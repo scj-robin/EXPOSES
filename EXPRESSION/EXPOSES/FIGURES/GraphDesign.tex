@@ -1,0 +1,217 @@
+\documentclass[dvips]{slides}
+
+%\renewcommand{\epsfig}[1]{{#1}} % suppression des figures
+
+% Mise en page
+\usepackage{lscape, rotating}
+\textwidth 19.5cm
+\textheight 23cm 
+\topmargin 0 cm 
+\oddsidemargin  -2cm 
+\evensidemargin  -2cm
+\renewcommand{\baselinestretch}{1.1}   
+
+% Maths
+\usepackage{amsmath, amssymb, amsfonts}
+
+% Texte
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+%\newcommand{\refer}[2]{{\small #1, {\sl #2}}}
+\newcommand{\refer}[2]{{\small #1}}
+
+
+% Couleur et graphiques
+\usepackage{color, graphics, epsfig, pstcol, epic, ecltree}
+
+% Symboles
+\newcommand{\Indic}{\mathbb I}
+\newcommand{\Esp}{\mathbb E}
+\newcommand{\Var}{\mathbb V}
+
+\renewcommand{\H}{{\bf H}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\Xbf}{{\bf X}}
+\newcommand{\xbf}{{\bf x}}
+
+\newcommand{\mubf}{\mbox{\mathversion{bold}{$\mu$}}}
+\newcommand{\Sigmabf}{\mbox{\mathversion{bold}{$\Sigma$}}}
+
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Tcal}{\mathcal{T}}
+
+\renewcommand{\a}{\tt a}
+\newcommand{\cc}{\tt c}
+\newcommand{\g}{\tt g}
+\renewcommand{\t}{\tt t}
+\newcommand{\coefbin}[2]{\left( 
+    \begin{array}{c} #1 \\ #2 \end{array} 
+  \right)}
+\newcommand{\bbullet}{\bullet\bullet}
+\newcommand{\bbbullet}{\bullet\bbullet}
+\newcommand{\bbbbullet}{\bullet\bbbullet}
+
+% Couleurs
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.4}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{\bf #1}}
+\newcommand{\textred}[1]{\textcolor{red}{\bf #1}}
+%\newcommand{\textred}[1]{{\bf #1}}
+\newcommand{\textgreen}[1]{\textcolor{darkgreen}{\bf #1}}
+\newcommand{\textlightgreen}[1]{\textcolor{green}{\bf #1}}
+%\newcommand{\textgreen}[1]{{\bf #1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{\bf #1}}
+\newcommand{\comment}[1]{{\LARGE \textred{#1}}}
+
+% Sections
+\newcommand{\section}[1]{
+  \addtocounter{section}{1}
+  \setcounter{subsection}{0}
+  \setcounter{subsubsection}{0}
+  \newpage
+%  \centerline{\LARGE \bf \textred{\arabic{section} - #1}}
+  \centerline{\LARGE \bf \textred{#1}}
+  }
+\newcommand{\subsection}[1]{
+  \addtocounter{subsection}{1}
+  \setcounter{subsubsection}{0}
+%  \noindent{\Large \bf \textblue{\arabic{section}.\arabic{subsection} - #1}}
+  \noindent{\Large \bf \textblue{#1}}
+  }
+\newcommand{\subsubsection}[1]{
+  \addtocounter{subsubsection}{1}
+  \noindent{\large \bf
+%  \textblue{\arabic{section}.\arabic{subsection}.\arabic{subsubsection} - #1}} 
+  \textblue{#1}} 
+  } 
+\newcommand{\paragraph}[1]{\noindent{\textgreen{#1}}}
+\newcommand{\emphase}[1]{{\textgreen{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% paramètres de la page standard
+\landscape 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{tabular}{l}
+  \paragraph{``Star'' design} \\
+  \\
+  Each condition \\
+  is compared to \\
+  a common \\
+  reference $0$ \\
+  \\
+  ($TR$ slides)
+\end{tabular}
+\hspace{2cm}
+\begin{tabular}{c}
+  \begin{pspicture}(8, 8)
+    \rput[B](4, 3.8){$0$}
+    
+    \rput[B](1, 1){$1$}
+    \psline[linewidth=0.1]{<->}(1.5, 1.5)(3.5, 3.5)
+    
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(3.5, 4)(1, 5.5)
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(4.5, 4)(7, 5.5)
+    
+    \rput[B](4, 8){$t$}
+    \psline[linewidth=0.1]{<->}(4, 4.7)(4, 7.5)
+    
+    \rput[B](7, 1){$T$}
+    \psline[linewidth=0.1]{<->}(6.5, 1.5)(4.5, 3.5)
+  \end{pspicture}
+\end{tabular}
+\hspace{2cm}
+\begin{tabular}{l}
+  Typically, \\
+  \\
+  $0 = $ wild type \\
+  \\
+  $t = $ mutant\\
+\end{tabular}
+$$
+\begin{array}{lcccc}
+  \mbox{parameter}\qquad & \qquad \delta_{tt'}
+  \qquad & \qquad  \delta_{t0} \qquad & \qquad \mu_t \qquad & \qquad
+  \mu_0 \qquad \\
+  \hline
+  \\
+  \mbox{estimate} & \overline{Y}_{t0} - \overline{Y}_{t'0} &
+  \overline{Y}_{t0} & \overline{X}_t & \overline{X}_0 \\
+  \\
+  \mbox{variance}  & 2\sigma^2 / R & \sigma^2 / R & \gamma^2 / R &
+  \gamma^2 / (TR) \\
+  \\
+  \\
+  & \multicolumn{4}{r}{\gamma^2 = \sigma^2/2 + \mbox{variance due to 
+      the slides.}}
+\end{array}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{tabular}{l}
+  \paragraph{``Loop'' design} \\
+  \\
+  Each condition \\
+  is compared to \\
+  two (arbitrary) \\
+  others \\
+  \\
+  ($TR$ slides)
+\end{tabular}
+\hspace{1.5cm}
+\begin{tabular}{c}
+  \begin{pspicture}(9, 9)
+    \rput[B](3, 0.5){$1$}
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(2.5, 1)(1, 2)
+%    \rput[B](0.5, 2.5){$o$}
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(0.5, 3)(0.5, 5)
+    \rput[B](0.5, 5.3){${t-1}$}
+    \psline[linewidth=0.1]{<->}(1, 6)(2.5, 7)
+    \rput[B](3, 7.3){$t$}
+    \psline[linewidth=0.1]{<->}(3.7, 7.5)(6.3, 7.5)
+    \rput[B](7.2, 7.3){${t+1}$}
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(7.5, 7)(9, 6)
+%    \rput[B](9.5, 5.5){$o$}
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(9.5, 5)(9.5, 3)
+%    \rput[B](9.5, 2.5){$o$}
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(9, 2)(7.5, 1)
+    \rput[B](7, 0.5){$T$}
+    \psline[linewidth=0.1]{<->}(6.3, 0.5)(3.7, 0.5)
+  \end{pspicture}
+\end{tabular}
+\hspace{1.5cm}
+\begin{tabular}{l}
+  Typically, \\
+  \\
+  $t = $ time $t$
+\end{tabular}
+$$
+\begin{array}{lll}
+  \mbox{parameter} \qquad &  \mbox{estimate} & \mbox{variance} \\
+  \hline
+  \\
+  \delta_{t(t+1)} & \overline{Y}_{t(t+1)} & \sigma^2 / R \\ 
+  \\
+  \delta_{t(t+d)} &  \overline{Y}_{t(t+1)} + \dots + \overline{Y}_{(t+d-1)(t+d)} \qquad & d \sigma^2 / R \\
+\end{array}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

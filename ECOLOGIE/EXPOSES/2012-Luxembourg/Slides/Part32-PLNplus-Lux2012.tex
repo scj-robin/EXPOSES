@@ -1,0 +1,333 @@
+%====================================================================
+%====================================================================
+\section{Extensions of the Poisson log-normal model}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+% %====================================================================
+% \frame{\frametitle{Flexibility of the latent layer} 
+% 
+% }
+  
+%====================================================================
+\subsection{Dimension reduction}
+%====================================================================
+\frame{\frametitle{Dimension reduction} 
+
+  \paragraph{Typical context.} 
+  \begin{itemize}
+  \item Microbial ecology: $p = 10^2$, $10^3$, $10^4$ species
+  \item \bigskip 'Abundance' = 'read' count = number of genomic sequences associated with each species sampled via high-troughput sequencing ('metagenomic')
+  \end{itemize}
+
+  \pause \bigskip \bigskip 
+  \paragraph{Aim.} 
+  \begin{itemize}
+  \item Dimension reduction (visualization)
+  \item \bigskip Accounting for major known effects
+  \end{itemize}
+
+  \pause \bigskip \bigskip 
+  \paragraph{Probabilistic principal component analysis.} Gaussian setting \refer{TiB99}:
+  $$
+  \Sigma = \underset{\text{low rank}}{\underbrace{B B^\intercal}} + \sigma^2 I_p, \qquad \qquad \text{where } B (p \times r)
+  $$
+
+}
+  
+%====================================================================
+\frame{\frametitle{(PLN-)probabilistic PCA} 
+
+  \paragraph{PLN-PCA model.} \refer{CMR18a}
+  \begin{itemize}
+  \item \pause Low dimension latent vector
+  $$
+  W_i \sim \Ncal_r(0, I), \qquad \qquad \text{where } r \ll p
+  $$
+  \item \pause \bigskip $p$-dimensional latent vector
+  $$
+  Z_i = \emphase{B} W_i \qquad \qquad  \text{where } \emphase{B} (p \times r) =
+  \text{loading matrix}
+  $$
+  \item \pause \bigskip Observed counts
+  $$
+  Y_{ij} \sim \Pcal(\exp(\emphase{o_{ij}} + x_i^\intercal \beta + Z_{ij}))
+  $$ 
+  ~\\
+  $\emphase{o_{ij}} =$ known 'offset' coefficient, accounting for the sampling
+  effort
+  \item \pause \bigskip Parameters
+  $$
+  \theta = (\text{loading matrix }B, \text{regression coefficient } \beta) \qquad
+  \qquad (+ \text{rank } r)
+  $$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Variational inference for PLN-PCA} 
+
+  \paragraph{VEM algorithm.}
+  \begin{itemize}
+  \item \pause \emphase{VE step:} update the variational parameters 
+  $m^{h+1}_i = \Esp_{q_i^{h+1}}(\emphase{W_i})$ and $S^{h+1}_i = \Esp_{q_i^{h+1}}(\emphase{W_i})$ \\
+  \ra Similar to the VE step of regular PLN
+  \item \pause \bigskip \emphase{M step:} update the model parameters $B^{h+1}$ and $\beta^{h+1}$ \\
+  \ra no close form, but still convex problem (gradient descent)
+  \end{itemize}
+
+  \bigskip 
+  \paragraph{Model selection.}
+  \begin{itemize}
+  \item \pause BIC penalty \refer{Sch78} (Laplace approximation):
+  $
+  \text{pen}_{BIC}(\theta) = (\underset{\beta}{\underbrace{p\; d}} + \underset{B}{\underbrace{p \; r}}) {\log n} / 2
+  $
+  \item \pause Heuristic adaptation (replace $\log p_\theta(Y)$ with $J_{\theta, q}(Y)$)
+  $$
+  vBIC = J_{\theta, q}(Y) - \text{pen}_{BIC}(\theta) 
+  $$
+  \item \pause Inspired from \refer{BCG00} (additional penalty for the conditional entropy the $W_i$'s)
+  \begin{align*}
+  vICL 
+  = J_{\theta, q}(Y) - \text{pen}_{BIC}(\theta)  - \Hcal(q)
+  \textcolor{gray}{\; =  \Esp_q \log p_\theta(Y, Z)  - \text{pen}_{BIC}(\theta)} 
+  \end{align*}
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Oak powdery mildew}
+  \begin{tabular}{cl}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.3\textwidth}}
+      \paragraph{Metabarcoding data} \refer{JFS16} 
+      \begin{itemize}
+      \item \bigskip $p = 114$ OTUs \\
+      (66 bacteria and 48 fungi) 
+      \item \bigskip $n = 116$ leaves 
+      \item \bigskip collected on 3 trees 
+        \begin{itemize}
+        \item resistant 
+        \item intermediate
+        \item susceptible       
+      \end{itemize}
+      to oak powdery mildew;
+      \item \bigskip different protocole for bacteria and fungi \\
+      $o_{ij} =$ sequencing depth
+      \end{itemize}
+
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+    \pause \includegraphics[height=.4\textheight]{\fignet/CMR18-AnnApplStat-Fig5a} \\
+    ~ \\
+    \pause \includegraphics[height=.4\textheight]{\fignet/CMR18-AnnApplStat-Fig4a} 
+    \end{tabular}
+  \end{tabular}
+  
+}
+
+%====================================================================
+\subsection{Network inference}
+%====================================================================
+\frame{\frametitle{Network inference} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.6\textwidth}}
+      \paragraph{Species interaction networks.}
+      \begin{itemize}
+      \item \bigskip Aim: Understand how species from a same community interact
+      \item \bigskip Network representation = draw an edge between interacting pairs of species
+      \item \pause \bigskip Main issue: Distinguish 
+      \emphase{direct interactions} (predator-prey) from
+      simple \emphase{associations} (two preys of a same predator) 
+      \end{itemize}
+    \end{tabular}
+    &
+    \hspace{-.05\textwidth}
+    \begin{tabular}{ccc}
+      \input{\figlux/Pred-Prey} &
+      & 
+      \input{\figlux/Pred-TwoPreys}
+    \end{tabular}
+  \end{tabular}
+  
+  \pause 
+  \ra Obviously, analyses based on co-occurences or correlations are not sufficient \refer{PWT19}
+
+  \pause \bigskip \bigskip 
+  \paragraph{Probabilistic translation.}
+  \begin{align*}
+    \text{association} & = \text{marginal dependance} \\
+    \text{direct interaction} & = \text{conditional dependance} 
+  \end{align*}
+
+}
+  
+%====================================================================
+\frame{\frametitle{Undirected graphical models} 
+
+  \paragraph{Definition.} 
+  $p(U_1, \dots U_k)$ is {\sl faithful} to the (chordal) graph $G = ([k], E)$ iff
+  $$
+  p(U_1, \dots U_k) \propto \prod_{C \in \Ccal} \psi_C(U_C)
+  $$
+  where $\Ccal = \{\text{cliques of } G\}$ and $U_C = (Y_j)_{j \in C}$.
+  
+  \pause \bigskip \bigskip 
+  \paragraph{Property.} 
+  $$
+  \text{separation}
+  \qquad \Leftrightarrow \qquad 
+  \text{conditional independance}
+  $$
+
+  \pause \bigskip 
+  \paragraph{Example.} ~ \\
+  \begin{tabular}{ccc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{c}
+      \input{\figlux/GG} \\
+      ~ \\
+      $C_1 = \{1, 2, 3\}, C_2 = \{3, 4\}$ \\
+    \end{tabular}
+    & &
+    \pause
+    \begin{tabular}{p{.5\textwidth}}
+      $$
+      p(U_1, U_2, U_3, U_4) \propto \psi_1(U_1, U_2, U_3) \; \psi_2(U_3, U_4)
+      $$
+      \begin{itemize}
+      \item $(U_1, U_2, U_3, U_4)$ all dependent 
+%        \item $U_1 \not\independent U_2$,  $U_1 \not\independent U_3$, $U_1 \not\independent U_4$, $U_2 \not\independent U_3$, ...
+      \item $U_1 \not\independent U_2 \mid (U_3, U_4)$ 
+      \item $U_4 \not\independent U_1 \mid U_2$ 
+      \item $U_4 \independent (U_1, U_2) \mid U_3$ 
+      \end{itemize}
+    \end{tabular}
+  \end{tabular}
+
+}
+  
+
+%====================================================================
+\frame{\frametitle{Gaussian graphical models} \pause
+
+  Suppose $Z \sim \Ncal(0, \Sigma)$ and denote by $\Omega = [\omega_{jk}] = \Sigma^{-1}$ the {\sl precision} matrix:
+  \begin{align*}
+  \sigma_{jk} = 0 
+  & \Leftrightarrow 
+  (Z_j, Z_k) \text{ independent}
+  & & (\text{'correlation'}) \\
+  ~ \\ 
+  \omega_{jk} = 0 
+  & \Leftrightarrow 
+  (Z_j, Z_k) \text{ independent } \mid (Z_h)_{h \neq j, k}
+  & & (\text{'partial correlation'})
+  \end{align*}
+  ~ \\
+  \pause \ra $\Omega$ only refers to 'direct' dependencies $\Rightarrow$ $G$ given by the \emphase{support of $\Omega$} 
+  
+  \pause \bigskip \bigskip 
+  \paragraph{Graphical lasso.} \refer{FHT08}
+  \begin{itemize}
+  \item Common assumption: few species are in direct interaction 
+  $$
+  \Rightarrow \quad \Omega \text{ should be \emphase{sparse} \qquad (many 0's)}
+  $$ 
+  \item \pause \bigskip Sparsity-inducing penalty (graphical lasso)
+  $$
+  \max_{\Omega} \; \log p(Z; \Omega) - \lambda \underset{\ell_1 \text{ penalty}}{\underbrace{\sum_{j \neq k} |\omega_{jk}|}}
+  $$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Poisson log-normal model for network inference} 
+
+  \paragraph{PLN-network.} PLN model with graphical lasso penalty \refer{CMR19}
+  $$
+  \arg\max_{\beta, \Omega, q \in \Qcal} \; 
+  J(\beta, \Omega, q)
+  - \underset{{\text{$\ell_1$ penalty}}}{\underbrace{\lambda \sum_{j \neq k} |\omega_{jk}|}}
+  $$
+  \ra Convex problem for both the VE and the M step
+
+  \onslide<2->{\bigskip \bigskip  
+  \paragraph{Inferring the {\sl latent} dependency structure}, not the abundance one}
+  $$
+  \begin{array}{c|c}
+  \onslide<3->{\text{good case}} & \onslide<4->{\text{bad case}} \\
+  \hline
+  \onslide<3->{\includegraphics[width=.4\textwidth]{\fignet/CMR18b-ArXiv-Fig1b}}
+  &
+  \onslide<4->{\includegraphics[width=.4\textwidth]{\fignet/CMR18b-ArXiv-Fig1a}}
+  \end{array}
+  $$
+  \onslide<5->{\ra Similar setting for most approaches in statistical ecology \refer{WBO15,KMM15,FHZ17,PHW18}}
+
+}
+
+%====================================================================
+\frame{\frametitle{Barents' fish species} 
+  
+  \vspace{-.05\textheight}
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.22\textwidth}}
+      \paragraph{Data:} \\ ~
+      \begin{itemize}
+      \item $n=89$ sites \\~
+      \item $p=30$ species \\~
+      \item $d=4$ covariates
+        \begin{itemize}
+        \item latitude
+        \item longitude
+        \item temperature
+        \item depth
+        \end{itemize}
+      \end{itemize}
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+      \includegraphics[height=.85\textheight]{\fignet/CMR18b-ArXiv-Fig5}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%====================================================================
+\frame{\frametitle{Barents' fish species: choosing $\lambda$}
+
+  \begin{tabular}{ll}
+    %\hspace{-.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[height=.7\textheight]{\fignet/BarentsFish_Gfull_criteria}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.4\textwidth}}
+      \paragraph{Alternatively.} ~ \\
+      ~ \\
+      Use resampling and select edges based on selection frequency \\
+      ~ \\
+      \refer{LRW10}
+    \end{tabular}
+  \end{tabular}
+
+}
+
+
+% %====================================================================
+% \frame{\frametitle{Other interesting extensions} 
+% 
+%   \begin{itemize}
+%     \item Species traits
+%     \item Spatial dependency
+%   \end{itemize}
+% 
+% 
+% }
+
+

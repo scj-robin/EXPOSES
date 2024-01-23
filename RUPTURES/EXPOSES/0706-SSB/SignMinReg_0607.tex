@@ -1,0 +1,653 @@
+\documentclass[dvips, lscape]{foils}
+%\documentclass[dvips, french]{slides}
+\textwidth 18.5cm
+\textheight 25cm 
+\topmargin -1cm 
+\oddsidemargin  -1cm 
+\evensidemargin  -1cm
+
+% Maths
+\usepackage{amsfonts, amsmath, amssymb}
+
+\newcommand{\coefbin}[2]{\left( 
+    \begin{array}{c} #1 \\ #2 \end{array} 
+  \right)}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\alphabf}{\mbox{\mathversion{bold}{$\alpha$}}}
+\newcommand{\betabf}{\mbox{\mathversion{bold}{$\beta$}}}
+\newcommand{\gammabf}{\mbox{\mathversion{bold}{$\gamma$}}}
+\newcommand{\mubf}{\mbox{\mathversion{bold}{$\mu$}}}
+\newcommand{\Pibf}{\mbox{\mathversion{bold}{$\Pi$}}}
+\newcommand{\psibf}{\mbox{\mathversion{bold}{$\psi$}}}
+\newcommand{\Sigmabf}{\mbox{\mathversion{bold}{$\Sigma$}}}
+\newcommand{\taubf}{\mbox{\mathversion{bold}{$\tau$}}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\Sbf}{{\bf S}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\ubf}{{\bf u}}
+\newcommand{\vbf}{{\bf v}}
+\newcommand{\xbf}{{\bf x}}
+\newcommand{\Xbf}{{\bf X}}
+\newcommand{\Esp}{{\mathbb E}}
+\newcommand{\Var}{{\mathbb V}}
+\newcommand{\Cov}{{\mathbb C}\mbox{ov}}
+\newcommand{\Ibb}{{\mathbb I}}
+\newcommand{\Rbb}{\mathbb{R}}
+
+% sommes
+\newcommand{\sumk}{\sum_k}
+\newcommand{\sumt}{\sum_{t \in I_k}}
+\newcommand{\sumth}{\sum_{t=t_{k-1}^{(h)}+1}^{t_k^{(h)}}}
+\newcommand{\sump}{\sum_{p=1}^{P}}
+\newcommand{\suml}{\sum_{\ell=1}^{P}}
+\newcommand{\sumtau}{\sum_k \hat{\tau}_{kp}}
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+% Texte
+\usepackage{lscape}
+\usepackage{../../../../Latex/fancyheadings, rotating, enumerate}
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.5}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\definecolor{jaune}{cmyk}{0, 0.5, 0.5, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\textred}[1]{\textcolor{red}{#1}}
+\newcommand{\textgreen}[1]{\textcolor{green}{ #1}}
+\newcommand{\textlightgreen}[1]{\textcolor{green}{#1}}
+%\newcommand{\textgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{#1}}
+\newcommand{\textyellow}[1]{\textcolor{yellow}{#1}}
+\newcommand{\refer}[2]{{\sl #1}}
+
+% Sections
+%\newcommand{\chapter}[1]{\centerline{\LARGE \textblue{#1}}}
+% \newcommand{\section}[1]{\centerline{\Large \textblue{#1}}}
+% \newcommand{\subsection}[1]{\noindent{\Large \textblue{#1}}}
+% \newcommand{\subsubsection}[1]{\noindent{\large \textblue{#1}}}
+% \newcommand{\paragraph}[1]{\noindent {\textblue{#1}}}
+% Sectionsred
+\newcommand{\chapter}[1]{
+  \addtocounter{chapter}{1}
+  \setcounter{section}{0}
+  \setcounter{subsection}{0}
+  {\centerline{\LARGE \textblue{\arabic{chapter} - #1}}}
+  }
+\newcommand{\section}[1]{
+  \addtocounter{section}{1}
+  \setcounter{subsection}{0}
+  {\centerline{\Large \textblue{\arabic{chapter}.\arabic{section} - #1}}}
+  }
+\newcommand{\subsection}[1]{
+  \addtocounter{subsection}{1}
+  {\noindent{\large \textblue{#1}}}
+  }
+% \newcommand{\subsection}[1]{
+%   \addtocounter{subsection}{1}
+%   {\noindent{\large \textblue{\arabic{chapter}.\arabic{section}.\arabic{subsection} - #1}}}
+%   }
+\newcommand{\paragraph}[1]{\noindent{\textblue{#1}}}
+\newcommand{\emphase}[1]{\textblue{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\landscape
+\newcounter{chapter}
+\newcounter{section}
+\newcounter{subsection}
+\setcounter{chapter}{0}
+\headrulewidth 0pt 
+\pagestyle{fancy} 
+\cfoot{}
+\rfoot{\begin{rotate}{90}{
+      %\hspace{1cm} \tiny S. Robin: Segmentation-clustering for CGH
+      }\end{rotate}}
+\rhead{\begin{rotate}{90}{
+      \hspace{-.5cm} \tiny \thepage
+      }\end{rotate}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+  \textblue{\LARGE Significance of Minimal Regions}
+  
+  \textblue{\LARGE  in Multiple CGH Profiles}
+\end{center}
+
+\paragraph{Working group:} 
+\begin{itemize}
+\item {\bf C. Rouveirol} (Institut Curie / Paris XI), 
+\item R. Radvanyi (Institut Curie), 
+\item E. Lebarbier (SSB, Paris), 
+\item F. Picard (SSB, Paris, San Francisco, Evry, Lyon, Chateauroux),
+\item {\bf S. Robin} (SSB, Paris)
+\end{itemize}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage
+% \chapter{Detection of chromosomal aberrations}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \vspace{1cm}
+% \section{Aberration at the chromosomic scale}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Known effects of big size chromosomal aberrations  (ex:
+% trisomy).
+
+% \centerline{$\rightarrow$ experimental tool: \textblue{Karyotype}
+%   (Resolution $\sim$ chromosome)} 
+
+% $$
+% \epsfig{file = ../Figures/Karyotype.ps, clip=,
+%   bbllx=158, bblly=560, bburx=452, bbury=778, scale=1.2}
+% $$
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage
+% \section{Within chromosome aberration}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{itemize}
+% \item Change of scale: what are the effects of small size DNA
+%   sequences deletions/amplifications?\\
+%  \\
+%   \centerline{$\rightarrow$ experimental tool:
+%     \textblue{"conventional" CGH} (resolution $\sim$ 10Mb).}
+% \item CGH = Comparative Genomic Hybridization: method for the
+%   comparative measurement of relative DNA copy numbers between two
+%   samples (normal/disease, test/reference).\\ 
+%  \\
+%   \centerline{$\rightarrow$ Application of the \textblue{microarray}
+%     technology to CGH (resolution $\sim$ 100kb).}
+%   $$
+%   \epsfig{file = ../Figures/CGHarray.ps, clip=,
+%     bbllx=113, bblly=564, bburx=497, bbury=778, scale=1.1}
+%   $$
+% \end{itemize}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage
+% \section{Microarray technology in its principle }
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \vspace{-1cm}
+% $$
+% \epsfig{file = ../Figures/principe_CGH.eps, clip=,
+%   bbllx=0, bblly=41, bburx=700, bbury=478, scale=0.9}
+% $$
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage
+% \section{A segmentation / clustering problem}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Several methods have been proposed to detect the breakpoint position
+% (left) and to classify segments into status (deleted / normal /
+% amplified: right).
+% $$
+%   \begin{tabular}{cc}
+%     Segmentation & Segmentation/Clustering \\
+%     \multicolumn{2}{c}{$K=4$ segments} \\
+%     \epsfig{file = ../Figures/bt474_c9_seg_homo_K4, clip=, scale=0.7} 
+%     & 
+%     \epsfig{file = ../Figures/bt474_c9_segclas_homo_P3K4 , clip=, scale=0.7} 
+%   \end{tabular}
+% $$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Minimal region in (discretized) CGH profiles}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\section{Discretized CGH profiles}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\hspace{-2cm}
+\begin{tabular}{cc}
+  \begin{tabular}{p{7cm}}
+    $i = 1..m$ patients \\
+    ($m = 84$), \\
+    \\
+    $t = 1..n$ positions \\
+    ($n = 2360$) \\
+    \\
+    $X_{it}$ = status of\\
+    patient $i$ %\\
+    at position $t$. \\
+    \\
+    \begin{tabular}{rcrl}
+      $X_{it}$ & = & \textblue{--1} & \textblue{(loss)} \\
+       & = & 0 & (normal) \\
+       & = & \textred{+1} & \textred{(gain)}
+    \end{tabular}
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \epsfig{file=/RECHERCHE/RUPTURES/Curie/MinRegion/Data1/Profiles.eps}
+  \end{tabular}
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Minimal region}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$$
+\begin{tabular}{cc}
+  \begin{tabular}{p{15cm}}
+    A minimal region $\Rcal$ is a sequence of \emphase{successive positions}
+    for which the \emphase{same status} is observed in \emphase{large
+    number} of patients at the same time. \\
+    \\
+    It is characterized by
+    \begin{itemize}
+    \item its position $t^*$, 
+    \item its length $\ell$,
+    \item its status $s$, 
+    \item the number of patients $M^*$.
+    \end{itemize}
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \epsfig{file=/RECHERCHE/RUPTURES/Curie/MinRegion/Data1/ExMinRegion.eps,
+      clip=, bbllx=270, bblly=209, bburx=400, bbury=593}
+  \end{tabular}
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Statistical question}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Binary case.} Assume that only 2 status exist: 
+$$
+0 = \text{normal}, \quad 1 = \text{aberration}.
+$$
+\paragraph{Region occurrence.} $Y_{it} = Y_{it}(\Rcal)$ indicates the
+occurrence of $\ell$ successive aberrations ending at position $t$ in
+patient $i$:
+$$
+Y_{it}= \prod_{u=1}^{\ell} X_{i, t-u+1}.
+$$
+\paragraph{Simultaneous occurrences.} $Y_{+t} = Y_{+t}(\Rcal)$ counts
+the number of patients for which $\Rcal$ occurs at position $t$:
+$$
+Y_{+t} = \sum_{i=1}^m Y_{it}.
+$$
+\paragraph{Significance of an observed minimal region.} We have to calculate
+$$
+\Pr\left\{\sup_{\ell \leq t \leq n}Y_{+t} \geq M^*\right\}.
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Significance}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\section{Model}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Markov chain.} 
+Each profile $\{X_{it}\}_t$ is a 2-state stationary Markov chain (MC):
+$$
+\{X_{it}\}_t \sim \text{MC}(\Pibf, \mubf)
+$$
+where $\Pibf$ is the transition matrix and $\mubf$ the stationary
+distribution ($\forall i: X_{i1} \sim \mubf$).
+
+The patients (profiles) are supposed to be independent.
+
+\bigskip
+\paragraph{Estimated transition probabilities and stationary
+  distributions.} 
+$$
+\text{Gain:} \qquad\qquad
+\widehat{\Pibf}^+ = \left(\begin{array}{rr}
+       99.74 &      0.26 \\
+        1.98 &      98.02 \\
+  \end{array}\right), 
+\qquad \widehat{\mubf}^+ = (88.36 \quad      11.64), 
+$$
+$$
+\text{Loss:} \qquad\qquad
+\widehat{\Pibf}^- = \left(\begin{array}{rr}
+        99.72 &      0.28 \\
+       2.26 &       97.74 \\
+  \end{array}\right), 
+\qquad \widehat{\mubf}^- = (88.98 \quad      11.02).
+$$
+% $$
+% \widehat{\Pibf} = \left(\begin{array}{rr}
+%        99.7 & 0.3 \\
+%        2.0 &  98.0 \\
+%   \end{array}\right), 
+% \qquad \widehat{\mubf} = (88.4 \quad  11.6).
+% $$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Exact calculation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{One patient} 
+
+We are interested in patients for which $\Rcal$ occurs at some
+position $t$. This depends on the number of successive aberrations
+observed at the last $\ell$ positions.
+
+\paragraph{Embedded Markov chain.} We define the embedded MC with
+($\ell +1$) states $s = 0, \dots \ell$, where
+$$
+\text{\emphase{$s$ = number of '1' in the last $\ell$ positions.}}
+$$
+Denoting $p= \pi_{1, 1}$ and $q = \pi_{0, 0}$, the transition
+matrix of the embedded MC is
+$$
+\left( 
+\begin{array}{c|cccccc}
+  & 0 & 1 & \dots  & s & \dots & \ell \\
+  \hline
+  0 & \pi_{0, 0} & \pi_{0, 1} & \\
+  1 & \pi_{1, 0} & & \pi_{1, 1} & \\
+  \vdots  & \vdots & & & \ddots \\
+  s & \pi_{1, 0} & & & & \pi_{1, 1}  \\
+  \vdots  & \vdots & & & & & \ddots \\
+  \ell & \pi_{1, 0} & & & & & \pi_{1, 1}  
+\end{array}
+\right).
+$$
+\paragraph{$\Rcal$ occurs each time the MC visits state $\ell$.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+\subsection{$m$ patients} 
+
+We are now interested in the number of patients for which $\Rcal$ occurs
+at position $t$. This depends on the number of successive aberrations
+observed in \emphase{all patients} at the last $\ell$ position.
+
+\paragraph{Counts.} Denote 
+\begin{description}
+\item[$M^0_t = $] \# {normal patients
+    at position $t$}: $M^0_t = {\sum_i (1-X_{it})}$ 
+\item[$M^s_t = $] \# {patients with aberrations at (exactly) the last $s$
+    positions} ($1 \leq s \leq \ell$): $M^s_t = {\sum_i (1-X_{i, t-s})
+    \prod_{u=1}^s X_{i, t-s+u}}$ 
+\item[$M^{\ell}_t =$]\# {patients with aberrations at the last $\ell$
+    positions: $M^{\ell}_t = Y_{+t} = {\sum_i \prod_{u=1}^{\ell} X_{i,
+        t-s+u}}$}
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Multivariate binomial process.} The distribution of the
+counts at position $t+1$ given the counts at position $t$ is defined
+as follows:
+\begin{eqnarray*}
+  M^1_{t+1} & \sim & \Bcal(M^0_t, \pi_{0, 1}), \\
+  M^{s+1}_{t+1} & \sim & \Bcal(M^s_t, \pi_{1, 1}), \qquad \qquad \text{for } 1 \leq
+  s \leq \ell-2 \\
+  M^{\ell}_{t+1} & \sim & \Bcal(M^{\ell-1}_t + M^{\ell}_t, \pi_{1,
+  1}), \\
+  M^0_{t+1} & = & M - \sum_{s=1}^{\ell} M^s_{t+1}. \\
+\end{eqnarray*}
+
+\vspace{-1cm}
+\hspace{-2cm}
+\begin{tabular}{cc}
+  \begin{tabular}{p{12cm}}
+    The process $\{(M^0_t, \dots, M^{\ell}_t)\}$ is a first order Markov
+    chain. \textred{Its number of states} (\textgreen{$< (\ell+1)^m$}) is
+    related to the \textblue{Stirling number of the second kind}:  
+    $$
+    m = 84, \ell = 15 \rightarrow
+    8.3\;10^{86} \text{states}.
+    $$
+    The transition matrix is very sparse.
+  \end{tabular}
+    &
+  \begin{tabular}{c}
+    \epsfig{file=/RECHERCHE/RUPTURES/Curie/MinRegion/Res/NbState.eps,
+    width=12cm, height=8cm}
+  \end{tabular}
+\end{tabular}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Poisson approximation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Distribution of $Y_{it}$ and $Y_{+t}$.} Denoting the
+occurrence probability of $\Rcal$ 
+$$
+\mu(\Rcal) = \mu_1 (\pi_{1, 1})^{\ell-1}
+$$
+and
+$$
+\forall i, t: Y_{it} \sim \Bcal[\mu(\Rcal)], 
+\qquad
+\forall t: Y_{+t} \sim \Bcal[m, \mu(\Rcal)], 
+$$
+
+\paragraph{Poisson approximation.} 
+If $M^*$ is large, then $p(\Rcal) = \Pr\{Y_{+t} \geq M^*\}$ is small so (\emphase{?})
+$$
+\sum_{t=\ell}^n \Ibb\{Y_{+t} \geq M^*\} \overset{\text{\emphase{?}}}{\approx}
+\Pcal[(n-\ell+1)p(\Rcal)]
+$$
+and (\emphase{?})
+$$
+\Pr\left\{\sup_t Y_{+t} \geq M^*\right\}
+\overset{\text{\emphase{?}}}{\simeq}
+1 - \exp[-(n-\ell+1)p(\Rcal)].
+$$
+\emphase{$\rightarrow$ does not work.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Upper bound}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Numbered of altered patients.} Denoting $X_{+t} = \sum_i
+X_{it}$ the number of altered patients at position $t$, we have
+\begin{eqnarray*}
+% \{Y_{+t} \geq M^*\} & \Rightarrow & \{X_{+t}, X_{+, t+1},\dots X_{+, t+\ell-1}
+% \geq M^*\} \\ 
+% \Rightarrow \qquad 
+\Pr\{Y_{+t} \geq M^*\} & \leq & \Pr\{X_{+t}, X_{+, t+1},
+\dots X_{+, t+\ell-1} \geq M^*\} \\
+\Rightarrow \qquad \Pr\left\{\sup_t Y_{+t} \geq M^*\right\} & \leq &
+\Pr\{\exists t: X_{+, t-\ell+1}, \dots, X_{+, t-1}, X_{+t} \geq M^*\} \\
+\end{eqnarray*}
+
+\paragraph{$\{X_{+t}\}$ as a Markov chain.} Given the number of altered
+patients at position $t$ ($X_{+t}$), $X_{+, t+1}$ is
+$$
+X_{+, t+1} = A_{t+1} + B_{t+1}
+$$
+where
+$$
+\begin{array}{rcll}
+  A_{t+1} & \sim & \Bcal(X_{+t}, \pi_{1,1})  & \text{number of altered at $t$
+  still altered at $t+1$,} \\
+  B_{t+1} & \sim & \Bcal(m-X_{+t}, \pi_{0,1})& \text{number of normal at $t$
+  becoming altered et $t+1$.}
+\end{array}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Embedded MC $\{C^*_t\}$.} We can define the MC counting the
+number of successive times where $X_{+t}$ exceeds $M^*$, with an
+\emphase{absorbing state} when this number reaches $\ell$.
+
+\paragraph{Example.} For $m = 84$ patients, $\ell = 5$ and $M^* = 31$,
+the embedded MC has $(m+1) + (\ell-2)(m-M^*+1) + 1 = 248$ states; its
+transition matrix has the following shape
+$$
+\vspace{-1cm}
+\Pibf_{C^*} = \left(
+  \begin{tabular}{c}
+    \epsfig{file=/RECHERCHE/RUPTURES/Curie/MinRegion/Res/ExPiR.eps,
+    width=10cm, clip=}
+  \end{tabular}
+  \right)
+$$
+\paragraph{$p$-value.}
+The $p$-value is given by the distribution of $C^*_n$:
+$\mubf^*_0 \left(\Pibf_{c^*}\right)^{n-1}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Application}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Multiple chromosomes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Profiles are actually spread into 24 distinct chromosomes (22 + X + Y) with
+varying lengths.
+
+\paragraph{One chromosome.}
+Denoting $n_k$ the number of positions in chromosome $k$, the upper
+bound of $\Pr\{\sup_{1 \leq t \leq n_k} Y_{+t} \geq M^*\}$ is 
+$$
+\Pr\left\{\sup_{1 \leq t \leq n_k} Y_{+t} \geq M^*\right\} \leq \mubf^*_0
+(\Pibf^*)^{n_k-1} 
+$$
+where $\mubf^*_0$ denotes the binomial distribution $\Bcal(m,
+\mu_1)$.
+
+\paragraph{All chromosomes.} The global upper bound is given by 
+$$
+\Pr\left\{\sup_{1 \leq t \leq n} Y_{+t} \geq M^*\right\} \leq 1 -
+\prod_{k=1}^K \left[1 - \mubf^*_0 (\Pibf^*)^{n_k-1} \right].
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Abacus}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+For given number of patient $m$ and chromosomes lengths $\{n_k\}$, we
+can give the abacus of the significance as a function of the length
+$\ell$ and the count $M^*$.
+
+\paragraph{Abacus for gains.} Upper bound of the $p$-value in
+$\log_{10}$ scale.
+$$
+\epsfig{file=/RECHERCHE/RUPTURES/Curie/MinRegion/Data1/Abaque-gain.eps,
+  width=16cm, clip=}
+$$
+Because of the very high value of $\pi_{1, 1}$, \emphase{the
+  significance mainly depends on $M^*$}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Results for raw profiles}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Significant regions at the (Bonferonni corrected) 10\% threshold.
+{\small
+$$
+\hspace{-1.5cm}
+\begin{tabular}{rrrrr|ccc|cc}
+  \multicolumn{5}{c|}{Region} & \multicolumn{3}{c|}{Poisson approximation}
+  & \multicolumn{2}{c}{Upper bound} \\
+  \input{/RECHERCHE/RUPTURES/Curie/MinRegion/Data1/zones_curie_2_m10.TabRes.tex}
+\end{tabular}
+$$
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Results for smoothed  profiles}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$$
+\begin{array}{cc}
+  \begin{array}{c}
+    \epsfig{file=/RECHERCHE/RUPTURES/Curie/MinRegion/Data2/Profiles.eps}
+  \end{array}
+  & 
+  \begin{array}{l}
+    \Pibf^+ = \left(\begin{array}{cc}
+        99.8   &       0.2 \\
+        5.0     &      95.0
+      \end{array}
+    \right) \\ \\
+    \mubf^+ = (96.1 \quad  3.9) \\
+    \\ \\
+    \Pibf^- = \left(\begin{array}{cc}
+        99.8 &         0.2 \\
+        4.5  &       95.5
+      \end{array}
+    \right) \\ \\
+    \mubf^- = (95.2 \quad 4.8) \\
+  \end{array}
+\end{array}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+Significant regions at the (Bonferonni corrected) 10\% threshold.
+{\small
+$$
+\hspace{-1.5cm}
+\begin{tabular}{rrrrr|ccc|cc}
+  \multicolumn{5}{c|}{Region} & \multicolumn{3}{c|}{Poisson approximation}
+  & \multicolumn{2}{c}{Upper bound} \\
+  \input{/RECHERCHE/RUPTURES/Curie/MinRegion/Data2/zones_curielisse_2_m10.TabRes.tex}
+\end{tabular}
+$$
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,106 @@
+%====================================================================
+%====================================================================
+\section*{Backup}
+%====================================================================
+\frame{\frametitle{EM property}  \label{goto:EMproof}
+
+  We have to show that   
+  $$
+  \log p_{\theta^{h+1}}(Y) - \log p_{\theta^h}(Y) \geq 0.
+  $$
+
+  \bigskip \pause 
+  \onslide+<2->{Because $\theta^{h+1} = \arg\max_\theta \Esp_{\theta^h} [\log p_\theta(Y, Z) \mid Y]$, we have that}
+  \bigskip
+  \begin{align*}
+    \onslide+<3->{0}
+    & \onslide+<3->{\leq \Esp_{\theta^h} [\log p_{\theta^{h+1}}(Y, Z) \mid Y] - \Esp_{\theta^h} [\log p_{\theta^h}(Y, Z) \mid Y]} \\ ~ \\
+    & \onslide+<4->{= \Esp_{\theta^h} \left[\log \frac{p_{\theta^{h+1}}(Y, Z)}{p_{\theta^h}(Y, Z)} \mid Y\right] }
+    \qquad 
+    \onslide+<5->{\leq \log \left(\Esp_{\theta^h} \left[\frac{p_{\theta^{h+1}}(Y, Z)}{p_{\theta^h}(Y, Z)} \mid Y\right]\right) \qquad \textcolor{gray}{(Jensen)}} \\ ~\\
+    & \onslide+<6->{= \log \int \frac{\textcolor{gray}{p_{\theta^h}(Y, Z)}}{p_{\theta^h}(Y)} \frac{p_{\theta^{h+1}}(Y, Z)}{\textcolor{gray}{p_{\theta^h}(Y, Z)}} \d Z} 
+    \qquad  
+    \onslide+<7->{ =\log \left(\frac{1}{p_{\theta^h}(Y)} \int p_{\theta^{h+1}}(Y, Z) \d Z \right)} \\ ~ \\
+    & \onslide+<8->{= \log \frac{p_{\theta^{h+1}}(Y)}{p_{\theta^h}(Y)}}
+    \qquad \onslide+<9->{= \log p_{\theta^{h+1}}(Y) - \log p_{\theta^h}(Y)} 
+  \end{align*}
+  
+  \bigskip
+  \textcolor{gray}{Back to \#\ref{back:EMproof}}
+}
+
+%====================================================================
+\frame{\frametitle{Two version of the ELBO} \label{goto:ELBO}
+
+  \begin{align*}
+  J_{\theta, q}(Y) 
+  & = \log p_\theta(Y) - KL\left[q(Z) \| p_\theta(Z \mid Y)\right] 
+  \qquad \qquad (\text{lower bound})\\ ~\\
+  & \onslide+<2->{= \log p_\theta(Y) - \Esp_q \log \left(q(Z) / p_\theta(Z \mid Y) \right)} \\ ~\\
+  & \onslide+<3->{= \log p_\theta(Y) - \Esp_q \log \left(\frac{q(Z) p_\theta(Y)}{p_\theta(Y, Z)} \right)} \\ ~\\
+  & \onslide+<4->{= \textcolor{gray}{\log p_\theta(Y)} - \Esp_q \log q(Z) - \textcolor{gray}{\Esp_q \log p_\theta(Y)} + \Esp_q \log p_\theta(Y, Z)} \\ ~\\
+  & \onslide+<5->{= \Esp_q \log p_\theta(Y, Z) \; \underset{{\normalsize \text{entropy } \Hcal(q)}}{\underbrace{- \; \Esp_q \log q(Z)}}} 
+  \end{align*}
+  
+  \bigskip
+  \onslide+<5->{\textcolor{gray}{Back to \#\ref{back:ELBO}}}
+}
+
+%====================================================================
+\frame{\frametitle{Mean-field approximation}  \label{goto:meanfield}
+
+  \begin{itemize}
+  \item \bigskip {We know that the function $q_1$ that minimizes
+  $$
+  F(q_1) = \int L(z_1, q_1(z_1)) \d z_1
+  $$
+  satisfies (see \#\ref{goto:EulerLagrange} or \refer{Bea03}) \label{back:EulerLagrange}
+  $$
+  \partial q_1(z_1) \; L(z_1, q_1(z_1)) = 0
+  $$}
+  \item \bigskip \bigskip \pause {Let us consider $z = (z_1, z_2)$, $q(z) = q_1(z_1) q_2(z_2)$ \pause
+  and define 
+  $$
+  L(z_1, q_1(z_1)) = q_1(z_1) \int q_2(z_2) \log \frac{q_1(z_1) q_2(z_2)}{p(z)} \d z_2
+  \qquad \Rightarrow \qquad 
+  F(q_1) = KL[ q \| p ].
+  $$}
+  \item \bigskip \bigskip \pause {Observe that
+  $$
+  \partial q_1(z_1) \; L(z_1, q_1(z_1))
+  = \log q_1(z_1) - \int q_2(z_2) \log p(z) \d z_2 + \cst
+  $$}
+  \end{itemize}
+  
+  \bigskip
+  \textcolor{gray}{Back to \#\ref{back:meanfield}}
+}
+
+%====================================================================
+\frame{\frametitle{Variational lemma}  \label{goto:EulerLagrange}
+
+  \begin{itemize}
+  \item Consider
+  $$
+  F(q) = \int L(z, q(z)) \d z
+  $$
+  \item \bigskip \pause $q$ is optimal if, for any function $h$,
+  $$
+  \left.\partial_t F(q + t h)\right|_{t = 0} = 0
+  $$
+  \item \bigskip \pause Observe that
+  $$
+  \partial_t F(q + t h) = \int h(z) \; \partial_{q(z)} L(z, q(z)) \d z
+  $$
+  \item \bigskip \pause This must be zero for any function $h$, meaning that
+  $$
+  \partial_{q(z)} L(z, q(z)) \equiv 0.
+  $$
+  \end{itemize}
+
+  \bigskip 
+  \textcolor{gray}{Back to \#\ref{back:EulerLagrange}}
+  
+}
+
+

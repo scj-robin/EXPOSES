@@ -1,0 +1,300 @@
+\documentclass[pdf,mia,noFooter,slideColor,colorBG]{prosper}
+%\documentclass[pdf,noFooter,slideColor,colorBG]{prosper}
+
+\usepackage{amsmath}
+\usepackage[dvips]{color}
+
+
+
+\begin{document}
+
+
+%====================================
+\begin{slide}{Sequence Analysis via HMM}
+{ \tiny The oldest theme of SSB is the analysis of sequences ($1^\text{st}$ paper $\sim$ 1994)}\\
+{\bf Markov} M$m$: $\qquad \qquad  \qquad \qquad X_t \in {\cal A}, \quad |{\cal A}| = k$
+\begin{eqnarray*}
+{\mathbb P}(X_t \ | \ (X_j)_{1 \leqslant j \leqslant  t-1}) &=& {\mathbb P}(X_t \ | \ (X_j)_{t-m \leqslant j \leqslant  t-1})\\
+&=& \pi(X_{t-m}\dots X_{t-1} \ ; \ X_t)
+\end{eqnarray*}
+{\bf Hidden Markov} M$1$M$m$: $\qquad \qquad S_t \in [1, 2, \dots, r]$
+\begin{eqnarray*}
+{\mathbb P}(S_t \ | \ (S_j)_{1 \leqslant j \leqslant  t-1}) &=& {\mathbb P}(S_t \ | \ S_{t-1}) \\ 
+&=&  \color{red}\pi_0 \color{black} (S_{t-1} \ ; S_t)\\
+{\mathbb P}(X_t \ | \ (X_j)_{1 \leqslant j \leqslant  t-1} \  \ (S_j)_{1 
+\leqslant j \leqslant  t}) &=& {\mathbb P}(X_t \ | \ (X_j)_{t-m 
+\leqslant j \leqslant  t-1}, S_t)\\
+&=&  \color{red} \pi_{S_t} \color{black}   (X_{t-m}\dots X_{t-1} \ ; X_t)
+\end{eqnarray*}
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{Markov : ``exceptional motifs''}
+$\qquad$ Markov models are essentialy used to measure the ``exceptionality'' of a given word $w$ or of a given motif $W$\\
+\color{green} {\it Gaussian and compound Poisson approximations were known in 2001.} \color{black}\\
+{\bf New} :
+\begin{itemize}
+\item Exact distribution \color{blue} {\bf (JRSS C 02, JCB 05)} \color{black}
+\item Approach based on Large Deviations \color{blue} {\bf (JCB 04)} \color{black}
+\item Waiting times for structured motifs based on generative functions \color{blue}{\bf (Disc.App.Math 06)} \color{black}
+\item Efficient implementation of all methods \color{blue} {\bf (R'MES, SPatt)} \color{black}
+\item Numerical comparison of methods \color{blue} {\bf (JCB 01, SAGMB 06) } \color{black}
+\end{itemize}
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{}
+\vspace{-1.2cm}
+\begin{itemize}
+\item Unified approach through Deterministic Finite Automata \color{blue}{\bf (JAP 06) }  \color{black}
+\end{itemize}
+Consider the motif $W = $  a-x(1;2)-a ; the graph below detects the occurrences of $W$ on a sequence (passage in the red circle).
+\vspace{-.4cm}
+\begin{tabular}{cc}
+\begin{minipage}{0.4\textwidth}
+\begin{figure}
+\includegraphics[width=\textwidth]{FDA.eps}
+\end{figure}
+\end{minipage}
+\begin{minipage}{0.6\textwidth}
+{\tiny
+$$
+\left(
+\begin{array}{rrrrr}
+\pi(a,a) & \pi(a,b) & 0 & 0 & 0\\
+\pi(b,a) & 0 & 0 & \pi(b,b) & 0\\
+0 & 0 & \pi(b,b) & 0 & \pi(b,a)\\
+\pi(b,a) & 0 & \pi(b,b) & 0 & 0\\
+\pi(a,a) & \pi(a,b) & 0 & 0 & 0
+\end{array}
+\right)
+$$
+}
+\end{minipage}
+\end{tabular}
+If $X_t$ is a Markov chain, the position on this graph is also a MC (whose transition is indicated).\\
+This methods overcomes the curse of the motif cardinality (ex : Prosite)
+
+
+%\color{blue} \underline{Example of application} : Genomic distribution of motifs involved in DNA repair (E. coli)
+%\color{black}
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{Hidden Markov Models}
+\begin{center}
+Theoretical results
+\end{center}
+\begin{itemize}
+\item Theoretical properties of the MLE
+\item Estimation by Monte Carlo MC (MCMC)
+\item Estimation of Semi Markovian Hidden Model (SHMM)  \color{blue} {\bf (Signal proc. 01) } \color{black}
+\item Choice of models,
+\begin{itemize}
+\item using penalization of likelihood,
+\item using Reversible Jump MC. \color{blue} {\bf (JCB 06)} \color{black}
+\end{itemize}
+\end{itemize}
+\begin{center}
++ \color{blue} {\bf (3 books : Belin 03, CUP 05, Hermes 07) } \color{black}
+\end{center}
+\end{slide}
+%====================================
+%        \color{blue} {\bf ( ) } \color{black}
+
+%====================================
+\begin{slide}{Hidden Markov Models}
+The modelisation by HMM turns to be a tool for the analysis of heterogeneity. In the ssb group of MIA, we used them for
+\begin{itemize}
+\item Alignments (pair HMM) \color{blue} {\bf (Scand. J. S 06) } \color{black}
+\item Annotation 
+\begin{itemize}
+\item localisation of genes  \color{blue} {\bf (NAR 02) } \color{black}
+\item localisation of motifs (ex : promotors) \color{blue} {\bf (JCB 06) } \color{black}
+\end{itemize}
+\item Secondary structure of proteins  \color{blue} {\bf (IEEE Int.Syst. 05 ) } \color{black}
+\item Localisation of nucleosomes \color{blue} {\bf (submitted Science 06)} \color{black}
+\end{itemize}
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{Alignment : pair HMM}
+A model for a pair of sequences consists in :
+\begin{tabular}{cc}
+\begin{minipage}{0.5\textwidth}
+\noindent $\bullet$ an (hidden) MC $S_t$ taking values in $\{ \, \longrightarrow \, , \, \uparrow \, , \, \nearrow  \}$\\
+\noindent $\bullet$ when $S_t = \longrightarrow$, we observe\\
+\indent $\quad (X_t,-) \quad ; \quad X_t \sim P_1$\\
+$\bullet$  when $S_t = \uparrow$, we observe\\
+\indent $\quad (-,Y_t) \quad \, ; \quad Y_t \sim P_2$\\
+$\bullet$  when $S_t = \nearrow$, we observe\\ 
+\indent $\quad (X_t,Y_t) \sim P_{12}$
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\begin{figure}
+\centering
+\includegraphics[width=.8\textwidth]{pairHMM.eps}
+\end{figure}
+\end{minipage}
+\end{tabular}
+
+\vspace{0,5cm}
+
+The alignment of two observed sequences can be done using the usual HMM tools.
+
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{HMM : SHOW}
+A very efficient (ssb) software implements these methods\\
+ \color{blue} {\bf (NAR 06, PNAS 06 ) } \color{black}
+\begin{figure}
+\centering
+\includegraphics[width=.8\textwidth]{papillon.eps}
+\end{figure}
+SHOW is part of the ``plate-forme'' AGMIAL in the INRA and is widely used (ex: Médigue's team in genopole).
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{Annotation}
+On $200\, 000$ bp of {\it B. subtilis}, SHOW gives the following annotation (curves), to be compared to the true one (colored arrows)
+\begin{figure}
+\centering
+\includegraphics[width=.9\textwidth]{bsub_34.eps}
+\end{figure}
+\end{slide}
+%====================================
+%{bsub_1-200000_6etats.eps}
+
+%====================================
+\begin{slide}{SHMM}
+HMM $\Rightarrow$ the length of each region follows an exponential distribution -- this hypothesis is false in the reality !\\
+\color{blue} {\bf Example : Modelization of the promotors of genes} \color{black}
+\vspace{-0.3cm}
+\begin{figure}
+\centering
+\includegraphics[width=.8\textwidth]{figure1.eps}
+\end{figure}
+\vspace{-1.1cm}
+\begin{figure}
+\includegraphics[width=.8\textwidth]{figure2.eps}
+\end{figure}
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{The promotor model : result}
+\vspace{-.5cm}
+\begin{figure}
+\centering
+\includegraphics[width=.7\textwidth]{figure4.eps}
+\end{figure}
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{II$^{\text{ary}}$ structure of proteins}
+The hidden chain is written in a ``structural alphabet'' describing angles in the skeleton of the protein.
+\begin{tabular}{cc}
+\begin{minipage}{0.4\textwidth}
+\begin{figure}
+\includegraphics[width=\textwidth]{diedre.eps}
+\end{figure}
+\begin{figure}
+\includegraphics[width=\textwidth]{complex2.eps}
+\end{figure}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+A learning set indicates how  the ``words'' of 5 a.a. can be grouped according to their spatial configuration in (here) 14 groups : the ``letters'' of the structural alphabet. The frequencies of each a.a. in each ``letter'' is estimated.\\
+Given a sequence of a.a., HMM tools allows the attribution of ``letters'', and therefore a spatial reconstruction.
+\end{minipage}
+\end{tabular}
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{Searching nucleosomes}
+In eukaryotes, an important part of the chromosomes forms chromatine, a state where the double helix winds rounds beads, forming a ``collar''.
+\begin{figure}
+\centering
+\includegraphics[width=.8\textwidth]{defnucleo.eps}
+\end{figure}
+Is it possible to give a \color{red} prediction of the positions \color{black} of these nucleosomes ?
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{}
+\begin{tabular}{cc}
+\begin{minipage}{0.4\textwidth}
+We will take advantage from the fact that the curvature of the DNA
+differs where it  touchs the ``core'' and in the parts far from the core.
+Therefore the necessary energy differs.
+\end{minipage}
+\begin{minipage}{0.6\textwidth}
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{defnucleo2.eps}
+\end{figure}
+\end{minipage}
+\end{tabular}
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{}
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{longsegment.eps}
+\end{figure}
+Using only the primary sequence ({\bf taccgtatcag...}),\\
+ we have computed the energy which is locally necesary to bend the DNA (blue curve).\\
+This is our ``observed sequence'' $X_t \in {\mathbb R}$
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{}
+$\qquad \qquad \quad$ \color{red} ``Nuc''-states ($\neq$ distributions in each position) 
+\begin{figure}
+\centering
+\includegraphics[width=.8\textwidth]{hmmnucleo.eps}
+\end{figure}
+\color{black}
+A HMM is ajusted to these data.\\
+The hidden chain will be $S_t =$ Nuc $\quad$ or $\quad S_t =$ No-Nuc
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{}
+\begin{figure}
+\centering
+\includegraphics[width=.3\textwidth]{segmentafterHMM_2.eps}
+\hspace{1cm}
+\includegraphics[width=.4\textwidth]{segmentafterHMM_1.eps}
+\end{figure}
+The predicted positions of the nucleosomes (red dots) ``fairly'' coincide with the experimental data (red curve -- Rando et al.)
+\end{slide}
+%====================================
+
+\end{document}
+
+

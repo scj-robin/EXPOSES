@@ -1,0 +1,642 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+\usepackage{xspace}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\GMSBM}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/1903-SemStat/}
+\newcommand{\figeconet}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/1904-EcoNet-Lyon/Figs}
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
+\newcommand{\figbayes}{/home/robin/RECHERCHE/BAYES/EXPOSES/FIGURES}
+\newcommand{\figCMR}{/home/robin/Bureau/RECHERCHE/ECOLOGIE/CountPCA/sparsepca/Article/Network_JCGS/trunk/figs}
+\newcommand{\figtree}{/home/robin/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Data/Tree/Fig}
+
+\renewcommand{\nodesize}{1.75em}
+\renewcommand{\edgeunit}{2.25*\nodesize}
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+\title[Poisson log-normal model]{Variational inference of the Poisson log-normal model}
+
+\author[S. Robin]{S. Robin \\ ~\\
+  {\small Sorbonne universit\'e (LPSM)} \\ ~\\ ~\\ ~\\
+  joint work with J. Chiquet, M. Mariadassou % \\ ~\\ ~\\
+  % \refer{CMR21}: \Refer{\tt www.frontiersin.org/article/10.3389/fevo.2021.588292}
+  }
+
+\date[Lille, Apr'22]{S\'eminaire Lille, April 2022}
+
+\maketitle
+
+%====================================================================
+\frame{\frametitle{Outline} \tableofcontents}
+
+%====================================================================
+%====================================================================
+\section{The Poisson log-normal model}
+% \frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\subsection*{Multivariate count data}
+%====================================================================
+\frame{\frametitle{Multivariate count data} 
+
+  \paragraph{General setting.} Consider a dataset made of $n$ observations $\{(x_i, Y_i)\}_{1 \leq i \leq n}$:
+  \begin{align*}
+   x_i & = (x_{i1}, \dots x_{id}) \in \Rbb^d: \text{vector of covariates (regressors, descriptors)},\\
+   \\
+   Y_i & = (Y_{i1}, \dots Y_{ip}) \in \Nbb^p: \text{vector of counts (responses)}
+  \end{align*}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Aim.} Model $Y_i$ as a function of $x_i$:
+  $$
+  Y_i \sim \Fcal(x_i, \theta)
+  $$
+  accouting for dependency between the counts $\{Y_{ij}\}_{1 \leq j \leq p}$.
+
+}
+
+%====================================================================
+\frame{\frametitle{Some examples} 
+
+  \paragraph{Community ecology:} $n$ sites, $p$ species,
+  \begin{align*}
+  Y_{ij} & = \text{abundance of species $j$ in site $i$}, \\
+  x_i & = \text{environmental descriptors of site $i$}. 
+  \end{align*}
+    
+  \bigskip \bigskip \pause 
+  \paragraph{Microbiome:} $n$ patients, $p$ OTUs, 
+  \begin{align*}
+  Y_{ij} & = \text{number of reads arising from OTU $j$ in the microbiome of patient $i$}, \\
+  x_i & = \text{descriptors/treatment of patient $i$}.
+  \end{align*}
+    
+  \bigskip \bigskip \pause 
+  \paragraph{Single cell:} $n$ cells, $p$ genes, 
+  \begin{align*}
+  Y_{ij} & = \text{number of reads mapped on gene $j$ in cell $i$}, \\
+  x_i & = \text{characteristics of cell $i$}.
+  \end{align*}
+
+}
+  
+%====================================================================
+\frame{\frametitle{Models for multivariate counts} 
+
+  No that many generic model for multivariate counts.
+  
+  \bigskip \bigskip
+  \paragraph{Data transformation:} ($\widetilde{Y}_{ij} = \log (1+Y_{ij}), (\sqrt{Y_{ij}} + \sqrt{1+Y_{ij}})/2$) 
+  \begin{itemize}
+  \item Unknown resulting distribution, pb when many counts are zero. 
+  \end{itemize}
+   
+  \bigskip \bigskip \pause
+  \paragraph{Poisson multivariate distributions.}
+  \begin{itemize}
+  \item Constraints of the form of the dependency \refer{IYA17} 
+  \end{itemize}
+   
+  \bigskip \bigskip \pause
+  \paragraph{Latent variable models.} \\
+  \begin{itemize}
+  \item Poisson-Gamma (= negative binomial): positive dependency 
+  \item \emphase{Poisson-log normal} \refer{AiH89}
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Running example: Community ecology} \pause
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Fish species in Barents sea \refer{FNA06}:} 
+      \begin{itemize}
+       \item $89$ sites (stations), 
+       \item $30$ fish species, 
+       \item $4$ covariates
+      \end{itemize}
+
+      \bigskip \bigskip 
+      \paragraph{Questions:} 
+      \begin{itemize}
+       \item Do environmental conditions affect species' abundances? (abiotic) \\~ 
+       \item Do species' abundances vary independently? (biotic)
+      \end{itemize} 
+      
+      \bigskip
+      See \refer{WBO15}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Abundance table $=Y$:} ~ \\
+        {\footnotesize \begin{tabular}{rrrr}
+        {\sl Hi.pl} & {\sl An.lu} & {\sl Me.ae} & \dots \\
+%         \footnote{{\sl Hi.pl}: Long rough dab, {\sl An.lu}: Atlantic wolffish, {\sl Me.ae}: Haddock} \\ 
+  %       Dab & Wolffish & Haddock \\ 
+        \hline
+        31  &   0  & 108 & \\
+         4  &   0  & 110 & \\
+        27  &   0  & 788 & \\
+        13  &   0  & 295 & \\
+        23  &   0  &  13 & \\
+        20  &   0  &  97 & \\
+        . & . & . & 
+      \end{tabular}} 
+      \\
+      \bigskip \bigskip 
+      \paragraph{Environmental covariates $=X$:} ~ \\
+        {\footnotesize \begin{tabular}{rrrr}
+        Lat. & Long. & Depth & Temp. \\
+        \hline
+        71.10 & 22.43 & 349 & 3.95 \\
+        71.32 & 23.68 & 382 & 3.75 \\
+        71.60 & 24.90 & 294 & 3.45 \\
+        71.27 & 25.88 & 304 & 3.65 \\
+        71.52 & 28.12 & 384 & 3.35 \\
+        71.48 & 29.10 & 344 & 3.65 \\
+        . & . & . & .
+      \end{tabular}} 
+    \end{tabular}
+  \end{tabular}  
+}
+
+%====================================================================
+\frame{\frametitle{Poisson log-normal (PLN) model \refer{AiH89}}
+ 
+  \bigskip 
+  \begin{itemize}
+    \item {$Z_i =$ latent vector} associated with site $i$
+      $$
+      Z_i \sim \Ncal_p(0, {\Sigma})
+      $$
+      \item $Y_{ij} = $ observed abundance for species $j$ in site $i$
+      $$
+      Y_{ij} \sim \Pcal(\exp(\textcolor{gray}{o_{ij} \,+\,} x_i^\intercal {\beta_j} + Z_{ij}))
+      $$
+  \end{itemize}
+  \ra Parameter \emphase{${\theta} = (\beta, \Sigma)$}
+% (\beta = [\beta_{hj}]_{1 \leq h \leq d, 1 \leq j \leq p}, \Sigma = [\sigma_{jk}]_{1 \leq j,k \leq p})
+
+  \pause \bigskip \bigskip
+  \paragraph{Some properties:} 
+  \begin{align*}
+    \text{Prediction:} & & 
+    \Esp(Y_{ij}) & = \exp(x_i^\intercal \beta_j + \emphase{\sigma_{jj}/2}) \\ ~ \\
+    \text{Overdispersion:} & & 
+    \Var(Y_{ij}) & = \Esp(Y_{ij}) + \Esp^2(Y_{ij}) (e^{\sigma_{jj}} - 1)
+    & \geq \; \Esp(Y_{ij}) \\ ~ \\
+    \text{Correlation sign:} & &
+    \sign(\sigma_{jk}) & = \sign(\Cor(Y_{ij}, Y_{ik})) 
+  \end{align*}
+}
+
+%====================================================================
+\frame{\frametitle{PLN for Barents' fishes}
+ 
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.55\textwidth}}
+      \paragraph{Data:} 
+      \begin{itemize}
+       \item $n=89$ sites, $p=30$ species, $d=4$ covariates \\ ~
+       \item Abundance table ($n \times p$): ${Y} = [Y_{ij}]$ \\ ~
+       \item Covariate table ($n \times d$): ${X} = [x_{ih}]$ 
+      \end{itemize}
+ 
+      \pause \bigskip \bigskip \bigskip 
+      \paragraph{Interpretation:}
+      \begin{itemize}
+        \item $\beta = [\beta_{hj}] =$ abiotic effects (specific to each species) \\ ~
+        \item $\Sigma = [\sigma_{jk}] =$ biotic covariance (same for all sites) 
+      \end{itemize}
+    \end{tabular}
+    & \pause
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Regression cofficients $\widehat{\beta}$:} abiotic \\ 
+      \includegraphics[width=.3\textwidth]{\figeco/BarentsFish-coeffAll} \\
+      ~\\
+      \paragraph{Covariance matrix $\widehat{\Sigma}$:} biotic \\ 
+      \includegraphics[width=.3\textwidth]{\figeco/BarentsFish-corrAll} 
+    \end{tabular}    
+  \end{tabular}
+ 
+}
+
+%====================================================================
+%====================================================================
+\section{(Variational) inference of incomplete data models}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\subsection*{A reminder on the EM algorithm}
+%====================================================================
+\frame{\frametitle{A reminder on the EM algorithm} 
+
+  \paragraph{Maximum likelihood inference.}
+  $$
+%   \widehat{\theta} = \arg
+  \max_\theta \; \log p(Y; \theta)
+  $$
+  \ra Most latent variable models: no closed form for ${p(Y; \theta) = \int \underset{\text{complete likelihood}}{\underbrace{p(Y, Z; \theta)}} \d Z}$ 
+
+  \pause \bigskip \bigskip
+  \paragraph{Incomplete data models.} EM algorithm \refer{DLR77}
+  $$
+  \log p(Y; \theta) 
+  = \underset{\text{\normalsize \emphase{M step}}}{\underbrace{\Esp(\log p(Y, Z; \theta) \mid Y)}} 
+  - \Esp(\log \underset{\text{\normalsize \emphase{E step}}}{\underbrace{p(Z \mid Y; \theta)}} \mid Y)
+  $$
+  
+%   \pause \bigskip
+%   \paragraph{Expectation-maximisation algorithm.}
+%   \begin{description}
+%    \item[E step:] Evaluate (some moments of) $p(Z \mid Y)$
+%    \item[M step:] Maximize $\Esp(\log p(Y, Z; \theta) \mid Y )$ with respect to $\theta$
+%   \end{description}
+
+  \pause \bigskip \bigskip
+  \paragraph{E step = critical step.} Evaluate $p(Z \mid Y; \theta)$
+  \begin{itemize}
+  \item easy: mixture models, Gaussian mixed-models
+  \item use a trick: hidden Markov models, phylogenetic models
+  \item intractable: many models, including PLN
+  \end{itemize}
+}
+
+%====================================================================
+\subsection*{Variational EM algorithms}
+%====================================================================
+\frame{\frametitle{Variational approximation} 
+
+  \paragraph{Twisted problem:} \refer{WaJ08,BKM17} maximize the lower bound
+  \begin{align*}
+  J(\theta, q)
+  & = \log p(Y; \theta) 
+  - \underset{\text{\normalsize {VE step}}}{\underbrace{\emphase{KL(q(Z) \mid\mid p(Z \mid Y))}}} \\
+  & = 
+  \underset{\text{\normalsize {M step}}}{\underbrace{\emphase{\Esp_q (\log p(Y, Z; \theta))}}} 
+  - \Esp_q(\log q(Z)) 
+  \end{align*}
+  where $q(Z) \simeq p(Z \mid Y)$ is chosen within the class of \emphase{approximate distributions $\Qcal$}
+  
+%   \pause \bigskip \bigskip
+%   \paragraph{Many avatars.} 
+%   \begin{itemize}
+%     \item Alternative divergences: $\alpha$-divergences \refer{Min05}, $KL(p(Z \mid Y) \mid\mid q(Z))$\footnote{$KL(p \mid\mid q) = \Esp_p \log(p/q)$} (expectation-propagation = EP \refer{Min01}) 
+%     \item Bayesian inference (variational Bayes = VB): look for $q(\theta) \simeq p(\theta \mid Y)$ 
+%     \item Bayesian inference for incomplete data model (VBEM): $q(\theta, Z) \simeq p(\theta, Z \mid Y)$ \refer{BeG03} 
+%   \end{itemize} 
+  
+%   \bigskip
+%   \ra Reasonably easy to implement and computationally efficient
+  
+  \pause \bigskip \bigskip \bigskip
+  \paragraph{Critical choice:} $\Qcal$ needs to be 
+  \begin{itemize}
+  \item 'large' enough to include good approximations of $p(Z \mid Y)$ 
+  \item 'small' enough to make the calculations tractable
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{VEM for the Poisson log-normal model} 
+
+%   \paragraph{Critical choice:} $\Qcal$ needs to be 
+%   \begin{itemize}
+%   \item 'large' enough to include good approximations of $p(Z \mid Y)$ 
+%   \item 'small' enough to make the calculations tractable
+%   \end{itemize}
+  
+%   \pause \bigskip \bigskip
+  \paragraph{Approximate distribution:} 
+  $\Qcal := \{\text{multivariate Gaussian distributions}\}$
+  $$
+  p(Z_i \mid Y_i) \simeq q_i(Z_i) := \Ncal_p(Z_i; {m_i, S_i}), 
+  $$
+  $\{(m_i, S_i)\}_{1 \leq i \leq n}$ = {\sl variational parameters}.
+  
+  \pause \bigskip \bigskip \bigskip
+  \paragraph{VE step:} minimize wrt $\{(m_i, S_i)\}_{1 \leq i \leq n}$
+  $$
+  KL(q(Z) \mid\mid p(Z \mid Y; \theta)) = KL(q(Z) \mid\mid p(Z, Y; \theta)) + \text{cst}
+  $$
+  \ra convex problem
+  
+  \pause \bigskip \bigskip 
+  \paragraph{M step:} maximize wrt $\theta = (\beta, \Sigma)$
+  $$
+  \Esp_q (\log p(Y, Z; \theta))
+  $$
+  \ra convex problem (weighted GLM)
+}
+
+%====================================================================
+%====================================================================
+\section{Avatars of the Poisson log-normal model: Modeling $\Sigma$}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\subsection{Basic model}
+%====================================================================
+\frame{\frametitle{Abiotic vs biotic interactions} \pause
+
+%   \paragraph{Variational EM \refer{CMR18a,CMR19}:} $p(Z_i \mid Y_i) \simeq \Ncal_p(Z_i; m_i, S_i)$
+  
+%   \pause \bigskip 
+  \begin{tabular}{cc|c}
+    \multicolumn{2}{l|}{\emphase{Barents fishes: Full model}} &
+    \multicolumn{1}{l}{\onslide+<3>{\emphase{Null model}}} \\
+    & & \\
+    \multicolumn{2}{c|}{{$Y_{ij} \sim \Pcal(\exp(\emphase{x_i^\intercal \beta_j} + Z_{ij}))$}} &
+    \multicolumn{1}{c}{{\onslide+<3>{$Y_{ij} \sim \Pcal(\exp(\emphase{\mu_j} + Z_{ij}))$}}} \\
+    & & \\
+    \multicolumn{2}{l|}{{$x_i =$ all covariates}} &
+    \multicolumn{1}{l}{{\onslide+<3>{no covariate}}} \\ 
+    & & \\
+    & correlations between & \\
+    inferred  correlations $\widehat{\Sigma}_{\text{full}}$ & 
+    predictions: $x_i^\intercal \widehat{\beta}_j$ & 
+    \onslide+<3>{inferred correlations $\widehat{\Sigma}_{\text{null}}$} \\ 
+    \includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrAll} 
+    &
+    \includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrPred} &
+    \onslide+<3>{\includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrNull}}
+  \end{tabular}
+
+}
+
+% %====================================================================
+% \frame{\frametitle{Ease of modeling with latent variables} 
+% 
+%   \paragraph{Latent layer = multivariate Gaussian:} flexible dependency structure (\url{PLNmodels} package)
+%   
+%   \pause \bigskip \bigskip
+%   \paragraph{Dimension reduction.} 
+%   \begin{itemize}
+%   \item Metagenomic, metabarcoding, environmental genomics: $p = 10^2, 10^3$ species
+%   \item Probabilistic PCA \refer{Tib99}: suppose that \emphase{$\Sigma$ has rank $r \ll p$}
+%   \item PLN-PCA: PLN model with rank constraint on $\Sigma$ \refer{CMR18a}
+%   \end{itemize}
+%   
+%   \pause \bigskip \bigskip
+%   \paragraph{Network inference.} 
+%   \begin{itemize}
+%   \item $\Sigma$ include both direct and indirect interactions
+%   \item Gaussian graphical models: \emphase{$\Sigma^{-1}$ should be sparse}
+%   \item PLN-network: PLN model with graphical lasso penalty \refer{CMR19}
+%   \end{itemize}
+%   $$
+%   \arg\max_{\beta, \Sigma, q \in \Qcal} \; 
+%   \underset{{\text{\normalsize log-likelihood}}}{\underbrace{\log p(Y; \beta, \Sigma)}}
+%   - \underset{{\text{\normalsize variational approx.}}}{\underbrace{KL(q(Z) \mid\mid p(Z \mid Y))}}
+%   - \underset{{\text{\normalsize $\ell_1$ penalty}}}{\underbrace{\emphase{\lambda \|\Sigma^{-1}\|_1}}}
+%   $$
+%   
+% }
+% 
+%====================================================================
+\subsection{Dimension reduction}
+%====================================================================
+\frame{\frametitle{PLN for dimension reduction (PCA)} \pause
+
+  \paragraph{Dimension reduction.} 
+  \begin{itemize}
+  \item Metagenomic, environmental genomics, gene expression: $p = 10^2, 10^3$ species
+  \item Probabilistic PCA \refer{Tib99}: suppose that \emphase{$\Sigma$ has rank $r \ll p$}
+  \end{itemize}
+  
+  \pause \bigskip \bigskip 
+  \paragraph{PLN-PCA = PLN model with rank constraint on $\Sigma$ \refer{CMR18a}.}
+  For each independent site $i$:
+  $$
+  \text{latent } W_i \sim \Ncal_{\emphase{r}}(0, {I}),
+  \qquad
+  Z_i = \underset{p \times r}{\underbrace{B}} W_i
+  \qquad \Rightarrow \qquad 
+  \Sigma = B B^\intercal 
+  $$
+  
+  \pause \bigskip 
+  \paragraph{Model selection =} choosing $r$
+  \begin{align*}
+    vBIC & = J(\widehat{\theta}, \widehat{q}) - \text{pen}_{BIC}, & 
+    \text{pen}_{BIC} & = \frac{\log n}2 \left(pd + \frac{(p-r+1)(p+r)}2\right), \\ 
+    \\
+    vICL & = J(\widehat{\theta}, \widehat{q}) - \text{pen}_{BIC} - \underset{\text{entropy}}{\underbrace{\Hcal(q)}}. 
+  \end{align*}
+
+}
+
+%====================================================================
+\frame{\frametitle{Oak powdery mildew dataset}
+  \begin{tabular}{cl}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.3\textwidth}}
+      \paragraph{Metabarcoding data} \refer{JFS16} \\~ \\~
+      \begin{itemize}
+      \item $p = 114$ OTUs \\
+      (bacteria and fungi \\
+      \ra use of offsets) \\~
+      \item $n = 116$ leaves \\~ \\~
+      \item collected on 3 trees 
+        \begin{itemize}
+        \item resistant 
+        \item intermediate
+        \item susceptible       
+      \end{itemize}
+      to oak powdery mildew
+      \end{itemize}
+
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+    \includegraphics[height=.4\textheight]{\fignet/CMR18-AnnApplStat-Fig5a} \\
+    ~ \\
+    \includegraphics[height=.4\textheight]{\fignet/CMR18-AnnApplStat-Fig4a} 
+    \end{tabular}
+  \end{tabular}
+}
+
+%====================================================================
+\subsection{Network inference}
+%====================================================================
+\frame{\frametitle{Network inference} \pause
+
+  \paragraph{A reminder on Gaussian graphical models (GGM).}  
+  \begin{itemize}
+  \item $\Sigma$ include both 'direct' and 'indirect' interactions:
+  $$
+  \sigma_{jk} = 0 
+  \qquad \Leftrightarrow \qquad
+  (Z_{ij}, Z_{ik}) \text{ independent}
+  $$ \\ ~ \pause
+  \item $\Omega = \Sigma^{-1}$ only includes 'direct' interactions:
+  $$
+  \omega_{jk} = 0 
+  \qquad \Leftrightarrow \qquad
+  (Z_{ij}, Z_{ik}) \text{ independent conditionally on } (Z_{ih})_{h \neq j, k}
+  $$ \\ ~ \pause
+  \item Common assumption: few species are in direct interaction 
+  $$
+  \Rightarrow \quad \Omega \text{ should be \emphase{sparse} \qquad (many 0's)}
+  $$ \\ ~ \pause
+  \item Sparsity-inducing penalty (graphical lasso)
+  $$
+  \max_{\Omega} \; \log p(Z; \Omega) - \lambda \underset{\ell_1 \text{ penalty}}{\underbrace{\sum_{j \neq k} |\omega_{jk}|}}
+  $$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Network inference: (PLNnetwork)} 
+
+  \paragraph{PLN-network.} PLN model with graphical lasso penalty \refer{CMR19}
+  $$
+  \arg\max_{\beta, \Omega, q \in \Qcal} \; 
+  J(\beta, \Omega, q)
+  - \underset{{\text{$\ell_1$ penalty}}}{\underbrace{\lambda \sum_{j \neq k} |\omega_{jk}|}}
+  $$
+
+  \pause \bigskip \bigskip  
+  \paragraph{Inferring the {\sl latent} dependency structure}, not the abundance one
+  $$
+  \begin{array}{c|c}
+  \text{good case} & \text{bad case} \\
+  \hline
+  \includegraphics[width=.4\textwidth]{\fignet/CMR18b-ArXiv-Fig1b}
+  &
+  \includegraphics[width=.4\textwidth]{\fignet/CMR18b-ArXiv-Fig1a}
+  \end{array}
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Barents' fish species} 
+  
+  \vspace{-.05\textheight}
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.22\textwidth}}
+      \paragraph{Data:} \\ ~
+      \begin{itemize}
+      \item $n=89$ sites \\~
+      \item $p=30$ species \\~
+      \item $d=4$ covariates
+        \begin{itemize}
+        \item latitude
+        \item longitude
+        \item temperature
+        \item depth
+        \end{itemize}
+      \end{itemize}
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+      \includegraphics[height=.85\textheight]{\fignet/CMR18b-ArXiv-Fig5}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%====================================================================
+\frame{\frametitle{Barents' fish species: choosing $\lambda$}
+
+  $$
+  \includegraphics[height=.7\textheight]{\fignet/BarentsFish_Gfull_criteria}
+  $$
+}
+
+%====================================================================
+%====================================================================
+\section{Conclusion}
+%====================================================================
+\frame{\frametitle{Conclusion} 
+
+  \paragraph{Poisson log-normal model.} \refer{CMR21}
+  \begin{itemize}
+  \item Generic modeling framework 
+  \item Other extension of PLN: sample comparison, species clustering, ...
+  \item Account for the sampling effort via offset ({\sl relative abundances})
+  \item R package \emphase{\url{PLNmodels}} 
+  \item See also tree-based network inference \refer{MRA20}, including {\sl missing actors} \refer{MRA20b}
+  \end{itemize}
+
+  \pause \bigskip \bigskip 
+  \paragraph{On-going modeling extensions:}
+  \begin{itemize}
+  \item Include species traits
+  \item Include spatial dependency between sites
+  \end{itemize}
+
+  \pause \bigskip \bigskip 
+  \paragraph{On-going inference developments:}
+  \begin{itemize}
+  \item Approximate confidence/credibility intervals
+  \item VEM = starting point for frequentist inference (importance sampling / composite likelihood)
+  \item Accelerated gradient descent for high-dimensional data
+  \end{itemize}
+
+}
+  
+%====================================================================
+%====================================================================
+\backupbegin 
+\section*{Backup}
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References}
+  {%\footnotesize
+   \footnotesize
+   \bibliography{/home/robin/Biblio/BibGene}
+%    \bibliographystyle{/home/robin/LATEX/Biblio/astats}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+\backupend 
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

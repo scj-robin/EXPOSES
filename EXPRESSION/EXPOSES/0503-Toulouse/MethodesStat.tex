@@ -1,0 +1,564 @@
+\documentclass[dvips, lscape]{foils}
+%\documentclass[dvips, french]{slides}
+\textwidth 18cm
+\textheight 25cm 
+\topmargin -1cm 
+\oddsidemargin  -1cm 
+\evensidemargin  -1cm
+
+% Maths
+\usepackage{amsfonts, amsmath, amssymb}
+% \newcommand{\Acal}{\mathcal{A}}
+% \newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Ncal}{\mathcal{N}}
+% \newcommand{\Pcal}{\mathcal{P}}
+% \newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\alphabf}{\mbox{\mathversion{bold}{$\alpha$}}}
+\newcommand{\betabf}{\mbox{\mathversion{bold}{$\beta$}}}
+\newcommand{\gammabf}{\mbox{\mathversion{bold}{$\gamma$}}}
+\newcommand{\psibf}{\mbox{\mathversion{bold}{$\psi$}}}
+\newcommand{\taubf}{\mbox{\mathversion{bold}{$\tau$}}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Sbf}{{\bf S}}
+% \newcommand{\bps}{\mbox{bps}}
+\newcommand{\ubf}{{\bf u}}
+\newcommand{\vbf}{{\bf v}}
+\newcommand{\Esp}{{\mathbb E}}
+\newcommand{\Var}{{\mathbb V}}
+% \newcommand{\Indic}{{\mathbb I}}
+\newcommand{\liste}{$\bullet \quad$}
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+% Texte
+\usepackage{lscape}
+\usepackage{../../../../Latex/fancyheadings, rotating, enumerate}
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.5}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\definecolor{jaune}{cmyk}{0, 0.5, 0.5, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\textred}[1]{\textcolor{red}{#1}}
+\newcommand{\textgreen}[1]{\textcolor{green}{ #1}}
+\newcommand{\textlightgreen}[1]{\textcolor{green}{#1}}
+%\newcommand{\textgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{#1}}
+\newcommand{\textyellow}[1]{\textcolor{yellow}{#1}}
+
+% Sections
+\newcommand{\chapter}[1]{\centerline{\LARGE \textblue{#1}}}
+\newcommand{\section}[1]{\centerline{\Large \textblue{#1}}}
+\newcommand{\subsection}[1]{\noindent{\large \textblue{#1}}}
+\newcommand{\paragraph}[1]{\noindent {\textblue{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\landscape
+\headrulewidth 0pt 
+\pagestyle{fancy} 
+\cfoot{}
+\rfoot{}
+\rhead{\begin{rotate}{90}{
+      \hspace{-.5cm} \tiny \thepage
+      }\end{rotate}}
+\setcounter{page}{0}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+  \chapter{Méthodes (statistiques)}
+  \bigskip
+  \chapter{pour l'analyse des données de microarrays} 
+
+  \bigskip \bigskip {\large S. {Robin}} \\ robin@inapg.inra.fr
+
+  \bigskip
+   {UMR INA-PG / ENGREF / INRA, Paris} \\
+   {Mathématiques et Informatique Appliquées}
+   
+  \bigskip
+   {Journées Transcriptome \& Bioinformatique, Toulouse, 30-31/03/05}
+\end{center}
+
+\bigskip \bigskip \hrule
+
+\bigskip 
+\noindent Les données de biopuces sont chères, abondantes, variables.
+
+\bigskip 
+\noindent Les méthodes statistiques prennent en compte la variabilité et
+permettent un traitement automatisé.
+
+$$
+\textblue{\mbox{Statistique} \neq \mbox{Bioinformatique}}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Tentative de typologie des problèmes et des méthodes}
+
+\vspace{-0.3cm}
+\hspace{-1.5cm}
+\begin{tabular}{p{12cm}lc}
+  \paragraph{Biologique} & \paragraph{Statistique} & Ici \\
+  \hline
+  \paragraph{Avant} & \paragraph{Avant} \\
+  Conception des puces & Échantillonnage & (*) \\
+  Organisation des expériences  & Planification  & (**) \\
+  \\
+  \paragraph{Pendant} & \paragraph{Pendant} \\
+  Acquisition du signal & Analyse d'image \\
+  ``Débruitage'' &    Normalisation  & (**) \\
+  \\
+  \paragraph{Après} & \paragraph{Après} \\
+  Détermination de groupes de gènes & Classification non supervisée & (*) \\
+  Recherche de gènes différentiellement exprimés & Tests
+  d'hypothèses (multiples) & (**)  \\ 
+  Prédiction de classe ou de statut & Classification supervisée & (**)  \\
+  Prédiction d'un caractère quantitatif & Régression   \\
+  \\
+  \paragraph{Ou encore} & \paragraph{Ou encore} \\
+  Puces chromosomiques &  Mod. mélanges, Détection de rupture \\
+  Compréhension des interactions &  Inférence de réseaux \\
+\end{tabular}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Conception des puces}
+
+\bigskip
+\paragraph{Choix du type de séquences déposées~:} banque d'ADNc, EST,
+séquences synthétiques de gènes prédits, couverture ''complète'' du
+génome, {\it etc.}
+
+\bigskip
+\paragraph{Enjeux.}
+\begin{itemize}
+\item Population des gènes visés~: puces dédiées / puces pangénomiques
+\item Spécificité du signal~: conception d'oligos spécifiques ({\sl
+    cf. N.  Raymond})
+\item Découverte de nouveaux gènes~: banque d'ADNc, EST / puces chromosomiques
+\end{itemize}
+
+
+\bigskip
+\paragraph{Du point de vue statistique.} Problème d'échantillonnage mais
+\begin{itemize}
+\item la population n'est pas bien définie (pas connue ?)
+\item le paramètre d'intérêt non plus (niveau d'expression, liste de
+  gènes, nouveaux gènes~?)
+\end{itemize}
+
+\bigskip\bigskip\bigskip
+Pour l'instant, contribution statistique faible.
+
+\bigskip
+Question cruciale pour les puces chromosomiques.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Organisation des expériences}
+
+\bigskip
+\paragraph{Objectif de la planification.} Organiser les
+expériences, sous contrainte des moyens disponibles, pour obtenir
+l'estimation la plus précise possible d'un (de quelques) paramètre(s).
+
+\noindent Le plan d'expériences doit être conçu en fonction de la question
+biologique \paragraph{\sl et} du modèle statistique prévu pour
+l'analyse. ({\sl cf. M.-L. Martin-Magniette})
+
+\noindent $\Rightarrow$ Il faut avoir à l'avance une idée précise
+du modèle statistique d'analyse.
+
+
+\bigskip 
+\subsection{Exemple~: Effet de la trisomie sur les gènes du chromosome
+  21}
+
+\paragraph{Objectif biologique.} Mesurer l'effet sur le niveau
+d'expression des gènes 
+\begin{itemize}
+\item de la trisomie ($\alpha$~: prioritaire),
+\item du sexe ($\beta$) et de l'interaction trisomie*sexe
+  ($\gamma$~: secondaires).
+\end{itemize}
+
+\bigskip 
+\paragraph{Moyens disponibles.}
+\begin{itemize}
+\item 20 patients (5 hommes trisomiques (TM), 5 femmes trisomiques F
+  (TF), idem pour les sains)~;
+\item une quarantaine de lame de verres.
+\end{itemize}
+
+\paragraph{Modèle statistique.} Pour tenir compte des corrélations
+entre les lames qui impliquent une même patient, on envisage une
+modèle linéaire mixte~:
+$$
+(\log)Expression = \mu + A_{patient} + \alpha_{type} + \beta_{sexe}
++ \gamma_{type, sexe} + E
+$$
+
+\paragraph{Hypothèse de travail.} La variance inter patients est 2
+fois supérieure à la variabilité intra patient~: $\Var(A) = 2
+\Var(E)$.
+
+\hspace{-2.2cm}
+\begin{tabular}{ll}
+  \begin{tabular}{c}
+    \paragraph{Plan proposé.} \\
+    \\
+    $\Var(\widehat{\alpha})$ \\
+    $\parallel$ \\
+    $\Var(\widehat{\beta}) / 2 $ \\
+    $\parallel$ \\
+    $\Var(\widehat{\gamma}) / 2 $ \\
+  \end{tabular}
+  & 
+  {\tiny
+    \hspace{-1cm} \begin{tabular}{c|ccccc|ccccc}
+      & TM1  & TM2  & TM3 & TM4  & TM5  & TF1  & TF2  & TF3  & TF4 & TF5 \\
+      \hline
+      SM1  &   + &   --&     &     &     &    +&   -- &     &     &      \\
+      SM2  &     &    +&   --&     &     &     &    +&   -- &     &      \\
+      SM3  &     &     &   + &  -- &     &     &     &   + &  -- &      \\
+      SM4  &     &     &     &   + &  -- &     &     &     &   + &   -- \\
+      SM5  &  -- &     &     &     &   + &  -- &     &     &     &    + \\
+      \hline
+      SF1  &   + &  -- &     &     &     &   + &  -- &     &     &      \\
+      SF2  &     &   + &  -- &     &     &     &   + &  -- &     &      \\
+      SF3  &     &     &   + &  -- &     &     &     &   + &  -- &      \\
+      SF4  &     &     &     &   + &  -- &     &     &     &   + &   -- \\
+      SF5  &  -- &     &     &     &   + &  -- &     &     &     &    + \\
+    \end{tabular}
+    }
+\end{tabular}
+
+\paragraph{Rq 1~:} Les comparaisons entre individus de même type ne sont pas
+  ``rentables''.
+
+\paragraph{Rq 2~:} Augmenter le nombre de lames n'apporterait pas grand chose, il
+  vaudrait mieux plus de patients.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Normalisation}
+
+%\bigskip
+\paragraph{Objectif curatif.} 
+Réduire les biais (technologiques) des mesures.
+
+\bigskip
+\paragraph{Détection des ``biais''.}
+\begin{enumerate}
+\item Graphiques simples,
+\item Analyse de la variance ($\rightarrow$ quantification),
+\item Calcul d'index spécifique (biais de marquage)
+\end{enumerate}
+
+\bigskip
+\paragraph{Correction.} Quelques méthodes bien admises~:
+\begin{enumerate}
+\item Loess, fondée sur l'hypothèse $\mbox{biais de marquage} =
+  f(\mbox{intensité moyenne})$
+\item Analyse de la variance
+\end{enumerate}
+
+\bigskip
+%\paragraph{Le mieux est encore de ne pas être malade.} 
+\paragraph{Réduction {\it a priori} des biais.} 
+\begin{itemize}
+\item Les progrès technologiques,
+\item Une préparation soigneuse des échantillons (concentration,
+  marquage, ...),
+\item Une bonne pratique expérimentale (pas de réglage des PMT, ...),
+\item Certains plans d'expériences (dye-swap)
+\end{itemize}
+contribuent efficacement à réduire la variabilités des mesures et
+les différents biais.
+
+\paragraph{Correction du biais de marquage par dye-swap.} 
+La moyenne des signaux sur les 2 lames inversées élimine une bonne
+part du biais de marquage. 
+$$
+\begin{tabular}{ccc}
+  \begin{tabular}{l}
+    \hspace{-1.5cm} 
+    \epsfig{figure=../MAplot-DyeSwap-ECabannes.ps,
+      bbllx=21, bblly=19, bburx=289, bbury=140, width=12cm, height=6cm,
+      clip=}    
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    $\hspace{-1cm} \overset{\mbox{moyenne}}{\longrightarrow} \hspace{-1cm}$ 
+  \end{tabular}
+  &
+  \begin{tabular}{l}
+    \epsfig{figure=../MAplot-DyeSwap-ECabannes.ps,
+      bbllx=345, bblly=19, bburx=574, bbury=143, width=10cm, height=6cm,
+      clip=}
+  \end{tabular}
+\end{tabular}    
+$$
+
+%\bigskip
+%\paragraph{Eviter que le remède ne tue le malade.} 
+\paragraph{Faut-il toujours normaliser~?} 
+Une normalisation mal conçue peut éliminer le signal d'intérêt. \\
+%$$
+\begin{tabular}{cc}
+  {\small avant} & {\small après} \\
+  \epsfig{figure=/ENSEIGN/COURS/Bioinfo/Figures/PuceDeBaseLogratio.ps,
+    bbllx=55, bblly=75, bburx=565, bbury=285, width=12cm, height=5cm,
+    clip=}    
+  &
+  \epsfig{figure=/ENSEIGN/COURS/Bioinfo/Figures/signalpost-cy.ps,
+    bbllx=70, bblly=310, bburx=580, bbury=520, width=12cm, height=5cm,
+    clip=}   
+\end{tabular} 
+%$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Classification non supervisée ({\sl Clustering})}
+
+\bigskip
+\centerline{\paragraph{\sl ``Quand on n'a qu'un marteau, tous les problèmes
+    ressemblent à un clou.''}}
+
+\paragraph{Objectif de la classification.} Définir des groupes de
+gènes ayant des profils d'expressions similaires.
+
+\bigskip
+\paragraph{Deux grands types de méthodes.}
+\begin{description}
+\item[Géométriques.] Fondées sur des distances ou des similarités~:
+  classification hiérarchique, $k$ means, {\it etc.}. \\ 
+  Ces méthodes ne prennent pas en compte la variabilité de la mesure
+  et affectent les gènes de façon binaires aux groupes.
+\item[Modélisatrices.] Fondées sur des modèles statistiques prenant en
+  compte la variabilité de la mesure. \\
+  Ces méthodes fournissent des probabilités d'appartenance des gènes
+  aux groupes.
+\end{description}
+
+\bigskip
+\paragraph{Visualisation des données.} Les méthodes de classification
+cherchent et trouvent une structure (arborescente) dans les
+données ... même si elle n'existe pas. 
+
+\noindent 
+Les méthodes de clustering ne fournissent pas une visualisation
+``objective'' des données.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Analyse différentielle}
+
+\paragraph{Objectif.} Trouver les gènes affectés par un changement de
+condition ou de traitement (comparaison de 2 conditions ou plus).
+
+\bigskip
+\paragraph{Méthode statistique.} Tests d'hypothèses~: paramétriques
+(student, Fisher) ou non paramétriques (Wilcoxon, permutation,
+bootstrap) \\
+\centerline{$\longrightarrow$ 1 probabilité critique (``$p$-value'')
+  $P_g$ par
+  gène.} \\
+({\sl cf. M. San Cristobal \& C. Robert-Granié})
+
+\bigskip
+\subsection{Problèmes des tests multiples.} 
+
+%\bigskip
+\paragraph{Règle de décision.} Si $P_g \leq \alpha$ (ex.~: $\alpha = 5
+\%$), on déclare le gène ``positif'' ({\it i.e} différentiellement exprimé)
+
+\noindent Pour une expérience impliquant $n=10\;000$ gènes, on peut craindre
+jusqu'à $n \alpha = 500$ faux positifs.
+
+\paragraph{Différentes approches.} 
+\begin{description}
+\item[FWER.] Contrôle de la probabilité d'avoir 1 (seul !) faux
+  positif \\
+  \centerline{{\bf Bonferroni~:} $\widetilde{P}_g = n P_g$.}
+\item[FDR.] Contrôle de la proportion de faux positifs (parmi les
+  positifs).
+\end{description}
+
+\newpage
+\paragraph{Données de Golub.} 27 patients AML / 11 patients ALL, $n =
+7070$ gènes,  $\alpha = 5\%$
+$$
+\begin{tabular}{ll}
+  \begin{tabular}{l}
+    Nombre de ``positifs''~: \\
+    \\
+    \quad $p$-value ({\bf --})~: 1887 \\
+    \\
+    \quad Bonferroni (\textred{\bf --})~: 111 \\
+    \\
+    \quad Sidak (\textgreen{\bf --})~: 113 \\
+    \\
+    \quad Holm (\textred{\bf --\;$\cdot$})~:   112 \\
+    \\
+    \quad Sidak adp. (\textgreen{\bf --\;$\cdot$})~:    113 \\
+    \\
+    \quad FDR (\textblue{\bf --\;$\cdot$})~:  903 \\
+    \\
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \epsfig{figure=/ENSEIGN/COURS/Bioinfo/Figures/Golub-adjp-zoom.eps,
+    height=12cm, width=15cm, bbllx=64, bblly=209, bburx=549,
+    bbury=586, clip} \vspace{-0.5cm}
+  \\
+  {\small Gènes ordonnés par probabilités critiques croissantes}
+  \end{tabular}
+\end{tabular}
+$$
+
+\paragraph{Question.} Faut-il absolument fixer un seuil~?
+
+Souvent les probabilités critiques ne servent qu'à ordonner les gènes.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Classification supervisée}
+
+\bigskip
+\paragraph{Objectif.} Prédiction du statut d'un patient à partir de
+données de transcriptome.
+
+\bigskip
+\paragraph{Méthodes extrêmement nombreuses.}
+$$
+\begin{tabular}{ll}
+  Fondées sur un {\bf modèle} &  Analyse discriminante
+  (linéaire/quadratique) \\
+  {\bf probabiliste}~: & Régression logistique \\
+  \\
+  Fondées sur des {\bf algorithmes}  &  Réseaux de neurones  \\
+  {\bf d'apprentissage}~:& Arbres de classification (CART) \\
+  & Forêts aléatoires  ({\sl cf. Ph. Besse}) \\
+  & Machines à vecteurs supports (SVM)
+\end{tabular}
+$$
+
+%\bigskip
+\paragraph{Critère de comparaison.} L'objectif étant prédictif, le
+critère naturel est le taux d'erreur. \\
+L'estimation de ce taux d'erreur ne doit pas conduire au
+sur-apprentissage (validation croisée).
+
+\bigskip
+\paragraph{Régression.} La prédiction d'une covariable (temps de
+survie, caractère quantitatif, {\it etc.}) pose des problèmes
+similaires.
+
+\newpage 
+\subsection{Sélection de variables (gènes)}
+
+\bigskip
+\paragraph{Réduction de dimension.} Faible rapport nombre
+de patients / nombre de gènes 
+
+\bigskip \centerline{$\Rightarrow$ nécessité de réduire la dimension
+  des données (le nombre de gènes).}
+
+\begin{description}
+\item[Compression~:] définition de ``gènes synthétiques'' (ACP, AFD,
+  etc.)
+\item[Sélection de gènes~:] détermination d'une sous liste de ``gènes
+  discriminants''
+\end{description}
+
+\paragraph{Corrélation entre les gènes.} La liste des gènes
+``discriminants'' doit être prise dans son ensemble~:
+\begin{itemize}
+\item Des gènes absents de cette liste peuvent être très
+  discriminants.
+\item Pris isolément, des gènes présents peuvent être faiblement
+  discriminants.
+\item La recherche des gènes discriminants peut être vue comme un
+  problème d'analyse différentielle.
+\end{itemize}
+
+\bigskip \bigskip \noindent
+La prédiction de classe et la recherche de gènes discriminants sont
+deux problèmes différents~:
+$$
+\textblue{\mbox{Prédiction} \neq \mbox{Compréhension}}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Outils}
+
+\subsection{Problèmes ``classiques''}
+
+\noindent 
+Un logiciel proposant toutes les méthodes évoquées ci-dessus et
+permettant de les combiner entre elles s'appelle $\dots$
+
+\bigskip
+\centerline{un logiciel statistique (SAS, R, S+, {\it etc.})~!}
+
+\bigskip
+\paragraph{Besoin de formation.}
+Un biologiste ``haut débit'' peut (et doit) acquérir une culture
+statistique minimale et devenir un utilisateur honnête de ces logiciels \\
+({\sl cf. S. Lemoine, S. Déjean, C. Dalmasso}).
+
+\bigskip
+\bigskip
+\subsection{Problèmes plus originaux}
+
+\paragraph{Exemples~:} 
+Analyse de puces chromosomiques, inférence des réseaux géniques, {\it
+  etc.}
+
+\noindent 
+Nécessité de développer des méthodes (et donc des outils) spécifiques
+en collaboration avec des statisticiens.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

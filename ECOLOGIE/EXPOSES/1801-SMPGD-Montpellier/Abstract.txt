@@ -1,0 +1,11 @@
+Variational Inference for Probabilistic Poisson PCA
+
+Many application domains such as ecology or genomics have to deal with multivariate non Gaussian observations. A typical example is the joint observation of the respective abundances of a set of species in a series of sites, aimed at understanding the co-variations between these species. The Gaussian setting provides a canonical way to model such dependencies, but does not apply in general to such data. We consider here the multivariate exponential family framework for which we introduce a generic hierarchical model with multivariate Gaussian latent variables.
+
+In view of dimension reduction, this model provides a natural extension of probabilistic Principal Component Analysis (pPCA) to non Gaussian settings and enables us to account for covariates and offsets at little additional cost. Unlike the purely Gaussian setting, the likelihood is generally not tractable in this framework. We resort instead to a variational approximation for parameter inference and solve the corresponding optimization problem using gradient descent, taking advantage of the (bi-)concavity of the objective function.
+
+We focus on the special case of the Poisson log-normal model, which is relevant for the analysis of species abundance date. This model displays several desirable properties such as over-dispersion and arbitrary signed correlations. Furthermore, both the variational approximation and its gradient have closed-formed expressions. We illustrate its use in the context of microbial ecology, emphasizing the importance of accounting for offsets and covariates.
+
+Finally, we show that the Poisson log-normal framework can be used for other purposes than dimension reduction, such as network inference based on species abundance data.
+
+Reference: Chiquet, Mariadassou, and Robin. 2017. Variational Inference for Probabilistic Poisson PCA. ArXiv E-Prints. https://arxiv.org/abs/1703.06633

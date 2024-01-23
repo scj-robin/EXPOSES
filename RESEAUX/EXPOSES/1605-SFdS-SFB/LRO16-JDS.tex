@@ -1,0 +1,56 @@
+\documentclass[11pt]{article}
+ %\pdfminorversion=4
+
+%\usepackage{amsmath}
+%\usepackage{graphicx,psfrag,epsf}
+\usepackage{enumerate}
+\usepackage{natbib}
+\usepackage{url} % not crucial - just used below for the URL 
+\usepackage{amsfonts,amsmath,amssymb,epsfig,epsf,psfrag}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{xspace}
+
+\usepackage[latin1]{inputenc}
+
+
+% \textwidth 16cm
+% \textheight 24cm 
+% \topmargin -1 cm 
+% \oddsidemargin 0cm 
+% \evensidemargin 0cm
+
+\title{\bf Goodness of fit of logistic models for random graphs: a variational Bayes approach}
+\author{Pierre Latouche$^1$, Stéphane Robin$^2$, Sarah Ouadah$^2$\\
+  \small{($^1$) Laboratoire    SAMM,   EA   4543,  Université   Paris   1, Panthéon-Sorbonne,  France}, \\
+  \small{($^2$) UMR MIA-Paris, AgroParisTech, INRA, Université Paris-Saclay, France}
+}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\paragraph{Keywords:}  Random graphs; logistic regression; $W$-graph
+model; variational approximations
+
+\bigskip
+The logistic regression model constitutes a natural and simple tool to understand how covariates (when available) contribute to explain the topology of a binary network. Parallel to this model, the W-graph model constitutes a fairly general model to for random graph, without any side information. Still, beside the issues raised by its inference, the graphon model suffers severe identifiability issues.
+ 
+In this work, we propose to combine the logistic model for graph with a W-graph residual term. Such an extra term aims at characterizing the residual structure of the network, that is not explained by the covariates. The goodness-of-fit of the logistic regression then amounts to check if the graphon function associated with the residual W-graph is constant.
+
+We approximate this new generic logistic model using a class of models with blockwise constant residual structure (see \cite{LaR15}). This framework allows to derive a Bayesian procedure from a model based selection context using goodness-of-fit criteria. All these criteria depend on marginal likelihood terms for which we provide estimates relying on two series of variational approximations (see \cite{LRO15}). 
+
+The accuracy of proposed inference procedure is assessed through a simulation study and its use will be illustrated on several networks from social and life sciences.
+
+\nocite{}
+\bibliographystyle{chicago}
+\bibliography{/home/robin/Biblio/BibGene}
+
+%\bibliographystyle{plain}
+%\bibliography{biblio}
+
+
+
+\end{document}
+

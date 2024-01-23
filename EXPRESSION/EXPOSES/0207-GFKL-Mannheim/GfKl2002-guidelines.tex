@@ -1,0 +1,276 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Guidelines for authors for the 26th Annual Conference 
+% Version 14.0.2.2001
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is a sample input file for your contribution to the 
+% proceedings volume to be published by Springer-Verlag.
+%
+% Please, use it as a template for your own input, and, please,
+% follow the instructions in this document.
+%
+% Please, send the Tex and figure files of your manuscript
+% to the editor.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%PACKAGES%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[runningheads]{d:/latex/gfkl2002}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{latexsym}  
+\usepackage{psfig}
+\usepackage{graphicx} 
+
+%AUTHOR_STYLES_AND_DEFINITIONS%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Please, reduce your own definitions and macros to an absolute
+% minimum. 
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%
+% \title* lets you specify the title of your manuscript. 
+% Use \protect\linebreak to force a line break in your title.
+\title*{Guidelines for Authors of the\protect\linebreak  
+Proceedings Volume of the\protect\linebreak  
+26th Annual Conference of the GfKl
+}
+
+%
+% \toctitle specifies the title as it will be printed in the table of 
+% contents. 
+% Use \protect\linebreak to force a line break in your title.
+\toctitle{Guidelines for Authors of the Proceedings Volume}
+
+%
+% \titlerunning defines the title in the running head. 
+% Abbreviate your title, if the full title is too long to fit in the running 
+% head.
+\titlerunning{Guidelines for Authors}
+
+%  
+% \authors specifies the authors. 
+% Authors are separated by the \and command. Use \inst{1}, \inst{2}, ...
+% to define the reference mark to your affiliation. 
+\author{
+  Wolfgang Gaul\inst{1}
+  \and 
+  Martin Schader\inst{2}
+  \and 
+  Maurizio Vichi\inst{3}
+}
+
+%
+% \authorrunning specifies the author names in the running heads.
+% If there is one author: Gaul
+% If there are two autors: Gaul and Schader
+% If there are more than two authors: Gaul et al.
+\authorrunning{Gaul et al.} 
+
+%
+% The \institute command lets you specify the your affiliation and
+% your address. Separate two or more different affiliations by the
+% \and command. 
+\institute{
+  Institut f\"ur Entscheidungstheorie und Unternehmensforschung, \\
+  Universit\"at Karlsruhe, D-76128 Karlsruhe, Germany
+  \and 
+  Lehrstuhl f\"ur Wirtschaftsinformatik III,\\
+  Universit\"at Mannheim, D-68131 Mannheim, Germany
+  \and 
+  Dip.\ Statistica, Probabilit\`{a} e Statistiche Applicate,\\
+  Universit\`{a} di Roma, I-00185 Roma, Italy
+}
+
+% Typeset the title
+\maketitle             
+
+\begin{abstract}
+A proceedings volume of the 26th Annual Conference of the GfKl will be published 
+as a special volume in the Series ``Studies in Classification, Data Analysis, 
+and Knowledge Organization'' by Springer-Verlag.
+In these guidelines we describe the format instructions and the submission 
+procedure both to be followed seriously. The text of these guidelines is 
+written in the prescribed format and can be used as a specimen.
+\end{abstract}
+
+\section{The format of the text}
+Please, use the style file \verb@gfkl2002.cls@. This file takes care of 
+all the formatting.\\
+{\bf Please, use only the \verb@gfkl2002.cls@ style file and standard
+fonts.\\
+Please, do not include other packages than the ones used above.}\\
+If you have any problems, do not hesitate to
+contact:
+\begin{center}
+Ingo Ott\\
+Lehrstuhl f\"ur Wirtschaftsinformatik III\\
+Universit\"at Mannheim, Schlo\ss, D-68131 Mannheim, Germany\\
+E-mail: ott@wifo3.uni-mannheim.de\\
+\end{center}
+
+\section{Heading, abstract, and sections}
+For the heading, specify the following items: 
+\begin{itemize}
+\item \verb@\title*@ to specify the title of your manuscript,
+\item \verb@\toctitle@ to specify the title to be used in the table 
+ of contents,
+\item \verb@\titlerunning@ to specify the title in the running head,
+\item \verb@\author@ to specify the authors. Authors are 
+ separated by the \verb@\and@ command. Use the \verb@\inst{1}@,  
+ \verb@\inst{2}@, \ldots\ commands to define the reference mark to your affiliation. 
+\item \verb@\authorrunning@ to specify the author names in the running heads.
+ If there are more than two authors, please, abbreviate the authors' list
+ (e.g., Opitz et al.).
+\item \verb@\institute@ to specify your affiliation and
+ your address. Separate two or more different affiliations by the
+ \verb@\and@ command. 
+\end{itemize}
+An abstract (6--9 lines) is to be included after the heading using the 
+commands \verb@\begin{abstract} ... \end{abstract}@. Do not specify 
+keywords in your paper.
+
+Please, use only the \LaTeX\ sectioning commands \verb@\section@ and 
+\verb@\subsec@- \verb@tion@. Do not use a deeper hierarchy. Considering the 
+length of the ma\-nu\-script, we recommend only using the \verb@\section@  
+command. Only capitalize the first word of the (sub)section title. 
+
+\section{Length of the paper, figures, tables, and equations}
+The manuscripts should have a length of approximately {\bf 8 pages} using the 
+\verb@gfkl2002.cls@ style file.
+
+Each figure or table must have a caption, explaining in brief your 
+figure or table, e.g., ``Fig. 3. Plot of ...  .'' or ``Table 1. Data 
+of ...  .'' (arabic numbering).  Use capitalization when referring to a 
+figure or a table in the text, for example, ``In the center of Figure 
+3, the clusters $\ldots$''.
+
+Figures and tables must be included at the appropriate place in the 
+text. Please, do not use colored figures. Please, provide the 
+figures only using the \LaTeX\ picture commands or in \verb@eps@ 
+(Encapsulated PostScript) format.  A figure contained in the \verb@eps@-file  
+\verb@yourfile.eps@ can be included as follows: 
+\begin{verbatim}
+\begin{figure}[t]
+  \centerline{
+    \includegraphics[width=.8\textwidth]{yourfile.eps}}
+  \caption{This is a sample of how to include an  
+  eps graphics file in your manuscript.}
+  \label{fig:ExampleEPSFile}
+\end{figure}
+\end{verbatim}
+The \verb@[width=.8\textwidth]@ option specifies that the graphics will 
+to be reduced to 80\%.  The \verb@\includegraphics@ command makes use 
+of the \verb@graphicx@ style file, which is a standard \LaTeX\ graphics tool 
+for including \verb@eps@-figure files.
+
+A figure containing only \LaTeX\ picture commands can be 
+specified as
+\begin{verbatim}
+\begin{figure}[t]
+  \setlength{\unitlength}{4cm}
+  \centerline{
+    \begin{picture}(1,1)(0,0)
+      \linethickness{.5pt}
+      \put(0,0){\framebox(1,1){}}
+      \put(0.25,0.25){\circle*{.02}}
+      \put(0.25,0.75){\circle*{.02}}
+      \put(0.75,0.75){\circle*{.02}}
+      \put(0.75,0.25){\circle*{.02}}
+    \end{picture}}
+  \caption{This is an example of a figure that uses only 
+  the \LaTeX\ picture commands. It contains four points.}
+  \label{fig:ExamplePicture}
+\end{figure}
+\end{verbatim}
+%
+\begin{figure}[t]
+  \setlength{\unitlength}{4cm}
+  \centerline{
+    \begin{picture}(1,1)(0,0)
+      \linethickness{.5pt}
+      \put(0,0){\framebox(1,1){}}
+      \put(0.25,0.25){\circle*{.02}}
+      \put(0.25,0.75){\circle*{.02}}
+      \put(0.75,0.75){\circle*{.02}}
+      \put(0.75,0.25){\circle*{.02}}
+    \end{picture}}
+  \caption{This is an example of a figure that uses only 
+  the \LaTeX\ picture commands. It contains four points.}
+  \label{fig:ExamplePicture}
+\end{figure}
+%
+Equations should be typed using the \LaTeX\ commands 
+\verb@\begin{equation}@ \verb@...\end{equation}@. For example: 
+\begin{equation}
+   g({\cal C}) := \sum_{i=1}^m \sum_{k\in C_i} \|x_k - 
+   \bar{x}_{C_i}\|^2.
+\end{equation}
+If you do not want the equation to be numbered, use \verb@\begin{displaymath}@
+\verb@...\end{displaymath}@ 
+instead of \verb@{equation}@.
+
+\section{Submission of papers, deadlines}
+
+Send your paper by e-mail to Prof. Dr. Martin Schader at
+\begin{verbatim} 
+mscha@wifo.uni-mannheim.de or gfkl2002@gfkl.de
+\end{verbatim}
+The deadline for submission is {\bf August 1, 2002}.
+At that time, we only need a \verb@pdf@ or \verb@ps@ version of your correctly formatted paper for the review process. If the paper passes the review, we will also need the following: 
+\begin{itemize}
+\item your paper in \LaTeX,
+
+\item the \verb@eps@ files for figures (if any), and
+
+\item a list of approximately 10 keywords for the index of the volume.
+\end{itemize}
+
+While submitting their paper, authors automatically leave
+the copyright to the editors or the publisher.
+
+\section{Specifying references}
+
+Please, use the following citation style within the text: Bock (1974) 
+(in parentheses: Bock (1974)), Gaul and Schader (1994). 
+In the case of more than two authors: first author et al.
+
+The list of references at the end of your paper must be in {\bf 
+alphabetical order}. 
+Please, use the style of the following specimen which shows examples 
+for the citation of books, articles, and papers in proceedings volumes.
+
+\begin{thebibliography}{1}
+
+\item[]
+% Example for the citation of books:
+BOCK, H.H. (1974): 
+{\em Automatische Klassifikation}. 
+Vandenhoeck \& Ruprecht, G\"ottingen. 
+
+\item[]
+% Example for the citation of articles:
+GAUL, W. and SCHADER, M. (1994): 
+Pyramidal Classification Based on Incomplete Dissimilarity Data. 
+{\em Journal of Classification, 11, 171--193}. 
+
+\item[]
+% Example for the citation of papers in proceedings volumes:
+IEZZI, D. and VICHI, M. (1999): 
+Forecasting a Classification. 
+In: M. Vichi and O. Opitz (Eds.): 
+{\em Classification and Data Analysis}. 
+Springer, Heidelberg, 27--34.
+
+\end{thebibliography}
+
+\end{document}
+
+

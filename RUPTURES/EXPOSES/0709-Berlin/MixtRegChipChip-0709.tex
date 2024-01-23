@@ -1,0 +1,385 @@
+\documentclass[dvips, lscape]{foils}
+%\documentclass[dvips, french]{slides}
+\textwidth 18.5cm
+\textheight 25cm 
+\topmargin -1cm 
+\oddsidemargin  -1cm 
+\evensidemargin  -1cm
+
+% Maths
+\usepackage{amsfonts, amsmath, amssymb}
+
+\newcommand{\coefbin}[2]{\left( 
+    \begin{array}{c} #1 \\ #2 \end{array} 
+  \right)}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\alphabf}{\mbox{\mathversion{bold}{$\alpha$}}}
+\newcommand{\betabf}{\mbox{\mathversion{bold}{$\beta$}}}
+\newcommand{\gammabf}{\mbox{\mathversion{bold}{$\gamma$}}}
+\newcommand{\mubf}{\mbox{\mathversion{bold}{$\mu$}}}
+\newcommand{\Pibf}{\mbox{\mathversion{bold}{$\Pi$}}}
+\newcommand{\psibf}{\mbox{\mathversion{bold}{$\psi$}}}
+\newcommand{\Sigmabf}{\mbox{\mathversion{bold}{$\Sigma$}}}
+\newcommand{\taubf}{\mbox{\mathversion{bold}{$\tau$}}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\Sbf}{{\bf S}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\ubf}{{\bf u}}
+\newcommand{\vbf}{{\bf v}}
+\newcommand{\xbf}{{\bf x}}
+\newcommand{\Xbf}{{\bf X}}
+\newcommand{\Esp}{{\mathbb E}}
+\newcommand{\Var}{{\mathbb V}}
+\newcommand{\Cov}{{\mathbb C}\mbox{ov}}
+\newcommand{\Ibb}{{\mathbb I}}
+\newcommand{\Rbb}{\mathbb{R}}
+
+% sommes
+\newcommand{\sumk}{\sum_k}
+\newcommand{\sumt}{\sum_{t \in I_k}}
+\newcommand{\sumth}{\sum_{t=t_{k-1}^{(h)}+1}^{t_k^{(h)}}}
+\newcommand{\sump}{\sum_{p=1}^{P}}
+\newcommand{\suml}{\sum_{\ell=1}^{P}}
+\newcommand{\sumtau}{\sum_k \hat{\tau}_{kp}}
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+\newcommand{\Example}{tfl2_1_ResReg}
+
+% Texte
+\usepackage{lscape}
+\usepackage{../../../../Latex/fancyheadings, rotating, enumerate}
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.5}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\definecolor{jaune}{cmyk}{0, 0.5, 0.5, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\textred}[1]{\textcolor{red}{#1}}
+\newcommand{\textgreen}[1]{\textcolor{green}{ #1}}
+\newcommand{\textlightgreen}[1]{\textcolor{green}{#1}}
+%\newcommand{\textgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{#1}}
+\newcommand{\textyellow}[1]{\textcolor{yellow}{#1}}
+\newcommand{\refer}[2]{{\sl #1}}
+
+% Sections
+%\newcommand{\chapter}[1]{\centerline{\LARGE \textblue{#1}}}
+% \newcommand{\section}[1]{\centerline{\Large \textblue{#1}}}
+% \newcommand{\subsection}[1]{\noindent{\Large \textblue{#1}}}
+% \newcommand{\subsubsection}[1]{\noindent{\large \textblue{#1}}}
+% \newcommand{\paragraph}[1]{\noindent {\textblue{#1}}}
+% Sectionsred
+\newcommand{\chapter}[1]{
+  \addtocounter{chapter}{1}
+  \setcounter{section}{0}
+  \setcounter{subsection}{0}
+  {\centerline{\LARGE \textblue{\arabic{chapter} - #1}}}
+  }
+\newcommand{\section}[1]{
+  \addtocounter{section}{1}
+  \setcounter{subsection}{0}
+  {\centerline{\Large \textblue{\arabic{chapter}.\arabic{section} - #1}}}
+  }
+\newcommand{\subsection}[1]{
+  \addtocounter{subsection}{1}
+  {\noindent{\large \textblue{#1}}}
+  }
+% \newcommand{\subsection}[1]{
+%   \addtocounter{subsection}{1}
+%   {\noindent{\large \textblue{\arabic{chapter}.\arabic{section}.\arabic{subsection} - #1}}}
+%   }
+\newcommand{\paragraph}[1]{\noindent{\textblue{#1}}}
+\newcommand{\emphase}[1]{\textblue{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\landscape
+\newcounter{chapter}
+\newcounter{section}
+\newcounter{subsection}
+\setcounter{chapter}{0}
+\headrulewidth 0pt 
+\pagestyle{fancy} 
+\cfoot{}
+\rfoot{\begin{rotate}{90}{
+      %\hspace{1cm} \tiny S. Robin: Segmentation-clustering for CGH
+      }\end{rotate}}
+\rhead{\begin{rotate}{90}{
+      \hspace{-.5cm} \tiny \thepage
+      }\end{rotate}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+  \textblue{\LARGE Regression Mixture Model }
+  
+  \textblue{\LARGE  for ChIP-chip Analysis}
+  
+  \vspace{1cm}
+  {\large M.-L. Martin-Magniette$^{1,2}$, T. Mary-Huard$^{1}$,}
+  
+  {\large C.  Bérard$^{2}$, S. Robin$^{1}$}
+
+  \vspace{1cm}
+  ($^1$) UMR AgroParisTech / INRA, ($^2$) INRA URGV
+
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Detecting Hybridization in CHip-Chip data}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\section{CHip-Chip technology}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Unsupervised Classification Problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Data:} For each probe $i$, we hence get 2 signals
+$$
+  X_i = \text{Input signal}, 
+  \qquad 
+  Y_i = \text{IP signal}.
+$$
+
+\bigskip
+\paragraph{Problem:} According to these two signals, we \emphase{have to}  
+\begin{itemize}
+\item \vspace{-0.5cm} \emphase{Classify each probe} into the
+  \emphase{enriched} group or into the \emphase{normal} group,
+\item \vspace{-0.5cm} Account for the \emphase{link between the IP and
+    Input} signals
+\end{itemize}
+
+\bigskip
+\noindent In addition we \emphase{would like to}
+\begin{itemize}
+\item \vspace{-0.5cm} Evaluate the strength of the classification;
+\item \vspace{-0.5cm} Avoid numerous false detections.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Mixture Model of Regressions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\section{Motivations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$$
+\begin{tabular}{cc}
+  \begin{tabular}{p{10cm}}
+    \paragraph{Correlation IP / Input.} \\ \\
+    A link between the two signal is observed in all studies. \\ \\
+    This correlation suggest at least to consider the logratio
+    IP/Input. \\
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \epsfig{file = ../Figures/\Example-LogRatio.eps, width=12cm,
+    height=12cm, clip=} 
+%     \epsfig{file = ../Figures/NuageIPInput.ps, width=12cm,
+%     height=12cm, clip=} 
+  \end{tabular}
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+$$
+\begin{tabular}{cc}
+  \begin{tabular}{p{10cm}}
+    \paragraph{Mixture.} \\ \\
+    A closer look shows that the relation between IP and Input
+    may differ between the two groups 'normal' and 'enriched'.
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \epsfig{file = ../Figures/\Example-RawIPInput.eps, width=12cm,
+    height=12cm, clip=} 
+  \end{tabular}
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Mixture model}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bigskip
+\paragraph{Model.} We assume that each probe $i$ has probability $\pi$
+to be enriched:
+$$
+\Pr\{\text{Probe $i$ enriched}\} = \pi, 
+\qquad
+\Pr\{\text{Probe $i$ normal}\} = 1 - \pi, 
+$$
+and that the relation between log-IP ($Y_i$) and log-Input ($X_i$) depends on
+the status of the probe:
+$$
+Y_i = \left\{ \begin{array}{ll}
+    a_0 + b_0 X_i + E_i & \quad \text{if $i$ is normal} \\
+    \\
+    a_1 + b_1 X_i + E_i & \quad \text{if $i$ is enriched}
+  \end{array} \right.
+$$
+
+\bigskip\bigskip
+\paragraph{Comparison with the 'Logratio' analysis.} The standard
+analysis based on the log(IP/Input) is the particular case of the
+regression mixture model where
+$$
+b_0 = b_1 = 1.
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Parameter Estimation and Probe Classification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bigskip
+\paragraph{Task.} We have to estimate
+\begin{itemize}
+\item \vspace{-0.5cm} the proportion of enriched probes: $\pi$;
+\item \vspace{-0.5cm} the regression parameters: intercepts ($a_0$,
+  $a_1$), slopes ($b_0$, $b_1$) and variance $\sigma^2$.
+\end{itemize}
+
+\bigskip\bigskip
+\paragraph{Algorithm.} This can be done using the E-M algorithm which
+alternates
+\begin{description}
+\item[E-step:] \vspace{-0.5cm} prediction of the probe status given
+  the parameters;
+\item[M-step:] \vspace{-0.5cm} estimation of the parameters given the
+  (predicted) probe status.
+\end{description}
+
+\bigskip\bigskip
+\paragraph{Posterior probability.} The status prediction is based on
+the posterior probability $\tau_i$
+$$
+\textred{\tau_i = \Pr\{\text{$i$ enriched} \; |\; X_i, Y_i\}},
+\qquad 1 - \tau_i = \Pr\{\text{$i$ normal} \; |\; X_i, Y_i\}.
+$$
+This probability provides a \emphase{probe classification rule}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+$$
+\begin{tabular}{cc}
+  \begin{tabular}{p{10cm}}
+    \paragraph{Posterior probabilities:}
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+%      \epsfig{file=../Figures/Graph_Regression_MoyDye_Rep1_chr4_degrade.ps,
+%      width=12cm, height=12cm, angle=270, clip=} 
+  \end{tabular}
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Limiting False Detections}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bigskip
+\paragraph{Maximum A Posteriori (MAP) rule.} Probes are usually classified
+into their most probable class, using the 50\% threshold:
+$$
+\begin{array}{rclcl}
+  \tau_i & \geq & 50\% & \Rightarrow & \text{$i$ classified as
+  'enriched'}, \\ 
+  \tau_i & < & 50\% & \Rightarrow & \text{$i$ classified as
+  'normal'}. 
+\end{array}
+$$
+
+\bigskip\bigskip
+\paragraph{Controlling false detections.} We want to control the
+probability for the $\tau_i$ of a normal probe to fall above the
+classification threshold. 
+
+For a \emphase{fixed risk $\alpha$} we calculate the threshold $s$
+such that
+$$
+\textred{s: \qquad \Pr\{\tau_i > s \;|\; \text{$i$ normal}, \;
+  \log(\text{Input})=X_i\} \leq \alpha}
+$$
+The threshold $s$ depends on both $\alpha$ and the log-Input $X_i$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+$$
+\begin{tabular}{cc}
+  \begin{tabular}{p{10cm}}
+    \paragraph{Number of enriched probes.}
+    Number enriched probes as a function of the risk $\alpha$.
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+  \end{tabular}
+\end{tabular}
+$$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+$$
+\begin{tabular}{cc}
+  \begin{tabular}{p{10cm}}
+    \paragraph{Classification with 2\% error rate.}
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+%     \epsfig{file= ../Figures/Graph_Regression_MoyDye_Rep1_chr4.ps,
+%       width=12cm, height=12cm, angle=270, clip=} 
+  \end{tabular}
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

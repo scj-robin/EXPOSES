@@ -1,0 +1,12 @@
+  \begin{tikzpicture}
+  \node[observed] (a) at (0*\edgeunit, 1*\edgeunit) {$A$};
+  \node[observed] (b) at (1*\edgeunit, 1*\edgeunit) {$B$};
+  \node[observed] (c) at (0*\edgeunit, 0*\edgeunit) {$C$};
+  \node[observed] (d) at (1*\edgeunit, 0*\edgeunit) {$D$};
+  
+  \draw[arrow] (a) to (b);  \draw[arrow] (a) to (c);
+  \draw[arrow] (b) to (d);  
+  \draw[arrow] (c) to (b);  \draw[arrowbendleft] (c) to (d);
+  \draw[arrowbendleft] (d) to (c);  \draw[arrow] (d) to (a);  
+  
+  \end{tikzpicture}

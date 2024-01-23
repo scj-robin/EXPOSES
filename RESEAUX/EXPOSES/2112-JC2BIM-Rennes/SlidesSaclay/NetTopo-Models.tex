@@ -1,0 +1,303 @@
+%==================================================================
+%==================================================================
+\subsection*{Erd\"os model}
+%==================================================================
+\frame{ \frametitle{The simplest one}
+
+  \paragraph{Erd\"os model $\Gcal(n, \pi)$\footnote{Alternate version $\Gcal(n, m)$, $m =$ fixed number of edges}:} 
+  \begin{itemize}
+   \item $n$ (fixed) nodes (= species) 
+   \item undirected binary edges (= interactions) 
+   \item all pairs of nodes are connected (= interact) independently 
+   \item with same probability $\pi$
+  \end{itemize}
+  $$
+  \{Y_{ij}\} \text{ iid } \sim \Bcal(\pi)
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Properties.} ~
+  \begin{itemize}
+   \item Graph density $\pi$ 
+   \item Degree of a node $\sim \Bcal(n-1, \pi) \approx \Pcal(n \pi)$ %\\
+   \ra Homegeneous degree distribution
+   \item Clustering coefficient $c = P\{j \sim k \mid i \sim j, i \sim k\} = \pi$ %\\
+   \ra No 'assortativity'
+  \end{itemize}
+
+%   \bigskip \bigskip \pause
+%   \paragraph{Remark:} 
+%   $$
+%   Y \sim \Ucal\{\text{set of graphs with $n$ nodes and $m$ edges}\}
+%   $$
+%   \begin{itemize}
+%    \item Density $m/N$, where $N = n(n-1)/2 =$ number of pairs
+%    \item Edges are not independent
+%   \end{itemize}
+}
+
+%==================================================================
+%==================================================================
+\subsection*{Degree-based models}
+%==================================================================
+\frame{ \frametitle{Degree-based models}
+
+  \bigskip 
+  \paragraph{Aim:} account for heterogeneous number of neighbors $D_i = \sum_{j \neq i} Y_{ij}$
+  
+  \bigskip \bigskip \pause
+  \hspace{-.04\textwidth}
+  \begin{tabular}{p{.45\textwidth}p{.45\textwidth}}  
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Expected degree distribution (EDD) \refer{ChL02}:} \\
+      $$
+      p_{ij} := \Pr\{i \sim j\} = d_i d_j / \lambda 
+      $$
+      $d_i =$ observed degree of node $i$, \\ ~ \\
+      $\lambda = \sum_i d_i 
+      \quad \Rightarrow \quad 
+      \emphase{\Esp D_i = d_i}$ \\ ~ \\
+      ($p_{ij}$ may exceed 1...) \\ ~ \\ 
+      ~ \\ 
+      \onslide+<3>{
+      \paragraph{Configuration model} (looks similar but actually different): requires
+      $$
+      D_i = d_i
+      $$
+      }
+    \end{tabular}
+    &
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[width=.5\textwidth]{\figeco/florida-EDD-simul.pdf}
+    \end{tabular} 
+  \end{tabular}
+
+}
+
+%==================================================================
+\frame{ \frametitle{EDD for oriented graphs}
+
+  \bigskip
+  \paragraph{Degrees:} out-degree $D^+_i = \sum_j Y_{ij}$, in-degree  $D^-_i = \sum_j Y_{ji}$
+
+  \bigskip \bigskip \pause
+  \hspace{-.04\textwidth}
+  \begin{tabular}{p{.45\textwidth}p{.45\textwidth}}  
+    \begin{tabular}{p{.4\textwidth}}
+      Connexion probability
+      $$
+      p_{ij} := \Pr\{i \rightarrow j\} = d^+_i d^-_j / \lambda 
+      $$
+      \bigskip
+      Expected degrees:
+      $$
+      \Esp D^+_i = d^+_i, 
+      \quad 
+      \Esp D^-_i = d^-_i
+      $$ 
+      
+      \bigskip
+      Only accounts for 'generalists' vs 'specialists' (see top left node) \\
+      \bigskip
+      \onslide+<3>{
+      \paragraph{Again:} similar but different from 'edge rewiring', which imposes
+      $$
+      D^+_i = d^+_i, \quad D^-_i = d^-_i
+      $$}
+    \end{tabular}
+    &
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[width=.5\textwidth]{\figeco/foodweb-baydry-EDD-simul.pdf}
+    \end{tabular} 
+  \end{tabular}
+
+}
+
+%==================================================================
+%==================================================================
+\subsection*{Latent-space models}
+%==================================================================
+\frame{ \frametitle{Latent-space models}
+
+  \paragraph{Fact:} observed networks are far from 'random' or 'uniform' (i.e. Erd\"os )
+  
+  \bigskip \bigskip 
+  \paragraph{Rational:} the observed heterogeneity is due to (unobserved) node specificities
+
+  \bigskip \bigskip \pause
+  \paragraph{General framework:} latent space models \refer{BJR07,MaR14}
+  \begin{itemize}
+   \item A latent (= hidden = unobserved) variable $Z_i$ is associated with each node
+   \item The connections are independent conditionally on $Z = \{Z_i\}$:
+   $$
+   \{Y_{ij}\} \text{ indep. } \mid Z:
+   \qquad 
+   P(Y_{ij} = 1) = \gamma(Z_i, Z_j)
+   $$
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Exchangeable graphs:} provided that the $Z_i$'s are iid, for any permutation $\sigma$,
+  $$
+  p(\{Y_{ij}\}) = p(\{Y_{\emphase{\sigma}(i)\emphase{\sigma}(j)}\})
+  $$
+
+}
+
+%==================================================================
+\frame{ \frametitle{Latent positions}
+
+  \paragraph{Latent position model \refer{HRH02}.} $Z_i \in \Rbb^d$,
+  $$
+  \log \frac{p_{ij}}{1 - p_{ij}} = \alpha - \|Z_i-Z_j\|
+  $$
+
+  \bigskip \pause
+  \begin{tabular}{p{.45\textwidth}p{.45\textwidth}}
+%     \hspace{-.1\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      Latent positions: \\
+      \includegraphics[width=.4\textwidth]{\fignet/LatentPositionModel-Network}
+    \end{tabular} 
+    &
+%     \hspace{-.1\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      Observed data: \\
+      \includegraphics[width=.4\textwidth]{\fignet/LatentPositionModel-Adjacency}
+    \end{tabular} 
+  \end{tabular}
+  
+  \pause
+  \paragraph{Clustering version:} \refer{HRT07}
+
+}
+
+%==================================================================
+\frame{ \frametitle{Stochastic blockmodel (SBM)}
+
+  \bigskip
+  \paragraph{Mixture model \refer{HoL79,NoS01}.} $Z_i \in \{1, \dots K\}$ (in proportion $\pi_1, \dots \pi_K$),
+  $$
+  p_{ij} = \gamma_{Z_i Z_j}
+  $$
+
+  \pause
+  \begin{tabular}{p{.45\textwidth}p{.45\textwidth}}
+%     \hspace{-.1\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      Latent groups: \\
+      \includegraphics[width=.4\textwidth]{\fignet/SBM-Network} \\
+%         $[\gamma_{k\ell}] =$
+%         \includegraphics[width=.1\textwidth]{\fignet/SBM-ConnexionProba} \\
+      \begin{tabular}{ll}
+        $[\gamma_{k\ell}] =$
+        &
+        \includegraphics[width=.1\textwidth]{\fignet/SBM-ConnexionProba}
+      \end{tabular}
+    \end{tabular} 
+    &
+%     \hspace{-.1\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      Observed data: \\
+      \includegraphics[width=.4\textwidth]{\fignet/SBM-Adjacency}
+    \end{tabular} 
+  \end{tabular}
+  
+}
+
+%==================================================================
+\frame{ \frametitle{A generic framework: $W$-graph}
+
+  \paragraph{Limit for dense graphs \refer{LoS06}.} $Z_i \sim \Ucal[0, 1]$, \emphase{graphon} function $\gamma: [0, 1]^2 \mapsto [0, 1]$ 
+  $$
+  p_{ij} = \gamma(Z_i, Z_j)
+  $$
+
+  \bigskip \pause
+  \begin{tabular}{p{.45\textwidth}p{.45\textwidth}}
+%     \hspace{-.1\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      Graphon function: \\
+      \includegraphics[trim=30 30 30 30, width=.4\textwidth, clip]{\fignet/Graphon-Function}
+    \end{tabular} 
+    &
+%     \hspace{-.1\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      Observed network: \\
+      \includegraphics[width=.4\textwidth]{\fignet/Graphon-Network}
+    \end{tabular} 
+  \end{tabular}
+  
+}
+
+%==================================================================
+%==================================================================
+\subsection*{Accounting for covariates}
+%==================================================================
+\frame{ \frametitle{Accounting for covariates}
+
+  \paragraph{Same story:} accounting for available information on nodes ($x_i$) or pairs ($x_{ij}$) may avoid to re-discover the wheel
+  
+  \bigskip \pause
+  \paragraph{Including covariates} is often easy (at least formally):
+  \begin{align*}
+   \log\frac{p_{ij}}{1 - p_{ij}} = \;
+   & \emphase{x_{ij}^\intercal \beta} + \|Z_i - Z_j\| & & \text{latent position model} \\
+   & \emphase{x_{ij}^\intercal \beta} + \gamma_{Z_i, Z_j} & & \text{stochastic block model} \\
+   & \emphase{x_{ij}^\intercal \beta} + \gamma(Z_i, Z_j) & & \text{$W$ graph} 
+  \end{align*}
+  
+  \bigskip \pause
+  \begin{itemize}
+   \item Aims at analysing the structure of the network, that is {\sl not explained} by the covariates ('residual' structure)
+   \item The edges are not exchangeable anymore
+   \item Easier to account for edge covariates ($x_{ij}$), than node covariates ($x_i$)
+  \end{itemize}
+
+}
+
+
+%==================================================================
+%==================================================================
+\subsection*{Statistical inference}
+%==================================================================
+\frame{ \frametitle{Statistical inference}
+
+  \paragraph{Exercise:} draw the graphical model of latent variable model for graph
+  
+  \bigskip
+  \hspace{-0.05\textwidth}
+  \begin{tabular}{p{.6\textwidth}p{.4\textwidth}}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<2->{\paragraph{Solution} for $p(Y, Z)$ ~\\}
+      \bigskip
+      \onslide+<3->{
+        \paragraph{Incomplete data model:} $Z$ is not observed \\ ~\\
+        \ra Standard statistical inference (e.g. EM algorithm) requires to compute \emphase{$p(Z \mid Y)$} ~\\
+        }
+      \bigskip
+      \onslide+<4->{
+        \paragraph{Graph moralization:} the dependency structure of $p(Z \mid Y)$ is (very) intricate \\ ~\\
+        \ra Need to resort to Monte-Carlo sampling \refer{NoS01,MSP05} or variational approximations \refer{GoN05,DPR08}
+        }
+    \end{tabular}
+    &
+    \begin{tabular}{p{.4\textwidth}}
+      \begin{overprint}
+        \onslide<2-3>
+%           \begin{centering}
+            \renewcommand{\nodesize}{1.5em}
+            \input{\figbordeaux/SBM-GraphModel-pZY} 
+%           \end{centering}       
+        \onslide<4>
+%           \begin{centering}
+            \renewcommand{\nodesize}{1.5em}
+            \input{\figbordeaux/SBM-GraphModel-pZmY} 
+%           \end{centering}       
+      \end{overprint}
+    \end{tabular} 
+  \end{tabular}
+
+}

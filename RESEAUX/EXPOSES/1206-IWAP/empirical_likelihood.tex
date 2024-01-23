@@ -1,0 +1,118 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{latexsym,amsthm,amsfonts,amsgen,amssymb,amscd,amsmath}
+\usepackage{graphicx}         % Packages to allow inclusion of graphics
+
+
+\usepackage[english]{babel}
+\usepackage[LGR,T1]{fontenc}
+\usepackage{palatino}
+\usepackage[mathbf]{euler}
+%\usepackage{euler}
+\usepackage{enumerate,mathrsfs}
+\usepackage{fullpage}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+%  For creating hyperlinks in cross references
+%\usepackage[pdfpagelabels,plainpages=false]{hyperref}  
+
+% Nice bibliography
+\usepackage{natbib}
+
+
+\parindent 0cm
+\parskip 0.4cm
+
+
+\newtheorem{thm}{Theorem}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{corollaire}[thm]{Corollary}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{defn}[thm]{Definition}
+\theoremstyle{remark}
+
+\theoremstyle{definition}
+\newtheorem{exemple}{Exemple}
+%\numberwithin{equation}{section}
+
+
+\newcommand{\dd}{\mathrm d}
+\newcommand{\ee}{\mathrm e}
+\newcommand{\esp}{\mathbb E}
+\newcommand{\prob}{\mathbb P}
+\newcommand{\e}{\mathrm e}
+\newcommand{\ii}{\mathrm i}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\Vect}{\mathrm{Vect}\,}
+\newcommand{\Var}{\mathrm{Var}\,}
+\newcommand{\ds}{\displaystyle}
+\newcommand{\trait}{\begin{center}\rule{3cm}{.3pt}\end{center}}
+\renewcommand{\mathcal}{\mathscr}
+\newcommand{\eqlaw}{\stackrel{\text{law}}{=}}
+
+%\newcommand{\eps}{\varepsilon}
+
+\newfont{\manfnt}{manfnt}
+\newcommand{\danger}{{\manfnt\symbol{'177}}}
+\newcommand{\mdanger}{\marginpar[\hfill\danger]{\danger\hfill}}
+\newcommand{\new}{{\manfnt\symbol{30}}}
+\newcommand{\mnew}{\marginpar[\hfill\new]{\hfill\new}}
+\DeclareTextFontCommand{\hershey}{\fontfamily{hscs}\selectfont}
+
+\begin{document}
+%
+%Please leave text above unchanged
+%Replace below with your information
+\begin{center}
+\textbf{\Large Computing Bayesian posterior with empirical likelihood in population genetics}\\[1em]
+Jean-Marie Cornuet$^1$, Rapha{\"e}l Leblois$^1$, \textbf{Pierre Pudlo}$^{1 \& 2}$ and
+Christian P. Robert$^3$ \\[1em]
+\end{center}
+$^1$ CBGP, INRA\\
+$^2$ I3M, Universit\'e Montpellier 2\\
+$^3$ CEREMADE, Universit\'e Paris Dauphine and CREST, INSEE, Paris.\\
+
+In population genetics, the computation of the likelihood is often a hard problem. Approximate Bayesian
+computation (ABC) is certainly the most used algorithm to bypass this computation in a Bayesian paradigm (see
+\cite{beaumont10}, for a recent survey). But ABC is quite time consuming and needs massive paralellization to be
+efficient. In this talk we will present a promising alternative using the empirical likelihood \cite{owen88}.
+
+
+That last method profiles the likelihood in a nonparametric way using an estimating equation on the unknown
+parameters. Our proposal relies on the score functions given by the pairwise composite likelihood 
+\cite{lindsay88} which can be explicitly computed in a large variety of evolutionary scenarii when considering
+microsatellite loci with the stepwise mutation model \cite{ohta:kimura:73}. Numerical simulations will
+exhibit that the posterior estimated with our proposal is comparable to the ABC posterior, but that the
+computation is about thirty times faster.
+
+
+
+\begin{thebibliography}{1}
+\bibitem{beaumont10}
+M.~Beaumont.
+\newblock Approximate Bayesian computation in evolution and ecology.
+\newblock {\em Annu. Rev. Ecol. Evol. Syst.}, 41:379--406, 2010.
+
+\bibitem{lindsay88}
+B. G. Lindsay.
+\newblock Composite Likelihood Methods.
+\newblock {\em Contemporary Mathematics}, 80:221--239, 1988.
+
+\bibitem{ohta:kimura:73}
+T.~Ohta and M.~Kimura.
+\newblock A model of mutation appropriate to estimate the number of electrophoretically detectable alleles in
+a finite population.
+\newblock {\em Genet. Res.}, 22:201--204, 1973.
+
+\bibitem{owen88}
+A.~B. Owen.
+\newblock Empirical Likelihood ratio confidence intervals for a single functional.
+\newblock {\em Biometrika}, 75:237--249, 1988
+
+\end{thebibliography}
+% \bibliographystyle{plain}
+% \bibliography{ibs.bib}
+
+\end{document}

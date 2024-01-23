@@ -1,0 +1,689 @@
+\documentclass[10pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+% Commands
+% \input{TikZcommands.tex}
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\newcommand{\backupbegin}{
+   \newcounter{finalframe}
+   \setcounter{finalframe}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+   \setcounter{framenumber}{\value{finalframe}}
+}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+% \newcommand{\emphase}[1]{{#1}}
+\newcommand{\paragraph}[1]{\textcolor{darkred}{#1}}
+\newcommand{\refer}[1]{{\small{\textcolor{blue}{{[\cite{#1}]}}}}}
+% \newcommand{\Refer}[1]{{\small{\textcolor{gray}{{[#1]}}}}}
+\renewcommand{\newblock}{}
+
+% Symbols
+\newcommand{\Abf}{{\bf A}}
+\newcommand{\Beta}{\text{B}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\BIC}{\text{BIC}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\dd}{\text{~d}}
+\newcommand{\dbf}{{\bf d}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Ebf}{{\bf E}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Gam}{\mathcal{G}\text{am}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Ibb}{\mathbb{I}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\ICL}{\text{ICL}}
+\newcommand{\Cov}{\mathbb{C}\text{ov}}
+\newcommand{\Corr}{\mathbb{C}\text{orr}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\Vsf}{\mathsf{V}}
+\newcommand{\pen}{\text{pen}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Jcal}{\mathcal{J}}
+\newcommand{\Kbf}{{\bf K}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\mum}{\mu(\mbf)}
+\newcommand{\mt}{\widetilde{m}}
+\newcommand{\Nbb}{\mathbb{N}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Nbf}{{\bf N}}
+\newcommand{\Nm}{N(\mbf)}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\Obf}{{\bf 0}}
+\newcommand{\Omegas}{\underset{s}{\Omega}}
+\newcommand{\Pbf}{{\bf P}}
+\newcommand{\pt}{\widetilde{p}}
+\newcommand{\Pt}{\widetilde{P}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\St}{\widetilde{S}}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\BP}{\text{BP}}
+\newcommand{\EM}{\text{EM}}
+\newcommand{\VEM}{\text{VEM}}
+\newcommand{\VBEM}{\text{VBEM}}
+\newcommand{\cst}{\text{cst}}
+\newcommand{\obs}{\text{obs}}
+\newcommand{\ra}{\emphase{\mathversion{bold}{$\rightarrow$}~}}
+%\newcommand{\transp}{\text{{\tiny $\top$}}}
+\newcommand{\transp}{\text{{\tiny \mathversion{bold}{$\top$}}}}
+\newcommand{\logit}{\text{logit}\xspace}
+
+% Directory
+\newcommand{\fignet}{/home/robin/Bureau/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figchp}{/home/robin/Bureau/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title[Probabilistic PCA for counts]{Probabilistic multivariate analysis of count data: Application to community ecology}
+
+\author[S. Robin]{S. Robin \\ ~\\
+  \begin{tabular}{ll}
+    Joint work with J. Chiquet \& M. Mariadassou
+  \end{tabular}
+  }
+
+\institute[INRA / AgroParisTech]{~ \\%INRA / AgroParisTech \\
+  \vspace{-.1\textwidth}
+  \begin{tabular}{ccc}
+    \includegraphics[height=.25\textheight]{\fignet/LogoINRA-Couleur} & 
+    \hspace{.02\textheight} &
+    \includegraphics[height=.06\textheight]{\fignet/logagroptechsolo} % & 
+%     \hspace{.02\textheight} &
+%     \includegraphics[height=.09\textheight]{\fignet/logo-ssb}
+    \\ 
+  \end{tabular} \\
+  \bigskip
+  }
+
+\date[May 2017, Nantes]{GdR EcoStat, May 2017, Nantes}
+
+%====================================================================
+%====================================================================
+\maketitle
+%====================================================================
+
+%====================================================================
+%====================================================================
+\section{Multivariate analysis of abundance data}
+%\frame{\tableofcontents[currentsection]}
+%====================================================================
+
+%====================================================================
+\subsection*{'Abundance' data}
+%====================================================================
+\frame{\frametitle{Abundance data}
+
+  \paragraph{Data table.} 
+  \begin{eqnarray*}
+   Y & = & [Y_{ij}]: n \times p, \qquad \text{either $n$ or $p$ 'large'} \\
+   \\
+   Y_{ij} & = & \text{abundance of species $j$ in sample $i$} \\
+    & = & \text{number of reads associated with species $j$ in sample $i$}
+  \end{eqnarray*}
+%   $$
+%   Y = [Y_{ij}]: n \times p, \qquad \text{either $n$ or $p$ 'large'}
+%   $$
+%   \begin{itemize}
+%    \item $Y_{ij} =$ count of $k$-mer $j$ in sample $i$
+%    \item $Y_{ij} =$ abundance of species $j$ in sample $i$
+%    \item ...
+%   \end{itemize}
+  
+  \bigskip \bigskip 
+  \paragraph{Need for multivariate analysis:} 
+  \begin{itemize}
+   \item to summarize the information from $Y$
+   \item to exhibit patterns of diversity
+   \item to understand between-species interactions
+   \item ...
+  \end{itemize}
+  
+  $$
+  \text{\ra Need for a generic (probabilistic) framework}
+  $$
+
+}
+
+%====================================================================
+%====================================================================
+\section{PCA}
+%\frame{\tableofcontents[currentsection]}
+%====================================================================
+
+%====================================================================
+\subsection*{PCA}
+%====================================================================
+\frame{\frametitle{Principal component analysis (PCA)}
+
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.4\textwidth}}
+    Crime data:
+    \begin{itemize}
+     \item $n =51$ observations \\  
+     \item $p = 4$ variables \\ 
+     \item $q = 2$ principal components (PC)
+    \end{itemize}
+    \quad 
+    \includegraphics[width=.35\textwidth]{../FIGURES/Fig-pPCA-exPCA-inertia.pdf}
+    \end{tabular}
+    & 
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+	 \includegraphics[width=.6\textwidth]{../FIGURES/Fig-pPCA-exPCA-biplot.pdf}
+    \end{tabular}
+  \end{tabular}
+}
+
+%====================================================================
+\subsection*{Probabilistic PCA}
+%====================================================================
+\frame{\frametitle{Probabilistic PCA (pPCA)}
+
+  \paragraph{Gaussian latent variable model.} $Y_i = (Y_{i1}, \dots Y_{ip})$
+  $$
+  \{Y_i\} \text{ iid } \sim \Ncal_p(\mu, \Sigma)
+  $$
+  \pause
+  $$ 
+  \includegraphics[width=.8\textwidth]{../FIGURES/pPCA-cst.pdf}
+%   Y = 1_n \times \mu \; + \; W \times B \; + \; E
+  $$
+%   $$
+%   \underset{n \times p}Y = \underset{n \times 1}1 \; \underset{1 \times p}\mu + \underset{n \times q}W \; \underset{q \times p}B + \underset{n \times p}E
+%   $$
+  where
+  \begin{itemize}
+   \item $\mu:$ mean (dim. $= p$)
+   \item $W_i:$ \emphase{principal coordinates}: $\{W_i\} \text{ iid} \sim \Ncal_q(0, I_q)$
+   \item $B:$ $q \times p$ coefficients
+   \item $E:$ non informative noise: $\{E_i\} \text{ iid} \sim \Ncal_p(0, \sigma^2 I_p)$
+  \end{itemize}
+  
+  $$
+  \Rightarrow \qquad \emphase{\Sigma = B' B + \sigma^2 I_p}
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{Covariance structure}
+
+  \begin{tabular}{cc}
+    Empirical covariance & \hspace{-.15\textwidth} Rotated covariance \\
+    \begin{tabular}{p{.5\textwidth}}
+    \includegraphics[width=.45\textwidth]{../FIGURES/Fig-pPCA-Sigma.pdf}
+    \end{tabular}
+    & 
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \includegraphics[width=.45\textwidth]{../FIGURES/Fig-pPCA-rotSigma.pdf}
+    \end{tabular} \\
+    $p = 20$ & \hspace{-.15\textwidth} $q = 5$ 
+  \end{tabular}
+}
+
+%====================================================================
+\frame{\frametitle{Accounting for covariates}
+
+  \begin{overprint}
+   \onslide<1>
+   \quad
+   \includegraphics[width=.8\textwidth]{../FIGURES/pPCA-cst.pdf}
+   \onslide<2>
+   \quad
+   \includegraphics[width=.845\textwidth]{../FIGURES/pPCA-cov.pdf}
+  \end{overprint}
+
+  \bigskip \bigskip \pause
+  \paragraph{Additional information.}
+  \begin{itemize}
+   \item $x_i: 1 \times d$ vector of descriptors for observation $i$
+   \item $X: n \times d$ matrix of descriptors 
+   \item $\beta: d \times p$ matrix of regression coefficient (effect of each covariate on each species)
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Inference}
+
+  \paragraph{Incomplete data model:} 
+  \begin{itemize}
+   \item $Y :$ observed variables, 
+   \item $W :$ unobserved variables, 
+   \item $\theta = (\beta, B, \sigma^2):$ unknown parameters
+  \end{itemize}
+
+  \bigskip \bigskip 
+  \paragraph{EM algorithm.} \refer{DLR77}
+  \begin{itemize}
+   \item E step: given $\theta$ compute (some moments of)
+   $$
+   \emphase{p_\theta(W_i \,|\, Y_i)}
+   $$
+   explicit for Gaussian pPCA \refer{TiB99}. 
+   \item M step: update $\theta$ using the 'completed' likelihood 
+   $$
+   \Esp [\log p_\theta(Y, W) \,|\, Y]
+   $$
+  \end{itemize}
+}
+
+%====================================================================
+%====================================================================
+\section{pPCA for counts}
+%\frame{\tableofcontents[currentsection]}
+%====================================================================
+%====================================================================
+\frame{\frametitle{Models for multivariate count data.}
+
+  \paragraph{Abundance vector:} $Y_i = (Y_{i1}, \dots Y_{ip})$, $Y_{ij} \emphase{= \text{ counts } \in \Nbb}$
+
+  \bigskip \bigskip \pause
+  \paragraph{No generic model for multivariate counts.}
+  \begin{itemize}
+   \item Data transformation ($\widetilde{Y}_{ij} = \log (1+Y_{ij}), \sqrt{Y_{ij}}$) \\ 
+   \ra Pb when many counts are zero. \\ ~
+   \item Poisson multivariate distributions \\
+   \ra Constraints of the form of the dependency \refer{IYA16} \\ ~
+   \item Latent variable models \\
+   \ra Poisson-Gamma (negative binomial) \\
+   \ra \emphase{Poisson-log normal (PLN)} \refer{AiH89}
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{{P}oisson-log normal (PLN) distribution}
+
+  \paragraph{Latent Gaussian model:} 
+  \begin{itemize}
+   \item $Z_i:$ latent vector $\sim \Ncal_p(\mu, \Sigma)$ \\ 
+   \item $Y_i = (Y_{ij})_j:$ counts independent conditional on $Z_i$ 
+   $$
+   Y_{ij} \,|\, Z_{ij} \sim \Pcal\left(e^{Z_{ij}}\right)
+   $$
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Some properties:}
+%   \begin{align*}
+%    \Esp(Y_{ij}) & = e^{\mu_j + \Sigma_{jj}/2} =: \lambda_j > 0 \\
+%    \Var(Y_{ij}) & = \lambda_j + \lambda_j^2 \left( e^{\Sigma_{jj}} - 1\right) 
+%    \qquad (\text{over-dispersion}) \\
+%    \Cov(Y_{ij}, Y_{ik}) & = \lambda_j \lambda_k \left( e^{\Sigma_{jk}} - 1\right)
+%    \quad \qquad (\text{arbitrary sign}) 
+%   \end{align*}
+  \begin{itemize}
+   \item $\Var(Y_{ij}) > \Esp(Y_{ij})$ : \text{over-dispersion}
+   \item $\Cov(Y_{ij}, Y_{ik})$ : \text{arbitrary sign}
+   \item Borrows nice properties of the multivariate Gaussian distribution
+  \end{itemize}
+}
+
+%====================================================================
+\subsection*{PLN-PCA}
+%====================================================================
+\frame{\frametitle{pPCA for count data}
+
+  \paragraph{Idea.} Merge pPCA with Poisson log-normal \refer{CMR17}.
+  
+  \bigskip \bigskip \pause
+  \begin{tabular}{p{.5\textwidth}p{.5\textwidth}}
+  \paragraph{Latent variable:}
+  \begin{itemize}
+  \item $W_i \sim \Ncal_q(0, I_q)$ 
+  \item $Z_i = \mu + W_i B$
+  \end{itemize}
+  &
+  \paragraph{Covariance structure:}
+  \begin{itemize}
+  \item $\Sigma = B' B$
+  \item $Z_i \sim \Ncal_p(\mu, \Sigma)$ 
+  \end{itemize}
+  \end{tabular}
+  \begin{itemize}
+   \item $(Y_{ij})$ independent $\,|\, \; (Z_{ij}):$ $Y_{ij} \sim \Pcal\left(e^{Z_{ij}}\right)$
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Covariates:} $Z_i = x_i \beta + W_i B$ \quad or \quad $Z_i \sim \Ncal_q(x_i \beta, \Sigma)$ 
+}
+
+%====================================================================
+\frame{\frametitle{Variational inference  \refer{CMR17}}
+
+  \paragraph{EM algorithm does not apply} because $p(W_i \,|\, Y_i)$ intractable.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Variational approximation \refer{WaJ08,Jaa00}.}
+  $$
+  p(W_i \,|\, Y_i) \approx \pt_{Y_i}(W_i) = \Ncal_q(\mt_i, \St_i)
+  $$
+  $\mt_i$, $\St_i$: optimal variational parameters in terms of $KL$ divergence.
+
+  \bigskip \bigskip \pause
+  \paragraph{Variational EM.} Aim at maximizing a lower bound
+  $$
+  \Jcal(Y; \theta, \pt) \leq \log p_\theta(Y)
+  $$
+  \paragraph{Property.} $\Jcal(Y; \theta, \pt)$ is convex wrt $(B, \mu)$ and wrt $(\mt, \St)$ \\
+  \ra No need for E and M steps.
+}
+
+%====================================================================
+\section{Illustrations}
+%\frame{\tableofcontents[currentsection]}
+%====================================================================
+
+%====================================================================
+\frame{\frametitle{Metagenomic experiment}
+
+  \paragraph{Data.} Metabarcoding
+  $$
+  Y_{ij} = \text{number of reads associated with species $j$ in sample $i$}
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Generic model.} 
+  $$
+  Y_{ij} \sim \Pcal(\lambda_{ij}), \qquad \log \lambda_{ij} = o_i + x_j \beta_j + W_i B_j
+  $$
+  \begin{itemize}
+   \item $o_i =$ offsets: sequencing depth in sample $i$ for bacteria (fungi)
+   \item $x_i =$ covariates
+   \item $W_i =$principal coordinates
+  \end{itemize} 
+}
+
+%====================================================================
+\subsection*{Pathobiome}
+%====================================================================
+\frame{\frametitle{Pathobiome: Oak powdery mildew}
+
+  \paragraph{Data from \refer{JFS16}.} 
+  \begin{itemize}
+   \item $n = 116$ oak leaves = samples
+   \item $p_1 = 66$ bacterial species (OTU)
+   \item $p_2 = 48$ fungal species ($p = 114$)
+   \item covariates: tree (resistant, intermediate, susceptible), height, distance to trunk, ...
+   \item offsets: $o_{i1}, o_{i2} =$ offset for bacteria, fungi
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Aim.} Understand the interaction between the species, including the oak mildew pathogene {\sl E. alphitoides}.
+}
+
+%====================================================================
+\frame{\frametitle{Pathobiome: How many components?}
+
+  $$
+  \includegraphics[width=.9\textwidth]{../FIGURES/CMR17-Fig1a_ModSel.pdf}
+  $$
+  \qquad \qquad offset only: $\widehat{q} = 24$; \qquad \qquad offset + covariates: $\widehat{q} = 21$, 
+}
+
+%====================================================================
+\frame{\frametitle{Pathobiome: First 2 PCs}
+
+  $$
+  \includegraphics[width=.9\textwidth]{../FIGURES/CMR17-Fig1c_IndMap.pdf}
+  $$
+  \qquad \qquad \qquad offset only; \qquad \qquad \qquad offset + covariates, 
+}
+
+
+%====================================================================
+\frame{\frametitle{Pathobiome: Precision of $\widehat{Z}_{ij}$}
+  
+  \begin{center}
+     \begin{tabular}{cc}
+	 $\sqrt{\Var}(Z_{ij})$ & \begin{tabular}{c}
+	 \includegraphics[width=.5\textwidth]{../FIGURES/CMR17-Fig2_VarZ.pdf} 
+	 \end{tabular} \\
+	 & $Y_{ij}$
+	\end{tabular}
+  \end{center}
+
+%   $$
+%   \includegraphics[width=.5\textwidth]{../FIGURES/CMR17-Fig2_VarZ.pdf}
+%   $$
+%   $x$: $Y_{ij}$; $y$: approximate sd of $Z_{ij}$
+  
+  \bigskip
+  Due to the link function (log) $\Var(Z_{ij})$ is higher when $Y_{ij}$ is close to 0.}
+
+%====================================================================
+\subsection*{Microbiome}
+%====================================================================
+\frame{\frametitle{Microbiome: Weaning of piglets}
+
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.4\textwidth}}
+    \paragraph{Data from \refer{MBE15}.} 
+    \begin{itemize}
+    \item $n = 115$ samples % (= $51$ piglets at $5$ times)
+    \item $p = 4031$ bacterial species % (OTU)
+    %    \item covariates: piglet, time
+    \item offsets: $o_i =$ offset % for sample $i$
+    \end{itemize}
+
+    \bigskip \bigskip
+    Considering only a fraction of (most abundant) species.
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    %$$
+    \includegraphics[width=.5\textwidth]{../FIGURES/CMR17-Fig3_timings.pdf} \\
+    %$$
+    $x$: number species; \\
+    $y$: computation time (s)
+    \end{tabular}
+  \end{tabular}
+}
+
+%====================================================================
+\frame{\frametitle{Microbiome: Model selection}
+
+  \begin{tabular}{ccc}
+    $\log_{10}$ abundances & $R^2$ criterion & chosen rank $\widehat{q}$ \\
+    \includegraphics[width=.3\textwidth]{../FIGURES/CMR17-Fig4a-CritAbundance.pdf}
+    &
+    \includegraphics[width=.3\textwidth]{../FIGURES/CMR17-Fig4b-CritR2.pdf}
+    &
+    \includegraphics[width=.3\textwidth]{../FIGURES/CMR17-Fig4c-CritRank.pdf}
+  \end{tabular}
+  $x-$axis: number of species
+}
+
+%====================================================================
+%====================================================================
+\section{Discussion}
+%\frame{\tableofcontents[currentsection]}
+%====================================================================
+
+%====================================================================
+\frame{\frametitle{Summary}
+
+  \begin{itemize}
+   \item Generic PLN model combining pPCA and GLM \\~
+   \item Efficient variational algorithm \\~
+   \item \refer{CMR17}: arXiv:1703.06633
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{And ...}
+  \begin{itemize}
+   \item Model selection ($BIC$ and $ICL$ criteria) + Goodness-of-fit \\~
+   \item Visualization (non-nested latent spaces when $q$ increases) \\~
+   \item Package available at \emphase{\tt https://github.com/jchiquet/PLNmodels} \\
+%    Syntax:
+    $$
+    \text{\url{
+    PCA = PLNPCA(Y ~ 1 + X + offset(O), Q=1:10, control = ...)
+    }}
+    $$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Extensions}
+
+  \begin{itemize}
+   \item PLN discriminant analysis (implicit via $X$) \\ ~
+   \item Extension to other distributions (Bernoulli for 0/1 data, ...) \\ ~
+   \item Alternative modeling of $\Sigma$ for network inference \\ ~
+   \item Autoregressive model for multivariate time series \\ ~
+   \item GLM mixed (GLMM) models \\ ~
+   \item Force sparsity in $B$ ('sparse pPCA') \\ ~
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{ \frametitle{References}
+{\tiny
+  \bibliography{/home/robin/Biblio/BibGene}
+%   \bibliographystyle{/home/robin/LATEX/Biblio/astats}
+  \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+%====================================================================
+%====================================================================
+\appendix 
+\backupbegin
+\section{Appendix}
+% \frame{\tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Appendix}}
+%====================================================================
+
+%====================================================================
+\frame{\frametitle{Model selection}
+
+  \paragraph{Number of component $q$:} needs to be chosen.
+  
+  \bigskip \bigskip %\pause
+  \paragraph{Penalized 'likelihood'.}
+  \begin{itemize}
+   \item $\log p_{\widehat{\theta}}(Y)$ intractable: replaced with $\Jcal(Y; {\widehat{\theta}}, \pt)$ \\ ~
+   \item $vBIC_q = \Jcal(Y; {\widehat{\theta}}, \pt) - pq \log(n)/2$ \refer{Sch78} \\ ~ 
+   \item $vICL_q = vBIC_q - \Hcal(\pt)$ \refer{BCG00} \\ ~ 
+  \end{itemize}
+  
+  \bigskip
+  \paragraph{Chosen rank:}
+  $$
+  \widehat{q} = \arg\max_q vBIC_q
+  \qquad \text{or} \qquad
+  \widehat{q} = \arg\max_q vICL_q
+  $$
+}
+
+
+%====================================================================
+\frame{\frametitle{Goodness of fit}
+
+  \paragraph{pPCA:} Cumulated sum of the eigenvalues = \% of variance preserved on the first $q$ components.
+  
+  \bigskip \bigskip 
+  \paragraph{PLN-pPCA:} Deviance based criterion.
+  \begin{itemize}
+   \item Compute $\widetilde{Z}^q = O + X \widehat{\beta} + \widetilde{M}^q \widehat{B}^q$
+   \item Take $\lambda_{ij}^q = \exp(\widetilde{Z}_{ij}^q)$
+   \item Define $\lambda_{ij}^{\min} = \exp( \widetilde{Z}_{ij}^0)$ and $\lambda_{ij}^{\max} = Y_{ij}$ 
+   \item Compute the Poisson log-likelihood $\ell_q = \log P(Y; \lambda^q)$
+  \end{itemize}
+  
+  \bigskip \bigskip 
+  \paragraph{Pseudo-$R^2$:} 
+  $$
+  R_q^2 = \frac{\ell_q - \ell_{\min}}{\ell_{\max} - \ell_{\min}}
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{Pathobiome: Goodness of fit}
+  
+  $$
+  \includegraphics[width=.9\textwidth]{../FIGURES/CMR17-Fig1b_GoodnessEntropy.pdf}
+  $$
+  $x-$axis: $q$; $y-$axis: left = $R_q^2$, right = $-\Hcal(\pt) = vBIC_q - vICL_q$
+}
+
+%====================================================================
+\frame{\frametitle{Visualization}
+
+  \paragraph{PCA:} Optimal subspaces nested when $q$ increases.
+  
+  \bigskip \bigskip 
+  \paragraph{PLN-pPCA:} Non-nested subspaces.
+  \begin{itemize}
+   \item For a given dimension $q$
+   \item Compute the estimated latent positions $\widetilde{P} = \widetilde{M} \widehat{B}$
+   \item Perform PCA on the $\widetilde{P}$.
+  \end{itemize}
+}
+
+\backupend
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

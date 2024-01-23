@@ -1,0 +1,208 @@
+\documentclass[french]{slides}
+
+\usepackage{amsfonts}
+\usepackage{enumerate}
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+
+\textwidth 16cm
+\textheight 22cm 
+\topmargin -1 cm 
+\oddsidemargin  0cm 
+\evensidemargin  0cm
+
+\newcommand{\section}[1]{\centerline{\Large \bf #1}}
+\newcommand{\subsection}[1]{{\large \bf #1}}
+\newcommand{\paragraph}[1]{{\large \sl #1}}
+\renewcommand{\baselinestretch}{1.1}     
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\centerline{\bf \Large QUELQUES EXEMPLES } \vspace{0.5cm}
+\centerline{\bf \Large D'ANALYSES STATISTIQUE} \vspace{0.5cm}
+\centerline{\bf \Large DU TRANSCRIPTOME} 
+\vspace{4cm}
+
+\centerline{\sc S. Robin} %\vspace{0.5cm}
+\centerline{\sl Institut National Agronomique Paris-Grignon}
+%\vspace{0.5cm}
+\centerline{\sl INRA Biométrie et Intelligence Artificielle}
+%\vspace{0.5cm}
+\centerline{\tt robin@inapg.inra.fr} 
+\vspace{4cm}
+
+\centerline{Séminaire Lyon} \vspace{0.5cm}
+\centerline{18 janvier 02}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{PLAN}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Classification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ -- Qu'est-ce qu'on cherche~?\\
+ -- Comment ça marche~?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Analyse de la variance}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ -- Le modèle et ses hypothèses\\
+ -- Les résultats obtenus\\
+ -- Version non-paramétrique\\
+ -- Une application
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Modèle de mélange}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ -- Le modèle~?\\
+ -- L'algorithme~? \\
+ -- Une application (comparaison avec l'anova)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{CLASSIFICATION}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Données}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Expression de $G$ gènes dans $T$ conditions
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Question}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Existe-t-il des groupes de gènes présentant des profils d'expression
+similaires~?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Objectif}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Définir des groupes de gènes \\
+ -- homogènes \\
+ -- bien distincts les uns des autres
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{ANALYSE DE LA VARIANCE}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Données}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Expression de $G$ gènes dans $T$ conditions avec répétition~:
+$$
+Z_{gtr} = 
+  \left\{ 
+    \begin{tabular}{l}
+      expression du gène $g$ \\
+      dans la condition $t$ \\
+      lors de la $r$-ème répétition \\
+    \end{tabular}
+  \right.
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Question}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Quels sont les gènes affectés par les changements de conditions
+
+\paragraph{Analyse différentielle~:} \\
+gènes $+ / -$
+
+\paragraph{Comparaisons multiples~:} \\
+comparaison des gènes entre eux
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Anova classique}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{eqnarray*}
+Z_{gtr} &  = & \mbox{constante générale} \\
+ & + & \mbox{correction pour le gène } g \\
+ & + & \mbox{correction pour la condition } t \\
+ & + & \mbox{interaction gène $g$ $\times$ condition $t$} \\
+ & + & \mbox{erreur aléatoire } (g, t, r)
+\end{eqnarray*}
+
+\paragraph{Idée~:}\\ 
+ -- Le terme intéressant est le terme d'{\bf interaction} \\
+ -- Toute l'erreur de mesure est prise en compte par le dernier
+    terme\\
+ -- Cette erreur est purement additive \\
+ -- C'est sur cette erreur que portent toutes les hypothèses
+  statistiques
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Anova sur les rangs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Principe}
+\begin{enumerate}
+\item On classe les $G \times T \times R$ mesures $Z_{gtr}$ par ordre
+  croissant et on leur associe leur rang dans ce classement:
+  $$
+  Z_{gtr} \rightarrow \mbox{Rang}(Z_{gtr})
+  $$
+\item On oublie les mesures originales $Z_{gtr}$ et on fait une anova
+  sur les {Rang}$(Z_{gtr})$
+\end{enumerate}
+
+\paragraph{Intérêt}
+\begin{itemize}
+\item Plus d'hypothèse de normalité
+\item Mais toujours une hypothèse de variance homogène (moins cruciale)
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{MODÈLES DE MÉLANGE}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Mélange de populations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Algorithme EM}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Initialisation~:}\\
+On choisit des valeurs initiales $(p_-, p_0, p_+)^0$, $(\mu_-,
+\mu_+)^0$, $(\sigma_-, \sigma_0, \sigma_+)^0$\\
+~\\
+\paragraph{Étape E (estimation)~:}\\
+On calcule la probabilité de chaque gène d'appartenir à chaque classe
+avec les paramètres de l'étape précédente ($i$): $p_-^i(g)$,
+$p_0^i(g)$, $p_+^i(g)$\\
+~\\\paragraph{Étape M (maximisation)~:}\\
+On ré-estime les paramètres $(p_-, p_0, p_+)^{i+1}$, $(\mu_-,
+\mu_+)^{i+1}$, $(\sigma_-, \sigma_0, \sigma_+)^{i+1}$ avec les
+probabilités $p^i(g)$:
+$$
+\mu_-^{i+1} = \frac{\sum_g p_-^i(g) D_g}{\sum_g p_-^i(g)}
+$$
+\paragraph{XEMgauss~:} 
+Programme MatLab (C. Biernacki, G. Celeux, INRIA Grenoble)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

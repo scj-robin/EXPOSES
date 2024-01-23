@@ -1,0 +1,147 @@
+\documentclass[11pt,a4paper,french]{article}
+
+\usepackage{enumerate}
+\usepackage{amsmath}
+
+\textwidth=16cm
+\textheight=22.5cm
+\oddsidemargin=0cm
+\evensidemargin 0 cm
+\topmargin=0cm
+%\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+  {\Large \bf Motif distribution in DNA sequences}
+
+  {\large St\'ephane {\sc Robin} \\
+  INA P-G / INRA, Biom\'etrie \\
+  16, rue Claude Bernard, 75005 Paris, {\sc France} \\
+  {\tt robin@inapg.inra.fr}}
+
+\end{center}
+
+Motif statistics are part of basic tools in DNA sequence analysis.  In
+this presentation, we define a motif (or pattern) as a short sequence
+(a dozen at most) of nucleotides {\tt a}, {\tt c}, {\tt g} or {\tt t}.
+A motif can be defined exactly (it is then called a word) or admit few
+errors, insertions or deletions. The underlying idea of the
+statistical analysis of a motif is that its presence, frequency or
+distribution provides informations regarding its biological function.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Three examples}
+
+\paragraph{Promotor sites.}
+A promotor is a motif appearing upstream from a gene and to which the
+enzyme responsible of the transcription binds. These motifs are
+generally unknown but the structure of the enzyme provides some
+information about their structure. We aim to discover promotor motifs
+by looking for motifs having the right structure and being frequently
+present upstream from known genes.
+
+\paragraph{CHI sites and palindromes.}
+Some motifs, like CHI in several bacteria, protect the genome against
+its degradation by some specific enzyme. Some others, like palindromes
+in {\em E. coli}, are frailty sites. The former must have been
+selected by evolution while the latter must have been avoided. Motifs
+of both kinds may be detected by looking at motifs with unexpectedly
+high or unexpectedly low frequencies.
+
+\paragraph{Rich regions in CHI occurrences.}
+Following the last example, one may also think that evolution may have
+concentrated occurrences of CHI (reps. avoided ocurrences of
+palindromes) in regions that are essential for the genome. One may
+look for such crucial regions by searching regions that are
+unexpectedly rich (resp. poor) in certain motifs. Such an analysis is
+based on the distribution of these motifs along the genome.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Two models}
+
+In the three preceding examples, we are considering motifs having an
+unexpected behaviour. The need for a statistical modelling raises
+immediately: to know if something is unexpected, one first needs to
+define what is expected.  In these analyses, the statistical model
+provides a reference in terms of probability of presence (ex. 1),
+expected frequency (ex. 2) or expected distribution (ex. 3). Observed
+data are then compared to this reference to decide whether what we
+observe is significant or not.
+
+\paragraph{Markov chains.}
+The most popular models in genomics are Markov chains that consider
+DNA as a sequence of random letters, the distribution of each letter
+depending on the few preceding ones.  We present here some theoretical
+results about the waiting time till a motif occur and the distance
+between occurrences in first order Markov chains. These results are
+obtained through the generating function of the associated random
+values. In particular, we show that the distribution of the distance
+between occurrences strongly depends on the overlapping structure of
+the motif.  Knowing the distribution of the first occurrence and of
+the distance between occurrences, we derive the exact distributions of
+($i$) the position of any occurrence (second, third, etc.), ($ii$) the
+number of occurrences in the sequence, ($iii$) and the cumulated
+distances ({\em scans}). \\
+These results are used to discover promotor motifs (ex. 1) and study
+the distribution of CHI sites (ex. 3). The latter analysis is based on
+cumulated distances and bounds for the associated $p$-value are
+obtained thanks to a Chen-stein type Poisson approximation.
+
+\paragraph{Compound Poisson process.}  
+We also propose an alternative modelling in which the DNA sequence is
+considered as a continuous line along which motifs occur as points.
+Simple Poisson process is not satisfying in the general case because
+of possible of overlaps between occurrences. We use a compound Poisson
+process that assumes that the occurrences of the motif appear in
+clumps (that occur according to a simple Poisson process) with random
+sizes. \\
+We pay a special attention to the modelling of clump size, and
+especially to the geometric case. In this case --always valid for a
+word--, distances between occurrences are iid and cumulated distances
+can be used to study the distribution of the occurrences along the
+sequence (ex. 3, CHI motif). When the geometric hypothesis does not
+hold, the analysis of the distribution can be performed using sliding
+windows, but the theoretical results are harder to derive.
+
+
+%\nocite{RoD99} \nocite{RoD01} \nocite{RoS01} \nocite{Rob02} \nocite{RDR02}
+%\bibliography{../../SSB}
+%\bibliographystyle{c:/Stephane/Tex/AjoutSR/astats}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{References}
+\begin{description}
+\item[{\sc Robin, S.}]  \newblock (2002).  \newblock A compound
+  {P}oisson model for words occurrences in {DNA} sequences.  \newblock
+  {\em J. R. Statist. Soc. C}.  \newblock {\bf 51} 437--451.
+  
+\item[{\sc Robin, S.} \textnormal{and} {\sc Daudin, J.-J.}]  \newblock
+  (1999).  \newblock Exact distribution of word occurrences in a
+  random sequence of letters.  \newblock {\em J. Appl. Prob.}
+  \newblock {\bf 36} 179--193.
+
+\item[{\sc Robin, S.} \textnormal{and} {\sc Daudin, J.-J.}]  \newblock
+  (2001).  \newblock Exact distribution of the distances between any
+  occurrences of a set of words.  \newblock {\em Ann. Inst. Statist.
+    Math.}  \newblock {\bf 36}~{\bf (4)} 895--905.
+
+\item[{\sc Robin, S.}, {\sc Daudin, J.-J.}, {\sc Richard, H.}, {\sc
+    Sagot, M.-F.} \textnormal{and} {\sc Schbath, S.}]  \newblock
+  (2002).  \newblock Occurrence probability of structured motifs in
+  random sequences.  \newblock {\em J. Comp. Biol.}  \newblock
+  761--773.
+
+\item[{\sc Robin, S.} \textnormal{and} {\sc Schbath, S.}]  \newblock
+  (2001).  \newblock Numerical comparison of several approximations of
+  the word count distribution in random sequences.  \newblock {\em J.
+    Comp. Biol.}  \newblock {\bf 8}~{\bf (4)} 349--359.
+
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

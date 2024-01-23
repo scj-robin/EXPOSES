@@ -1,0 +1,71 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,letterpaper,tmargin=3cm,bmargin=3cm,lmargin=3cm,rmargin=3cm}
+\setcounter{secnumdepth}{3} \setcounter{tocdepth}{3}
+\usepackage[english]{babel}
+\usepackage{amsmath, amssymb, amsfonts}
+%\usepackage{../../../../LateX/astats}
+\renewcommand{\baselinestretch}{1.5}
+
+\newcommand{\Esp}{\mathbb E}
+\newcommand{\ind}{I_{\{Y_i=1|X_i=x_i\}}}
+\newcommand{\som}{\frac{1}{n}\sum_{i=1}^n}
+
+\title{Answer to the reviewers}
+\begin{document}
+\maketitle
+
+\section{About the title}
+The reviewers mentioned that since the labels are not used for the aggregation, the method should not be called "supervised aggregation". This name was chosen because the method we propose is a competitor of many variable aggregation or variable compression strategies that were developed for the supervised classification framework and that where often known as "supervised clustering". But clearly this was a mistake so we do not used the term "supervised aggregation" anymore in the new version.
+
+While the method is clearly not supervised, we may wonder whether the method is a wrapper or a filter method. We can take a look at the seminal paper of REFREFREFKOHAVI for the intuition of what is a wrapper method. In the Discussion section, the authors write: ``\emph{In supervised classification learning, the question of whether a feature in a dataset is relevant to a given prediction task is less usful than the question of whether a feature is relevant to the prediction task given a learning algorithm. If the goal is to optimize accuracy, one should ask whether a set of features is optimal for a task given a learning algorithm and a training set}.''  True, the main goal of the aggregation method is not to optimize accuracy, but to improve interpretability. However, the aggregation method we propose is wrapper because it does depend on the algorithm: one has to specify the learning algorithm in order to define the aggregation loss $L_{alg}$. So we do not agree on this point with reviewer 2, and the title of the revised version now mentions the wrapper aspect of the method.
+
+
+Sur le partage cart pour l'un, knn pour l'autre.
+
+\section{Answer to Reviewer 1}
+
+
+
+\section{Answer to Reviewer 2}
+\emph{For example, I think I finally understand it now, but I was very confused by the meaning of N_C and N_S.  N_C is initially defined as the number of clusters (except the authors [mis]use the word "class" to mean "cluster"), but the figure captions call it the "average aggregation rate" and say that N_S is the number of clusters.  It didn't help to find sentences like this one on p10: "The procedure stops when the number of clusters is N_C, or possibly when the number of clusters is 1." -- what does that mean?}
+
+As mentioned by Reviewer 1, there were some confusing uses of expressions like "class" instead of "cluster", or "aggregation rate" instead of "number of clusters after the aggregation step". We made the replacement when needed, and made clearer the distinction between $N_C$, $N_{min}$ and $N_S$.\\
+We stated that the procedure may stop at $N_C$ or 1 just to emphasize the fact that if the user knows the number $N_C$ of clusters he wants, he can stop the procedure at the corresponding step, and if he does not know $N_C$, he can just let the hierarchical clustering go to 1 cluster and then look at the results to choose $N_C$. Since the sentence was misleading, we simplified and wrote 'The procedure stops when the number of clusters is N_C' in the revised version.
+
+\emph{In another example, choosing Nmin is explained only in terms of finding an "identifiable breakpoint", and is illustrated in Fig 3. This figure has no labels, a tiny font for the numbers, a very thin line for the curve, and the curve hugs the two axes so closely it's hard to even see it.  Further, the choice of breakpoint for this curve seems totally arbitrary.  Presumably some criterion is used; all the authors say is that they use a strategy that is similar to one that was described in a 1999 reference.
+}
+
+The figure is now properly displayed, with a longer legend to explain what appears on it. The strategy we use is a strategy proposed by Lavielle (1999), and we added a sentence about this strategy in section 'Choice of the number of clusters'. The details are in the article of Lavielle so that the interested reader can refer to this article.
+
+\emph{p13, One thing I didn't understand about the dataset in Section IIIA: do the signals correspond to the entire words Boat and Goat, or just to the first sound? I'm not a speech recognition expert, but I would imagine that a Fourier transform of the whole word would be less informative than the transform of the first sound since it is the first sound that is different.}
+
+The signals correspond to the entire word. This explains why some variable selection to select the ``good part'' of the signal is needed. See also the answer to the next question.
+
+\emph{p14, While Fig 4 is somewhat interesting, it would be more informative, I think, to see what the differences are between "Boat" and "Goat" -- eg, plot a sampling of Boat spectra and a sampling of Goat spectra.}
+
+A example of each speech frame is now available in the new version of the manuscript.
+
+\emph{p14, In describing the work of Biau et al (2005), the authors say that they use "the first d components" but do not say what d is, or whether these components correspond to the components used by the authors.}
+
+In the new version of the manuscript, the sentence that presents the Biau's strategy is now the following:
+``As a comparison, \cite{Biau05} achieved a classification error rate of 21\% by applying the $k$NN algorithm to the first $d$ principal components of the Fourier transform, where $d$ is chosen with a cross-validation strategy.'' \\ Obviously the components of Biau are not the components we use, since Biau performs compression using PCA on the whole set of variables, whereas we use aggregation, where each group of variables is summed up by its own PCA.
+
+\emph{p15, Table I, Do the authors really mean "standard errors"? Or do they mean "standard deviations"?}
+
+We meant standard deviation. This is now corrected on both tables. 
+
+
+\emph{Authors cite a 1999 preprint by Hastie et al, but that paper was published in 2000 in Genome Biology. The authors should use the published reference
+}
+
+Done.
+
+
+
+\section{Answer to Referee 3}
+
+
+\end{document}
+

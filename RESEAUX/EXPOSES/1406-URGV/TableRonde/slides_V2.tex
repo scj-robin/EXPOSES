@@ -1,0 +1,282 @@
+\documentclass[nopagenumber]{beamer}
+\mode<presentation> {
+  \usetheme{Madrid}
+  \setbeamercovered{transparent}
+  \usecolortheme{sidebartab}
+  \usefonttheme{structurebold}
+  \useinnertheme{rounded}
+}
+
+\usepackage{float}
+%\usepackage[french]{babel}
+\usepackage{amsmath}
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{multirow}
+\usepackage{url}
+
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\card}{Card}
+\def \ybf {\mathbf{y}}
+\def \xbf {\mathbf{x}}
+% Commands
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\newcommand{\emphase}[1]{\textcolor{blue}{#1}}
+\newcommand{\paragraph}[1]{\noindent\textcolor{blue}{#1}}
+\newcommand{\textred}[1]{\textcolor{red}{#1}}
+\newcommand{\textgreen}[1]{\textcolor{green}{#1}}
+\newcommand{\textblue}[1]{\textcolor{blue}{#1}}
+
+\title[Statistique \& r\'eseaux biologiques]
+{M\'ethodes statistiques pour les r\'eseaux biologiques}
+
+%\subtitle{Presentation Soustitre}
+
+\author{M.L. Martin-Magniette $\&$ S. Robin}
+\institute[]{}
+\date[10 juin 2014]{}
+
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  \begin{columns}
+    \begin{column}{3.5cm}
+      % \centerline{\includegraphics[width=2cm]{./image/IMT.jpg}}
+  \end{column}
+  \begin{column}{3.5cm}
+    % \centerline{\includegraphics[width=2cm]{./image/logoInriaSaclay.png}}
+  \end{column}
+  \begin{column}{3.5cm}
+    % \centerline{\includegraphics[width=2cm]{./image/LogoINRA-Couleur.jpg}}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%====================================================================
+\section{De quoi parle-t-on ?}
+%====================================================================
+\frame{\frametitle{Analyse de la  co-expression}
+
+\paragraph{Objectif:} Identifier des gènes qui ont le même profil d'expression dans un grand ensemble de conditions.
+
+\bigskip
+\paragraph{Méthodes:} classification non supervis\'ee (clustering hi\'erarchique ou modèles de m\'elange)
+$$
+\includegraphics[scale=.2]{profil19.png}
+$$
+
+\paragraph{Résultat:} ``r\'eseau de co-expression'', mais les méthodes ne font généralement pas appel à réseau au sens mathématique.
+
+% Attention : le mot r\'eseau n'a pas forc\'ement le même sens dans les deux communaut\'es
+% Réseau de cluster -> vrai graphe mathématique, mais noeuds = clusters
+}
+
+
+%====================================================================
+\frame{\frametitle{R\'eseau biologique}
+  
+\begin{tabular}{cc}
+  \begin{tabular}{p{.4\textwidth}}	
+  \paragraph{``Définition''.}
+  Ensemble d'interactions entre des composants variés de la cellule (gènes, prot\'eines, m\'etabolites, etc.)
+  \end{tabular} 
+  &
+  \begin{tabular}{p{.6  \textwidth}}
+  \includegraphics[height=.6\textheight]{DeLaRota.jpeg}
+  \end{tabular} 
+\end{tabular}
+\begin{itemize}
+ \item Quels composants (gènes, prot\'eines, m\'etabolites, etc.) ?
+ \item Quelles interactions (régulation, ...)
+\end{itemize}
+
+}
+
+%====================================================================
+\section{Quel représentation ?}
+%====================================================================
+\frame{\frametitle{Graphe (au sens math\'ematique)}
+
+\begin{tabular}{cc}
+  \begin{tabular}{p{.4\textwidth}}
+  Un graphe $G$ est constitu\'e 
+  \begin{itemize}
+   \item de noeuds $(V)$  
+   \item et d'arêtes $(E)$: 
+  \end{itemize}
+  $$
+  G = (V, E)
+  $$
+  \end{tabular} 
+  &
+  \begin{tabular}{p{.5\textwidth}}
+  \includegraphics[height=.5\textheight]{graphe.jpeg}
+  \end{tabular} 
+\end{tabular}
+
+  \begin{itemize}
+  \item Graphe orienté: $\{i \rightarrow j\} \neq \{j \rightarrow i\}$ / non-orienté: $\{i \sim j\}$
+  \item Composante connexe: ensemble de noeuds connectés entre eux par au moins un chemin
+  \end{itemize}
+  
+  \bigskip
+  \paragraph{$\longrightarrow$} Description (statique) des interactions existantes
+
+}
+
+%====================================================================
+\frame{\frametitle{Modèle graphique}
+
+
+Représentation probabiliste des dépendances entre des variables (i.e. expression de gènes).
+
+\begin{tabular}{cc}
+  \begin{tabular}{p{.5\textwidth}}
+  $$
+  \begin{array}{l}
+  P(A, B, C, D, E) \\
+  ~ \\
+  \quad = P(A) \; P(B|A) \; P(C|A) \\
+  ~ \\
+  \qquad \times \; P(D) \; P(E | C, D)
+  \end{array}
+  $$
+  \end{tabular} 
+  &
+  \begin{tabular}{p{.5\textwidth}}
+  \includegraphics[height=.4\textheight]{Fig-GM-SimpleExample.png}
+  \end{tabular} 
+\end{tabular}
+
+\bigskip
+\begin{itemize}
+ \item Autres noms: ``réseaux bayésiens'', ``DAG'', ...
+ \item Structure: peut-être donnée ou à inférer
+\end{itemize}
+
+}
+
+
+%====================================================================
+\section{Quel question \& quelles méthodes ?}
+%====================================================================
+\frame{\frametitle{Th\'ematiques de recherche associ\'es aux graphes}
+
+\begin{description}
+\item[Inf\'erence de la structure:] estimer le modèle graphique sous-jacent. \\ ~
+\item[Caract\'eriser la structure:] analyser l'organisation globale d'un graphe. \\ ~
+\item[Recherche de motifs] d\'etecter des structures locales dans un graphe.
+\end{description}
+}
+
+%====================================================================
+\frame{\frametitle{Inférence de la structure}
+
+\begin{tabular}{ll}
+ \begin{tabular}{p{.4\textwidth}}
+  \paragraph{Cas typique :}
+  \begin{itemize}
+   \item Données = expression de gènes 
+   \item Résultats = réseau ``de régulation''
+  \end{itemize}
+ \end{tabular}
+ &
+ \hspace{-.01\textwidth}
+ \begin{tabular}{p{.5\textwidth}}
+  \includegraphics[width=0.5\textwidth]{PuX12-ECCV-Figa}
+ \end{tabular}
+\end{tabular} 
+
+\bigskip
+\paragraph{Modèle de référence :} Modèle graphique gaussien (GGM)
+
+\bigskip
+\paragraph{Enjeux globaux:}
+\begin{itemize}
+ \item Atteignable pour le réseau complet (réseau entier) ?
+ \item Prise en compte de connaissance {\sl a priori}
+ \item Comparaison / évolution de réseaux
+\end{itemize}
+\paragraph{Enjeux locaux:}
+\begin{itemize}
+\item Existence \& comparaison d'une ou quelques arêtes ?
+\end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Caractérisation de la structure}
+
+\begin{tabular}{cc}
+  \begin{tabular}{p{.6\textwidth}}
+  \paragraph{Statistique descriptive:}
+  \begin{itemize}
+%    \item Graph mining \\
+  \item distribution des degrés, diamètre, 
+  \item nombre de composantes connexes 
+  \end{itemize} \\~
+  \bigskip
+  \paragraph{Modèle statistique = graphe aléatoire}
+  \begin{itemize}
+%    \item Graph mining \\
+  \item Erdös-Renyi = ``aléatoire''
+  \item attachement préférentiel
+  \item stochastique blockmodel = modulaire
+  \end{itemize} \\
+  ~ \\ ~ \\ ~ \\ ~ \\ 
+  \end{tabular} 
+  &
+  \hspace{-.05\textwidth}
+  \begin{tabular}{c}
+    \includegraphics[width=0.28\textwidth]{histo_degre_power} \\
+    \vspace{-.12\textheight} ~\\
+    \includegraphics[width=0.5\textwidth, angle=270]{Colinet_Q5} 
+  \end{tabular} 
+\end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Recherche de motifs}
+
+\begin{tabular}{cc}
+  \begin{tabular}{p{.6\textwidth}}
+  \paragraph{Structure local du graphe:} \\
+  \begin{itemize}
+   \item Transitivité $\propto$ nombre de triangles \\
+   \item Forme de régulation: 'Feed-forward loop' \\
+   \item Motif 'non-topologiques': combinaison de métabolites
+  \end{itemize}
+  \bigskip
+  \paragraph{Enjeux:} \\
+  \begin{itemize}
+   \item Identification \& énumération  \\ 
+   \item Significativité statistique
+  \end{itemize}
+  \end{tabular} 
+  &
+  \hspace{-.05\textwidth}
+  \begin{tabular}{c}
+    \includegraphics[width=0.24\textwidth]{feedforwardloop} \\
+    ~ \\
+    \includegraphics[width=0.3\textwidth]{ColoredMotif-SR} 
+  \end{tabular} 
+\end{tabular}
+
+
+}
+
+\end{document}
+
+
+\begin{tabular}{cc}
+  \begin{tabular}{p{.5\textwidth}}
+  \end{tabular} 
+  &
+  \begin{tabular}{p{.5\textwidth}}
+  \end{tabular} 
+\end{tabular}

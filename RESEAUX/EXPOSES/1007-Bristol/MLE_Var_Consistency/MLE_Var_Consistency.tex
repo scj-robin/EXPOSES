@@ -1,0 +1,1295 @@
+\documentclass[11pt]{article}
+
+%%%% Declaration packages
+\usepackage{graphicx}
+\usepackage[latin1]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath, amssymb, amsfonts}%,amsthm}
+%\usepackage{nath}
+\usepackage{stmaryrd}
+\usepackage{dsfont} % pour l'indicatrice
+\usepackage[T1]{fontenc}
+
+%%%%%%% Ajouts pour preprint
+\usepackage{hyperref}
+\usepackage[authoryear]{natbib}
+% use this package if hyperref and natbib is used:
+\usepackage{hypernat}
+%\usepackage{shortcuts}
+
+
+
+%%%% Theorem environments
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{proof}{Proof}%[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{assum}{Assumption}
+\newtheorem{rk}{Remark}
+
+
+
+
+
+
+
+
+%%%%  Format page
+
+\textwidth  14cm
+\textheight 21cm
+\topmargin 0 cm
+\oddsidemargin 0 cm
+\evensidemargin 0 cm
+
+
+%%%% raccourcis Alain
+
+%% Espaces mesurables
+%\newcommand{\Z}{\mathcal{Z}}
+\newcommand{\Zdefn}{\mathcal{Z}_{n}}
+\newcommand{\Xdefn}{\mathcal{X}_{n}}
+%\newcommand{\A}{\mathcal{A}}% tribu sur Z
+\newcommand{\An}{\mathcal{A}_{n}}
+\newcommand{\F}{\mathcal{F}}% tribu sur X
+\newcommand{\Fn}{\mathcal{F}_{n}}
+\newcommand{\T}{\mathcal{T}}% tribu sur les mesures de proba
+
+%% Points
+\newcommand{\Xn}{X_{[n]}}
+\newcommand{\xn}{x_{[n]}}
+\newcommand{\Zn}{Z_{[n]}}
+\newcommand{\zn}{z_{[n]}}
+\newcommand{\taun}{\tau_{[n]}}
+\renewcommand{\L}{\mathcal{L}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\znh}{\widehat{z}_{[n]}}
+\newcommand{\zh}{\widehat{z}}
+\newcommand{\tah}{\widehat{\tau}}
+\newcommand{\tahn}{\tah_{[n]}}
+\newcommand{\znt}{\widetilde{z}_{[n]}}
+\renewcommand{\th}{\widehat{\theta}}
+\newcommand{\thn}{\th_{n}}
+\newcommand{\Mn}{\mathbb{M}_{n}}
+\newcommand{\PXn}{P^{\Xn}}
+
+
+
+% Fin raccourcis Alain
+
+
+
+
+
+%%%%%% Juste pour la redaction
+\newtheorem{postita}{Post-it}
+\newenvironment{postit}[1][]{\begin{quote} \begin{postita}[ #1]}{\end{postita} \end{quote}}
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+
+
+\title{Consistency of maximum-likelihood and variational estimates in mixture models for random graphs}
+
+\author{Alain Celisse and Jean-Jacques Daudin}
+
+\date{\today}
+
+\maketitle
+
+
+
+\begin{abstract}
+The asymptotic properties of the parameters estimates of two mixture models for heterogenous directed or undirected random graphs (called stochastic block structure model or Mixnet) are studied.
+%
+We prove that the maximum likelihood estimates are consistent for the infinite parameter (conditionnal) version of the model.
+%
+Moreover we prove that the variational parameter estimates of the usual mixture model are consistent and asymptotically equivalent to the maximum likelihood estimates.
+\end{abstract}
+
+
+
+\section{Introduction}
+
+Complex networks are more and more studied in different domains such as social sciences and biology.
+%
+The network representation of the data is graphically attractive, but there is clearly a need for a synthetic model, giving a lightning representation of complex networks.
+%
+Statistical methods have been developed for analyzing complex data such as networks in a way that could reveal underlying data patterns through some form of classification.
+
+Unsupervised classification of the vertices of networks is a rapidly developing area with many applications in social and biological sciences.
+%
+The underlying idea is that common connectivity behavior shared by several vertices leads to  their grouping in one {\it meta-vertex}, without losing too much information.
+%
+Then, the initial complex network may be reduced to a simpler {\it meta-network}, with few {\it meta-vertices} connected by few {\it meta-edges}.
+%
+\cite{PMDCR} show applications of this idea to biological networks and  \cite{NS} to social networks.
+
+Using mixture model, discrete latent variables give the assignment of each vertex to a group, where each vertex is supposed to pertain to only one group.
+%
+\cite{NS}  were among the first to propose what they called a Stochastic block structure model because their model was on the line of an older non stochastic block structure model largely developed in social science.
+%
+Their estimation method is made through bayesian MCMC algorithms for networks with less than 200 vertices. \cite{DPR} have given more insight on the same model, the degree distribution and the clustering coefficient, and used a variational method for estimating the parameters.
+
+
+%
+Bickel and Chen \cite{BC} use a label switching algorithm to maximize modularity criteria such as a profile likelihood and give some asymptotic results of consistency and speed of convergence for undirected networks. In particular they proved that one can recover exactly the class of each node when $n$ tends to infinity, a result which was given first by \cite{SN} for two classes.
+
+
+%
+The variational method allows to deal with several thousand vertices and gives good results in practice (see Mixnet \cite{Mixnet}).
+%
+However the statistical properties of variational estimates are not well known.  They maximize a pseudo-likelihood and are, by definition, inferior to maximum likelihood estimates.
+%
+No general properties have been established. However the variational estimates have been proved to be consistent in some cases (\cite{HHT}, \cite{HT}, \cite{CM}, \cite{WB}) and not consistent in other ones (\cite{WT}).
+
+In this paper we define two versions of the mixture model for random graphs: the first one, denoted model (M1), assume that the latent variables giving the group of each node are fixed parameters, and the second one, denoted model (M2), is the standard mixture model with random latent classes. We prove that the maximum-likelihood estimate of the countable set of parameters of model (M1) is consistent. Then we turn to model (M2) and prove that the asymptotic a-posteriori pdf of the latent variables is a Dirac distribution and that the variational estimates are consistent and asymptotically equivalent to the maximum likelihood estimates.
+
+
+
+
+
+\section{Notations and Models}
+\label{sec.notation}
+
+
+%%%%%
+\subsection{Basic notations}
+Let $\Omega=(\N,\X)$ be the set of random graphs with a countable number of nodes labeled in $\N$ , $\X=\acc{0,1}^{\N^2}$ the corresponding random adjacency matrix, with $X_{ij}=1$ if there is an edge from node $i$ to node $j$, $\P$ a probability measure on $\Omega$ and  $x \in \X$. We assume that there is no edge from a node to itself ($diag(X)=0$). Let $\Xdefn=\acc{0,1}^{n^2}$ the set of the $(n,n)$ adjacency matrices, and
+$\xn=\acc{x_{i,j}\in\acc{0,1}\mid 1\leq i,j\leq n} \in \Xdefn$.
+
+\medskip
+
+
+%%%%%
+\subsection{Mixnet: Model (M2)}
+{\bf Stochastic blockmodel}
+The name "Stochastic blockmodel" comes from the historical development of models for
+social networks. However this name seems quite abstruse for people who have no historical background in social sciences. This model is now used in many domains, such as molecular biology and ecology, exceeding largely the social sciences.
+Therefore we prefer to use the name "Mixnet" which takes into account its two main characteristics: (i) it is a model for
+networks and (ii) it is a mixture model. Moreover this name is not associated to any particular domain of application.
+
+The definition of the Mixnet model for a network with $n$ nodes is the following:
+\begin{itemize}
+\item $i=1,\ldots,n$ vertices \item $q=1,\ldots,Q$ classes \item $X_{ij}=1$ if
+there is an edge from node $i$ to node $j$.
+ \item
+$\Zn=(Z_1,...Z_i...Z_n), \; Z_i \in \acc{1,\ldots,Q}  $ a sequence of
+independent random integers with $P(Z_i=q)=\alpha_q$, and
+$\alpha=(\alpha_1,...,\alpha_Q)$.
+%In some cases we will use the notation $Z_{iq}$, with
+%$Z_{iq}=1$ if $Z_i=q $ and $Z_{iq}=0$ if $Z_i \neq q .$
+ \item Conditionally to
+$Z$, $X_{ij}$ are independent Bernoulli RV with
+       $$P(X_{ij}=1\mid Z_i=q,Z_j=l)=\pi_{ql},$$  $\pi$ is the $Q\times Q$ matrix of the parameters
+       $\pi_{ij}$ and $\Xn \in \Xdefn$ is the random matrix composed of the $X_{ij}$
+       \item The parameters of model (M2) are  $\theta=(\alpha, \pi).$
+\end{itemize}
+
+
+
+%%%%%
+\subsection{Mixnet-FP: Model (M1)}
+{\bf Mixnet with fixed parameters for each node.}
+In model M1, $Z$ is considered as a fixed parameter. This is quite atypical: generally the latent variable $Z$ is random in mixture models. The reason is that it is impossible in most cases to recover the value of $Z$ knowing $X$, even asymptotically: it is impossible to know the class of each observation, but it is possible to infer the proportions of the mixture. However we will see that the class of each node may be exactly recovered for infinite networks, so the random nature of $Z$ is no longer necessary. The model M2 is the mixture model in the usual way (i.e. with $Z$ random), and the model M1 is a special mixture model with $Z$ considered as fixed parameters.
+
+The model (M1) is the same as model (M2) excepted that $\zn \in \Zn$ is not random and that the  $X_{ij}$ are independent Bernoulli RV with $\P(X_{ij}=1)=\pi_{z_iz_j}.$  The parameter of (M1) is $\theta_n=(\zn, \pi)$. Note that the parameter depends on $n$, so a special framework will be necessary to set the asymptotic results.
+
+
+
+
+
+%%%%%
+
+\subsection{Assumptions C1, C1', C2}
+Some conditions which will be used elsewhere. They are presented in the following section with a short commentary.
+\begin{assum}[C1]
+\label{assum.pi.diff}
+\begin{align*}
+        \forall (q,l) \ne (q',l'),\quad \pi_{ql} \ne \pi_{q'l'}\enspace.
+\end{align*}
+\end{assum}
+This condition is a strong one for obtaining the identifiability of models (M1) and (M2). It is not a necessary condition and
+(C1) can be relaxed by (C1'), which is a necessary condition for the identifiability of (M1) and (M2):
+\begin{assum}[C1']
+\label{assum.pi.block.diff}
+\begin{align*}
+        \forall q \ne q', \quad
+        \exists l \in \acc{1,\ldots,Q} \ : \ \pi_{ql} \ne \pi_{q'l}\ \mathrm{or}\ \pi_{lq} \ne \pi_{lq'}.
+\end{align*}
+\end{assum}
+(C1') excludes the possibility that two columns are equal and that the corresponding rows are also equal.
+% \begin{assum}[(C2): no empty class]
+% \label{assum.pi.empty.class}
+% \begin{align*}
+%       \forall q \in  \acc{1,\ldots,Q}, \quad \exists i \in \acc{1,\ldots,n} \ : \ z_i=q\enspace.      
+% \end{align*}  
+% \end{assum}
+
+\begin{assum}[$T_{\epsilon}$]
+\label{assum.pi.trunc}
+There exists $\epsilon>0$ such that
+\begin{align*}
+\forall (q,l) \in \acc{1,\ldots,Q}^2 ,\quad \pi_{q,l}\in]0,1[\quad \Rightarrow\quad \pi_{q,l}\in[\epsilon,1-\epsilon]\enspace.  
+\end{align*}
+\end{assum}
+The models (M1) and (M2) can deal with null probabilities of connection between nodes. However, the use of $\log\pi_{ql}$ implies a special treatment for the case $\pi_{ql}=0.$  Therefore we will analyze separately the two cases $\pi_{ql}=0$  and $\pi_{ql}>0.$ This implies that the two cases are well separated and that the possibility that $\pi_{ql}\rightarrow 0$ when $n \rightarrow \infty$ is excluded. That is the role of condition  $T_{\epsilon}$ which also includes the symmetric case $\pi_{ql}=1.$
+
+\begin{assum}[$H_{\gamma}$]
+\label{assum.alpha.trunc}
+There exists $\gamma >0$ such that
+\begin{align*}
+        \forall q \in \acc{1,\ldots,Q},\quad \alpha_q\in [\gamma,1-\gamma]\enspace.
+\end{align*}
+
+\end{assum}
+This condition, which implies that no class is drained, is necessary for model (M2). A similar condition, necessary for model (M1) is not written here.
+
+
+\section{Consistency of the ML estimates of the parameters of model (M1)}
+\label{sec.consistency.M1}
+
+
+
+
+
+
+%%%%%
+
+
+
+
+\subsection{Identifiability of  Model (M1)}
+
+\begin{thm}\label{thm.identif.M1}
+\
+\\
+Under C1' and C2, for every $n$, the Model (M1)   is identifiable.
+\end{thm}
+
+
+\begin{proof}
+Assume that C1' and C2 are true.
+Let $P$ be the matrix defined by
+$\forall (i,j) \; \; P_{ij}= \pi_{z_i z_j}$, $P_i$
+be the line $i$ of the matrix $P$ and $\pi_q$
+be the line $q$ of the matrix $\pi$.
+%
+Then any element of $P_i$ is a member of the
+set of the elements of $\pi_{z_i}$ and by C2 all
+the elements of $\pi_{z_i}$  are present in $P_i$.
+%
+The same property is also true for the columns of $P$ and $\pi$.
+Therefore C1' and C2 imply that if $z_i \neq z_j$ then the $i^{th}$
+ and $j^{th}$ lines or columns of $P$ are different.
+%
+Conversely if $z_i = z_j$ then the $i^{th}$ and $j^th$ lines
+ or columns of $P$ are equal. This property leads to an equivalence
+relation
+$i \sim j \Leftrightarrow z_i=z_j \Leftrightarrow (P_i=P_j) \cap  (P'_i=P'j)$
+with corresponding $Q$ equivalence classes.
+
+Suppose that there is another
+couple $(Z^{(1)},\pi^{(1)})$ such that
+$\forall (i,j) \; \; P_{ij}= \pi^{(1)}_{z^{(1)}_i z^{(1)}_j}$.
+As the equivalence relation is based on $P$, it must be true for $Z^{(1)}$.
+%
+Therefore the equivalence classes are the same for $Z^{(1)}$ and $Z$.
+The only difference are the labels $(1,2,...Q)$ of the classes.
+%
+Let $\sigma$ be a permutation on $(1,Q)$.
+The only possible couples $(Z^{(1)},\pi^{(1)})$ are defined by
+$Z^{(1)}=Z \circ \sigma$ with $\pi^{(1)}_{ql}=\pi_{\sigma^{-1}(q),\sigma^{-1}(l)}$. %
+Finally $(Z,\pi)$ is unique, free from permutations.    
+\end{proof}
+In the following we assume that a particular instance of the equivalence class has been chosen. For example $z_1=1$, $\min(z_i : z_i \neq z_1)=2$, and so on.
+
+
+
+\subsection{Consistency of $\widehat{\theta_n}$}
+\subsubsection{LogLikelihood}
+
+Let $z^*$ be true value of $z$ and  $\pi^*$ the true value of $\pi$. The reference probability is $P^*=\P\croch{\cdot ; z=z^*, \pi=\pi^*}$.
+
+The loglikelihood of model (M1) is  $$\L_1(\xn; \zn, \pi)= \sum_{i,j \neq i}x_{ij}\log\pi_{z_iz_j}+(1-x_{ij})\log(1-\pi_{z_iz_j}) .$$
+
+ If $\pi_{z_i,z_j}=0$ and $x_{ij} =1$, then  $\L_1(\xn;\zn,\pi) < -\infty$, which means that the value  $x_{ij}=1$ is impossible with the parameters $\theta_n=(\zn,\pi)$. The same argument is true with $\pi_{z_i,z_j}=1$ and $x_{ij}=0$. In the following we restrict the set of parameters to the admissible set $\Theta_n$ which allows $\pi_{ij}=0$ (respectively $\pi_{ij}=1$), only if $\pi^*_{ij}=0$ (respectively $\pi^*_{ij}=1$ ):
+  \begin{align*}
+        \Theta_n = & \Theta_n(z^*,\pi^*)\\
+     \defegal & \acc{\theta_n=(\zn,\pi)\mid \forall  i\neq j \in  \{ 1...n \} ^2,\ \pi_{z_i,z_j}\in\acc{0,1} \Rightarrow \pi_{z_i,z_j}=\pi^*_{z^*_i,z^*_j}}\enspace.
+\end{align*}
+$\Theta_n$ is embedded in
+\begin{align*}
+        \Theta = & \Theta(z^*,\pi^*)\\
+     \defegal & \acc{\theta=(z,\pi)\mid \forall  i\neq j \in  \N^2,\ \pi_{z_i,z_j}\in\acc{0,1} \Rightarrow \pi_{z_i,z_j}=\pi^*_{z^*_i,z^*_j}}\enspace.
+\end{align*}
+Set
+\begin{align*}
+        M_n\paren{\theta_n} & \defegal \frac{1}{n(n-1)} \L_1\paren{\xn;\theta_n},\\
+        \mathbb{M}_n\paren{\theta_n}&\defegal \E^*\croch{M_n\paren{\zn,\theta_n}}\enspace.
+\end{align*}
+with $\E^*$ the mean operator corresponding with $P^*$. Let $\widehat{\theta}_n=\argmax_{\theta_n \in \Theta_n} \L_1(\xn; \zn,\pi)$, the ML estimate of $\theta_n$.
+\begin{postit}[Choice of $\rho_n$]
+~\\
+\begin{itemize}
+\item It turns out that assuming $\pi_{q,l}\neq 1/2$ for every $(q,l)$ implies that $\rho_n=n(n-1)$.
+
+\item However, if some $\pi_{q,l}$ are to be equal to $1/2$, then the number of non-zero terms in the $M_n$ crucially depends on the choice of $\zn$, and can therefore vary strongly.
+\end{itemize}
+\end{postit}
+
+
+\bigskip
+
+%
+%Here is the leading theorem which is to be proved. It justifies the strategy that will be followed in the following.
+%
+%Consider the following remarks
+
+
+\begin{thm} \label{thm.conv.proba.theta.hat}
+For every $n\in\N^*$, let $\Theta_n\subset\Theta$ denote a metric space endowed with a distance $d(\cdot,\cdot)$. Let us further assume that the following assumptions hold:
+\begin{enumerate}
+        \item $\forall \epsilon>0, \forall n\in\N^*,\quad \sup_{d(\theta,\theta_n^*) \ge \epsilon } \mathbb{M}_n(\theta)<\mathbb{M}_n(\theta_n^*)$,
+        \item $\norm{M_n-\mathbb{M}_n}_{\Theta_n}\xrightarrow[n\to +\infty]{P^*}0$.
+\end{enumerate}
+Then, $M_n(\widehat{\theta}_n)\geq \sup_{\theta\in\Theta_n}M_n\paren{\theta}+o_{P^*}(1)$ implies that
+\begin{align*}
+        d\paren{\widehat{\theta}_n,\theta_n^*}\xrightarrow[n\to+\infty]{P^*}0\enspace.
+\end{align*}
+\end{thm}
+
+\begin{proof}[Theorem \ref{thm.conv.proba.theta.hat}]
+Since $\sup_{d(\theta,\theta_n^*)>\epsilon } \mathbb{M}_n(\theta)<\mathbb{M}_n(\theta_n^*)$, there exists $\delta>0$ such that
+        \begin{align*}
+        P^*\croch{d\paren{\thn,\theta^*_n}\geq \epsilon} & \leq
+        P^*\croch{\Mn(\thn)\leq \Mn(\theta^*_n)-\delta}\enspace.
+        \end{align*}
+
+Then, it comes that
+\begin{align*}
+        P^*\croch{d\paren{\thn,\theta^*_n}>\epsilon}\leq 2P^*\croch{\norm{M_n-\mathbb{M}_n}_{\Theta_n}\geq \delta/3}+P^*\croch{M_n(\thn)\leq M_n(\theta^*_n)-\delta/3}\enspace,
+\end{align*}
+ $\norm{M_n-\mathbb{M}_n}_{\Theta_n}\xrightarrow[n\to +\infty]{P^*}0$  implies the desired convergence.
+\end{proof}
+
+In practice we will consider the following distance defined on $\Theta$:
+
+$d(\theta,\theta'):=\max\paren{d_1(z,z'),d_2(\pi,\pi')}$, with
+$d_1(z,z'):=2^{-p},\ \mathrm{with}\ p=\max\acc{n\in\N^*\mid \forall i\leq n,\ z_i=z'_i}\enspace,$ and
+$d_2(\pi,\pi'):=\max_{q,l}\abs{\pi_{ql}-\pi'_{ql}}$.
+
+$\Theta_n$ is a metric space that is included in $\Theta$ up to an embedding mapping.
+
+
+
+
+
+The proofs of conditions 1 and 2 of theorem \ref{thm.conv.proba.theta.hat} are given in the two following subsections.
+
+
+\subsubsection{``Well-separated'' point of maximum}
+
+
+\begin{prop}\label{prop.theta.separation}
+        $$\sup_{d(\theta,\theta_n^*)\geq \epsilon } \mathbb{M}_n(\theta)<\mathbb{M}_n(\theta_n^*)\enspace.$$
+\end{prop}
+
+\begin{proof}[Proposition \ref{prop.theta.separation}]
+First note that
+\begin{align*}
+\mathbb{M}_n(\theta_n) & =\E^* \left[ \sum_{i,j \neq i} X_{ij}\log\pi_{z_iz_j}+(1-X_{ij})\log(1-\pi_{z_iz_j}) \right], \\
+ & = \sum_{i,j \neq i} \pi^*_{z^*_iz^*_j}\log\pi_{z_iz_j}+(1-\pi^*_{z^*_iz^*_j})\log(1-\pi_{z_iz_j}),\\
+ & \le \sum_{i,j \neq i} \pi^*_{z^*_iz^*_j}\log\pi^*_{z^*_iz^*_j}+(1-\pi^*_{z^*_iz^*_j})\log(1-\pi^*_{z^*_iz^*_j}),\\
+ & \le \mathbb{M}_n(\theta^*_n).
+ \end{align*}
+with equality if and only if $\forall (i \neq j) \in \{ 1...n \} ^2, \; \; \pi_{z_iz_j}=\pi^*_{z^*_iz^*_j}$. Then, $d\paren{\theta_n,\theta_n^*}\geq \epsilon$ means that
+\begin{align*}
+        \max\paren{d_1\paren{\zn,\zn^*},
+        d_2\paren{\pi,\pi^*}}\geq \epsilon\enspace.
+\end{align*}
+\begin{itemize}
+        \item If $d_1\paren{\zn,\zn^*}\geq \epsilon$,
+
+\begin{align*}
+        \sup_{d(\theta,\theta_n^*)\geq\epsilon } \mathbb{M}_n(\theta) & = \max_{d_1\paren{\zn,\zn^*}\geq \epsilon} \sup_{\pi}\  \mathbb{M}_n\paren{\zn,\pi},\\
+        & = \max_{d_1\paren{\zn,\zn^*}\geq \epsilon} \mathbb{M}_n\paren{\zn,\pi^0}\enspace.
+\end{align*}
+By construction, the set of matrices $\pi$ is compact. Then, there exists $\pi^0$ such that the second supremum is achieved.
+
+For every $\zn$ such that $d_1\paren{\zn,\zn^*}\geq \epsilon$,
+\begin{align*}
+        \mathbb{M}_n\paren{\zn,\pi^0} < \mathbb{M}_n\paren{\zn^*,\pi^*}\enspace.
+\end{align*}
+Otherwise, for every $1\leq i \neq j \leq n$, $\pi^0_{z_i,z_j}=\pi^*_{z^*_i,z^*_j}$, which would imply that $\pi^0=\pi$ and $\zn =\zn^*$ by identifiability.
+
+Since this inequality holds for every $\zn$, it holds for the maximum.
+
+
+        \item If $d_2\paren{\pi,\pi^*}\geq \epsilon$,
+\begin{align*}
+\sup_{d(\theta,\theta_n^*)\geq\epsilon } \mathbb{M}_n(\theta) & = \max_{\zn} \sup_{d_2\paren{\pi,\pi^*}\geq \epsilon}\  \mathbb{M}_n\paren{\zn,\pi}\enspace,\\
+& = \max_{\zn}   \mathbb{M}_n\paren{\zn,\pi^0}\enspace,
+\end{align*}
+since the set of matrices $\pi$ such that $d_2\paren{\pi,\pi^*}\geq \epsilon$ is compact.
+
+The conclusion follows from the same argument since for every $\zn$,
+$\mathbb{M}_n\paren{\zn,\pi^0}< \mathbb{M}_n\paren{\zn^*,\pi^*}$.
+\end{itemize}
+
+\end{proof}
+
+
+
+
+
+
+\subsubsection{Uniform convergence}
+
+
+\begin{prop}\label{prop.unif.conv.cond.model}
+Let us assume that $T_{\epsilon}$ holds and that for every $1\leq q,l\leq Q$, there exist $0< c < C <1$ such that
+$ c n^2\leq n_q n_l \leq C n^2$, where $n_q$ denotes the number of nodes in class $q$.
+Then,
+\begin{align*}          \norm{M_n-\mathbb{M}_n}_{\Theta_n}\xrightarrow[n\to +\infty]{P^*}0\enspace.
+\end{align*}
+\end{prop}
+
+The proof of the uniform convergence is deferred in appendix \ref{Appendix.prop.unif.conv.M1}
+
+\subsection{Consistency of $\znh$}
+It is given by the following corollaries of theorem \ref{thm.conv.proba.theta.hat}. The first one is a direct consequence of the theorem.
+\begin{cor}\label{cor.dist.znh.znstar}
+        \begin{align*}
+        d_1(\znh,\zn^*)\xrightarrow[n\to+\infty]{P^*}0\enspace.
+        \end{align*}
+\end{cor}
+
+
+
+
+\begin{cor}\label{cor.conv.dist.znh.zstar}
+        \begin{align*}
+        d_1(\znh,z^*)\xrightarrow[n\to+\infty]{P^*}0\enspace.
+        \end{align*}
+\end{cor}
+Up to the use of an embedding mapping, $\Theta_n$ can be seen as a subset of $\Theta$.
+%
+Since $\znh$ and $\zn^*$ are closer to each other as $n$ tends to infinity, it is natural to infer the gap between $\znh$ and $z^*$.
+
+\begin{proof}[Corollary \ref{cor.conv.dist.znh.zstar}]
+Let us recall that
+\begin{align*}
+        d_1(\znh,z^*) = 2^{-p},\qquad \mathrm{where}\quad p=\max\acc{k\in\N^*\mid \forall i\leq k,\ \zh_i=z^*_i}\enspace.
+\end{align*}
+The triangle inequality yields
+\begin{align*}
+        d_1(\znh,z^*) \leq d_1(\znh,\zn^*) +d_1(\zn^*,z^*)\enspace.
+\end{align*}
+The previous Corollary \ref{cor.dist.znh.znstar} states the desired convergence for the first term in the right-hand side.
+%
+The conclusion comes from the following equality
+\begin{align*}
+        d_1(\zn^*,z^*) \leq 2^{-n}\enspace.
+\end{align*}
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Consistency in model (M2)}
+
+We consider now the model (M2) with random latent variable $Z$. We prove first a special property of this model which is not shared by other mixture model: the posterior probability $P(\Zn=\zn/\Xn)$ tends asymptotically to a Dirac distribution. The fact that the class of each node can be asymptotically exactly recovered has been already remarked by \cite{SN} for $Q=2$ and \cite{BC} using a profile likelihood criterium for undirected networks. However our result is different, because it is a property of the model itself and is not linked to any estimation procedure. Then we use this property to prove the consistency of the variational estimation procedure.
+
+
+
+In the following we assume that the model (M2) is identifiable. Matias et al. \cite{AMR} proved the identifiability for undirected networks and $Q=2$. Some work from the same authors, not yet published, is in progress for $Q>2$.
+
+
+
+
+\subsection{Asymptotics of $\P\paren{\Zn=\cdot\mid \Xn}$}
+
+
+
+\begin{thm}\label{thm.distrib.conv.zn}
+Let $P^*\defegal\P\paren{\cdot\mid Z=z^*}$ denote the distribution  conditional to the labels $Z$ of the infinite graph. Then,
+\begin{align*}
+        \sum_{\zn\neq \zn^*}\frac{\P\paren{\Zn=\zn\mid \Xn}}{\P\paren{\Zn=\zn^*\mid \Xn}}\xrightarrow[n\to+\infty]{P^*}0\enspace\cdot
+\end{align*}
+\end{thm}
+The proof of Thereom \ref{thm.distrib.conv.zn} is deferred to the appendix.
+%
+The Borel-Cantelli lemma implies the following corollary
+\begin{cor} \label{cor.distrib.conv.as.zn} With the same notation as Theorem
+\ref{thm.distrib.conv.zn},
+\begin{align*}
+\sum_{\zn\neq \zn^*}\frac{\P\paren{\Zn=\zn\mid \Xn}}{\P\paren{\Zn=\zn^*\mid \Xn}}\xrightarrow[n\to+\infty]{}0\enspace,\qquad P^*-a.s.\enspace.  
+\end{align*}
+\end{cor}
+
+
+% \begin{lem}\label{lem.condition.prob.Xn}
+% \begin{align*}
+% \forall \zn\neq \zn^*,\quad \frac{\P\paren{\Zn=\zn\mid \Xn}}{\P\paren{\Zn=\zn^*\mid \Xn}}=
+% \frac{\P\paren{\Zn=\zn\mid X}}{\P\paren{\Zn=\zn^*\mid X}}\enspace\cdot
+% \end{align*}
+% \end{lem}
+
+
+
+As a consequence of previous Theorem \ref{thm.distrib.conv.zn} and Corollary \ref{cor.distrib.conv.as.zn}, it comes that
+\begin{cor}\label{cor.degeneracy.distrib.zn}
+\begin{align*}
+        \mathcal{D}(\Zn\mid \Xn) \xrightarrow[n\to+\infty]{w} \delta_{z^*},\quad P^*-a.s.\enspace,
+\end{align*}
+where $\mathcal{D}(\Zn\mid \Xn)$  denotes the distribution of $\Zn$ conditional to $\Xn$, and $\xrightarrow[n\to+\infty]{w}$ refers to the weak convergence in $\mathcal {M}_1\paren{\mathcal{Z}}$, as $n$ tends to infinity.
+\end{cor}
+
+\begin{proof}[Corollary \ref{cor.degeneracy.distrib.zn}]
+Let $\Z=(1...Q)^{\N}$. For every $n\in\N^*$, set  $\Z=(1...Q)^n$, $\Pn=P\croch{\cdot\mid \Xn}$, and $\mathcal{F}_n$ a $\sigma$-algebra on $\Z_n$.
+%
+ Let $\E_n\croch{\cdot}$ denote the expectation with respect to $\Pn$.
+%
+In the sequel, the sets $\Z_n$ are embedded into $\Z$, so that every point $\zn\in\Z_n$ can be identified as an element $\widetilde{\zn}\in \widetilde{\Z}_n\subset \Z$.
+%
+$\Z$ is endowed with the distance $d_1(\cdot,\cdot)$.
+
+Let $f\in C_b\paren{\Z}$ such that $\norm{f}_{\infty}\leq M$ for $M>0$.
+%
+By continuity at point $z^*$, for every $\eta>0$, there exists $u>0$ such that
+\begin{align*}
+d_1(z,z^*) \leq u \quad \Rightarrow \quad \abs{f(z^*)-f(z)}\leq \eta \enspace.                                                   
+\end{align*}
+%
+Then, it comes that for every $\eta>0$,
+\begin{align*}
+\abs{\E_n\croch{f\paren{\widetilde{\Zn}}}-f(z^*)} = & \abs{\sum_{\widetilde{\zn}}\croch{f\paren{\widetilde{\zn}}-f(z^*)}\Pn\paren{\widetilde{\Zn}=\widetilde{\zn}}} \\
+ \leq & \sum_{ d_1(\widetilde{\zn},z^*)\leq u} \eta \Pn\paren{\widetilde{\Zn}=\widetilde{\zn}} + 2M \sum_{ d_1(\widetilde{\zn},z^*)> u} \Pn\paren{\widetilde{\Zn}=\widetilde{\zn}} \\
+ \leq &\ \eta + o(1) \quad P^*-a.s.\enspace,
+\end{align*}
+by use of Corollary~\ref{cor.distrib.conv.as.zn}, which yields the result.
+
+
+\end{proof}
+
+
+
+\subsection{Variational approximation}
+
+
+
+The log-likelihood  $\L_2\paren{\xn; \alpha,\pi}$ is not tractable since it relies on the computation of a sum over $Q^n$ terms:
+\begin{align*}
+\L_2(\xn; \alpha,\pi)= \log \left\{ \sum_{z_{[n]} \in \Zdefn} e^{\left[ \sum_{i,j \neq i}^n b_{ij}(z_i,z_j) \right]} P_{\Zn}(\zn) \right\}      \enspace.
+\end{align*}
+ This leads Daudin et al.\cite{DPR} to use the so-called {\em variational approximation}, consisting in approximating $\L_2(\xn; \alpha,\pi)$ thanks to a product distribution $D_{\tau}$ chosen within a pre-specified set of candidate distributions $\mathcal{D}_n$.
+%
+For any $D_{\tau}\in\mathcal{D}_n$, let us first define $\J$ by
+\begin{align*}
+     \J(\xn; \taun, \pi, \alpha) = \L_2(\xn;  \pi, \alpha) - K\paren{D_{\taun},P^{\xn}}\enspace.
+ \end{align*}
+In practice, $D_{\taun}$ is a product of multinomial pdfs $\prod_{i:1,n}\M(1,\tau_{i1}, ...\tau_{iQ})$ and $\J$ may be computed using the following expression, see (\cite{DPR})
+\begin{align*}
+\J(\xn; \taun, \pi, \alpha)= \sum_{i,j \neq i} \sum_{ql} b_{ij}(q,l)\tau_{iq}\tau_{jl}-\sum_{iq}\tau_{iq}\log\tau_{iq}+\sum_{iq}\tau_{iq}\log\alpha_{q},
+\end{align*}
+with $\tau \in S_n$ and $S_n=\{u \in ([0,1]^Q)^n \; : \; \forall i=1:n, \; \; \sum _{q=1}^Q u_{iq}=1 \}.$
+Then, the variational approximation to $P^{\xn}$ is given by solving the minimization problem over $\mathcal{D}_n$:
+\begin{align*}
+    \inf _{D_{\tau}\in\mathcal{D}_n} K\paren{D_{\tau},P^{\Xn}}\enspace,
+ \end{align*}
+ with $K(.,.)$  the Kullback-Liebler divergence.
+%
+In the following it is assumed that there exists $R_{\Xn} \in\mathcal{D}_n$ such that
+\begin{align*}
+        K\paren{R_{\Xn},P^{\Xn}} = \inf _{D_{\tau}\in\mathcal{P}_n} K\paren{D_{\tau},P^{\Xn}}\enspace.
+\end{align*}
+Minimizing $K\paren{D_{\tau},P^{\Xn}}$ is equivalent to maximizing
+     $\J(\xn; \tau, \pi, \alpha) $
+and $\tahn$ is defined by $\tahn(\pi,\alpha):=\argmax_{\taun} \J(\xn; \taun,\pi,\alpha).$
+
+The variational estimates of $(\alpha,\pi)$ are $(\widetilde{\alpha},\widetilde{\pi})=\arg\max_{\alpha,\pi}\J(\xn; \tahn, \pi, \alpha).$
+
+In practice the variational algorithm maximizes $\J$ with respect to $(\pi,\tau)$ and $\widehat{\alpha}$ is obtained as a byproduct of $\widehat{\tau}$, see (\cite{DPR}).
+
+
+
+
+
+
+\subsection{Consistency of Kullback-Leibler divergence}
+
+
+\begin{thm} For every $n$, let $\mathcal{D}_n$ denote the set of product distributions over $\mathcal{Z}_n$, and $P^{\Xn}\paren{\cdot}$ the distribution of $\Zn$ conditional to $\Xn$. Then,
+\begin{align*}
+K(R_{\Xn},P^{\Xn})\defegal \inf_{D\in\mathcal{P}_n} K(D,P^{\Xn}) \xrightarrow[n\to\infty]{}0\enspace,\qquad P^*-a.s. \enspace.
+\end{align*}
+\end{thm}
+
+\begin{proof} By definition of the variational approximation,
+\begin{align*}
+        K(R_{\Xn},P^{\Xn})  \leq K(\delta_{\zn^*},P^{\Xn})\enspace,
+\end{align*}
+where $\delta_{\zn^*}=\prod_{1\leq i\leq n} \delta_{z^*_i}$.
+%
+% $$K(P_{[n]},P_n)=\sum_{z_{[n]}}P_{[n]}(z_{[n]})\log \frac{P_{[n]}(z_{[n]})}
+% {P_{n}(z_{[n]})}$$
+Then,
+\begin{align*}
+        K(R_{\Xn},P^{\Xn})  \leq \sum_{1\leq i\leq n} -\log\paren{P\paren{Z_i=z^*_i \mid \Xn}} = -\log\croch{P\paren{\Zn=\zn^* \mid \Xn}}
+     \enspace.
+\end{align*}
+The conclusion results from Theorem \ref{thm.distrib.conv.zn}, since $P\paren{\Zn=\zn^* \mid \Xn}\xrightarrow[n\to\infty]{}~1\quad P^*-~a.s.\,$.
+
+\end{proof}
+
+\begin{rk}
+        Note that the previous result entails that
+\begin{align*}
+\abs{\J(\Xn; \tahn, \pi, \alpha)-\L_2(\Xn;  \pi, \alpha)}\xrightarrow[n\to\infty]{}0\quad  P^*-a.s. \enspace.   
+\end{align*}
+%
+Results in Section~\ref{subsubsec.uniform.asymptotics.J.L} provide a stronger statement involving uniformity.
+\end{rk}
+
+
+
+
+
+
+
+\subsection{Asymptotic equivalence between MLE and VE}
+
+
+
+
+\subsubsection{Uniform asymptotics of $\L_2(\xn; \alpha,\pi)$ and  $\J(\xn; \taun, \pi, \alpha)$}\label{subsubsec.uniform.asymptotics.J.L}
+
+\begin{prop}\label{prop.unif.conv.M2}
+Let $\znh =\znh (\pi)=\arg\max_{\zn}\L_1(\xn; \zn, \pi)$. For every $\xn\in\Xdefn$, $(\pi,\alpha) \in \Theta$, and $\taun \in S_n$, it comes that
+\begin{align*}
+\J(\xn; \taun, \pi, \alpha) \le \L_2(\xn;  \pi, \alpha) \le  \L_1(\xn; \znh,\pi)\enspace.       
+\end{align*}
+\end{prop}
+
+\begin{proof}[Proposition\ref{prop.unif.conv.M2}]
+The first inequality comes from the definition of $\J$ and the second one comes from the definitions of $\L_2$, $\L_1$ and $\znh$:
+%
+For any $\pi,\alpha$,
+\begin{eqnarray*}
+% \nonumber to remove numbering (before each equation)
+\L_2(\xn;  \pi, \alpha) &=& \log \left\{ \sum_{\zn \in \Zdefn} e^{\left[  \L(\xn; \zn,\pi) \right]} P_{\Zn}(\zn) \right\} \\
+ & \le & \log \left\{ \sum_{z_{[n]} \in \Zdefn} e^{\left[  \L_1(\xn; \znh,\pi) \right]} P_{\Zn}(\zn) \right\} \\
+ & \le & \log \left\{ e^{\left[  \L_1(\xn; \znh,\pi) \right]}  \sum_{z_{[n]} \in \Zdefn}  P_{\Zn}(\zn) \right\} \\
+ & \le & \L_1(\xn; \znh,\pi)
+ \end{eqnarray*}
+        
+\end{proof}
+
+
+A straightforward consequence of Proposition~\ref{prop.unif.conv.M2} and definition of $\tahn$ is that
+\begin{align*}
+\J(\xn; \znh, \pi, \alpha) \le  \J(\xn; \tahn, \pi, \alpha) \le \L_2(\xn; \alpha, \pi) \le  \L_1(\xn; \znh,\pi)\enspace,        
+\end{align*}
+
+
+Combined with
+$\J(\xn; \znh, \pi, \alpha)= \L_1(\xn; \znh, \pi)+\sum_{i=1}^n\log \alpha_{\zh_i}$, it leads to both
+\begin{align*}
+\abs{\L_2(\xn; \alpha, \pi)-\L_1(\xn; \znh,\pi)} \leq &\ -\sum_{i=1}^n \log \alpha_{\zh_i}\enspace,\\
+\abs{\J(\xn; \tahn, \pi, \alpha)-\L_1(\xn; \znh,\pi)} \leq &\ -\sum_{i=1}^n \log \alpha_{\zh_i}\enspace.
+\end{align*}
+%
+Assumption \ref{assum.alpha.trunc} ($H_{\gamma}$) then implies that there exists $0<\gamma<1$ such that
+for every $\alpha,\pi$,
+\begin{align*}
+\abs{\L_2(\xn; \alpha, \pi)-\L_1(\xn; \znh,\pi)} \leq &\ n \log (1/\gamma)\enspace,\\
+\abs{\J(\xn; \tahn, \pi, \alpha)-\L_1(\xn; \znh,\pi)} \leq &\ n \log (1/\gamma)\enspace.
+\end{align*}
+
+% \begin{align*}
+% \abs{\L_2(\xn; \alpha, \pi)-\L_1(\xn; \znh,\pi)} \leq
+% \abs{\J(\xn; \tahn, \pi, \alpha)-\L_1(\xn; \znh,\pi)} \leq
+% n \log (1/\gamma)\enspace.
+% \end{align*}
+%
+Then $P-a.s.$,
+\begin{align*}
+\sup_{\alpha,\pi}\frac{1}{n(n-1)}\abs{\L_2(\xn; \alpha, \pi)-\L_1(\xn; \znh,\pi)} &\leq\  \frac{1}{n-1}\log(1/\gamma) \xrightarrow[n\to\infty]{} 0 \enspace,\\
+\sup_{\alpha,\pi}\frac{1}{n(n-1)}\abs{\J(\xn; \tahn, \pi, \alpha)-\L_1(\xn; \znh,\pi)} &\leq\  \frac{1}{n-1}\log(1/\gamma) \xrightarrow[n\to\infty]{} 0 \enspace.
+\end{align*}
+%
+As a consequence, it comes that
+% \begin{align*}
+% \sup_{\alpha,\pi}\frac{1}{n(n-1)}\abs{\L_2(\xn; \alpha, \pi)-\J(\xn; \tahn, \pi, \alpha)}
+% \xrightarrow[n\to\infty]{} 0,\quad P-a.s.\enspace.
+% \end{align*}
+\begin{thm}\label{thm.uniform.P-as.Var.Likelihood}
+\begin{align*}
+        \sup_{\alpha,\pi}\acc{ \frac{1}{n(n-1)}\abs{\J(\xn; \tahn, \pi, \alpha)- \L_2(\xn; \alpha, \pi)}} = o(1),\quad P-a.s.\enspace.
+\end{align*}
+\end{thm}
+
+
+
+
+
+
+\subsubsection{Consistency of variational estimators}
+
+We assume that the normalized Log-Likelihood function $M_n(\theta)=\frac{1}{n(n-1)}\L_2(\xn;\alpha,\pi)$  satisfy the conditions required for consistency of the M-estimators:
+
+\begin{enumerate}
+        \item $\forall \epsilon>0, \forall n\in\N^*,\quad \sup_{d(\theta,\theta^*) \ge \epsilon } \mathbb{M}_n(\theta)<\mathbb{M}_n(\theta^*)$,
+        \item $\norm{M_n-\mathbb{M}_n}_{\Theta_n}\xrightarrow[n\to +\infty]{P}0$.
+\end{enumerate}
+
+
+\begin{thm}\label{thm.consist.Var}
+Let us assume that the normalized log-likelihood function $M_n(\theta)=\frac{1}{n(n-1)}\L_2(\xn;\alpha,\pi)$ satisfies the above assumptions and let  $\widetilde{\theta}=\arg \max_{\theta} \J(\xn; \tahn,\theta).$
+%
+Then, under the same assumptions as Theorem \ref{thm.uniform.P-as.Var.Likelihood}, one gets
+\begin{align*}
+\mathrm{dist}\paren{\widetilde{\theta},\theta^*} \xrightarrow[n\to \infty]{P}0\enspace.
+\end{align*}
+\end{thm}
+
+\begin{proof}[Theorem \ref{thm.consist.Var}]
+Since $\theta^*$ maximizes the expectation of the log-likelihood $\mathbb{M}$ and is ``well-identified'', there exists $\eta>0$ such that
+        \begin{align*}
+\P\croch{\mathrm{dist}\paren{\widetilde{\theta},\theta^*}\geq \epsilon} & \leq
+        \P\croch{\mathbb{M}(\widetilde{\theta})\leq \mathbb{M}(\theta^*)-\eta}\enspace.
+        \end{align*}
+Moreover, $\norm{M_n-\mathbb{M}}_{\Theta_n}\xrightarrow[n\to +\infty]{\P}0$ implies that for $n$ large enough,
+\begin{align*}
+        \norm{M_n-\mathbb{M}}_{\Theta_n} \defegal \sup_{\theta\in\Theta_n} \abs{M_n(\theta)-\mathbb{M}(\theta)} \leq \eta/6\enspace.
+\end{align*}
+Then, it comes that
+\begin{align*}
+        \P\croch{d\paren{\widetilde{\theta},\theta^*}>\epsilon} & \leq \P\croch{\norm{M_n-\mathbb{M}}_{\Theta_n}\geq \eta/6}  + \P\croch{M_n\paren{\widetilde{\theta}}\leq M_n(\theta^*)-4\eta/6}\\
+ & \leq o(1) + \P\croch{J_n\paren{\widetilde{\theta}}
+\leq J_n\paren{\theta^*}-2\eta/6}
+\enspace,
+\end{align*}
+where $J_n\paren{\theta} \defegal \frac{1}{n(n-1)}\J\paren{\Xn; \tahn, \theta}$,
+which concludes the proof.
+        
+\end{proof}
+The following corollary sets that the variational estimate $\tahn(\widetilde{\theta})$ of the class of the nodes is consistent.
+\begin{cor}\label{cor.conv.taun}
+\begin{align*}
+        \mathcal{D}_{\tahn(\widetilde{\theta})} \xrightarrow[n\to+\infty]{w} \delta_{z^*},\quad P^*-a.s.\enspace,
+\end{align*}
+where $D_{\tahn(\widetilde{\theta})}$  denotes the variational approximation of the distribution of $\Zn$ conditional to $\Xn$, and $\xrightarrow[n\to+\infty]{w}$ refers to the weak convergence in $\mathcal {M}_1\paren{\mathcal{Z}}$, as $n$ tends to infinity.
+\end{cor}
+
+
+
+
+
+
+\section{Conclusion}
+Our results validate the use of the variational estimates for the Mixnet or Stochastic Block model. This is important in practice because the variational method allows to deal with large networks (between 200 and 5000 nodes). Some work remains to obtain the speed of convergence of the estimates. Moreover it would be interesting to study a new asymptotic framework with $Q$ increasing with $n$. An other interesting question is which model should be preferred between (M1) and (M2). In practice when you have observed $\xn$, you know that it was generated using only one particular realization $z$ of $Z$, and the estimate of this hidden value is of interest. Therefore model (M1) seems basically  well suited.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+
+
+\appendix
+
+
+
+\section{Proof of Proposition \ref{prop.unif.conv.cond.model}}\label{Appendix.prop.unif.conv.M1}
+\begin{proof}[Proposition \ref{prop.unif.conv.cond.model}]
+\
+
+First, let us assume that every $\pi^*_{q,l} \in \acc{0,1}$.
+%
+Then,
+\begin{align*}
+        M_n-\mathbb{M}_n(\theta_n)=\rho_n\sum_{i\neq j} \paren{\theta^*_{ij}-\theta^*_{i,j}} \log \croch{\theta_{i,j}/(1-\theta_{i,j})}=0
+\end{align*}
+
+Second, let us consider that there exists $(q,l)$ such that  $\pi^*_{q,l}\not\in\acc{0,1}$.
+
+One can notice that
+\begin{align*}
+\sup_{\theta_n\in\Theta_n}\abs{M_n\paren{\theta_n}-\Mn \paren{\theta_n}} & = \sup_{\theta_n\in\Theta_n} \rho_n\abs{\sum_{i\neq j} \paren{X_{ij}-\theta^*_{i,j}} \log \croch{\theta_{i,j}/(1-\theta_{i,j})}}\enspace,\\
+        & = \sup_{\theta_n\in\Theta_n}\rho_n\abs{\sum_{i\neq j} \xi_{ij}\, f\paren{\theta_{i,j}}}\enspace,\\
+& = \max_{\zn\in\Theta_n^1}\acc{\sup_{\pi\in\Theta_n(\zn)}\rho_n\abs{\sum_{i\neq j} \xi_{ij}\, f\paren{\theta_{i,j}}}}\enspace,
+\end{align*}
+\sloppy
+where $\xi_{i,j}=X_{ij}-\theta^*_{i,j}$ for every $(i,j)$, and $f(t)=\log(t/(1-t))$, $t\in]0,1[$. Besides, $\Theta_n^1=\acc{\zn\in\mathcal{Z}_n\mid \exists \pi\in K,\ (\zn,\pi)\in\Theta_n}$, and $\Theta_n(\zn)=\acc{\pi\in K \mid (\zn,\pi)\in\Theta_n}$.
+%
+Moreover, all $(i,j)$s do not necessarily contribute to the sum since $f(\theta_{i,j})=0$ for some of them. Introducing the set of indices $\mathcal{N}\paren{\theta_n}=\acc{(i,j)\mid i\neq j,\ f(\theta_{i,j})\neq 0}$, one get
+\begin{align*}
+\sup_{\theta_n\in\Theta_n}\abs{M_n\paren{\theta_n}-\Mn \paren{\theta_n}} & = \max_{\zn\in\Theta_n^1}\acc{\sup_{\pi\in\Theta_n(\zn)}\rho_n\abs{\sum_{(i,j)\in\mathcal{N}(\theta_n)} \xi_{ij}\, f\paren{\theta_{i,j}}}}\enspace.
+\end{align*}
+%
+Note that by definition of $K$ and with the assumption that $cn^2\leq n_qn_l\leq Cn^2$ for every $(q,l)$, one can assume that $\mathcal{N}(\theta_n)\neq  \emptyset$.
+
+\medskip
+
+For any $\eta>0$,
+\begin{align*}           P^*\croch{\sup_{\theta_n\in\Theta_n}\abs{M_n\paren{\theta_n}-\mathbb{M}_n\paren{\theta_n}}>\eta} &  \leq \sum_{\zn\in\Theta_n^1} P^*\croch{\sup_{\pi\in\Theta_n(\zn)}\abs{M_n\paren{\theta_n}-\mathbb{M}_n\paren{\theta_n}}>\eta} \enspace.
+\end{align*}
+%
+Let us introduce the statistic
+\begin{align*}
+Z\paren{\theta_n}=\abs{\sum_{(i, j)\in\mathcal{N}\paren{\theta_n}} \xi_{ij}\, f\paren{\theta_{i,j}}}\enspace,   
+\end{align*}
+and the set $\Omega_n(\epsilon)$ defined for every $\epsilon>0$ by
+\begin{align*}
+\Omega_n(\epsilon) = \acc{ \sup_{\pi\in\Theta_n(\zn)} \rho_n Z_{\theta_n} \leq (1+\epsilon) \sqrt{\rho_n} r + \sqrt{2 \rho_n b^2 x_n}+ \paren{1/\epsilon+1/3} \rho_n b\, x_n}\enspace,
+\end{align*}
+where $\acc{x_n}_n$ is a sequence of positive reals to be chosen hereafter.
+%
+Then, Lemma \ref{lem.bounds.Talagrand} and Talagrand's inequality (Theorem \ref{thm.Talagrand}) imply that
+\begin{align*}
+        P^*\croch{\Omega_n(\epsilon)^c}\leq e^{-x_n}\enspace.
+\end{align*}
+
+From the previous bound, one can deduce that
+For any $\eta>0$,
+\begin{align*}           & P^*\croch{\sup_{\theta_n\in\Theta_n}\abs{M_n\paren{\theta_n}-\mathbb{M}_n\paren{\theta_n}}>\eta}\\
+\leq & \sum_{\zn\in\Theta_n^1} P^*\croch{\acc{\sup_{\pi\in\Theta_n(\zn)}\abs{M_n\paren{\theta_n}-\mathbb{M}_n\paren{\theta_n}}>\eta} \cap \Omega_n(\epsilon)} +  \sum_{\zn\in\Theta_n^1}  e^{-x_n} \\
+\leq & \sum_{\zn\in\Theta_n^1} P^*\croch{ (1+\epsilon) \sqrt{\rho_n} r + \sqrt{2 \rho_n b^2 x_n}+ \paren{1/\epsilon+1/3} \rho_n b\, x_n>\eta} +  \sum_{\zn\in\Theta_n^1}  e^{-x_n}\enspace.
+\end{align*}
+
+Since the cardinality of $\Theta_n^1$ is at most $Q^n$, a sufficient condition for the second term of the last inequality to converge to 0 is that $x_n=\sqrt{\rho_n}\log(n)\approx n\log(n)$.
+%
+Moreover, with this choice of $x_n$, one gets
+\begin{align*}
+        \rho_n=o_n(1),\quad \mathrm{and}\quad \rho_n x_n=o_n(1)\enspace.
+\end{align*}
+Then for large enough values of $n$,
+\begin{align*}
+        P^*\croch{ (1+\epsilon) \sqrt{\rho_n} r + \sqrt{2 \rho_n b^2 x_n}+ \paren{1/\epsilon+1/3} \rho_n b\, x_n>\eta} = 0\enspace,
+\end{align*}
+which yields the result.
+
+\end{proof}
+
+
+\begin{thm}[Talagrand]\label{thm.Talagrand}
+Let $\acc{Y_{i,j}}_{1\leq i\neq j\leq n}$ denote independent centered random variables, and define
+\begin{align*}
+        \forall f\in\mathcal{F},\quad Z(f)=\sum_{i\neq j}Y_{i,j}f_{i,j}\enspace,
+\end{align*}
+where $\mathcal{F}\subset \R^{n^2}$.
+%
+Let us further assume that there exist $0<b$ and $\sigma^2>0$ such that  $\abs{Y_{i,j}f_{i,j}}\leq b$ for every $(i,j)$, and  $\sup_{f\in\mathcal{F}}\sum_{i\neq j} \Var(Y_{i,j}f_{i,j})\leq \sigma^2$.
+%
+Then, for every $\eta>0$, and $x>0$,
+\begin{align*}
+ \P\croch{\sup_{f}Z(f)\geq \E\croch{\sup_{f}Z(f)}(1+\eta)+\sqrt{2\sigma^2 x}+ b\paren{1/\eta+1/3}x}\leq e^{-x}\enspace.
+\end{align*}
+
+        
+\end{thm}
+
+
+\begin{lem}\label{lem.bounds.Talagrand}
+With the sam notation as Theorem \ref{thm.Talagrand},
+        \begin{align*}
+                \sup_{\theta}\max_{(i,j)\in \mathcal{N}(\theta_n)} \frac{\abs{\xi_{i,j}f(\theta_{i,j})}}{N(\theta_n)} \leq \frac{r}{cn^2}\enspace. \\
+\frac{\sum_{i,j} \theta^*_{i,j}(1-\theta^*_{i,j}) f^2(\theta_{i,j})}{N(\theta_n)^2} \leq \frac{r^2}{4cn^2}\enspace.
+        \end{align*}
+
+\end{lem}
+
+
+
+
+
+
+
+
+
+
+\begin{lem}\label{lem.expect.upper.bound}
+For every $\zn\in\Theta_n^1$,
+\begin{align*}
+\E\croch{\sup_{\pi\in\Theta_n(\zn)}\rho_n\abs{\sum_{(i,j)\in\mathcal{N}(\theta_n)}\paren{X_{i,j}-\E\croch{X_{i,j}}}f\paren{\theta_{i,j}}}}
+& \leq r \rho_n\sqrt{N(\theta_n)}\enspace.
+\end{align*}
+\end{lem}
+
+
+\begin{proof}[Lemma \ref{lem.expect.upper.bound}]
+                \begin{align*}
+& \E\croch{\sup_{\pi\in\Theta_n(\zn)}\rho_n\abs{\sum_{(i,j)\in\mathcal{N}(\pi)}\paren{X_{i,j}-\E\croch{X_{i,j}}}f\paren{\theta_{i,j}}}} \\
+\leq &
+\ \E_{X,X'}\croch{\sup_{\pi\in\Theta_n(\zn)} \rho_n \abs{\sum_{(i,j)\in\mathcal{N}(\theta_n)}\paren{X_{i,j}-X'_{i,j}}f\paren{\theta_{i,j}}}}\\
+ = & \  \E_{X,X'}\croch{\sup_{\pi\in\Theta_n(\zn)} \rho_n \abs{\sum_{(i,j)\in\mathcal{N}(\theta_n)}\E_{\epsilon}\croch{\epsilon_{i,j}\paren{X_{i,j}-X'_{i,j}}f\paren{\theta_{i,j}}}}}\\
+ \leq &\   2\E\croch{\sup_{\pi\in\Theta_n(\zn)} \rho_n \E_{\epsilon}\croch{\abs{\sum_{(i,j)\in\mathcal{N}(\theta_n)}\epsilon_{i,j}X_{i,j}f\paren{\theta_{i,j}}}}}\\
+ \leq & \  2\E\croch{\sup_{\pi\in\Theta_n(\zn)} \rho_n \sqrt{\E_{\epsilon}\croch{\paren{\sum_{(i,j)\in\mathcal{N}(\theta_n)}\epsilon_{i,j}X_{i,j}f\paren{\theta_{i,j}}}^2}}}\\
+= &\  2\E\croch{\sup_{\pi\in\Theta_n(\zn)} \rho_n \sqrt{\mathrm{Var}_{\epsilon}\croch{\sum_{(i,j)\in\mathcal{N}(\theta_n)}\epsilon_{i,j}X_{i,j}f\paren{\theta_{i,j}}}}}\\
+\leq & \
+ \E\croch{\sup_{\pi\in\Theta_n(\zn)} \rho_n \sqrt{N(\theta_n) f^2\paren{\theta_{i,j}}}}\\
+& \leq r \rho_n\sqrt{N(\theta_n)}\enspace.
+\end{align*}
+
+\end{proof}
+
+
+
+
+
+
+
+\begin{lem}\label{lem.card.non.nul.pi}
+Let us choose $\theta_n=(\zn,\pi)\in\Theta_n$ such that
+$\acc{(q,l)\mid \pi_{q,l}\not\in\acc{0,1,0.5}}\neq \emptyset$.
+%
+Moreover, let us assume that there exist $0< c < C <1$ such that for every $1\leq q,l\leq Q$,
+$ c n^2\leq n_q n_l \leq C n^2$, where $n_q$ denotes the number of nodes in class $q$.
+%
+Then,
+\begin{align*}
+        c n^2 \leq N(\theta_n) \leq C n^2\enspace,
+\end{align*}
+where $N(\theta_n)$ denotes the cardinality of $\mathcal{N}(\theta_n)$.
+\end{lem}
+
+\begin{proof}[Lemma \ref{lem.card.non.nul.pi}]
+~\\
+\begin{postit}
+~\\
+                The main point is that $\zn$ is drawn from a multinomial distribution. It leads to the fact that there exists $0<\rho<1$ such that
+\begin{align*}
+        \forall q,\quad \abs{\frac{\card\paren{\acc{i\mid z_i^*=q}}}{n}-\alpha_q} \leq \rho\, \alpha_q \quad \mathrm{and} \quad (1+\rho)^2 \sum_{q,l}\alpha_q\alpha_l n^2< n(n-1) \enspace.
+\end{align*}
+\end{postit}
+Set
+$$ S\defegal \acc{(i,j)\mid \theta_{i,j}=\pi_{z_i,z_j}\in\acc{0,1},\ \theta_n\in\Theta_n}\enspace.
+$$
+Since $\theta_n\in\Theta_n$, it comes
+$$S\subset S^*\defegal \acc{(i,j)\mid \theta^*_{i,j}=\pi_{z^*_i,z^*_j}^*\in\acc{0,1}}\enspace. $$
+Let us define $N^*=\acc{(q,l)\mid \pi_{q,l}^*\in\acc{0,1}}$, and for every $(q,l)\in N^*$,
+$$\quad\card\paren{\acc{i\mid z_i^*=q}}\approx n\alpha_q,\quad \card\paren{\acc{i\mid z_i^*=l}}\approx n\alpha_l\enspace.$$
+We recall that $\zn^*$ has been drawn form a multinimial distribution $\mathcal{M}(\alpha_1,\ldots,\alpha_Q)$. Then, one has
+$$\card\paren{S}\leq (1+\rho)^2\paren{\sum_{(q,l)\in N^*}\alpha_q \alpha_l} n^2\enspace.$$
+Then, we get
+\begin{align*}
+        \abs{\mathcal{N}(\theta_n)}\geq \croch{1-(1+\rho)^2\paren{\sum_{(q,l)\in N^*}\alpha_q \alpha_l}} n(n-1)\enspace.         
+\end{align*}
+
+\end{proof}
+
+
+
+
+\section{Proof of Theorem \ref{thm.distrib.conv.zn}}
+We first state the proof under condition (C1).
+
+\subsection{Upper bounding $P \croch{ \sum_{\zn \neq
+\zn^*}\frac{\P\croch{\Zn=\zn\mid \Xn}}{\P\croch{\Zn=\zn^*\mid \Xn}} > t  \mid  Z=z^*}$}\ \\
+
+Let $\PXn(\zn)$ denote $\P\croch{\Zn=\zn\mid \Xn}$ for every $\zn$.
+%
+The sum on $\zn$ is partitioned according to the number $r$ of differences between $\zn$ and $\zn^*$.
+\begin{align*}\sum_{\zn \neq \zn^*}
+\frac{\PXn(\zn)}{\PXn(\zn^*)} =\sum_{r=1}^n \sum_{\left\| z-z^* \right\|_0
+=r} \frac{\PXn(\zn)}{\PXn(\zn^*)}\enspace ,
+\end{align*}
+where $\|z \|_0$ designates the number of
+non-zero components of the vector $z$.
+\begin{align*}
+&\ P \croch{ \sum_{z \neq z^*} \frac{\PXn(\zn)}{\PXn(\zn^*)} > t \mid Z=z^*} \nonumber \\
+ = &\  P \croch{ \sum_{r=1}^n \sum_{\norm{\zn-\zn^*}_0=r}
+\frac{\PXn(\zn)}{\PXn(\zn^*)} > t \ | \ Z=z^*} \nonumber \\
+ \leq &\  P \croch{ \bigcup_{r=1}^n \acc{\sum_{\norm{\zn-\zn^*}_0=r}
+\frac{\PXn(\zn)}{\PXn(\zn^*)} > \frac{t}{n}} \mid Z=z^* } \nonumber \\
+ \leq & \sum_{r=1}^n P \croch{ \sum_{\norm{\zn-\zn^*}_0=r}
+\frac{\PXn(\zn)}{\PXn(\zn^*)} > \frac{t}{n}\mid Z=z^*} \nonumber \\
+ \leq & \sum_{r=1}^n \sum_{\norm{\zn-\zn^*}_0=r} P \croch{
+\frac{\PXn(\zn)}{\PXn(\zn^*)} > \frac{t}{n {n\choose r}(Q-1)^{r}} \mid Z=z^*}
+ \enspace .
+\end{align*}
+%
+Note that the number of $\zn\neq\zn^*$ such that
+$\norm{\zn-\zn^*}_0=r$ is equal to ${n\choose r} \paren{Q-1}^r$ since $\zn\in
+\paren{\acc{0,1}^Q}^n$.
+%
+This leads us to
+\begin{align*}
+        &\ P \croch{ \sum_{z \neq z^*} \frac{\PXn(\zn)}{\PXn(\zn^*)} > t \mid Z=z^*}\\
+ \leq & \sum_{r=1}^n \sum_{\norm{\zn-\zn^*}_0=r} P \croch{
+\frac{\PXn(\zn)}{\PXn(\zn^*)} > \frac{t}{n^{r+1}(Q-1)^{r}} \mid Z=z^*}
+ \enspace .
+\end{align*}
+
+\subsection{Upper bounding $P \left[ \frac{\PXn(\zn)}{\PXn(\zn^*)} >
+\frac{t}{n^{r+1}(Q-1)^{r}} \ | \ Z=z^* \right]$}
+
+Let us first notice that
+\begin{align*}
+ & P \croch{ \frac{\PXn(\zn)}{\PXn(\zn^*)} >
+\frac{t}{n^{r+1}(Q-1)^{r}} \mid Z=z^*} \\
+= & P \croch{ \log \frac{\PXn(\zn)}{\PXn(\zn^*)} > \log \paren{\frac{t}{n^{r+1}(Q-1)^{r}}} \mid Z=z^* } \\
+= & P \left\{ \frac{1}{r(2n-r-1)} \paren{ \log \frac{\PXn(\zn)}{\PXn(\zn^*)} - \E^{Z=z^*}
+\croch{ \log \frac{\PXn(\zn)}{\PXn(\zn^*)} } }  \right.\\
+& \left. \hspace*{2cm} > \frac{1}{r(2n-r-1)} \paren{ \log
+\frac{t}{n^{r+1}(Q-1)^{r}} -\E^{Z=z^*}
+\croch{ \log \frac{\PXn(\zn)}{\PXn(\zn^*)} }} \mid Z=z^* \right\}  \enspace.\\
+\end{align*}
+
+Since
+\begin{align*}
+        \log \paren{\frac{\PXn(\zn)}{\PXn(\zn^*)}}=\sum_{i\neq j} \acc{X_{i,j}\log\paren{\frac{\pi^*_{z_i,z_j}}{\pi^*_{z^*_i,z^*_j}}}+(1-X_{i,j})\log\paren{\frac{1-\pi^*_{z_i,z_j}}{1-\pi^*_{z^*_i,z^*_j}}}}\enspace,
+\end{align*}
+it comes that
+\begin{align*}
+        & \log \paren{\frac{\PXn(\zn)}{\PXn(\zn^*)}}-\E^{Z=z^*}\croch{\log \paren{\frac{\PXn(\zn)}{\PXn(\zn^*)}}}  \\
+= & \sum_{i\neq j} \acc{\paren{X_{i,j}-\pi^*_{z^*_i,z^*_j}}\log\croch{\frac{\pi^*_{z_i,z_j}\paren{1-\pi^*_{z^*_i,z^*_j}}}{\pi^*_{z^*_i,z^*_j}\paren{1-\pi^*_{z_i,z_j}}}}}\enspace.
+\end{align*}
+%
+Under condition (C1), lemma \ref{lemmeN} implies that there are $r(2n-r-1)$ non-zero term in the sum. Let us then apply Proposition \ref{prop.Hoeffding.inequality} (Hoeffding's inequality), with $a_{ij}=-b/2$ and $b_{ij}=b/2=\log \croch{ \paren{1-\epsilon}^2{\epsilon}^{-2}}$ for every $(i,j)$ and $t=s/(r(2n-r-1))$. The bounds are given by the Lemma \ref{lem.Hoeffding.bound}.
+%
+Then, one gets for every $s>0$
+\begin{align*}
+        & P \croch{\frac{1}{r(2n-r-1)} \paren{\log \frac{\PXn(\zn)}{\PXn(\zn^*)} - \E^{Z=z^*}
+\croch{ \log \frac{\PXn(\zn)}{\PXn(\zn^*)}}} > s \mid Z=z^*}  \\
+ & \hspace*{9cm} \leq \mathrm{exp}\paren{\frac{-r(2n-r-1)s^2}{b^2}}\enspace.
+\end{align*}
+
+\subsection{Conclusion}
+Taking
+\begin{align*}
+        s = \frac{1}{r(2n-r-1)} \paren{ \log
+\frac{t}{n^{r+1}(Q-1)^{r}} -\E^{Z=z^*}
+\croch{ \log \frac{\PXn(\zn)}{\PXn(\zn^*)} }}\enspace,
+\end{align*}
+one can notice that
+\begin{align*}
+        s =  -\frac{(r+1)\log(n) +r\log(Q-1)}{r(2n-r-1)} -\frac{1}{r(2n-r-1)}\E^{Z=z^*}
+\croch{ \log \frac{\PXn(\zn)}{\PXn(\zn^*)} }\enspace.
+\end{align*}
+%
+Using lemma \ref{lem.Hoeffding.Expectation}, it is then not difficult to show that for large enough values of $n$,
+\begin{align*}
+s^2 \geq \frac{3}{4}\paren{\frac{1}{r(2n-r-1)}\E^{Z=z^*}
+\croch{ \log \frac{\PXn(\zn)}{\PXn(\zn^*)} }}^2
+\geq  \frac{3}{4}\, c_{\epsilon}^2\paren{\pi^*}
+\enspace.
+\end{align*}
+%
+It results that
+\begin{align*}
+\mathrm{exp}\paren{\frac{-r(2n-r-1)s^2}{b^2}} \leq \mathrm{exp}\paren{\frac{-3r(2n-r-1)c_{\epsilon}^2\paren{\pi^*}}{4 b^2}} \enspace,
+\end{align*}
+which implies
+\begin{align*}
+        &\ P \croch{ \sum_{z \neq z^*} \frac{\PXn(\zn)}{\PXn(\zn^*)} > t \mid Z=z^*}\\
+ \leq & \sum_{r=1}^n \sum_{\norm{\zn-\zn^*}_0=r} \mathrm{exp}\paren{\frac{-3r(2n-r-1)c_{\epsilon}^2\paren{\pi^*}}{4 b^2}} \\
+ \leq & \sum_{r=1}^n {n \choose r} (Q-1)^r \mathrm{exp}\paren{\frac{-3r(2n-r-1)c_{\epsilon}^2\paren{\pi^*}}{4 b^2}}\\
+ \leq & \sum_{r=1}^n {n \choose r} \croch{(Q-1) a_n}^r
+\enspace ,
+\end{align*}
+where $a_n=\mathrm{exp}\croch{\paren{-3(n-1)c_{\epsilon}^2\paren{\pi^*}}/\paren{4 b^2}}$.
+%
+It is then easy to see that
+\begin{align*}
+& P^* \croch{ \sum_{z \neq z^*} \frac{\PXn(\zn)}{\PXn(\zn^*)} > t \mid Z=z^*} \leq \paren{1+(Q-1) a_n}^n-1 \\
+& \leq n \, a_n\; e^{Q-1} \xrightarrow[n\to +\infty]{}0 \enspace,
+\end{align*}
+as long as $n$ is large enough, which concludes the proof.
+
+
+
+
+
+\subsection{Hoeffding's inequality and related lemmas}
+\begin{prop}[Hoeffding's inequality] \label{prop.Hoeffding.inequality}
+        Let $\acc{Y_i}_{1\leq i\leq n}$ independent random variables such that for every $i$, $Y_i\in [a_i,b_i]$ almost surely.
+%
+Then, for any $t>0$,
+\begin{align*}
+        \P\croch{\sum_{i=1}^n \paren{Y_i-\E\croch{Y_i}} > t} \leq \mathrm{exp}\paren{\frac{-t^2}{\sum_{i=1}^n(b_i-a_i)^2}}\enspace.
+\end{align*}
+\end{prop}
+
+\begin{lem}[Bounds $a_{ij}$ and $b_{ij}$]\label{lem.Hoeffding.bound}
+For every $1 \leq i\neq j \leq n$,
+\begin{align*}
+        \abs{X_{i,j} \log\croch{\frac{\pi^*_{z_i,z_j}\paren{1-\pi^*_{z^*_i,z^*_j}}}{\pi^*_{z^*_i,z^*_j}\paren{1-\pi^*_{z_i,z_j}}}}} \leq
+\log \croch{ \paren{ \frac{1-\epsilon}{\epsilon}}^2 }\enspace,
+\end{align*}
+where $\epsilon=\min\acc{\pi_{q,l} \mid \pi_{q,l}\in]0,1[,\ 1\leq q,l\leq Q)}$. The existence of $\epsilon>0$ comes from the assumption 3.
+\end{lem}
+
+
+\begin{lem}[Bounds for the exponent term]\label{lem.Hoeffding.Expectation}
+There exist $c_{\epsilon}(\pi^*),C_{\epsilon}(\pi^*)>0$ such that
+\begin{align*}
+         c_{\epsilon}\paren{\pi^*} \leq -\frac{1}{r(2n-r-1)}\E^{Z=z^*} \croch{ \log \frac{\PXn(\zn)}{\PXn(\zn^*)} } \leq C_{\epsilon}\paren{\pi^*}\enspace.
+\end{align*}
+
+\end{lem}
+
+\begin{proof}[Lemma \ref{lem.Hoeffding.Expectation}]
+\begin{align*}
+\E^{Z=z^*} \croch{ \log \frac{\PXn(\zn)}{\PXn(\zn^*)} } & = \E^{Z=z^*}\croch{   \sum_{i\neq j} \acc{X_{i,j}\log\paren{\frac{\pi^*_{z_i,z_j}}{\pi^*_{z^*_i,z^*_j}}}+(1-X_{i,j})\log\paren{\frac{1-\pi^*_{z_i,z_j}}{1-\pi^*_{z^*_i,z^*_j}}}}}\\
+& = \sum_{i\neq j} \E^{Z=z^*} \croch{X_{i,j}\log\paren{\frac{\pi^*_{z_i,z_j}}{\pi^*_{z^*_i,z^*_j}}}+(1-X_{i,j})\log\paren{\frac{1-\pi^*_{z_i,z_j}}{1-\pi^*_{z^*_i,z^*_j}}}}\\
+& = \sum_{i\neq j} -\croch{\pi^*_{z^*_i,z^*_j}\log\paren{\frac{\pi^*_{z^*_i,z^*_j}}{\pi^*_{z_i,z_j}}}+(1-\pi^*_{z^*_i,z^*_j})\log\paren{\frac{1-\pi^*_{z^*_i,z^*_j}}{1-\pi^*_{z_i,z_j}}}}\enspace.
+\end{align*}
+Since $\norm{\zn-\zn^*}_0=r$, Lemma \ref{lemmeN} implies that there are $r(2n-r-1)$ couples $(i,j)$ such that $\pi^*_{z^*_i,z^*_j}\log\paren{\frac{\pi^*_{z_i,z_j}}{\pi^*_{z^*_i,z^*_j}}}+(1-\pi^*_{z^*_i,z^*_j})\log\paren{\frac{1-\pi^*_{z_i,z_j}}{1-\pi^*_{z^*_i,z^*_j}}}\neq 0$.
+%
+Let $A(\zn^*,\zn)$ denote this set of couples $(i,j)$.
+
+Let us set
+\begin{align*}
+C_{\epsilon}\paren{\pi^*} & \defegal  \max_{(q,l),(q',l')\in B}  \pi^*_{q,l}\log\paren{\frac{\pi^*_{q',l'}}{\pi^*_{q,l}}}+(1-\pi^*_{q,l})\log\paren{\frac{1-\pi^*_{q',l'}}{1-\pi^*_{q,l}}}\enspace,\\
+c_{\epsilon}\paren{\pi^*} & \defegal  \min_{(q,l),(q',l')\in B}  \pi^*_{q,l}\log\paren{\frac{\pi^*_{q',l'}}{\pi^*_{q,l}}}+(1-\pi^*_{q,l})\log\paren{\frac{1-\pi^*_{q',l'}}{1-\pi^*_{q,l}}}\enspace,
+\end{align*}
+where $B=\acc{(q,l) \mid \pi^*_{q,l}\log\paren{\pi^*_{q',l'}/\pi^*_{q,l}}+(1-\pi^*_{q,l})\log\croch{\paren{1-\pi^*_{q',l'}}/\paren{1-\pi^*_{q,l}}}\neq 0}$.
+%
+Then, for each $(i,j)\in A(\zn^*,\zn)$,
+\begin{align*}
+0 < c_{\epsilon}\paren{\pi^*} \leq \pi^*_{z^*_i,z^*_j}\log\paren{\frac{\pi^*_{z^*_i,z^*_j}}{\pi^*_{z_i,z_j}}}+(1-\pi^*_{z^*_i,z^*_j})\log\paren{\frac{1-\pi^*_{z^*_i,z^*_j}}{1-\pi^*_{z_i,z_j}}} \leq C_{\epsilon}\paren{\pi^*}\enspace.
+\end{align*}
+%
+Hence,
+\begin{align*}
+         c_{\epsilon}\paren{\pi^*} \leq -\frac{1}{r(2n-r-1)}\E^{Z=z^*} \croch{ \log \frac{\PXn(\zn)}{\PXn(\zn^*)} } \leq C_{\epsilon}\paren{\pi^*}\enspace.
+\end{align*}
+
+\end{proof}
+
+
+
+\begin{lem}[Number of non-zero terms in the sum] \label{lemmeN} Let $r$ the number of differences between $z$ and $z^*$, $\pi_{ij}=\pi^*_{z_iz_j}$ and
+$\pi^*_{ij}=\pi^*_{z^*_iz^*_j}$ With
+\begin{align}\label{expectation}
+E^{Z=z^*} \paren{ \log \frac{\PXn(\zn)}{\PXn(\zn^*)} } = \sum_{i \neq j} \paren{ \pi_{ij}^*
+\log \frac{\pi_{ij}}{\pi_{ij}^*} + (1-\pi_{ij}^*) \log
+\frac{1-\pi_{ij}}{1-\pi_{ij}^*}} + \sum_{i=1}^n \log
+\frac{\alpha_i}{\alpha_i^*} \enspace \cdot
+\end{align}
+and under the assumptions 1 and 2, the first sum of
+(\ref{expectation}) has $r(2n-r-1)$ non-zero elements, whereas the second sum has $r$ non-zero elements.
+\end{lem}
+
+
+\begin{proof}
+The $n^2$ elements of the first sum can be organized in a $(n,n)$-matrix with the $r$ terms which are different between $z$ and $z^*$ at the beginning of the matrix. We have then a four-parts partitioned matrix. The count of the non-zero elements is the following: the top-left sub-matrix contains $r(r-1)$ terms, the top-right and the bottom-left ones contains each $r(n-r)$ terms and the bottom-right sub-matrix contains no term. The total number of non-zeros terms is thus $r(r-1)+2r(n-r)=r(2n-r-1)$.
+
+
+%Let us show this lemma by recurrence.
+%%\begin{align}\label{expectation}
+%%E \paren{ \log \frac{\PXn(\zn)}{\PXn(\zn^*)} } = \sum_{i \neq j} \pi_{ij}^*
+%%\log \frac{\pi_{ij}}{\pi_{ij}^*} + (1-\pi_{ij}^*) \log
+%%\frac{1-\pi_{ij}}{1-\pi_{ij}^*} + \sum_{i=1}^n \log
+%%\frac{\alpha_i}{\alpha_i^*} \enspace \cdot
+%%\end{align}
+%
+%The idea of the proof is to count the number of couples $(i,j)$ with $i\neq j$
+% such that $\pi_{ij}\neq \pi_{ij}^*$. This condition implies that the term in the first sum
+%of  (\ref{expectation}) is different to zero.
+%
+%Initialization:
+%For $r=1$, it exists a unique  $k_1$ such as $z_{k_1}
+%\neq z_{k_1}^*$. So for all $i \neq k_1$ and for all $j \neq
+%k_1$: $\pi_{k_1j}\neq \pi_{k_1j}^*$, $\pi_{ik_1}\neq \pi_{ik_1}^*$ and
+%$\alpha_{k_1}\neq \alpha_{k_1}^*$. There are $(n-1)$ indexes $i$ and
+%$(n-1)$ indexes $j$ satisfying the inequalities in $\pi$. Moreover,
+%only $k_1$ satisfies the inequality in $\alpha$. So the first sum
+%of (\ref{expectation}) has $2(n-1)$ non-zero elements and the
+%second sum in $\alpha$ has one term different to zero. So $E
+%\paren{ \log {\PXn(\zn)}/{\PXn(\zn^*)} } $ has $1\times (2n-1)$ non zero terms
+%and the lemma is right for the rank 1.
+%
+%
+%Let us suppose the property right for the rank $r-1$ and let us us show that is is right for the rank $n$.
+%
+%Let us note $k_1, \cdots ,k_r$ the rank of the misclassified individuals.
+%
+%For the individual $k_r$, we look for the indexes $i$ and $j$ that
+% satisfy: $\pi_{k_rj}\neq
+%\pi_{k_rj}^*$, $\pi_{ik_r}\neq \pi_{ik_r}^*$. $k_1, \cdots, k_{r-1}$
+%are couples $i,j$ already counted at the rank $r-1$. So
+%we only have $(n-1)-(r-1)$ new $i$ and $(n-1)-(r-1)$ new
+%$j$ that satisfy the expected relations. Besides, the
+%definition of $k_r$ and the assumption 2 give $\alpha_{k_r}\neq
+%\alpha_{k_r}^*$. So, for $r$ misclassified individuals, the number of
+%non-zero elements of (\ref{expectation}) is
+%\begin{eqnarray*}
+%(r-1)\,\paren{2n-(r-1)}+ 2\paren{n-1-(r-1)}+ 1 &=& r(2n-r) \enspace .
+%\end{eqnarray*}
+%The property is right for the rank $r$, and the lemma is right for all $r\geq 1$.
+
+
+\end{proof}
+
+
+\subsection{Condition (C1) may be replaced by (C1')}
+The key element in the proof is the order $n^2$ in the exponent of the Hoeffding's inequality. The value $n^2$ comes from the number of non-null elements in the sum $\sum_{i\neq j} \acc{\paren{X_{i,j}-\pi^*_{z^*_i,z^*_j}}\log\croch{\frac{\pi^*_{z_i,z_j}\paren{1-\pi^*_{z^*_i,z^*_j}}}{\pi^*_{z^*_i,z^*_j}\paren{1-\pi^*_{z_i,z_j}}}}}\enspace.$ 
+A term of this sum is null in two cases:
+\begin{enumerate}
+  \item $\pi^*_{z^*_i,z^*_j}=0$ or $\pi^*_{z^*_i,z^*_j}=1$ (implies that $X_{ij}-\pi^*_{z^*_i,z^*_j}=0$)
+  \item $\pi^*_{z_i,z_j}=\pi^*_{z^*_i,z^*_j}$. This case contains two subcases: (i) $z_i=z^*_i$ and $z_j=z^*_j$  (ii) $z_i \neq z^*_i$ or $z_j \neq z^*_j$ and the two elements of the matrix $\pi$, $\pi^*_{z_i,z_j}$ and $\pi^*_{z^*_i,z^*_j}$ are equal. The case (i) is taken into account in the main proof: the number of non-zero elements in the sum when there are $r$ differences between $\zn$ and $\zn^*$ is at most equal to $r(2n-r-1)$. The case (ii) is impossible with assumption (C1) but possible with assumption (C1'). It then implies that using assumption (C1'), the number of non-null terms is less than $r(2n-r-1)$.
+\end{enumerate}
+If every $\pi^*_{ql} \in (0,1)$, $\Xn$ is not random and $\PXn(\Zn \neq \zn^*)=0$. In the following we assume that each row (and column) of $\pi$ contains at least one value pertaining to the interval $[\epsilon, 1-\epsilon]$, with $\epsilon$ given by assumption 3. The rows (and columns) that have all their values in $(0,1)$ are discarded.
+The number of random edges $X_{ij}$ is, for $n$ sufficiently high, greater than $\gamma^2 n^2$, with $\gamma > 0$ given by assumption 4.
+If there are $r$ differences between $\zn$ and $\zn^*$, assumption (C1') a detailed analysis shows that the minimal number of non-zero terms in the sum is $\gamma^2 r(2n-r) -\gamma r$. Therefore substituting (C1) by (C1') implies that  $n^2$ is replaced by $\gamma^2 n^2$ in the exponent of the Hoeffding's inequality and the proof made with the condition (C1) remains valid with condition (C1').
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\bibliographystyle{plain}
+\bibliography{biblio}
+
+
+\end{document}
+
+

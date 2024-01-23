@@ -1,0 +1,79 @@
+% !TEX root = Topology-MIA518.tex
+\section{Model with independent edges}
+\frame{\frametitle{A model with independent edges}
+
+Let $\{1,\dots,n\}$ be a set of actors  and $E$ a set of pairs.  We consider a binary non-oriented graph: 
+$$
+Y_{ij} \sim_{i.i.d.} \mathcal{B}(p_{ij}) \quad \quad \quad \quad \forall i \neq j \in \{1,\dots, n\}^2
+$$
+with  $P(Y_{ii}=0)=1$
+ 
+\begin{block}{Particular case:  Erd\"os-Renyi} $$p_{ij} = p \quad \quad \forall i\neq j $$
+
+
+\emphase{Consequences}
+\begin{itemize}
+\item $|E| \sim \mathcal{B}in( n^2-n,p) $
+\item For a given node $i$,  its indegree and outdegree are distributed with $\mathcal{B}in( n-1,p) $
+\end{itemize}
+
+\end{block}
+
+
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Covariates: GLM}
+\frame{\frametitle{Introduction of covariates}
+
+ \begin{itemize}
+ \item  Assume we have extra covariates  on the edges or on the nodes. 
+ 
+\item  For example: 
+  \begin{itemize}
+ \item We consider a fridenship network
+ \item We also know if the individuals are in the same school, if they are male or female, their ages 
+  \end{itemize}
+  
+\item  We denote by $\mathbf{x}_{ij} \in \mathbb{R}^d$ the covariates on the couple $(i,j)$
+ $$P(Y_{ij} = 1) = \varphi( p + x_{ij}^T \beta)$$
+ \item No difficulty of estimation : GLM
+ \item \emphase{Question} : 
+ Once we have removed the effects of the covariates, do we get a particular structure in the network or not? 
+ $$ \mathcal{H}_0: p_{ij}= p  \quad \mbox{ versus } \quad \mathcal{H}_1:  p_{ij} \mbox{ not a constante } $$ 
+ \end{itemize}
+ }
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ \frame{\frametitle{Example: Club de Karat\'e? }
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Goodness of fit}
+\frame{\frametitle{Goodness of fit}
+
+  For a given model $P(\cdot; \theta)$:
+  $$
+  Y \overset{?}{\sim} P(\cdot; \theta)
+  $$
+  
+  \paragraph{Typical case:} 
+  $$
+  P(\cdot; \theta) = \text{Erd\"os-Renyi}.
+  $$
+  Popular statistics: degree variance
+  $$
+  V_n = \frac1n \sum_i (D_i - \overline{D})^2, 
+  \qquad \text{where} \quad
+  D_i = \sum_{j} Y_{ij}, \qquad \overline{D} = \frac1n \sum_i D_i.
+  $$
+
+  \paragraph{On-going work:} Asymptotic distribution of $V_n$
+  \begin{itemize}
+   \item under Erd\"os-Renyi;
+   \item under the '$p_{ij}$ model'
+   \item ...
+  \end{itemize}
+
+
+  }

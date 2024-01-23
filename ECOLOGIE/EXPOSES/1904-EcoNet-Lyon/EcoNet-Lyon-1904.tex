@@ -1,0 +1,665 @@
+\documentclass[9pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+\usepackage{xspace}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\GMSBM}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/1903-SemStat/}
+\newcommand{\figeconet}{/home/robin/Bureau/RECHERCHE/ECOLOGIE/EXPOSES/1904-EcoNet-Lyon/Figs}
+\renewcommand{\nodesize}{1.75em}
+\renewcommand{\edgeunit}{2.25*\nodesize}
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+\title[Graphical models]{Introduction to probabilistic graphical models}
+
+\author[S. Robin]{S. Robin: based on Forbes (2016) \& Schwaller (2016)} \nocite{For16,Sch16}
+
+\date[EcoNet, Apr '19, Lyon]{EcoNet, April 2019, Lyon}
+
+\maketitle
+
+%====================================================================
+\frame{ \frametitle{References}
+  {\footnotesize
+   %\tiny
+   \bibliography{/home/robin/Biblio/BibGene}
+%    \bibliographystyle{/home/robin/LATEX/Biblio/astats}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+\frame{\frametitle{Graphical models}
+
+  Useful and mathematically grounded tool to describe the dependency structure among a set of random variables.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Example.} Let $A, B, C, ... =$ species abundances, environmental covariates, ...
+  
+  What do we mean when drawing 
+  $$
+  \input{\figeconet/DAG6nodes}
+  \qquad \qquad
+  \input{\figeconet/GM7nodes}
+  $$
+}
+  
+
+%====================================================================
+%====================================================================
+\section{Elements of probability}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Elements of probability}
+
+  \paragraph{Notation.}
+  $$
+  p(x) = p(x_1, x_2, \dots, x_n) = \Pr\{X_1=x_1, X_2=x_2, \dots, X_n=x_n\}
+  $$
+  
+  \bigskip 
+  \onslide+<2->{\paragraph{Definitions\footnote{$\sum_{x_2, \dots, x_n} ()$ to be replaced with $\int () \d x_2 \dots \d x_n$ when continuous}.}
+  \begin{align*}
+   \text{Marginal distribution of $X_1$:} & &  p(x_1) & =\sum_{x_2, \dots, x_n} p(x_1, x_2, \dots, x_n) \\ 
+   ~ \\
+   \text{Conditional distribution of $Y \mid X$:} & & p(y \mid x) & = {p(x, y)} \left/ {p(x)} \right. 
+  \end{align*} }
+  
+  \bigskip 
+  \onslide+<3->{\paragraph{Properties.}
+  \begin{align*}
+   \text{Product rule:} & & p(x, y) & =p(x) p(y \mid x) \\ 
+   ~ \\
+   \text{Chain rule:} & & \quad p(x_1, x_2, \dots, x_n) & =p(x_1) p(x_2 \mid x_1) \\
+   & & & \quad \dots \times p(x_n \mid x_1, x_2, \dots x_{n-1})
+  \end{align*}}
+}
+  
+%====================================================================
+%====================================================================
+\section{Directed graphs and Bayesian networks}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Directed graphs and Bayesian networks}
+
+  \paragraph{Definition.} Let $D$ be a {\sl directed acyclic graph} (\emphase{DAG}), the distribution $p$ is said to factorize in $D$ iff
+  $$
+  p(x_1, \dots x_n) = \prod_{i=1}^n p(x_i \mid x_{pa_D(i)})
+  $$
+  where $pa_D(i)$ stands for the set of parents of $i$ in $D$.
+
+  \bigskip \bigskip \pause
+  \begin{tabular}{cc}
+    \begin{tabular}{c}
+    $\input{\figeconet/DAG6nodes}$
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+      \begin{eqnarray*}
+        pa_D(A) = \emptyset, & & pa_D(D) = \{B, C\}, \qquad \dots  \\
+        \\
+        p(a, \dots f) & = 
+        & p(a) \; p(b \mid a) \; p(c \mid a) \\
+        & & p(d \mid b, c) \; p(e \mid d) \\
+        & & p(f \mid b, d)
+        \end{eqnarray*}
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Dynamic Bayesian Networks (DBN)}
+
+  \renewcommand{\nodesize}{2em}
+  \begin{tabular}{p{.48\textwidth}p{.48\textwidth}}
+   \paragraph{Genuine graphical model.} A DAG: &
+   \paragraph{Popular representation.} Not a DAG: \\ 
+   $$
+   \input{\figeconet/DBN4nodes}
+   $$
+   &
+   $$
+  \input{\figeconet/DBN4nodes-collapsed}
+   $$
+  \end{tabular}
+  \renewcommand{\nodesize}{1.75em}
+}
+  
+%====================================================================
+\frame{\frametitle{A simple (interesting) example}
+
+  Consider $D =$
+  $$
+  \input{\figeconet/LeftRightChain}
+  $$
+  $p(x, y, z)$ is faithful to $D$ iff
+  $$
+  p(x, y, z) = p(x) \; p(y \mid x) \; p(z \mid y) 
+  $$ \pause
+  But
+  \begin{align*}
+   p(x) \; p(y \mid x) \; p(z \mid y) 
+%    & = p(x) \; \frac{p(x, y)}{p(x)} \; \frac{p(y, z)}{p(y)} \\
+%    & = \frac{p(x, y)}{p(y)} \; \frac{p(y, z)}{p(z)} \; p(z) \\
+   & = p(x \mid y) \; p(y \mid z) \; p(z) 
+  \end{align*}
+  so $p$ is also faithful to $D' =$
+  $$
+  \input{\figeconet/RightLeftChain} 
+  $$
+  \pause and to $D'' =$
+  $$
+  \input{\figeconet/AwayFromCenter}
+  $$
+  
+  \bigskip \pause
+  \paragraph{Conclusions.} 
+  \begin{itemize}
+   \item $p(x)$ is not enough to retrieve edge orientations'
+   \item No causal interpretation
+  \end{itemize}
+}
+  
+%====================================================================
+%====================================================================
+\section{Conditional independance and Markov properties}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Conditional independance}
+
+  \paragraph{Definition.} $X$ is independent of $Y$ conditional on $Z$ ($X \independent Y \mid Z$) iff
+  $$
+  p(x, y \mid z) = p(x \mid z ) p(y \mid z)
+  \qquad \Leftrightarrow \qquad 
+  p(x \mid z, y) = p(x \mid z ) 
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Example.} $A \independent C \mid B$ in the three DAGs:
+  $$
+  \input{\figeconet/LeftRightChain} \qquad
+  \input{\figeconet/RightLeftChain} \qquad
+  \input{\figeconet/AwayFromCenter}
+  $$
+  Indeed, for first one,
+  $$
+  p(x, z \mid y)
+  = \frac{p(x, y, z)}{p(y)}
+  = \frac{p(x) p(y \mid x) p(z \mid y)}{p(y)}
+  = p(x \mid y) p(z \mid y)
+  $$
+  because $p(x) p(y \mid x) = p(y) p(x \mid y)$.
+  
+}
+
+%====================================================================
+\frame{\frametitle{V-structure}
+
+%   \paragraph{Counter-example.} 
+  In the V-structured (or 'head to head') DAG:
+  $$
+  \input{\figeconet/HeadToHead}
+  $$
+  $X$ and $Z$ are \emphase{conditionally dependent} ($X \not\independent Y \mid Z$):
+  \begin{align*}
+  p(x, y, z) & = p(x) p(z) p(y \mid x, z) \\ ~\\
+  \Rightarrow \quad
+  p(x, z \mid y) & = \frac{p(x, y, z)}{p(y)}   = \frac{p(x) p(z) p(y \mid x, z)}{p(y)}  
+  \end{align*}
+  
+  
+  \bigskip \bigskip \pause
+  \paragraph{Remark.} 
+  $X$ and $Z$ are \emphase{marginally independent}:
+  $$p(x, z)
+  = \sum_y p(x) p(z) p(y \mid x, z)
+  = p(x) p(z) \underset{= 1}{\underbrace{\sum_y p(y \mid x, z)}}
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Markov properties}
+
+  \paragraph{Theorem.} Two DAGs are Markov equivalent (i.e. induce the same conditional dependences and independences) if they share
+  \begin{itemize}
+   \item the same skeleton (i.e. the same undirected edges)
+   \item the same V-structures.
+  \end{itemize}
+
+}
+  
+%====================================================================
+\frame{\frametitle{Equivalent DAGs}
+
+  \begin{tabular}{c|cc|cc}
+  $D$ &
+  \multicolumn{2}{c|}{Equivalent to $D$} &
+  \multicolumn{2}{c}{Not equivalent to $D$} \\
+  (\textcolor{red}{V-stuctures}) & & & & \\ 
+  & & & & \\ \hline & & & & \\ 
+  $\input{\figeconet/DAG6nodes-vtruct}$ \pause &
+  $\input{\figeconet/DAG6nodes-vtruct-equiv1}$ \pause &
+  $\input{\figeconet/DAG6nodes-vtruct-equiv2}$ \pause &
+  $\input{\figeconet/DAG6nodes-vtruct-notequiv1}$ \pause &
+  $\input{\figeconet/DAG6nodes-vtruct-notequiv2}$ 
+  \end{tabular}
+
+}
+  
+%====================================================================
+%====================================================================
+\section{Undirected graphs and Markov random fields}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Undirected graphical model}
+
+  \paragraph{Definition.} Let $G$ be an {\sl undirected graph}, the distribution $p$ is said to factorize in $G$ iff
+  $$
+  p(x_1, \dots x_n) \propto \prod_{C \in \Ccal(G)} \psi_C(x_C).
+  $$
+  where $\Ccal(G)$ is the set of cliques of $G$
+
+  \bigskip \bigskip \pause
+  \begin{tabular}{cc}
+    \begin{tabular}{c}
+    $\input{\figeconet/GM7nodes}$
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+      \begin{eqnarray*}
+        p(a, \dots g) & \propto 
+        & \psi_1(a, b, c) \; \psi_2(a, b, d) \; \psi_3(a, c, d) \; \psi_4(b, c, d) \\
+        & & \psi_5(d, e, f) \; \psi_6(f, g) \\\pause
+      \text{but also} \qquad \\
+        p(a, \dots g) & \propto 
+        & \psi_1(a, b, c, d) \\
+        & & \psi_2(d, e, f) \; \psi_3(f, g) 
+      \end{eqnarray*}
+      \ra Only consider \emphase{maximal} cliques
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Conditional independence}
+
+  \paragraph{Property.} If $p(x) > 0$, 
+  $$
+  \text{separation} \qquad \Leftrightarrow \qquad \text{conditional independence}
+  $$
+
+  \bigskip \pause
+  \begin{tabular}{cc}
+    \begin{tabular}{c}
+    $\input{\figeconet/GM7nodes}$
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+    \begin{itemize}
+     \item $A \not\independent B$ \\ ~
+     \item $A \not\independent D \mid B$ \\ ~
+     \item $A \independent D \mid \{B, C\}$ \\ ~
+     \item $\{A, B, C\} \independent \{E, F, G\} \mid D$ \\ ~
+     \item $\{B, C\} \independent \{E, F\} \mid D$ \\ ~
+    \end{itemize}
+    \end{tabular}
+  \end{tabular}
+
+}
+  
+%====================================================================
+\frame{\frametitle{From directed to undirected graphical models}
+
+  \paragraph{Resolve {\sl immoralities}.} Graph {\sl moralization} (parents must be married):
+  $$
+  \begin{array}{ccccc}
+   \input{\figeconet/Moral-DAG}
+   & \qquad & 
+   \input{\figeconet/Moral-marriage}
+   & \qquad & 
+   \input{\figeconet/Moral-GM}
+  \end{array}
+  $$
+  
+  \pause
+  \paragraph{Example.}
+  $$
+  \begin{array}{ccccc}
+   \input{\figeconet/DAG6nodes}
+   & \qquad & 
+   \input{\figeconet/DAG6nodes-marriage}
+   & \qquad & 
+   \input{\figeconet/DAG6nodes-GM}
+  \end{array}
+  $$
+}
+
+%====================================================================
+%====================================================================
+\section{Two useful models}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+%====================================================================
+\subsection{Gaussian graphical models (GGM)}
+%====================================================================
+\frame{\frametitle{Gaussian graphical models (GGM)}
+
+  \paragraph{Multivariate Gaussian distribution.} $\Omega =$ {\sl precision} matrix:
+  \begin{align*}
+  X = (X_1, \dots X_n) & \sim \Ncal(0, \Sigma), 
+  \qquad \qquad \text{define } [\omega_{ij}] = \Omega := \Sigma^{-1} \\ ~\\ 
+  \Rightarrow \quad p(x_1, \dots, x_n) 
+  & \propto \exp\left( - x^\intercal \Omega x \left/ 2 \right. \right) 
+  = \exp\left( - \sum_{i, j} x_i \omega_{ij} x_j \left/ 2 \right. \right) \\
+  & = \prod_{i, j} \exp(- x_i \omega_{ij} x_j / 2)
+  \end{align*}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Consequence.} $p(x)$ is faithful to $G$ such that: 
+  $$
+  i \sim j \quad \Leftrightarrow \quad \omega_{ij} \neq 0
+  $$
+  
+}
+  
+%====================================================================
+\frame{\frametitle{GGM: an example}
+
+  \begin{tabular}{ll}
+   \paragraph{Covariance.} &    \paragraph{Correlations.} \\
+   \begin{tabular}{p{.4\textwidth}}
+    \footnotesize{$$
+    \Sigma = \left(\begin{array}{rrrr} 
+    1.6  & -1.2  & -0.8  & 0.7 \\ 
+     & 2.3  & 1.5  & -1.4 \\ 
+     & & 2.6  & -1.8 \\ 
+     & &  & 2.4 
+    \end{array} \right) 
+    $$}
+   \end{tabular}
+   &
+   \begin{tabular}{p{.4\textwidth}}
+    \footnotesize{$$
+    R = \left(\begin{array}{rrrr} 
+    1.0 & -0.6  & -0.4  & 0.4 \\ 
+    & 1.0 & 0.6  & -0.6 \\ 
+    & & 1.0 & -0.7 \\ 
+    & & & 1.0
+    \end{array} \right)
+    $$}
+   \end{tabular}
+   \\ ~ \\
+   \paragraph{Inverse covariance.} &     \paragraph{Graphical model.} \\
+   \begin{tabular}{p{.4\textwidth}}
+    \footnotesize{$$
+    \Omega = \left(\begin{array}{rrrr} 
+    1.0 & 0.5  & 0  & 0 \\ 
+    & 1.0 & -0.3  & 0.2 \\ 
+    & & 1.0 & 0.6 \\ 
+    & & & 1.0
+    \end{array} \right) 
+    $$}
+   \end{tabular}
+   &
+   \begin{tabular}{p{.4\textwidth}}
+   $$
+   \input{\figeconet/GGM}
+   $$
+   \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Infering GGM}
+
+  \paragraph{A simulation.} 50 replicates \\~ \\~
+
+  \begin{tabular}{ll}
+   \paragraph{Empirical covariance.} &    \paragraph{Empirical precision.} \\
+   \begin{tabular}{p{.4\textwidth}}
+    \footnotesize{$$
+    \widehat{\Sigma} = \left(\begin{array}{rrrr} 
+    2.15  & -1.36  & -0.59  & 0.57 \\ 
+    & 1.83  & 1.24  & -1.05 \\ 
+    & & 2.58  & -1.62 \\ 
+    & & & 1.81 
+    \end{array} \right) 
+    $$}
+   \end{tabular}
+   &
+   \begin{tabular}{p{.4\textwidth}}
+    \footnotesize{$$
+    \widehat{\Omega} = \left(\begin{array}{rrrr} 
+    0.93  & 0.82  & -0.15  & 0.04 \\ 
+    & 1.59  & -0.37  & 0.33 \\ 
+    & & 0.97  & 0.7 \\ 
+    & & & 1.36     
+    \end{array} \right)
+    $$}
+   \end{tabular}
+  \end{tabular}
+  
+  \ra Need to force $\widehat{\Omega}$ to be sparse (e.g. graphical lasso)
+
+}
+
+%====================================================================
+%====================================================================
+\subsection{Stochastic block-model (SBM)}
+%====================================================================
+\frame{\frametitle{Stochastic block-model (SBM)}
+
+  \paragraph{Reminder.} Consider a network with $n$ nodes
+  \begin{itemize}
+   \item Each node $i$ belongs to a unobserved class: $Z_i \in \{1, \dots, K\}$, $Z_i$ iid
+   \item Connections between node are to node memberships: $P(i \sim j \mid Z_i=k, Z_j=\ell) = \gamma_{kl}$
+  \end{itemize}
+  \ra Statistical inference requires to evaluate $p(Z \mid Y)$.
+
+  \bigskip \bigskip 
+  \begin{overprint}
+  \onslide<2>
+  \begin{centering}
+  \input{\GMSBM/SBM-GraphModel-pZ} 
+  \end{centering}
+  \onslide<3>
+  \begin{centering}
+  \input{\GMSBM/SBM-GraphModel-pZY12} 
+  \end{centering}
+  \onslide<4>
+  \begin{centering}
+  \input{\GMSBM/SBM-GraphModel-pZY13} 
+  \end{centering}
+  \onslide<5>
+  \begin{centering}
+  \input{\GMSBM/SBM-GraphModel-pZY} 
+  \end{centering}
+  \onslide<6>
+  \begin{centering}
+  \input{\GMSBM/SBM-GraphModel-pZY-moral} 
+  \end{centering}
+  \onslide<7>
+  \begin{centering}
+  \input{\GMSBM/SBM-GraphModel-pZY-GM} 
+  \end{centering}
+  \onslide<8>
+  \begin{centering}
+  \input{\GMSBM/SBM-GraphModel-pZcY} 
+  \end{centering}
+  \end{overprint}
+
+}
+
+%====================================================================
+%====================================================================
+\backupbegin 
+\section*{Backup}
+
+%====================================================================
+\frame{\frametitle{DAG for a hidden Markov model (HMM)}
+
+  \paragraph{Model.} 
+  \begin{itemize}
+   \item (Hidden) $(Z_t) \sim$ Markov chain$(\pi)$
+   \item (Observed) $Y_t \mid Z_t = k \sim F(\mu_k)$
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \begin{tabular}{p{.4\textwidth}p{.4\textwidth}}
+  \paragraph{Frequentist model.} & \paragraph{Bayesian model.} \\
+   $$
+   \input{\figeconet/HMM-freq}
+   $$
+   &
+   $$
+   \input{\figeconet/HMM-bayes}
+   $$
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Reading conditional independence: $d$-separation}
+
+  \paragraph{Definition.} $X$ and $Z$ are $d$-separated by a set of nodes $S$ if in any undirected path from $X$ to $Z$, there exist a node $Y$ such as
+  \begin{itemize}
+   \item $Y \in S$ and the path does not form a v-structure in $Y$
+   \item $Y \notin S$ (nor its descendants) and the path forms a v-structure in $Y$
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Property.} $d$ separation is equivalent to conditional independence, i.e.
+%   $$
+%   \{\text{$S$ $d$-separates $X$ and $Z$}\} \qquad \Leftrightarrow \qquad \{X \independent Z \mid S\}
+%   $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Remark \refer{For16}.} 
+  {\sl The definition $d$-separation implies that a variable is are conditionally independent from its non-descendants given its parents.}
+}
+
+%====================================================================
+\frame{\frametitle{Understanding $d$-separation}
+
+%   \begin{tabular}{p{.48\textwidth}p{.48\textwidth}}
+%     $\input{\figeconet/Dseparation1}$
+%     & 
+%     $\input{\figeconet/Dseparation2}$ 
+%     \\
+%     \begin{itemize}
+%      \item $D$ does separate $A$ and $E$
+%      \item $C$ does not separate $A$ and $E$
+%      \item $\{C, D\}$ does separate $A$ and $E$
+%     \end{itemize}
+%     & 
+%     \begin{itemize}
+%      \item $D$ does separate $A$ and $E$
+%      \item $C$ does not separate $A$ and $E$
+%      \item $\{C, D\}$ does not separate $A$ and $E$
+%     \end{itemize}
+%   \end{tabular}
+  
+
+  \begin{tabular}{p{.48\textwidth}p{.48\textwidth}}
+   $\input{\figeconet/Dseparation1}$
+   & 
+   \begin{itemize}
+   \item $D$ $d$-separates $A$ and $E$
+   \item $C$ does not $d$-separate $A$ and $E$
+   \item $\{C, D\}$ $d$-separates $A$ and $E$
+   \end{itemize}
+  \end{tabular}
+
+
+  
+}
+
+%====================================================================
+\frame{\frametitle{Conditional independence: an example}
+
+  \paragraph{Proof} of $\{B, C\} \independent \{E, F\} \mid D$
+
+  \begin{tabular}{cc}
+    \begin{tabular}{l}
+    $\input{\figeconet/GM7nodes}$
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+      \begin{eqnarray*}
+       p(b, c, d, e, f) 
+       & = & \sum_a \sum_g p(a, b, c, d, e, f, g) \\
+       & \propto & \sum_a \sum_g \psi_1(a, b, c, d) \psi_2(d, e, f) \psi_3(f, g) \\
+       & \propto & \underset{\Psi_1(b, c, d)}{\underbrace{\sum_a \psi_1(a, b, c, d)}} \; \underset{\Psi_2(d, e, f)}{\underbrace{\sum_g \psi_2(d, e, f) \psi_3(f, g)}} \\
+      \end{eqnarray*}
+      so, for any fixed $d$,
+      \begin{eqnarray*}
+       p(b, c, e, f \mid d) 
+       & = & p(b, c, d, e, f) \left/p(d) \right. \\
+       & \propto & \Psi_1(b, c, d) \times \Psi_2(d, e, f)
+      \end{eqnarray*}
+    \end{tabular}
+  \end{tabular}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Causality \refer{Pea09}}
+
+  \begin{tabular}{c|c|c}
+    'Truth' & Equivalent & 'Causality' \\  
+    & {based on observational data} \\  
+    & & \\\hline & & \\
+    \includegraphics[trim={0 15 180 0}, height=.22\textheight, clip]{../FIGURES/Pea09-Fig2-3}
+    &
+    \includegraphics[trim={0 15 0 0}, height=.21\textheight, clip]{../FIGURES/Pea09-Fig2-4}
+    &
+    \includegraphics[trim={180 15 0 0}, height=.22\textheight, clip]{../FIGURES/Pea09-Fig2-3}
+  \end{tabular}
+
+  \bigskip \bigskip 
+  $$
+  \{a \leftrightarrow b\} \qquad = \qquad \{a \leftarrow u \rightarrow b, 
+  \quad \text{$u$ unobserved}\}
+  $$
+
+}
+
+%====================================================================
+\backupend 
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================

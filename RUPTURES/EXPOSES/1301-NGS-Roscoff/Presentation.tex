@@ -1,0 +1,504 @@
+\documentclass[a4paper]{beamer}
+
+
+\mode<presentation>
+{
+  \usetheme[secheader]{Singapore}
+  % or ...
+
+  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+}
+%\definecolor{curie}{rgb}{1,0.4,0}
+\usecolortheme{dolphin}
+%\usecolortheme{default}
+
+\setbeamerfont{title}{shape=\itshape,family=\rmfamily}
+
+\setbeamertemplate{navigation symbols}{}
+\usepackage[english]{babel}
+\usepackage{amsfonts,amsmath,amssymb,epsfig,epsf,psfrag}
+\usepackage{enumerate}
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+\usepackage{default}
+\usepackage {graphicx}
+\usepackage[T1]{fontenc}
+\usepackage{algorithmic}
+\usepackage{pseudocode}
+\usepackage{clrscode}
+\usepackage{latexsym}
+\usepackage{amsthm}
+\usepackage{multimedia}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\E}{\mathbb E}
+\newcommand{\PP}{\mathbb P}
+\def\newblock{\hskip .11em plus .33em minus .07em}
+
+\title[]{Segmentation for genome annotation with RNA-seq data}
+
+\subtitle{}
+\author[A. Cleynen]%
+{Alice Cleynen}
+
+\institute[AgroParisTech]{}
+\date[January 2013] 
+{January 14th, 2013}
+
+
+\subject{*}
+
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Datasets}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{The central dogma}
+ \begin{figure}
+  \includegraphics[width=7cm]{centraldogma.png}
+ \end{figure}
+\end{frame}
+
+\begin{frame}{The central dogma, more details}
+ \begin{figure}
+  \includegraphics[width=10cm]{centraldogmadetailcell.png}
+ \end{figure}
+\end{frame}
+
+
+
+\begin{frame}{Next-Generation Sequencing technology}
+ \begin{figure}
+  \includegraphics[width=7cm]{sequencing1.png}
+ \end{figure}
+\end{frame}
+
+\begin{frame}{Next-Generation Sequencing technology}
+ \begin{figure}
+  \includegraphics[width=7cm]{sequencing2.png}
+ \end{figure}
+\end{frame}
+
+
+\begin{frame}{Overview of the Data}
+ \begin{figure}
+ \includegraphics[width=10cm]{chr1.png}
+  \caption{Number of reads starting at postition t}
+ \end{figure}
+\end{frame}
+
+\begin{frame}{Zoom in positions 70 000 to 80 000}
+ \begin{figure}
+  \includegraphics[width=10cm]{chr1-70-80.png}
+  \caption{Zoom in : positions 70 000 to 80 000}
+ \end{figure}
+\end{frame}
+
+\begin{frame}{Squared-root scale}
+ \begin{figure}
+  \includegraphics[width=10cm]{zoom-sqrt.png}
+  \caption{Same data, squared-root scale}
+ \end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Whole genome analysis}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Segmentation context}
+	\begin{figure}
+	\includegraphics[width=5cm]{segmentation.png}
+	\end{figure}
+	\begin{columns}
+		\begin{column}{6cm}
+			\begin{itemize}
+				\item $m$ a segmentation of $[\![1,n]\!]$
+				\item $J$ a segment of $m$
+			\end{itemize}
+		\end{column}
+		\begin{column}{6cm}
+			$\forall J \in m, \forall t \in J, Y_t \sim \mathcal{G}(\theta_J,\phi) $
+		\end{column}
+	\end{columns}
+	
+	\vspace{0.5cm}
+	$\rightarrow$ \texttt{Segmentor3IsBack}: implementation of the Pruned DPA for the Poisson, Gaussian homoscedastic and Negative Binomial models.
+\end{frame}
+
+\begin{frame}{Data modelization}
+	\begin{itemize}
+		\item Negative Binomial
+			$$\forall J \in m, \forall t \in J, Y_t \sim \mathcal{NB}(p_J,\phi) $$
+			$\phi$ estimated using a modified estimator of Jonhson \textit{et al.}  \cite{jonhson_kotz}.
+		\item Gaussian homoscedastic
+			$$\forall J \in m, \forall t \in J, \tilde{Y}_t \sim \mathcal{N}(\mu_J,\sigma^2) $$
+			$\sigma^2$ estimated using the MAD estimator.
+			
+			$\tilde{Y}_t=\log(Y_t+1) \quad \quad \qquad \tilde{Y}_t=\sinh^{-1}\sqrt{\frac{Y_t}{\phi}}$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Choice of the number of segments}
+\center{Penelized version of the likelihood}
+
+\vspace{0.5cm}
+	\begin{itemize}
+		\item Negative Binomial : $$pen(K)=\theta K \left(1+4\sqrt{1.1+\log\frac{n}{K}}\right)^2 $$
+		\item Gaussian homoscedastic \cite{lebarbier_detecting_2005} :  $$pen(K)=\theta \frac{K}{n} \left(\log\dfrac{n}{K} +2.5\right) $$ 
+	\end{itemize}
+	\vspace{0.3cm}
+\begin{center}
+$\theta$ calibrated using the slope heuristic \cite{Arl_Mas-pente}
+\end{center}
+\end{frame}
+
+\begin{frame}{Real data-set results}
+ \begin{figure}
+  \includegraphics[width=8cm]{whole-analysis-t2.pdf}
+ \end{figure}
+\end{frame}
+
+\begin{frame}{Simulation results}
+ \begin{figure}
+  \includegraphics[width=8cm]{sample-an.pdf}
+ \end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Gene re-annotation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}{Framework}
+  \begin{center}
+    Bayesian segmentation approach introduced by Rigaill \textit{et al.} \cite{rigaill_exact_2011}
+  \end{center}
+  
+  \vspace{0.2cm}  
+  \begin{itemize}
+    \item Let $m$ denote a segmentation $J$ a segment of $m$.
+    \item Suppose that the counts are independant conditionnaly to the parameters.
+      \begin{eqnarray*}
+        \theta_J & \sim& \mathcal{C}onjPrior(a)\\
+        Y_t & \sim& \mathcal{G}(\theta_J,\phi) \quad \text{if } t\in J
+      \end{eqnarray*}
+    \item if $J=[\![t_1,t_2[\![$, let $Y_J=[\![Y_{t_1},Y_{t_2}[\![$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Likelihood}
+  \begin{eqnarray*}
+    \PP(m,Y) & = &  \PP(m) \PP(Y|m) \\
+    & = & \PP(K)\PP(m|K)  \PP(\phi|m) \prod_{J \in m}  \PP(Y_J|J,\phi) \\
+    & = & \PP(K)\PP(m|K)  \PP(\phi|m) \prod_{J \in m} \int \PP(Y_J|\theta_J,\phi) \PP(\theta_J)d\theta_J \\
+  \end{eqnarray*}
+
+\invisible<1>{
+  \begin{itemize}
+    \item Dirac prior on K allows to work for a given K
+    \item Uniform on $m|K$ (simplifies computations)
+    \item Dirac on $\phi|m$ to verify factoriability assumption
+\end{itemize}}
+\end{frame}
+
+\begin{frame}{Likelihood}
+  \begin{eqnarray*}
+    \PP(m,Y) & = &  \PP(m) \PP(Y|m) \\
+    & = & \PP(K)\PP(m|K)  \PP(\phi|m) \prod_{J \in m}  \PP(Y_J|J,\phi) \\
+    & = & {\color{red}\PP(K)\PP(m|K)  \PP(\phi|m)} \prod_{J \in m} \int \PP(Y_J|\theta_J,\phi) \PP(\theta_J)d\theta_J \\
+  \end{eqnarray*}
+
+  \begin{itemize}
+    \item Dirac prior on K allows to work for a given K
+    \item Uniform on $m|K$ (simplifies computations)
+    \item Dirac on $\phi|m$ to verify factoriability assumption
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Likelihood}
+  \begin{eqnarray*}
+    \PP(Y,K)=  \sum_{m\in \mathcal{M}_K}\PP(m,Y) = C \sum_{m\in \mathcal{M}_K} \prod_{J \in m}  \PP(Y_J|J,\phi) \\
+  \end{eqnarray*}
+
+Let $A$ be the matrix of segment probabilities, i.e. $\forall 1\leq i < j \leq n+1$,
+$[A]_{i,j}= \PP(Y^{[\![i,j[\![}|[\![i,j[\![,\phi) $.
+
+Then 
+  \begin{eqnarray*}
+    \PP(Y,K) & = &  C [A]^K_{1,n+1}
+    \end{eqnarray*}
+\end{frame}
+
+\begin{frame}{Quantity of interest}
+  Let 
+  \begin{itemize}
+    \item $\mathbf{F}_{t_1,t_2}(K) =$ probability of data $[\![Y_{t_1},Y_{t_2}[\![ $ segmented into $K$ segments 
+    \item $\mathbf{B}_{K,k}(t) = $ probability given $Y$ and $K$ of the subset of segmentations from $\mathcal{M}_K$ such that the $k$-th segment starts at position $t$.
+  \end{itemize}
+
+\vspace{0.5cm}
+  Then
+  $$\mathbf{F}_{t_1,t_2}(K) = \sum_{m\in \mathcal{M}_{K}([\![t_1,t_2 [\![)} \PP(Y^{[\![t_1,t_2 [\![}|m)\PP(m|K)$$
+
+\vspace{0.3cm}
+  $$\mathbf{B}_{K,k}(t) = \dfrac{\mathbf{F}_{1,t}(k-1)\mathbf{F}_{t,n+1}(K-k+1)}{\PP(Y|K)}$$
+\end{frame}
+
+\begin{frame}{Model Selection (choice of K)}
+  \begin{itemize}
+    \item Exact BIC criterion
+      $$\hat{K}=\arg \min_K BIC(K) = \arg \min_K (-\log\PP(Y,K)) $$
+
+    \item ICL criterion (Integrated Completed Likelihood)
+      $$\hat{K}=\arg \min_K ICL(K) = \arg \min_K (-\log\PP(Y,K)+H(m|Y,K)) $$
+      $$H(m|Y,K) = -\sum_{m\in\mathcal{M}_K} \PP(m|Y,K)\log\PP(m|Y,K)$$
+  \end{itemize}
+  
+  	\vspace{0.5cm}
+	$\rightarrow$ \texttt{EBS}: implementation of the Exact Bayesian Segmentation for the Poisson, Gaussian homoscedastic and heteroscedastic, and Negative Binomial models.
+\end{frame}
+
+\begin{frame}{Example 1}
+  \begin{columns}
+    \begin{column}{6cm}
+    \begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{p13.pdf}
+  \end{figure}
+    \end{column}
+    \begin{column}{6cm}
+    \begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{gene13.pdf}
+  \end{figure}
+     \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Example 2}
+  \begin{columns}
+    \begin{column}{6cm}
+    \begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{geneEFB1.pdf}
+  \end{figure}
+    \end{column}
+    \begin{column}{6cm}
+    \begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{EFG1.pdf}
+  \end{figure}
+     \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Example 2: continued}
+	\begin{figure}
+		\includegraphics[width=0.55\textwidth]{e2.pdf}
+		\caption{Posterior change-point location probabilities for the Negative Binomial and Gaussian models}
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}{Example 3}
+  \begin{columns}
+    \begin{column}{6cm}
+    \begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{droso.pdf}
+  \end{figure}
+    \end{column}
+    \begin{column}{6cm}
+    \begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{truepos.pdf}
+  \end{figure}
+     \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Example 3: continued}
+	\begin{figure}
+		\includegraphics[width=0.55\textwidth]{e3.pdf}
+    \caption{Posterior change-point location probabilities for the Negative Binomial and Gaussian models}
+	\end{figure}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Profile Comparisons}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Yeast grown under different conditions}
+ \begin{figure}
+  \includegraphics[width=10cm]{data-condi.png}
+ \end{figure}
+\end{frame}
+
+\begin{frame}{Framework}
+  \begin{itemize}
+  	\item $I$ profiles $Y^l,\ 1\leq l\leq I.$ 
+  	
+  	Let $\mathbf{Y}=\{Y^1,\dots,Y^I\}$
+  	\item $Y^l$ segmented into  $m^l$ with $K^l$ pieces ($K^l$ known). 
+  	
+  	Let $\mathbf{K}=\{K^1,\dots,K^l\}$
+		\begin{eqnarray*}
+			\forall 1\leq l\leq I, \, \forall t \in J_l, \, Y_t^l \sim \mathcal{G}(\theta_J^l,\phi)
+		\end{eqnarray*}
+		\item We want to compare the $k_l^{th}$ change-points: 
+		$$\left(\mathcal{E}_0\right): \quad \tau_{k_1}^1=\dots=\tau_{k_I}^I  $$
+		\item Let  $p^l(t)=p(\tau_{k_l}^l=t|\mathbf{Y},\mathbf{K})=p(\tau_{k_l}^l=t|Y^l,K^l)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Credibility Intervals}
+  \begin{itemize}
+  	\item Only two profiles to compare: $\tau_{k_1}^1=\tau_{k_2}^2$?
+  	\item Distribution $\delta$ of the difference $\Delta =  \tau_{k_1}^1-\tau_{k_2}^2$ 
+		\begin{eqnarray*}
+			\delta(d)=P(\Delta=d|\mathbf{Y}) =\sum_t p^1(t) p^2(t-d)
+		\end{eqnarray*} 
+		\item Compute credibility interval: how much mass before $0$ falls inside?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Posterior probability of $(\mathcal{E}_0)$}
+  Decision rule based on $\dfrac{P(\mathcal{E}_0|\mathbf{Y},\mathbf{K})}{P(\mathcal{E}_0|\mathbf{K})} $
+  \begin{eqnarray*}
+		P(\mathcal{E}_0|\mathbf{Y},\mathbf{K})=\dfrac{P(\mathcal{E}_0,\mathbf{Y}|\mathbf{K})}{P(\mathbf{Y}|\mathbf{K})} = \sum_{t} \prod_{l} p_l(t)
+	\end{eqnarray*} 
+	And
+	\begin{eqnarray*}
+		P(\mathcal{E}_0|\mathbf{K}) = \sum_{t} \prod_{l} P(\tau_{k_l}=t|K_l)
+	\end{eqnarray*} 
+\end{frame}
+
+\begin{frame}{Simulation Design}
+ \begin{figure}
+  \includegraphics[width=9cm]{plan-simu.png}
+ \end{figure}
+\end{frame}
+
+\begin{frame}{Results: comparison of 2 profiles}
+ \begin{center}
+First change-point (theoretically identical)
+\begin{table}[h]
+\begin{tabular}{l|ccc||ccc}
+ & \multicolumn{3}{c||}{mass to $0$} & \multicolumn{3}{c}{$(\mathcal{E}_0)$} \\
+  \hline
+  &  NB &  log &  asinh & NB & log & asinh\\ 
+  \hline
+1 & 0 & 0 & 0 & 476 & 936 & 1084\\
+2 & 0 & \textcolor{red}{0.94} & 0 & 351 & \textcolor{red}{30} & 889\\
+3 & 0 & \textcolor{red}{0.92} & 0 & 401 & \textcolor{red}{80} & 671\\
+4 & 0 & 0 & 0 & 345 & 606& 1055\\
+5 & 0 & 0 & 0 & 400 & 1055 & 1090\\
+6 & 0 & 0 & 0 & 375 & 1035 & 1086\\
+7 & 0 & 0 & 0 & 333 & 1013 & 1089\\ 
+8 & 0.36 & \textcolor{red}{0.99} & \textcolor{red}{0.99} & 175 & \textcolor{red}{3} & \textcolor{red}{4}\\
+9 & 0 & 0.71 & 0 & 307 & 181 & 991\\
+10 & 0 & 0 & 0 & 353 & 731 & 1069 \\
+   \hline
+\end{tabular}
+\end{table}
+\end{center}
+\end{frame}
+
+\begin{frame}{Results: comparison of 2 profiles}
+ \begin{center}
+Second change-point (5 bases apart)
+\begin{table}[h]
+\begin{tabular}{l|ccc||ccc}
+ & \multicolumn{3}{c||}{mass to $0$} & \multicolumn{3}{c}{$(\mathcal{E}_0)$} \\
+  \hline
+  &  NB &  log &  asinh & NB & log & asinh\\ 
+  \hline
+1 & 0.89 & 1 & 1 & 32 & $10^{-3}$ & $10^{-5}$\\
+2 & 0.72 & 1 & 1 & 78 & $10^{-1}$ & $10^{-1}$\\
+3 & 0.9 & 1 & 1 & 39 & $10^{-3}$ & $10^{-6}$\\
+4 & \textcolor{red}{0.14} & \textcolor{red}{0} & 1 & \textcolor{red}{239} & \textcolor{red}{858}& 90\\
+5 & 0.92 & 1 & 1 & 31 & $10^{-4}$ & $10^{-4}$\\
+6 & 0.79 & 1 & 1 & 76 & 1.9 & $10^{-2}$\\
+7 & 0.80 & 1 & 1 & 58 & $10^{-3}$ & $10^{-4}$\\ 
+8 & 0.72 & \textcolor{red}{0} & 1 & \textcolor{red}{316} & \textcolor{red}{855} & 1.1\\
+9 & 0.9 & 1 & 1 & 59 & $10^{-2}$ & $10^{-3}$\\
+10 & 0.7 & 1 & 1 & 19 & $10^{-2}$ & $10^{-4}$ \\
+   \hline
+\end{tabular}
+\end{table}
+\end{center}
+\end{frame}
+
+\begin{frame}{Results: comparison of 2 profiles}
+ \begin{center}
+Third and fourth change-points (10 and 15 bases apart)
+\begin{table}[h]
+\begin{tabular}{c|ccc||ccc}
+ & \multicolumn{3}{c||}{mass to $0$} & \multicolumn{3}{c}{$(\mathcal{E}_0)$} \\
+  \hline
+  &  NB &  log &  asinh & NB & log & asinh\\ 
+  \hline
+10 & 0.94 &  &  & 1 & $10^{-17}$ & $10^{-24}$\\
+bases & to & 1 & 1 & to & to & to\\
+apart & 1 &  &  & 10 & $10^{-7}$ & $10^{-8}$\\
+\hline
+\hline
+15 &  &  &  & 0.005 & $10^{-26}$& $10^{-32}$\\
+bases & 1 & 1 & 1 & to & to & to\\
+apart &  &  &  & 0.6 & $10^{-16}$ & $10^{-20}$\\
+   \hline
+\end{tabular}
+\end{table}
+\end{center}
+\end{frame}
+
+\begin{frame}{Gene Results}
+\begin{table}[h]
+\begin{tabular}{c|cccc|}
+Method & 5'UTR & 5' intron & 3' intron & 3' UTR \\
+\hline
+NB &  0.25 &\textcolor{red}{3306}& \textcolor{red}{32140} &  102  \\
+log-Gaussian & 24 & $10^{-3}$ & \textcolor{red}{7493} & 3.15 \\
+asinh-Gaussian & \textcolor{red}{199} & 3.$10^{-4}$ & \textcolor{red}{115277} & 4.$10^{-4}$ \\
+\end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}{Conclusion}
+	\begin{itemize}
+		\item Whole genome analysis: use argsh transformation
+		\item Gene re-annotation: in most cases, methods are equivalent. However, in tricky cases, using the negative binomial distribution on the raw-dataset seems to improve the performances.
+		\item Profile comparison: work ro do on decision rule, has to differ according to model choice.
+		\item Runtime: Gaussian model much faster!
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{References}
+  \scriptsize
+  \bibliographystyle{plain}
+  \bibliography{Biblio.bib}
+\end{frame}
+
+\end{document}

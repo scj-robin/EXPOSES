@@ -1,0 +1,137 @@
+%==================================================================
+\frame{\frametitle{Graphical models} 
+
+  \bigskip
+  \paragraph{'Interaction':} 
+  need for a probabilistic / statistical counterpart for this concept
+
+  \bigskip 
+  \paragraph{Translation:} 
+  $$
+  \text{species interactions} 
+  := 
+  \text{dependency structure of a set of random variables}
+  $$
+  
+  \pause\bigskip
+  \begin{tabular}{lll}
+    \paragraph{Graphical models:} &
+    \paragraph{Directed models.} ~ &
+    \paragraph{Undirected models.} ~ \\
+    \begin{tabular}{p{0.3\textwidth}} A generic \\ framework \\ \refer{Lau96,WaJ08} \end{tabular}
+    & 
+    \begin{tabular}{p{0.3\textwidth}} \input{\figeco/DAG6nodes} \end{tabular}
+    & 
+    \begin{tabular}{p{0.3\textwidth}} \input{\figeco/GM7nodes} \end{tabular}
+    \end{tabular}
+  }
+
+%==================================================================
+\subsection*{Directed graphical models}
+%==================================================================
+\frame{\frametitle{Directed graphs = Bayesian networks}
+
+  \paragraph{Definition.} Let $D$ be a {\sl directed acyclic graph} (\emphase{DAG}), the distribution $p$ is said to factorize in $D$ iff
+  $$
+  p(x_1, \dots x_n) = \prod_{i=1}^n p(x_i \mid x_{pa_D(i)})
+  $$
+  where $pa_D(i)$ stands for the set of parents of $i$ in $D$.
+
+  \bigskip \pause
+  \begin{tabular}{cc}
+    \begin{tabular}{c}
+    $\input{\figeco/DAG6nodes}$
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+      \begin{eqnarray*}
+        pa_D(A) = \emptyset, & & pa_D(D) = \{B, C\}, \qquad \dots  \\
+        \\
+        p(a, \dots f) & = 
+        & p(a) \; p(b \mid a) \; p(c \mid a) \\
+        & & p(d \mid b, c) \; p(e \mid d) \\
+        & & p(f \mid b, d)
+        \end{eqnarray*}
+    \end{tabular}
+  \end{tabular}
+  
+  \bigskip
+  See \refer{SWA17} for an introduction in ecology
+}
+
+
+%==================================================================
+\frame{\frametitle{A simple (interesting) example}
+
+  Consider $D =$
+  $$
+  \input{\figeco/LeftRightChain}
+  $$
+  $p(x, y, z)$ is faithful to $D$ iff
+  $$
+  p(x, y, z) = p(x) \; p(y \mid x) \; p(z \mid y) 
+  $$ \pause
+  But
+  \begin{align*}
+   p(x) \; p(y \mid x) \; p(z \mid y) 
+%    & = p(x) \; \frac{p(x, y)}{p(x)} \; \frac{p(y, z)}{p(y)} \\
+%    & = \frac{p(x, y)}{p(y)} \; \frac{p(y, z)}{p(z)} \; p(z) \\
+   & = p(x \mid y) \; p(y \mid z) \; p(z) 
+  \end{align*}
+  so $p$ is also faithful to $D' =$
+  $$
+  \input{\figeco/RightLeftChain} 
+  $$
+  \pause and to $D'' =$
+  $$
+  \input{\figeco/AwayFromCenter}
+  $$
+  \bigskip 
+  \pause but not to $D''' =$
+  $$
+  \input{\figeco/HeadToHead}
+  $$  
+}
+  
+%====================================================================
+\frame{\frametitle{Interpretability?}
+
+  \paragraph{Theorem \refer{Pea09}.} 
+  Two DAGs are Markov equivalent (i.e. induce the same conditional dependences and independences) if they have the \emphase{same skeleton} (i.e. the same undirected edges) and the \emphase{same V-structures}.
+
+  \bigskip \bigskip \pause
+  \paragraph{Example.}
+  \begin{center}  
+  \begin{tabular}{c|cc|cc}
+  $D$ &
+  \multicolumn{2}{c|}{Equivalent to $D$} &
+  \multicolumn{2}{c}{Not equivalent to $D$} \\
+  (\textcolor{red}{V-stuctures}) & & & & \\ 
+%   & & & & \\ \hline & & & & \\ 
+  \hline
+  $\input{\figeco/DAG6nodes-vtruct}$ \pause &
+  $\input{\figeco/DAG6nodes-vtruct-equiv1}$ &
+  $\input{\figeco/DAG6nodes-vtruct-equiv2}$ \pause &
+  $\input{\figeco/DAG6nodes-vtruct-notequiv1}$ &
+  $\input{\figeco/DAG6nodes-vtruct-notequiv2}$ 
+  \end{tabular}
+  \end{center}
+  (Not speaking of possibly missing nodes)
+}
+
+%==================================================================
+\frame{\frametitle{Infering directed network}
+
+  \paragraph{Directed networks are desirable} because of interpretability but
+  \begin{itemize}
+   \item Visiting the space of DAGs is a hard task \refer{NPK11}
+   \item Most of the time $p(x, \dots, x_n)$ is not enough to retrieve the edge orientations
+   \item Many DAGs can be consistent with the observed distribution
+   \item No causal interpretation of the edge orientation can be made\footnote{Causality \refer{Pea09,Pea09b} is not addressed here}
+   \item All these identifiability issue arise for \emphase{known} distribution $p$, i.e. not speaking of the statistical estimation of $p$
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Still} directed network can be hoped to be inferred ... when the orientations are known.
+
+}

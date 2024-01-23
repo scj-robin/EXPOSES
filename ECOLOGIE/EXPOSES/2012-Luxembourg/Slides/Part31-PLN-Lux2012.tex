@@ -1,0 +1,153 @@
+%====================================================================
+%====================================================================
+\section{Poisson log-normal model}
+%====================================================================
+\subsection{Illustration}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Poisson log-normal model for species abundances} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Data:} 
+      \begin{itemize}
+      \item $n$ sites, $p$ species, $d$ covariates 
+      \item $Y_{ij} =$ abundance of species $j$ in site $i$
+      \item $x_i =$ vector of descriptors for site $i$
+      \end{itemize}
+ 
+      \bigskip \bigskip \pause
+      \paragraph{Abundance table $Y$} ~ \\
+      {\footnotesize \begin{tabular}{rrrr}
+        {\sl Hi.pl} & {\sl An.lu} & {\sl Me.ae} & \dots \\
+        \hline
+        31  &   0  & 108 & \\
+         4  &   0  & 110 & \\
+        27  &   0  & 788 & \\
+%         13  &   0  & 295 & \\
+%         23  &   0  &  13 & \\
+%         20  &   0  &  97 & \\
+         . & . & . & 
+      \end{tabular}} 
+
+      \bigskip \bigskip 
+      \paragraph{Environmental covariates $X$} ~ \\
+      {\footnotesize \begin{tabular}{rrrr}
+        Lat. & Long. & Depth & Temp. \\
+        \hline
+        71.10 & 22.43 & 349 & 3.95 \\
+        71.32 & 23.68 & 382 & 3.75 \\
+        71.60 & 24.90 & 294 & 3.45 \\
+%         71.27 & 25.88 & 304 & 3.65 \\
+%         71.52 & 28.12 & 384 & 3.35 \\
+%         71.48 & 29.10 & 344 & 3.65 \\
+        . & . & . & .
+      \end{tabular}}     
+    \end{tabular}
+    & \pause
+    \begin{tabular}{p{.45\textwidth}}
+      \bigskip \bigskip 
+      \paragraph{Poisson log-normal model.} 
+      \begin{itemize}
+       \item \bigskip Latent vectors
+       $$
+       Z_i \sim \Ncal(0, \Sigma)
+       $$
+       \item Observed species counts
+       $$
+       Y_{ij} \sim \Pcal(\exp(x_i^\intercal \beta_j + Z_{ij}))
+       $$
+       \item Parameters
+       $$
+       \theta = (\beta, \Sigma)
+       $$
+      \end{itemize}
+    \end{tabular}
+  \end{tabular}
+  
+}
+  
+%====================================================================
+\frame{\frametitle{Variational inference} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Conditional distribution.}
+      \begin{itemize}
+       \item Because of the independance between sites
+       $$
+       p_\theta(Z \mid Y) = \prod_i p_\theta(Z_i \mid Y_i)
+       $$
+       \item But $p_\theta(Z_i \mid Y_i)$ has no close form
+      \end{itemize}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.3\textwidth}}
+      \begin{tabular}{c}
+      \includegraphics[width=.3\textwidth]{\figeco/FigPLN-pZcondY-mu1-sigma2} 
+      \end{tabular}
+    \end{tabular}
+  \end{tabular}
+  
+  \pause \bigskip \bigskip 
+  \paragraph{Variational approximation.} Use a Gaussian approximate distribution
+  $$
+  \Qcal = \{ q: 
+  \quad q(Z) = \underset{\text{no approx.}}{\underbrace{\prod_i q_i(Z_i)}},
+  \quad \emphase{q_i(Z_i) = \Ncal(Z_i; m_i ,S_i)}
+  \}
+  $$
+  \begin{itemize}
+  \item Variational parameters: \qquad $m_i \simeq \Esp(Z_i \mid Y_i)$, \qquad $S_i \simeq \Var(Z_i \mid Y_i)$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Variational EM}
+
+  \paragraph{Variational EM algorithm.} {\tt PLNmodels} R package \refer{CMR18a} 
+  \begin{itemize}
+  \item \pause \bigskip \emphase{VE step:} update the \emphase{variational parameters} $m_i$, $S_i$
+  $$
+  (m_i^{h+1}, S_i^{h+1}) = \argmin_{m, S} \; KL[\Ncal(Z_i; m, S) \| p_{\theta^h}(Z_i \mid Y_i)]
+  $$
+  \pause \ra Convex problem: doable via gradient descent
+  \item \pause \bigskip \bigskip \emphase{M step:} update the \emphase{model parameters} $\Sigma$, $\beta$
+  $$
+  \theta^{h+1} = \argmax_\theta \; \Esp_{q^{h+1}} \log p_\theta(Y, Z)
+  $$
+  \pause \ra $\Sigma^{h+1}:$ explicit formula \\
+  \bigskip
+  \ra $\beta^{h+1}:$ similar to Poisson regression (generalized linear model)
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{A first illustration: Abiotic vs biotic interactions} 
+
+  \begin{tabular}{cc|c}
+    \multicolumn{2}{l|}{\emphase{Barents fishes: Full model}} &
+    \multicolumn{1}{l}{\onslide+<4->{\emphase{Null model}}} \\
+    & & \\
+    \multicolumn{2}{c|}{{{$Y_{ij} \sim \Pcal(\exp(\emphase{x_i^\intercal \beta_j} + Z_{ij}))$}}} &
+    \multicolumn{1}{c}{{\onslide+<4->{$Y_{ij} \sim \Pcal(\exp(\emphase{\mu_j} + Z_{ij}))$}}} \\
+    & & \\
+    \multicolumn{2}{l|}{{{$x_i =$ all covariates}}} &
+    \multicolumn{1}{l}{{\onslide+<4->{no covariate}}} \\ 
+    & & \\
+    & \onslide+<3->{correlations between} & \\
+    \onslide+<2->{inferred  correlations $\widehat{\Sigma}_{\text{full}}$} & 
+    \onslide+<3->{predictions: $x_i^\intercal \widehat{\beta}_j$} & 
+    \onslide+<5>{inferred correlations $\widehat{\Sigma}_{\text{null}}$} \\ 
+    \onslide+<2->{\includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrAll}} 
+    &
+    \onslide+<3->{\includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrPred}} &
+    \onslide+<5>{\includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrNull}}
+  \end{tabular}
+
+}
+

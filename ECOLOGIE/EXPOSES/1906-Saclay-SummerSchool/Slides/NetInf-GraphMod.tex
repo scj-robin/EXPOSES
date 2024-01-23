@@ -1,0 +1,249 @@
+%==================================================================
+\frame{\frametitle{Graphical models} 
+
+  \bigskip
+  \paragraph{'Interaction':} 
+  need for a probabilistic / statistical counterpart for this concept
+
+  \bigskip 
+  \paragraph{Translation:} 
+  $$
+  \text{species interactions} 
+  := 
+  \text{dependency structure of a set of random variables}
+  $$
+  
+  \pause\bigskip
+  \begin{tabular}{lll}
+    \paragraph{Graphical models:} &
+    \paragraph{Directed models.} ~ &
+    \paragraph{Undirected models.} ~ \\
+    \begin{tabular}{p{0.3\textwidth}} A generic \\ framework \\ \refer{Lau96,WaJ08} \end{tabular}
+    & 
+    \begin{tabular}{p{0.3\textwidth}} \input{\figeco/DAG6nodes} \end{tabular}
+    & 
+    \begin{tabular}{p{0.3\textwidth}} \input{\figeco/GM7nodes} \end{tabular}
+    \end{tabular}
+  }
+
+%==================================================================
+\subsection*{Directed graphical models}
+%==================================================================
+\frame{\frametitle{Directed graphs = Bayesian networks}
+
+  \paragraph{Definition.} Let $D$ be a {\sl directed acyclic graph} (\emphase{DAG}), the distribution $p$ is said to factorize in $D$ iff
+  $$
+  p(x_1, \dots x_n) = \prod_{i=1}^n p(x_i \mid x_{pa_D(i)})
+  $$
+  where $pa_D(i)$ stands for the set of parents of $i$ in $D$.
+
+  \bigskip \pause
+  \begin{tabular}{cc}
+    \begin{tabular}{c}
+    $\input{\figeco/DAG6nodes}$
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+      \begin{eqnarray*}
+        pa_D(A) = \emptyset, & & pa_D(D) = \{B, C\}, \qquad \dots  \\
+        \\
+        p(a, \dots f) & = 
+        & p(a) \; p(b \mid a) \; p(c \mid a) \\
+        & & p(d \mid b, c) \; p(e \mid d) \\
+        & & p(f \mid b, d)
+        \end{eqnarray*}
+    \end{tabular}
+  \end{tabular}
+  
+  \bigskip
+  See \refer{SWA17} for an introduction in ecology
+}
+
+
+%==================================================================
+\frame{\frametitle{A simple (interesting) example}
+
+  Consider $D =$
+  $$
+  \input{\figeco/LeftRightChain}
+  $$
+  $p(x, y, z)$ is faithful to $D$ iff
+  $$
+  p(x, y, z) = p(x) \; p(y \mid x) \; p(z \mid y) 
+  $$ \pause
+  But
+  \begin{align*}
+   p(x) \; p(y \mid x) \; p(z \mid y) 
+%    & = p(x) \; \frac{p(x, y)}{p(x)} \; \frac{p(y, z)}{p(y)} \\
+%    & = \frac{p(x, y)}{p(y)} \; \frac{p(y, z)}{p(z)} \; p(z) \\
+   & = p(x \mid y) \; p(y \mid z) \; p(z) 
+  \end{align*}
+  so $p$ is also faithful to $D' =$
+  $$
+  \input{\figeco/RightLeftChain} 
+  $$
+  \pause and to $D'' =$
+  $$
+  \input{\figeco/AwayFromCenter}
+  $$
+  
+  \bigskip \pause
+  \paragraph{Conclusions.} 
+  \begin{itemize}
+   \item $p(x)$ is not enough to retrieve the edge orientations
+   \item No causal interpretation (causality not addressed here, see \refer{Pea09,Pea09b})
+  \end{itemize}
+}
+  
+%==================================================================
+\frame{\frametitle{A nice case: Dynamic 'Bayesian' networks (DBN)}
+
+  \paragraph{Temporal data:} $A_t =$ abundance of species $A$ at time $t$
+  
+  \bigskip
+  \begin{tabular}{p{.48\textwidth}p{.48\textwidth}}
+  \paragraph{Genuine graphical model.} A DAG: &
+  \paragraph{Usual representation.}  \\ 
+  $$
+  \renewcommand{\nodesize}{2em}
+  \input{\figeco/DBN4nodes}
+  \renewcommand{\nodesize}{\commonnodesize}
+  $$
+  &
+  $$
+  \renewcommand{\nodesize}{2em}
+  \input{\figeco/DBN4nodes-collapsed}
+  \renewcommand{\nodesize}{\commonnodesize}
+  $$
+  (not a DAG)
+  \end{tabular}
+  
+  \paragraph{Simpler reconstruction problem:} 
+  Find the parents of each species $A$, $B$, ... \emphase{independently}
+}
+
+
+%==================================================================
+\subsection*{Undirected graphical models}
+%==================================================================
+\frame{\frametitle{Undirected graphs = Markov random fields}
+
+  \paragraph{Definition.} Let $G$ be an {\sl undirected graph}, the distribution $p$ is said to factorize in $G$ iff
+  $$
+  p(x_1, \dots x_n) \propto \prod_{C \in \Ccal(G)} \psi_C(x_C).
+  $$
+  where $\Ccal(G)$ is the set of maximal cliques of $G$
+
+  \bigskip \bigskip \pause
+  \begin{tabular}{cc}
+    \begin{tabular}{c}
+    $\input{\figeco/GM7nodes}$
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+      \begin{eqnarray*}
+%         p(a, \dots g) & \propto 
+%         & \psi_1(a, b, c) \; \psi_2(a, b, d) \; \psi_3(a, c, d) \; \psi_4(b, c, d) \\
+%         & & \psi_5(d, e, f) \; \psi_6(f, g) \\\pause
+%       \text{but also} \qquad \\
+        p(a, \dots g) & \propto 
+        & \psi_1(a, b, c, d) \\
+        & & \psi_2(d, e, f) \; \psi_3(f, g) 
+      \end{eqnarray*}
+%       \ra Only consider \emphase{maximal} cliques
+    \end{tabular}
+  \end{tabular}
+}
+
+%====================================================================
+\frame{\frametitle{Conditional independence}
+
+  \paragraph{Property.} If $p(x) > 0$, 
+  $$
+  \text{separation} \qquad \Leftrightarrow \qquad \text{conditional independence}
+  $$
+
+  \bigskip \pause
+  \begin{tabular}{ccc}
+    \hspace{.2\textwidth} 
+    &
+    \begin{tabular}{c}
+    $\input{\figeco/GM7nodes}$
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+    \begin{itemize}
+     \item $A \not\independent B$ \\ ~
+     \item $A \not\independent D \mid B$ \\ ~
+     \item $A \independent D \mid \{B, C\}$ \\ ~
+     \item $\{A, B, C\} \independent \{E, F, G\} \mid D$ \\ ~
+     \item $\{B, C\} \independent \{E, F\} \mid D$ \\ ~
+    \end{itemize}
+    \end{tabular}
+  \end{tabular}
+
+}
+  
+%====================================================================
+\subsection*{Missing actors}
+%====================================================================
+\frame{\frametitle{Missing 'actors'}
+
+  \paragraph{Incomplete observations.} Most of the time, not all actors (species, environmental covariate, ...) are observed
+  
+  \bigskip \bigskip 
+  \paragraph{Missing variable = marginalisation.} 
+  \begin{center}
+  \begin{tabular}{ccccc}
+    $B \independent C \mid A$ & & $A$ missing & & $B \not\independent C$ \\
+    \begin{tabular}{c}
+    $\input{\figeco/MissingNode-GM}$
+    \end{tabular}
+    & \qquad \qquad &
+    \begin{tabular}{c}
+    $\input{\figeco/MissingNode-Amissing-GM}$
+    \end{tabular}
+    & \qquad \qquad &
+    \begin{tabular}{c}
+    $\input{\figeco/MissingNode-Amissing-marginal}$
+    \end{tabular}
+  \end{tabular}
+  \end{center}
+  
+  \bigskip
+  \paragraph{Indeed:}
+  $$
+  p(a, b, c) = p(a) p(b \mid a) p(c \mid a)
+  $$
+  but $A$ is not observed, so only $p(b, c)$ can be considered:
+  $$
+  p(b, c) = \sum_a p(a, b, c) = \sum_a p(\emphase{a}) p(b \mid \emphase{a}) p(c \mid \emphase{a}) \neq p(b) p(c)
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{'Spurious' edges}
+
+  Possibly dramatic effect on the observable dependency structure:
+  \begin{center}
+  \begin{tabular}{ccccc}
+    'Truth' && $C$ missing && $D$ missing \\
+    \begin{tabular}{c}
+    $\input{\figeco/GM7nodes}$
+    \end{tabular}
+    & \qquad \qquad &
+    \begin{tabular}{c}
+    $\input{\figeco/GM7nodes-Cmissing-marginal}$
+    \end{tabular}
+    & \qquad \qquad &
+    \begin{tabular}{c}
+    $\input{\figeco/GM7nodes-Dmissing-marginal}$
+    \end{tabular}
+  \end{tabular}
+  \end{center}
+  
+  \ra Need to account for 'all' available information
+
+}
+
+

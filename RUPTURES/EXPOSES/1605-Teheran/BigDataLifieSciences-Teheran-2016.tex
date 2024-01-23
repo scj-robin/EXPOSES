@@ -1,0 +1,1102 @@
+\documentclass[10pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+% Commands
+\input{TikZcommands.tex}
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+% \newcommand{\emphase}[1]{{#1}}
+\newcommand{\paragraph}[1]{\textcolor{darkred}{#1}}
+\newcommand{\refer}[1]{{{\textcolor{blue}{{[\cite{#1}]}}}}}
+\newcommand{\Refer}[1]{{{\textcolor{blue}{{[#1]}}}}}
+\renewcommand{\newblock}{}
+
+% Symbols
+\newcommand{\Abf}{{\bf A}}
+\newcommand{\Beta}{\text{B}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\BIC}{\text{BIC}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\dd}{\text{~d}}
+\newcommand{\dbf}{{\bf d}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Ebf}{{\bf E}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Gam}{\mathcal{G}\text{am}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Ibb}{\mathbb{I}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\ICL}{\text{ICL}}
+\newcommand{\Cov}{\mathbb{C}\text{ov}}
+\newcommand{\Corr}{\mathbb{C}\text{orr}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\Vsf}{\mathsf{V}}
+\newcommand{\pen}{\text{pen}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Jcal}{\mathcal{J}}
+\newcommand{\Kbf}{{\bf K}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\mum}{\mu(\mbf)}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Nbf}{{\bf N}}
+\newcommand{\Nm}{N(\mbf)}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\Obf}{{\bf 0}}
+\newcommand{\Omegas}{\underset{s}{\Omega}}
+\newcommand{\Pbf}{{\bf P}}
+\newcommand{\Pt}{\widetilde{P}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\BP}{\text{BP}}
+\newcommand{\EM}{\text{EM}}
+\newcommand{\VEM}{\text{VEM}}
+\newcommand{\VBEM}{\text{VBEM}}
+\newcommand{\cst}{\text{cst}}
+\newcommand{\obs}{\text{obs}}
+\newcommand{\ra}{\emphase{\mathversion{bold}{$\rightarrow$}~}}
+%\newcommand{\transp}{\text{{\tiny $\top$}}}
+\newcommand{\transp}{\text{{\tiny \mathversion{bold}{$\top$}}}}
+\newcommand{\logit}{\text{logit}\xspace}
+
+% Directory
+\newcommand{\fignet}{/home/robin/Bureau/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figchp}{/home/robin/Bureau/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title[Exact inference with discrete parameters]{Exact Bayesian inference for some models with discrete parameters}
+
+\author[S. Robin]{S. Robin \\ ~\\
+  \begin{tabular}{ll}
+    Joint work with & A. Cleynen, E. Lebarbier, G. Rigaill, \\
+    & L. Schwaller, M. Stumpf
+  \end{tabular}
+  }
+
+\institute[INRA / AgroParisTech]{INRA / AgroParisTech \\
+  \vspace{-.1\textwidth}
+  \begin{tabular}{ccccc}
+    \includegraphics[height=.3\textheight]{\fignet/LogoINRA-Couleur} & 
+    \hspace{.02\textheight} &
+    \includegraphics[height=.08\textheight]{\fignet/logagroptechsolo} & 
+    \hspace{.02\textheight} &
+    \includegraphics[height=.09\textheight]{\fignet/logo-ssb}
+    \\ 
+  \end{tabular} \\
+  \bigskip
+  }
+
+\date[May 2016, Teheran]{Big Data Life Sciences, May 2016, Teheran}
+
+%====================================================================
+%====================================================================
+\maketitle
+%====================================================================
+
+%====================================================================
+%====================================================================
+\section{Bayesian inference with discrete parameters}
+%====================================================================
+\frame{\frametitle{A reminder on Bayesian inference} 
+
+  \paragraph{Parametric inference.} A statistical model describes how the distribution of the observed data $Y$ depends on a parameter of interest:
+  $$
+  Y \sim p(\cdot; \theta)
+  $$
+
+  \pause \bigskip
+  \paragraph{'Classical' or 'frequentist' framework:} $\theta$ supposed to be fix.
+  \begin{itemize}
+   \item Try to provide a estimate $\widehat{\theta}$ not too far from the true $\theta^*$.
+  \end{itemize}
+
+  \pause \bigskip \bigskip
+  \paragraph{Bayesian framework:} $\theta$ is random with  \emphase{\sl prior} distribution $p(\theta)$.
+  \begin{itemize}
+   \item Try to establish its conditional distribution given the data: 
+   $$
+   p(\theta|Y) = \frac{p(\theta) p(Y|\theta)}{p(Y)}
+   \qquad = \text{\emphase{\sl posterior} distribution.}
+   $$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Illustration: Beta binomial (1/2)}
+
+  \paragraph{Aim:} Infer a success probability $\theta$ based on $n$ independent trials.
+  
+  \bigskip
+  \begin{itemize}
+   \item \pause Define a prior distribution $p(\theta)$, e.g.
+   $$
+   \theta \sim \Beta(a, b)
+   $$
+   \item \pause Write the conditional distribution of $Y =$ number of success:
+   $$
+   Y|\theta \sim \Bcal(n, \theta)
+   $$
+   \item \pause Deduce the conditional distribution of $\theta$ given $Y$ (posterior):
+   $$
+   p(\theta|Y=y) = \frac{p(\theta) P(Y=y | \theta)}{P(Y=y)}
+   $$
+   where $P(Y=y) = \int P(Y=y|\theta) p(\theta) \dd \theta$
+  \end{itemize} \pause 
+  In this case we get
+  $$
+  (\theta|Y=y) \sim \Beta(\widetilde{a}, \widetilde{b}): \qquad \widetilde{a}=a+y, \quad
+  \widetilde{b}=b+n-y
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Illustration: Beta binomial (2/2)}
+
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{enumerate}
+       \onslide+<2->{\item Define a (flat) prior for $\theta$}
+       \onslide+<3->{\item Get the data ($n = 20$, $y = 4$)}
+       \onslide+<4->{\item Compute the posterior distribution}
+       \onslide+<5->{\item Compute, e.g. a credibility interval: $CI_{95\%}(\theta|Y)$.}
+      \end{enumerate}
+    \end{tabular}
+    & 
+    \hspace{-.125\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+       \onslide<2>\includegraphics[width=.5\textwidth]{../FIGURES/Fig-BetaBinom-Prior1}
+       \onslide<3>\includegraphics[width=.5\textwidth]{../FIGURES/Fig-BetaBinom-Prior1-Data}
+       \onslide<4>\includegraphics[width=.5\textwidth]{../FIGURES/Fig-BetaBinom-Prior1-Data-Posterior1}
+       \onslide<5>\includegraphics[width=.5\textwidth]{../FIGURES/Fig-BetaBinom-Prior1-Data-ConfInter1}
+       \onslide<6>\includegraphics[width=.5\textwidth]{../FIGURES/Fig-BetaBinom-Prior2}
+       \onslide<7>\includegraphics[width=.5\textwidth]{../FIGURES/Fig-BetaBinom-Prior2-Data-Posterior2}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+  \onslide<6->{A different prior} \onslide<7->{gives in a different posterior.} 
+}
+
+
+%====================================================================
+\frame{\frametitle{Bayesian inference} 
+
+  \paragraph{Generic Bayesian framework:}
+  \begin{align*}
+   \text{prior:} & \quad p(\theta) \\
+   \text{likelihood:} & \quad p(Y|\theta) \qquad \text{(given by the model)}\\
+   \text{\ra posterior:} & \quad p(\theta|Y)
+  \end{align*}
+  
+  \bigskip \pause
+  \paragraph{A typical issue:} Deriving
+  $$
+  p(\theta|Y) = {p(\theta) p(Y|\theta)} \ / \ {p(Y)}
+  $$
+  is often not trivial, typically because
+  $$
+  p(Y) = \int_\Theta p(Y|\theta) p(\theta) \dd \theta
+  $$
+  is intractable when the parameter space $\Theta$ is huge.
+}
+%====================================================================
+\frame{\frametitle{Posterior distribution} 
+
+  \paragraph{3 main approaches}
+  \begin{enumerate}
+   \item \pause {Sampling} (Monte Carlo, Monte Carlo - Markov chain, sequential MC, Importance sampling, ...): 
+   $$
+   \text{sample} \quad (\theta^b) \sim p(\theta | Y).
+   $$ \\~ 
+   \item \pause {Approximation} (e.g. Variational Bayes, Expectation propagation, ...): 
+   $$
+   \text{find} \qquad q_Y(\theta) \simeq p(\theta | Y).
+   $$ \\~ 
+   \item \pause {Exact:} 
+   $$
+   \text{actually compute} \qquad p(\theta|Y)
+   $$
+   or some marginal of interest.
+  \end{enumerate}
+  }
+
+%====================================================================
+\frame{\frametitle{Models with discrete parameters}
+
+  \paragraph{Mixed parameter:} $ \theta \rightarrow (\theta, T)$
+  $$
+  \theta \in \Theta = \text{continuous set}, 
+  \qquad
+  T \in \Tcal = \text{discrete (countable) set}, 
+  $$
+  $$
+  \Rightarrow \qquad p(Y) = \emphase{\sum_{T \in \Tcal}} \int_\Theta p(Y, \theta, T) \dd \theta
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Size of $\Tcal$.}
+  \begin{itemize}
+   \item No big deal of $\Tcal$ is small (e.g. model selection within a small collection).
+%    $$
+%    p(T|Y) = \int_\Theta p(Y, \theta, T) \dd \theta \left/ \sum_{T' \in \Tcal} \int_\Theta p(Y, \theta, T') \dd \theta \right.
+%    $$
+  \\ ~
+   \item Big issue if $|\Tcal|$ grows (super-)exponentially with the number of observations $n$ or the number of variables $p$.
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Main issue}
+
+  Suppose that the calculation wrt $\theta$ raise no issue\footnote{Using e.g. conjugate priors.}, the calculation of 
+  $$
+  \sum_{T \in \Tcal}
+  $$
+  can often not be achieved in a naive way because of the combinatorial complexity\footnote{The frequentist counterpart often raises similar issues.}. 
+  \begin{center}
+   \ra Need to find algorithmic or algebraic shortcuts
+  \end{center}
+  
+  \bigskip \pause
+  \paragraph{Examples.}
+  \begin{itemize}
+   \item Change-point detection \\~
+   \item 'Network inference' = inference of the structure of a graphical model 
+  \end{itemize}
+  }
+
+%====================================================================
+%====================================================================
+\section{Change-point detection}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+
+%====================================================================
+\subsection*{Change-point detection model}
+%====================================================================
+\frame{\frametitle{A change-point detection model} 
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<1->{\paragraph{Model.} 
+        \begin{itemize}
+        \item \onslide+<2->{$K$ segments \\~}
+        \item \onslide+<3->{$T = (\tau_k)_k$ change points\\~\\
+        $r_k = \llbracket\tau_{k-1}+1; \tau_k\rrbracket$\\~}
+        \item \onslide+<4->{$\theta = (\theta_k)_k$ parameters\\~}
+        \item \onslide+<5->{$Y = (Y_t)_{1 \leq t \leq n}$ observed data \\~\\
+        $Y^r = (Y_t)_{t \in r}$}
+        \end{itemize}}
+    \end{tabular}
+    & 
+    \hspace{-1cm}
+    \begin{tabular}{c}
+	 \hspace{-6cm}
+	 \onslide+<5->{$\{Y^r\}_r \text{ indep}, \quad Y^r \sim p(\cdot | \theta_r)$}
+	 \\
+      \begin{overprint}
+        \onslide<2>
+        \includegraphics[width=.5\textwidth]{\figchp/FigSeg-Budapest-1} 
+        \onslide<3>
+        \includegraphics[width=.5\textwidth]{\figchp/FigSeg-Budapest-2} 
+        \onslide<4>
+        \includegraphics[width=.5\textwidth]{\figchp/FigSeg-Budapest-3} 
+        \onslide<5>
+        \includegraphics[width=.5\textwidth]{\figchp/FigSeg-Budapest-4} 
+        \onslide<6->
+        \includegraphics[width=.5\textwidth]{\figchp/FigSeg-Budapest-0} 
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+  \onslide+<6->{
+  \paragraph{Bayesian version:} on the top of this, add
+  $
+  p(K), p(T|K), p(\theta|K).
+  $
+  } 
+
+}
+
+%====================================================================
+\subsection*{Maximum likelihood inference}
+\frame{\frametitle{Maximum likelihood inference (1/2)} 
+
+  \paragraph{Log-likelihood:}
+  $$
+  \log p(Y; \theta, T) = \sum_{r \in T} \log p(Y^r; \theta^r) 
+  $$
+  
+  \pause
+  \paragraph{Inference}
+  \begin{itemize}
+   \item continuous part ($\theta$):
+   $$
+   \widehat{\theta}_r = \arg\max_{\theta_r} \; \log p(Y^r; \theta^r)
+   \qquad \text{\ra standard MLE}
+   $$
+   \item \pause discrete part ($T$):
+   $$
+   \widehat{T} = \arg\max_{T} \; \sum_{r \in T} \log p(Y^r; \widehat{\theta}^r)
+   = \arg\max_{T} \; \sum_{r \in T} \log \widehat{p}(Y^r)
+   $$
+   \ra discrete optimization problem
+   \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Maximum likelihood inference (2/2)} 
+
+  \paragraph{Segmentation space} $\Tcal = \Tcal_{1:n}^K =$ set of all possible segmentations of $\llbracket 1; n \rrbracket$ with $K$ segments:
+  $$
+  |\Tcal| = \binom{n-1}{K-1} \approx \left(\frac{n}{K}\right)^K
+  $$
+  \ra exhaustive search is prohibited.
+
+  \bigskip \pause
+  \paragraph{Dynamic programming} allows to retrieve $\widehat{T}$ \refer{AuL89} using 
+  $$
+  \max_{T \in \Tcal_{1:j}^K} \sum_{r \in T} \log \widehat{p}(Y^r)
+  =
+  \max_{K-1 \leq i < j} \left(\max_{T \in \Tcal_{1:i}^{K-1}} \sum_{r \in T} \log
+  \widehat{p}(Y^r)\right) + \log \widehat{p}(Y^{\llbracket i+1; j\rrbracket})
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Further inference} is hard to carry out \\
+  \ra Standard likelihood theory does not apply to discrete parameters \\
+  \qquad (no simple confidence intervals for the $\tau_k$). \\
+  \ra Bayesian inference can circumvent some difficulties.
+  }
+%====================================================================
+\subsection*{Bayesian inference}
+\frame{\frametitle{Bayesian inference} 
+
+  \paragraph{Factorability assumptions} 
+  \begin{itemize}
+  \item Prior distribution for the segmentation:
+  $$
+  p(T|K) = \prod_{r \in T} a_r , \qquad \text{e.g. } a_r = n_r^\alpha
+  $$
+  ~
+  \item Independent parameters in each segment:
+  $$
+  p(\theta|T) = \prod_{r \in T} p(\theta_r)
+  $$
+  ~
+  \item Data are independent from one segment to another
+  $$
+  p(Y | T, \theta) = \prod_{r \in T} p(Y^r | \theta_r) 
+  $$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{ \frametitle{Some quantities of interest}
+
+  \paragraph{Marginal likelihood.}
+  $$
+  p(Y|K) = \sum_{T \in \Tcal^K} \int p(Y, \theta, T | K) \dd \theta \propto \sum_{T \in \Tcal^K} \prod_{r \in T} a_r p(Y^r)
+  $$
+  where $p(Y^r) = \int p(Y^r|\theta_r) p(\theta^r) \dd \theta_r$ 
+%   (supposed to be easy to compute using e.g. conjugate priors) 
+  and the normalizing constant is
+  $$
+  \sum_{T \in \Tcal^K} \prod_{r \in T} a_r.
+  $$
+
+  \pause \bigskip
+  \paragraph{Posterior distribution of a change-point.}
+  $$
+  \Pr\{\tau_k = t | Y, K\} \propto \left(\sum_{T \in \Tcal^k_{1:t}} \prod_{r \in T} a_r p(Y^r) \right) \left(\sum_{T \in \Tcal^{K-k}_{t+1:n}} \prod_{r \in T} a_r p(Y^r) \right)
+  $$
+
+}
+
+%====================================================================
+\frame{ \frametitle{Summing over segmentations \refer{RLR11}}
+
+  \paragraph{Property:} {\sl 
+%   To compute
+%   $$
+%   \sum_{T \in \Tcal^K_{1:n}} \prod_{r \in T} f_r,
+%   $$
+  Define the upper triangular $(n+1) \times (n+1)$ matrix $A$:
+  $$
+  A_{i, j+1} = f_r \qquad \text{for } r = \llbracket i, j \rrbracket
+  $$ \pause
+  Then 
+  $$
+  \left[A^K\right]_{1,n+1} = \sum_{T \in \Tcal^K_{1:n}} \prod_{r \in T} f_r
+  $$
+  \ra all terms are computed in {$O(K n^2)$}. }
+  
+  \bigskip
+  \begin{itemize}
+   \item \pause To compute $p(Y)$, take $f_r = a_r p(Y^r)$. 
+   \item Similar ideas in \refer{Fea06}. 
+   \item \pause 'sum-product' = counterpart of 'max-sum' in the dynamic programming algorithm.
+  \end{itemize}
+  
+  \bigskip \pause
+  \ra R package EBS (exact Bayesian segmentation) \refer{ClR14}
+
+  }
+
+%====================================================================
+\frame{\frametitle{Illustration: Of exons, introns and UTR's}
+  
+  Regions for a same gene are not adjacent along the genome 
+  $$
+  \includegraphics[width=.8\textwidth]{\figchp/Pre-mRNA_to_mRNA}
+  $$
+  \Refer{Wikipedia}
+  
+  \bigskip \bigskip \pause
+  \begin{itemize}
+   \item The transcribed regions are made of both exons and untranslated regions (UTR)
+   \item Alternative splicing: some exons can be skipped or the boundaries may vary.
+  \end{itemize}
+
+  }
+
+%====================================================================
+\frame{\frametitle{Posterior distribution of transcript boundaries in yeast}
+
+  \vspace{-.05\textheight}
+  \begin{tabular}{p{.2\textwidth}p{.7\textwidth}}
+    \begin{tabular}{p{.3\textwidth}}
+	 \paragraph{RNA-seq data:} \\
+	 \\ ~\\
+	 One gene \\
+	 \\
+	 $\times$ \\
+	 \\
+	 Three growth \\
+	 conditions \\ 
+	 $A$, $B$, $C$
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+    \includegraphics[width=.7\textwidth]{\figchp/compyeastresult.pdf}
+    \end{tabular}
+  \end{tabular}
+}
+
+%====================================================================
+\frame{\frametitle{Comparing change-point locations \refer{ClR14}}
+
+  \paragraph{One series.} We know how to compute (in $O(Kn^2)$)
+  $$
+  \Pr\{\tau_k = t | Y, K\} \qquad \text{or} \qquad \Pr\{\tau_k = t | Y\}.
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Two series ($Y^A, Y^B$):} Consider the shift of the $k$th change-point 
+  $$
+  \Pr\{\tau^A_k - \tau^B_k = 0 | Y^A, Y^B, K^A, K^B\}
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{$I$ series ($Y^A, \dots Y^I$):} Check if the $k$th change-point is conserved\footnote{Requires a probability change, as $Y^A, \dots Y^I$ are not independent conditionally on $\tau^A_k = \dots = \tau^I_k$.}:
+  $$
+  \Pr\{\tau^A_k = \dots = \tau^I_k | Y^A, \dots Y^I, K^A, \dots, K^I\}
+  $$
+  
+}
+
+%====================================================================
+\frame{\frametitle{Boundary shifts between conditions}
+
+  3 comparisons ($A/B$, $A/C$, $B/C$) $\times$ 4 change points:
+  
+\centerline{\includegraphics[width=.8\textwidth, height=.8\textheight]{\figchp/cred-yeast.pdf}}
+
+}
+
+%====================================================================
+\frame{\frametitle{Comparing transcript boundaries}
+
+Setting $\Pr\{\tau^A_k = \tau^B_k | K\} = 1/2$.
+
+$$
+\begin{array}{lccccc}
+& \tau_1 & \tau_2 & \tau_3 & \tau_4 \\ 
+\hline \\
+\Pr\{\tau^A_k = \tau^B_k | Y, K\} & 0.32 & 0.30 &0.99 & 10^{-5} \\ \\
+\Pr\{\tau^A_k = \tau^C_k | Y, K\} & 4 \; 10^{-4} & 0.99 &0.99 & 6 \; 10^{-3} \\ \\
+\Pr\{\tau^B_k = \tau^C_k | Y, K\} & 5 \; 10^{-2} & 0.60 & 0.99 & 0.99 \\ \\
+\Pr\{\tau^A_k = \tau^B_k = \tau^C_k | Y, K\} & 10^{-3} & 0.99  & 0.99 & 6 \; 10^{-3} \\ 
+\end{array}
+$$
+
+\bigskip
+\ra Differences at the UTR's end but not at internal exon boundaries.
+}
+
+%====================================================================
+\frame{\frametitle{Various isoforms in yeast?} 
+
+  \paragraph{$\Pr\{\tau^A_k = \tau^B_k = \tau^C_k | Y, K\}$} for all yeast genes with 2 expressed exons
+  $$
+  \begin{tabular}{cc}
+  \includegraphics[width=.4\textwidth]{\figchp/statall-all} 
+  & 
+  \includegraphics[width=.4\textwidth]{\figchp/statall2} 
+  \\
+   $p_0 = (.5, \;.5, \;.5, \;.5)$
+   &
+   $p_0 = (.9, \;.99, \;.99, \;.9)$
+  \end{tabular}
+  $$
+}
+
+%====================================================================
+%====================================================================
+\section{Network inference}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\subsection*{Graphical model framework}
+\frame{\frametitle{Graphical model framework} 
+
+  \paragraph{Property [Hammersley-Clifford].} The joint distribution $p(Y) = p(Y_1, \dots Y_p)$ is Markov wrt the (decomposable) graph $G$ iff it factorizes wrt the maximal cliques of $G$:
+  $$
+  p(Y) \propto \prod_{C \in \Ccal(G)} \psi_c(Y^c), 
+  \qquad Y^c = (Y_j)_{j \in C}.
+  $$
+  
+  \bigskip 
+  \ra $G$ reveals the structure of conditional independences between the variables $Y_1, \dots Y_p$.
+  
+}
+
+%====================================================================
+\frame{\frametitle{Graphical model} 
+
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{tikzpicture}
+      \node[observed] (Y1) at (0, 0) {$Y_1$};
+      \node[observed] (Y2) at (\edgeunit, 0) {$Y_2$};
+      \node[observed] (Y3) at (.5*\edgeunit, .87*\edgeunit) {$Y_3$};
+      \node[observed] (Y4) at (-.5*\edgeunit, -.87*\edgeunit) {$Y_4$};
+      \node[observed] (Y5) at (.5*\edgeunit, -.87*\edgeunit) {$Y_5$};
+      \node[observed] (Y8) at (-.5*\edgeunit, .87*\edgeunit) {$Y_8$};
+      \node[observed] (Y6) at (1.5*\edgeunit, -.87*\edgeunit) {$Y_6$};
+      \node[observed] (Y7) at (1.5*\edgeunit, -1.87*\edgeunit) {$Y_7$};
+      
+      \draw[edge] (Y1) to (Y2);  \draw[edge] (Y1) to (Y3);  \draw[edge] (Y2) to (Y3);
+      \draw[edge] (Y1) to (Y4);  \draw[edge] (Y1) to (Y5);
+      \draw[edge] (Y2) to (Y6);  \draw[edge] (Y6) to (Y7);
+      \draw[edge] (Y3) to (Y8);
+      \end{tikzpicture}
+    \end{tabular}
+    & 
+    \hspace{-.2\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    Means that
+    \begin{eqnarray*}
+      p(Y_1, \dots, Y_8) & \propto & \psi_1(Y_1, Y_2, Y_3) \\
+      & \times & \psi_2(Y_1, Y_4) \ \psi_3(Y_1, Y_5) \\
+      & \times & \psi_4(Y_2, Y_6) \ \psi_5(Y_6, Y_7) \\
+      & \times & \psi_6(Y_3, Y_8)
+    \end{eqnarray*}
+    which implies\footnote{Under fairly general assumptions on $p$} that
+    \begin{eqnarray*}
+     Y_4 \perp Y_3 & | & Y_1 \\
+     (Y_6, Y_7) \perp Y_3 & | & Y_2 \\
+     \dots
+    \end{eqnarray*}
+    \end{tabular}
+  \end{tabular}
+  
+  \pause
+  \paragraph{'Network inference' problem:} Based on $\{(Y_{i1}, \dots Y_{ip})\}_i$ iid $\sim p$, infer $G$.
+
+}
+
+%====================================================================
+\frame{\frametitle{Tree-structured network} 
+
+  Suppose the graph $G$ is a tree $T$, $p(Y)$ is Markov wrt $T$ iff
+  \begin{eqnarray*}
+   p(Y|\theta) 
+   & = & \prod_j p(Y_j|\theta_j) \prod_{(j, k) \in T} \frac{p(Y_j, Y_k|\theta_{jk})}{p(Y_j|\theta_j)p(Y_k|\theta_k)} \\
+   & = & \prod_{(j, k) \in T} p(Y_j, Y_k|\theta_{jk}) \left/ \prod_j p^{d_j-1}(Y_j|\theta_j) \right.
+  \end{eqnarray*}
+  where $d_j$ is the degree (number of neighbors in $T$) of node $j$.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Tree structure assumption.}
+  \begin{itemize}
+   \item Consistent with the usual assumption that the graph is sparse (although much stronger). \\~
+   \item Not true in general, but may be sufficient for the \emphase{inference on local structures}, such as the existence of a given edge.
+  \end{itemize}
+
+}
+
+%====================================================================
+\subsection*{Maximum likelihood inference}
+\frame{\frametitle{Maximum likelihood inference (1/2)} 
+
+  \paragraph{Log-likelihood.}
+  \begin{eqnarray*}
+    \log p(Y; \theta, T) & = & \sum_{(j, k) \in T} \log p(Y_j, Y_k|\theta_{jk}) - \sum_j ({d_j-1}) \log p(Y_j|\theta_j) \\
+    & = & \sum_j \log p(Y_j|\theta_j) + \sum_{(j, k) \in T} \log \frac{p(Y_j, Y_k|\theta_{jk})}{p(Y_j|\theta_j) p(Y_j|\theta_j)}
+  \end{eqnarray*}
+  
+  \bigskip \pause
+  \paragraph{Inference:}
+  \begin{itemize}
+   \item continuous part ($\theta$): MLE
+   $$
+   \widehat{\theta}_j = \arg\max_{\theta_j} \log p(\{Y_{ij}\}_i; \theta_j), 
+   \qquad
+   \widehat{\theta}_{jk} = \arg\max_{\theta_{jk}} \log p(\{(Y_{ij}, Y_{ik})\}_i; \theta_{jk})
+   $$
+   \item \pause discrete part ($T$)
+   $$
+   \widehat{T} = \arg\max_T \sum_{(j, k) \in T} \log \frac{p(Y_j, Y_k|\widehat{\theta}_{jk})}{p(Y_j|\widehat{\theta}_j)p(Y_k|\widehat{\theta}_k)}  $$
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Maximum likelihood inference (2/2)} 
+
+  \paragraph{Chow \& Liu algorithm \refer{ChL68}:} Taking
+  $$
+  f_{jk} = \log \frac{p(Y_j, Y_k|\widehat{\theta}_{jk})}{p(Y_j|\widehat{\theta}_j) \ p(Y_j|\widehat{\theta}_j)}
+  $$
+  as the weight of edge $(j, k)$, 
+  $$
+  \widehat{T} = \arg\max_T \sum_{(j, k) \in T} f_{jk}
+  $$
+  is the \emphase{maximum spanning tree} with weights $\{f_{jk}\}$, which can be retrieved by Kruskal's algorithm in $O(p^2)$ \refer{Kru56}.
+  
+  \pause \bigskip \bigskip
+  Retrieves the maximum likelihood tree but with no measure of uncertainty. \\
+  \ra Exploring the whole tree space allows to evaluate uncertainty. \\
+  \ra Bayesian inference can again be a solution.
+  }
+  
+%====================================================================
+\subsection*{Bayesian inference}
+\frame{\frametitle{Bayesian setting \refer{SRS15}} 
+
+  \bigskip 
+  \hspace{-.02\textwidth}\begin{tabular}{lrlcrl}
+  \paragraph{Model: \qquad } 
+  & prior on $T$: & $\quad p(T) $ \\
+  & prior on $\theta$: & $\quad p(\theta|T)$ & \ra & posterior: & $\quad p(T|Y)$ \\
+  & likelihood: & $\quad p(Y|\theta, T)$
+  \end{tabular}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Prior on $T$:} factorizes over the edges:
+  $$
+  p(T) \propto \prod_{(j, k) \in T} a_{jk}
+  $$
+  
+  \bigskip \pause
+  \paragraph{Prior on $\theta$:} displays factorability properties, i.e. needs to satisfy
+  $$
+  p(\theta_{jk}|T) \equiv p(\theta_{jk}) \quad \text{for all } T \ni (j, k).
+  $$ 
+  \ra Compatible family of strong Markov hyper-distributions \refer{DaL93}:	multinomial-Dirichlet (conjugacy), normal-Wishart (conjugacy), Gaussian copulas (numerical integration), ...?
+
+}
+
+%====================================================================
+\frame{\frametitle{Quantities of interest}
+
+  \paragraph{Marginal distribution.}
+  $$
+  p(Y) \propto 
+%   \sum_{T \in \Tcal} \prod_{j, k} \frac{a_{jk} \int p(Y_j, Y_k, \theta_{jk}) \dd \theta_{jk}}{\int p(Y_j, \theta_j) \dd \theta_j \times \int p(Y_k, \theta_k) \dd \theta_k}
+  \sum_{T \in \Tcal} \prod_{j, k} \frac{a_{jk} p(Y_j, Y_k)}{p(Y_j) p(Y_k)}
+  $$
+  where $\Tcal$ stands for the set of all spanning trees and $p(Y_j)$, $p(Y_j, Y_k)$ are intergals wrt $\theta_j$ and $\theta_{j, k}$, resp. 
+  
+  \bigskip \pause
+  \paragraph{Posterior probability for an edge to be absent.}
+  $$
+  \Pr\{(j, k) \notin T |Y\} \propto 
+%   \sum_{T \in \Tcal: (j, k) \notin T} \prod_{j, k} \frac{a_{jk} \int p(Y_j, Y_k, \theta_{jk}) \dd \theta_{jk}}{\int p(Y_j, \theta_j) \dd \theta_j \times \int p(Y_k, \theta_k) \dd \theta_k}
+  \sum_{T \in \Tcal: (j, k) \notin T} \prod_{j, k} \frac{a_{jk} p(Y_j, Y_k)}{p(Y_j) p(Y_k) }
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Typical form:} 
+  $$\displaystyle{\sum_{T \in \Tcal} \prod_{(j, k) \in T} f_{jk}},$$
+  with \emphase{cardinality of $\Tcal = p^{p-2}$}.
+
+
+}
+
+%====================================================================
+\frame{\frametitle{Summing over spanning trees} 
+
+  \paragraph{Matrix-tree theorem.} \refer{Cha82} {\sl
+  \begin{itemize}
+   \item $F = [f_{jk}]$: a symmetric matrix with $f(j, j) = 0, f_{jk} > 0$;
+   \item $\Delta = [\Delta_{jk}]$ its Laplacian: $\Delta_{jj} = \sum_k f_{jk}, \Delta_{jk} = -f_{jk}$. 
+  \end{itemize} \pause
+  Then the minors $\Delta^{uv}$ of $\Delta$ are all equal to
+  $$
+  \sum_{T \in \Tcal} \prod_{(j, k) \in T} f_{jk}.
+  $$}
+  
+  \pause \bigskip
+  \begin{itemize}
+   \item Can be used to compute $p(Y)$, the normalizing constant of $p(T)$, ... at the cost of computing a $p \times p$ determinant.
+   \item Already used in \refer{MeJ06} for tree learning.
+   \item Again 'sum-product' in place of 'max-sum'.
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Posterior probability of an edge} 
+
+  The existence of an edge between variables $Y_j$ and $Y_k$ can be assessed by
+  $$
+  \Pr\{(j, k) \in T | Y\} \propto \sum_{T \ni (j, k)} p(T) p(Y|T)
+  $$
+  which depends on the prior $p(T)$.
+  
+  \bigskip \bigskip
+  The prior probability $\Pr\{(j, k) \in T\}$ can be tuned
+  \begin{itemize}
+   \item with the prior coefficient $a_{jk}$ 
+   \item or set to an arbitrary value using an edge-specific probability change.
+  \end{itemize}
+  
+
+  \pause \bigskip \bigskip
+  All posterior probabilities can be computed in $O(p^3)$. \\
+  \ra R package Saturnin (spanning trees used for network inference) \refer{SRS15}
+
+}
+
+%====================================================================
+\frame{\frametitle{Simulations: ROC curves for edge detection} 
+
+For various graph topologies ($p=25$, $n = 25, 50, 200$, $B = 100$ simulations) \\
+\begin{tabular}{cccc}
+\includegraphics[width=0.2\linewidth]{\fignet/roc_curves_tree_multinomial.pdf}
+& \includegraphics[width=0.2\linewidth]{\fignet/roc_curves_ER2p_multinomial.pdf}
+& \includegraphics[width=0.2\linewidth]{\fignet/roc_curves_ER4p_multinomial.pdf}
+& \includegraphics[width=0.2\linewidth]{\fignet/roc_curves_ER8p_multinomial.pdf} \\
+Tree & Erd\"{o}s-R\'{e}nyi & Erd\"{o}s-R\'{e}nyi & Erd\"{o}s-R\'{e}nyi \\
+& $p_c = 2/p$ & $p_c = 4/p$ &  $p_c = 8/p$ 
+\end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Simulations: Comparison with sampling among DAGs} 
+
+\refer{NPK11}: MCMC sampling over the directed acyclic graphs (multinomial case) \\~
+
+\begin{tabular}{cccc}
+\includegraphics[width=0.2\linewidth]{\fignet/boxplot_tree.pdf}
+& \includegraphics[width=0.2\linewidth]{\fignet/boxplot_ER2p.pdf}
+& \includegraphics[width=0.2\linewidth]{\fignet/boxplot_ER4p.pdf}
+& \includegraphics[width=0.2\linewidth]{\fignet/boxplot_ER8p.pdf} \\
+Tree & Erd\"{o}s-R\'{e}nyi & Erd\"{o}s-R\'{e}nyi & Erd\"{o}s-R\'{e}nyi \\
+& $p_c = 2/p$ & $p_c = 4/p$ &  $p_c = 8/p$ 
+\end{tabular} \\~
+
+Area under the curves: top=ROC, bottom=PR\\
+light grey = multinomial trees (\emphase{2.2''}), dark grey: multinomial DAGs (\emphase{1393''}) 
+
+}	
+
+%====================================================================
+\frame{\frametitle{Illustration: Raf pathway}
+
+Flow cytometry data for $p = 11$ proteins from the Raf signaling pathway \refer{SPP05} \\ ~
+
+\begin{tabular}{cc}
+  \includegraphics[trim = 12mm 35mm 12mm 18mm, clip,width=0.45\linewidth]{\fignet/RAF.pdf}
+  & 
+  \includegraphics[width=0.45\linewidth]{\fignet/RAF_edge_prob_graph_q0_05.pdf} \\
+  'ground truth' & posterior probabilities \\ 
+  ~\\
+  \includegraphics[width=0.45\linewidth]{\fignet/best_1.pdf} 
+  &
+  \includegraphics[width=0.45\linewidth]{\fignet/best_2.pdf} \\
+  most likely tree & second most likely tree
+\end{tabular}
+
+}
+
+%====================================================================
+%====================================================================
+\section{Detecting changes in a graphical model}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+
+%====================================================================
+\frame{\frametitle{Change-point in a graphical model} 
+
+  \pause \paragraph{Problem:} \refer{ScS16}
+  \begin{itemize}
+  \item Consider $p$ variables observed along time; 
+  \item Consider the graph $G_t$ supporting the graphical model at time $t$; 
+  \item Does the graph $G_t$ remain the same along time? 
+  \end{itemize}
+  $$
+  \includegraphics[height=.3\textheight]{../FIGURES/ChangePoint-Tree.pdf}
+  $$
+
+ \pause \paragraph{Examples:}
+  \begin{enumerate}
+   \item Gene regulatory network along the {\sl Drosophila} life cycle? \\~
+   \item Connections between brain regions along different tasks?
+  \end{enumerate}
+%   }
+  
+}
+
+%====================================================================
+\frame{\frametitle{Handling two sums} 
+
+  \paragraph{Double discrete structure:}
+  \begin{itemize}
+   \item $\approx (N/K)^K$ possible segmentations into $K$ segments; \\~
+   \item $p^{K(p-2)}$ possible combination of $K$ trees \\~
+  \end{itemize}
+  \ra sum over $\approx (N/K)^K p^{K(p-2)}$ terms.
+
+  \pause \bigskip \bigskip
+  \paragraph{Combining the two preceding tricks:}
+  \begin{itemize}
+   \item Summing of all segmentations in $O(KN^2)$, \\~
+   \item Summing over all trees in $O(p^3)$ (one tree per possible segment) \\~
+  \end{itemize}
+  \ra Global complexity $= O(\max\{K, p^3\}N^2)$
+
+}
+
+%====================================================================
+\frame{\frametitle{Inference} 
+
+  \paragraph{Quantities of interest} can be computed in $O(p^3N^2)$: \\
+  \begin{itemize}
+   \item $P(\text{change-point at time $t$} |K, Y)$ \\~
+   \item $P(\text{edge $(i, j)$ present at time $t$} | K, Y)$ \\~
+   \item $P(\text{edge $(i, j)$ remains present along time} |Y)$ \\~
+   \item $P(\text{$K$ segments} | Y)$.
+  \end{itemize}
+  
+  \pause \bigskip 
+  \paragraph{+ Network comparison} \\
+  \begin{itemize}
+   \item $P(T_1 = T_2 | Y_1, Y_2)$ \\~
+   \item $P(\text{edge $(i, j)$ present in both $T_1$ and $T_2$} |Y_1 ,Y_2)$.
+  \end{itemize}
+
+}
+%====================================================================
+\frame{\frametitle{Some simulations} 
+
+  \begin{tabular}{ccc}
+   Tree & Erd\"os ($\pi = 2/p$) & Erd\"os ($\pi = 4/p$) \\
+   \begin{tabular}{c}
+    \includegraphics[width=.3\textwidth]{../FIGURES/ScR16-Fig4-Tree_N_p10_Tree}
+   \end{tabular}
+   &
+   \hspace{-.05\textwidth}
+   \begin{tabular}{c}
+    \includegraphics[width=.3\textwidth]{../FIGURES/ScR16-Fig4-ER2p_N_p10_Tree}
+   \end{tabular}
+   &
+   \hspace{-.05\textwidth}
+   \begin{tabular}{c}
+    \includegraphics[width=.3\textwidth]{../FIGURES/ScR16-Fig4-ER4p_N_p10_Tree}
+   \end{tabular}
+   \\
+   \begin{tabular}{c}
+    \includegraphics[width=.3\textwidth]{../FIGURES/ScR16-Fig4-Tree_N_p10_Complete}
+   \end{tabular}
+   &
+   \hspace{-.05\textwidth}
+   \begin{tabular}{c}
+    \includegraphics[width=.3\textwidth]{../FIGURES/ScR16-Fig4-ER2p_N_p10_Complete}
+   \end{tabular}
+   &
+   \hspace{-.05\textwidth}
+   \begin{tabular}{c}
+    \includegraphics[width=.3\textwidth]{../FIGURES/ScR16-Fig4-ER4p_N_p10_Complete}
+   \end{tabular}
+  \end{tabular}
+  From top to bottom: N = 70, 140, 210. \\
+   \textcolor{blue}{Tree-structured} network. \textcolor{red}{Complete} network.
+
+}
+
+%====================================================================
+\frame{\frametitle{Gene regulatory network} 
+
+  \pause
+  \paragraph{Data:} $N = 67$ time points, $p = 11$ genes, four expected regions
+
+  \pause \bigskip
+  Posterior probability of change-points:
+  $$
+  \includegraphics[width=.7\textwidth]{../FIGURES/SrS16-Fig8-chgpt_EMP_ap10_au1}
+  $$
+
+  \pause
+  Inferred networks:
+  $$
+  \includegraphics[width=.8\textwidth]{../FIGURES/SrS16-Fig9-network_seuil02}
+  $$
+
+}
+
+% %====================================================================
+% \frame{\frametitle{Brain connectivity} 
+% }
+
+%====================================================================
+%====================================================================
+\section{Discussion}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+
+%====================================================================
+\frame{\frametitle{Discussion} 
+
+  \paragraph{To summarize.}
+  \begin{itemize}
+   \item Exact Bayesian inference can still be achieved for some fairly complex models with discrete parameter.
+   \item Do not have to care about sampling and convergence.
+   \item No systematic way to check when this is possible \ra ad-hoc developments.
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Future works.}
+  \begin{itemize}
+%    \item Combining the two problems: finding change-points in a network structure.
+   \item Dealing with dependency along time.
+   \item Influence of the prior: $p(T)$ depends on $n$ and/or $p$.
+   \item The exact evaluation of the key quantity raises numerical issues.
+  \end{itemize}
+}
+
+
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References}
+{\tiny
+  \bibliography{/home/robin/Biblio/BibGene}
+  %\bibliographystyle{/home/robin/LATEX/Biblio/astats}
+  \bibliographystyle{plain}
+  }
+}
+
+% %====================================================================
+% %====================================================================
+% \section{Appendix}
+% 
+% %====================================================================
+% \frame{\frametitle{Bayesian inference: Example 1.0.0 (1/2)} 
+% 
+%   \paragraph{Beta/binomial setting.} Aim: estimate a success probability $\theta$
+%   
+%   \bigskip
+%   \begin{itemize}
+%    \item \pause Prior distribution on $\theta$:
+%    $$
+%    \theta \sim \text{Beta}(a, b): \qquad p(\theta) = \left. \theta^{a-1} (1-\theta)^{b-1} \right/ \Beta(a+b)
+%    $$ \bigskip
+%    \item \pause Model: $n$ independent trials, $Y =$ number of successes:
+%    $$
+%    (Y | \theta) \sim \Bcal(n, \theta): \qquad P(Y=y|\theta) = \binom{n}{y} \theta^y (1-\theta)^{n-y}
+%    $$
+%   \end{itemize}
+% 
+% }
+% 
+% %====================================================================
+% \frame{\frametitle{Bayesian inference: Example 1.0.0 (2/2)} 
+% 
+%   \begin{itemize}
+%    \item Marginal distribution of $Y$:
+%    \begin{eqnarray*}
+%    P(Y=y) & = & \int P(Y=y|\theta) p(\theta) \dd \theta \\
+%    & = & \frac1{\Beta(a, b)} \binom{n}{y} \int \theta^{a+y-1} (1-\theta)^{b+n-y-1} \dd \theta \\
+%    & = & \frac1{\Beta(a, b)} \binom{n}{y} \Beta(a+y, b+n-y) \\
+%    \end{eqnarray*} \bigskip
+%    \item \pause Posterior distribution of $\theta$:
+%    $$
+%    p(\theta|Y=y) = \frac{p(\theta) p(Y=y|\theta)}{p(Y=y)} = \frac{\theta^{a+y-1} (1-\theta)^{b+n-y-1}}{\Beta(a+y, b+n-y)}
+%    $$
+%    \pause so we recognize
+%    $$
+%    (\theta|Y) \sim \Beta(\widetilde{a}, \widetilde{b}): \qquad \widetilde{a}=a+Y, \quad \widetilde{b}=b+n-Y
+%    $$
+%   \end{itemize}
+% 
+% }
+
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

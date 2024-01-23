@@ -1,0 +1,96 @@
+\documentclass[9pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+\usepackage{xspace}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\renewcommand{\chaptername}{Lecture}
+
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
+\newcommand{\figCMR}{/home/robin/Bureau/RECHERCHE/ECOLOGIE/CountPCA/sparsepca/Article/Network_JCGS/trunk/figs}
+\newcommand{\figeconet}{/home/robin/Bureau/RECHERCHE/ECOLOGIE/EXPOSES/1904-EcoNet-Lyon/Figs}
+\newcommand{\figbarents}{/home/robin/Bureau/CountPCA/sparsepca/Pgm/PLNnetwork/barent_fish/output_barents}
+
+
+%==================================================================%==================================================================
+\begin{document}
+%==================================================================
+%==================================================================
+\title{Some statistical models for ecological networks: \\
+  Network inference}
+\author{S. Robin}
+\date{\today}
+\maketitle
+
+\frame{\frametitle{Outline} \tableofcontents}
+
+%==================================================================%==================================================================
+\newcommand{\commonnodesize}{1.5em}
+\renewcommand{\nodesize}{\commonnodesize}
+
+\section{Introduction} 
+% \frame{\frametitle{Outline} \tableofcontents[currentsection]}
+\input{NetInf-Intro}
+
+\section[Directed graphical models]{Directed graphical models} 
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+\input{NetInf-DirectedGraphMod}
+
+\section{Temporal data} 
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+\input{NetInf-TimeSeries}
+
+\section[Undirected graphical models]{Undirected graphical models} 
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+\input{NetInf-UndirectedGraphMod}
+
+\section{Network inference} 
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+\input{NetInf-Inference}
+
+\section{Conclusion ?} 
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+\input{NetInf-Conclusion}
+
+%==================================================================
+\backupbegin
+
+\frame[allowframebreaks]{ \frametitle{References} 
+  {\tiny
+   \bibliography{/home/robin/Biblio/BibGene}
+   \bibliographystyle{alpha}
+  }
+}
+
+\section*{Backup} 
+\input{NetInf-Backup}
+\backupend
+
+%==================================================================
+%==================================================================
+\end{document}
+%==================================================================
+%==================================================================

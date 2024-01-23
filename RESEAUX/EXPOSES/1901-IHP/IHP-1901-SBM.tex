@@ -1,0 +1,169 @@
+%----------------------------------------------------------------------
+\subsection{\SBMo}
+%----------------------------------------------------------------------
+
+\example{Karate club (2/2)} 
+
+%----------------------------------------------------------------------
+\jump \paragraph{Model \citep{HoL79,NoS01}.} Undirected, no self-loop version
+\begin{itemize}
+\item $K$ groups (= clusters, colors, status, ...);
+\item $(Z_i)_{1 \leq i \leq n}$ iid: 
+$Z_i \sim \Mcal(1; \pi)$, $\pi = (\pi_1, \dots, \pi_K)$;
+\item $(\Yij)_{1 \leq i < j \leq n}$ indep. $\mid (Z_i)_i$: 
+$(\Yij \mid Z_i=k, Z_j=\ell) \sim \Bcal(\gamma_{k\ell})$.
+\end{itemize}
+
+\ra $Z_i =$ group membership, $\gamma_{k\ell} =$ interaction between groups
+
+\ra $K = 1:$ Erd\"os-R\'enyi model $G(n, \gamma)$.
+
+\ra Model with random effect at the node level:
+\begin{align*}
+(i, j, u, v) \text{ all different} & \Rightarrow \Yij \perp Y_{uv}, \\
+(i, j, u) \text{ all different} & \Rightarrow (\Yij, Y_{iu}) \text{ not independent}
+\end{align*}
+
+\ra 'Affiliation' model:
+$$
+\forall k: \gamma_{kk} = \gamma^+, \qquad 
+\forall k\neq \ell: \gamma_{k\ell} = \gamma^-, \qquad 
+\gamma^+ > \gamma^-.
+$$
+
+
+\ra 'Theoretical justification': Szemer\'edi regularity lemma \citep{Sze75}: for any $\epsilon > 0$, for any graph large enough, then exist an $\epsilon$-regular $K$-partition $\bigoplus_{k=1}^K I_k = \{1, \dots n\}$, that is: for all pair of subsets $J_k \subset I_k$,  $J_\ell \subset I_\ell$, 
+$$
+|d(J_k, J_\ell) - d(I_k, I_\ell)| \leq \epsilon
+$$ 
+(denoting the 'density' $d(A, B) = \# \text{edges}(A, B)/ (|A| |B|)$).
+
+%----------------------------------------------------------------------
+\jump \paragraph{Notations.} 
+\begin{itemize}
+\item $Y = (\Yij)$: observed network
+\item $Z = (Z_i)$: latent (class, color, group)
+\item $\theta = (\pi, \gamma)$: unknown parameter
+% \item $K$: number of groups
+\end{itemize}
+
+%----------------------------------------------------------------------
+\jump \paragraph{Aim.} 
+\begin{itemize}
+\item Classify nodes into groups: $Z_i$
+\item Estimate group proportions $\pi$ and interactions $\gamma$
+\item Select $K$
+\end{itemize}
+
+
+%----------------------------------------------------------------------
+\blank
+\subsection{Other state-space models for graphs}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\jump \paragraph{General framework.}
+\begin{itemize}
+\item $(Z_i)$ iid
+\item $(\Yij)$ indep. $\mid Z$: $(\Yij \mid Z_i, Z_j) \sim \Bcal(\gamma(Z_i, Z_j))$
+\end{itemize}
+Review: \citep{MaR14}
+
+%----------------------------------------------------------------------
+\jump \paragraph{Examples.}
+\begin{itemize}
+  \item Latent position model \citep{HRH02}, Clustering latent position model \citep{HRT07}:
+  $$
+  (Z_i)_i \text{ iid} \in \Rbb^d, \qquad
+  P(\Yij = 1 \mid Z_i, Z_j) = \left(1 + e^{\|Z_i - Z_j\|}\right)^{-1}
+  $$
+  \item Continuous version of SBM \citep{DPV10} ($Z_i \in \Scal^K$)
+  \item $W$-graph: \citep{LoS06}
+  \begin{align*}
+    \text{graphon function } \phi: [0, 1]^2 & \mapsto [0, 1], \qquad \text{symmetric:} w(u, v) = w(v, u) \\
+    (U_i) \text{ iid} &\sim \Ucal[0, 1] \\
+    (\Yij) \text{ indep. } \mid (U_i): (\Yij \mid U_i, U_j) & \sim \Bcal\left(w(U_i, U_j)\right)
+  \end{align*}  
+\end{itemize}
+\example{Graphon (1/2)}
+
+\ra All these models are exchangeable:
+$
+\forall \sigma: p\left((\Yij)_{i, j}\right) = p\left((Y_{\sigma(i)\sigma(j)})_{i, j}\right)
+$
+
+\ra $W$-graph = limit for any (dense) exchangeable random graph (Aldous-Hoover theorem, \citep{DiJ08}).
+
+\ra \SBMo is a $W$-graph with block-wise constant graphon $\phi$, with block widths $= \pi_k$, block heights $= \gamma_{k\ell}$ and taking
+$$
+Z_i = k \qquad \Leftrightarrow \qquad \sum_{\ell \leq k-1} \pi_\ell \leq U_i < \sum_{\ell \leq k} \pi_\ell.
+$$
+\example{Graphon (2/2)}
+
+
+%----------------------------------------------------------------------
+\blank
+\subsection{Extensions of SBM}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\jump \paragraph{Valued ('weighted') SBM / SBM with covariates.} Generalize the emission distribution:
+\begin{itemize}
+\item Zero-inflated distibution:
+$$
+(\Yij \mid Z_i=k, Z_j=\ell) \sim (1 - \alpha_{k\ell}) \delta_0 + \alpha_{k\ell} \Pcal(\gamma_{k\ell})
+$$
+\item Generalized linear model \citep{MRV10}:
+$$
+(\Yij \mid Z_i=k, Z_j=\ell) \sim \Pcal\left(e^{\gamma_{k\ell} + x_{ij}^\trans \beta}\right)
+$$
+where $x_{ij} =$ vector of {\sl edge} covariates
+\item Multivariate / multiplex: $\Yij \in \{0, 1\}^d, \Nbb^d, \Rbb^d$ or any combination
+\end{itemize}
+
+\ra Mixed Model with node random effect
+
+\ra Exchangeability does not hold anymore when using covariates
+
+\example{Tree ecological network}
+
+%----------------------------------------------------------------------
+\jump \paragraph{Dynamic SBM.} $Y^t = (\Yij^t)$ observed at times $t = 1, \dots T$ \citep{MaM17}:
+\begin{itemize}
+\item $(Z_i)_i$ iid: 
+$Z_i = (Z_i^t)_{1 \leq t \leq T} \sim MC$;
+\item $(Y^t_{ij})_{t, i, j}$ indep. $\mid Z$: 
+$(Y^t_{ij} \mid Z^t_i=k, Z^t_j=\ell) \sim \Bcal(\gamma_{k\ell})$
+\end{itemize}
+\citep[see also][]{JLB14}
+
+\example{Onager network: alluvial plot}
+
+%----------------------------------------------------------------------
+\jump \paragraph{Latent block model.} LBM = asymmetric SBM \citep{GoN05}:
+\begin{itemize}
+\item $(Z^1_i)_{1 \leq i \leq m}$ iid: $Z^1_i \sim \Mcal(1; \pi^1)$;
+\item $(Z^2_i)_{1 \leq j \leq n}$ iid: $Z^2_j \sim \Mcal(1; \pi^2)$;
+\item $(\Yij)_{i, j}$ indep. $\mid Z^1, Z^2$: 
+$(\Yij \mid Z^1_i=k, Z^2_j=\ell) \sim \Fcal(\gamma_{k\ell})$
+\end{itemize}
+
+%----------------------------------------------------------------------
+\jump \paragraph{And many more.} 
+\begin{itemize}
+ \item $n$ varying along time (birth and death of nodes)
+ \item Mixed-membership SBM \citep{ABF08}, Overlapping SBM \citep{LBA11}
+ \item SBM with partially observed networks \citep{TBC17}
+ \item \dots
+\end{itemize}
+
+
+%----------------------------------------------------------------------
+\jump \paragraph{In the sequel: Static SBM.} Undirected, no self-loop but with arbitrary (parametric) emission distribution
+\begin{itemize}
+\item $(Z_i)_{1 \leq i \leq n}$ iid: 
+$Z_i \sim \Mcal(1; \pi)$, $\pi = (\pi_1, \dots, \pi_K)$;
+\item $(\Yij)_{1 \leq i < j \leq n}$ indep. $\mid (Z_i)_i$: 
+$(\Yij \mid Z_i=k, Z_j=\ell) \sim \Fcal(\gamma_{k\ell})$
+\end{itemize}
+

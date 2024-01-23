@@ -1,0 +1,506 @@
+\documentclass[dvips, lscape]{foils}
+%\documentclass[dvips, french]{slides}
+\textwidth 18.5cm \textheight 25cm \topmargin -1cm \oddsidemargin
+-1cm \evensidemargin  -1cm
+
+% Maths
+\usepackage{amsfonts, amsmath, amssymb,graphics}
+
+\newcommand{\coefbin}[2]{\left(
+    \begin{array}{c} #1 \\ #2 \end{array}
+  \right)}
+
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig}
+\usepackage{pstcol}
+\newcommand{\Example}{tfl2_1_ResReg}
+
+% Texte
+\usepackage{lscape}
+\usepackage{fancyheadings, rotating, enumerate}
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.5}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\definecolor{jaune}{cmyk}{0, 0.5, 0.5, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\textred}[1]{\textcolor{red}{#1}}
+\newcommand{\textgreen}[1]{\textcolor{green}{ #1}}
+\newcommand{\textlightgreen}[1]{\textcolor{green}{#1}}
+%\newcommand{\textgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{#1}}
+\newcommand{\textyellow}[1]{\textcolor{yellow}{#1}}
+\newcommand{\refer}[2]{{\sl #1}}
+
+% Sections
+%\newcommand{\chapter}[1]{\centerline{\LARGE \textblue{#1}}}
+% \newcommand{\section}[1]{\centerline{\Large \textblue{#1}}}
+% \newcommand{\subsection}[1]{\noindent{\Large \textblue{#1}}}
+% \newcommand{\subsubsection}[1]{\noindent{\large \textblue{#1}}}
+% \newcommand{\paragraph}[1]{\noindent {\textblue{#1}}}
+% Sectionsred
+\newcommand{\chapter}[1]{
+  \addtocounter{chapter}{1}
+  \setcounter{section}{0}
+  \setcounter{subsection}{0}
+  {\centerline{\LARGE \textblue{\arabic{chapter} - #1}}}
+  }
+\newcommand{\section}[1]{
+  \addtocounter{section}{1}
+  \setcounter{subsection}{0}
+  {\centerline{\Large \textblue{\arabic{chapter}.\arabic{section} - #1}}}
+  }
+\newcommand{\subsection}[1]{
+  \addtocounter{subsection}{1}
+  {\noindent{\large \textblue{#1}}}
+  }
+% \newcommand{\subsection}[1]{
+%   \addtocounter{subsection}{1}
+%   {\noindent{\large \textblue{\arabic{chapter}.\arabic{section}.\arabic{subsection} - #1}}}
+%   }
+\newcommand{\paragraph}[1]{\noindent{\textblue{#1}}}
+\newcommand{\emphase}[1]{\textblue{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\landscape
+\newcounter{chapter}
+\newcounter{section}
+\newcounter{subsection}
+\setcounter{chapter}{0} \headrulewidth 0pt \pagestyle{fancy}
+\cfoot{} \rfoot{\begin{rotate}{90}{
+      %\hspace{1cm} \tiny S. Robin: Segmentation-clustering for CGH
+      }\end{rotate}}
+\rhead{\begin{rotate}{90}{
+      \hspace{-.5cm} \tiny \thepage
+      }\end{rotate}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+  \textblue{\LARGE ChIPmix : Mixture model of regressions }
+
+  \textblue{\LARGE  for ChIP-chip experiment analysis}
+
+  \vspace{1cm}
+  {\large C. Bérard$^{1,2}$,  M.-L. Martin-Magniette$^{1,2}$,} 
+
+  {\large  T. Mary-Huard$^{1}$,  S. Robin$^{1}$}
+
+  \vspace{1cm}
+  ($^1$) UMR 518 AgroParisTech/INRA, Paris, France \\
+  ($^2$) UMR INRA/CNRS/UEVE Plant Genomic Research Unit, Evry, France
+  \vspace{5cm}
+
+\includegraphics[height=.07\textheight]{Figures_Rennes/Logo_AgroParisTech.ps}   % logo 2
+\hspace{2,5cm}
+\includegraphics[height=.07\textheight]{Figures_Rennes/urgv_logo2.ps} 
+\hspace{2,5cm}
+\includegraphics[height=.07\textheight]{Figures_Rennes/logo_inra.ps} 
+\hspace{2,5cm}
+\includegraphics[height=.07\textheight]{Figures_Rennes/logo-ssb.ps} 
+
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Detecting Hybridization in ChIP-Chip data}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\section{Biological context}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\begin{itemize}
+\item Gene expression study $\rightarrow$ DNA microarray
+\item \emphase{Control mecanisms of gene expression} \\ \\
+\textit{\underline{Examples :}} 
+\begin{itemize}
+\item Transcription factors and co-factors
+\item DNA methylation
+\item Histone modifications $\rightarrow$ alter chromatin structure $\rightarrow$ alter gene expression \\
+\end{itemize}
+ 
+\end{itemize}
+
+\begin{center}
+$\Longrightarrow$ Interest to study \emphase{interactions} between \emphase{proteins} and \emphase{DNA} \\ 
+\end{center}
+
+\begin{center}
+$\Longrightarrow$ Technique of \emphase{ChIP-chip}
+\end{center}
+
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{ChIP-Chip technology}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$$
+\begin{tabular}{cc}
+  \begin{tabular}{c}
+  \epsfig{file = Figures_Rennes/Chip-chip.ps, width=12cm,height=12cm, clip=}
+ %\includegraphics{HistogrammeChr4.png}%, width=12cm,height=12cm, clip=}
+  \end{tabular}
+  \begin{tabular}{p{12cm}}
+    \emphase{IP sample} : immuno-precipitated DNA\\
+    \emphase{INPUT sample} : total DNA\\\\
+    Both samples are co-hybridized on a same array\\\\
+    \emphase{Purpose} : to determine which probes have a significantly higher IP signal
+ than the INPUT signal.
+  \end{tabular}
+ \end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Unsupervised Classification Problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Data:} For each probe, we hence get the IP signal and the INPUT
+signal\\\\
+\bigskip
+\paragraph{Question:} According to these two signals, we have to
+\begin{itemize}
+%\item \vspace{-0.5cm} Account for the \emphase{link between the IP and
+%    Input} signals
+\item \vspace{-0.5cm} \emphase{Classify each probe} into the
+  \emphase{enriched} group or into the \emphase{normal} group,
+\end{itemize}
+
+\bigskip
+\noindent In addition we would like to
+\begin{itemize}
+\item \vspace{-0.5cm} Avoid numerous false detections (false enriched probes).
+\end{itemize}
+
+\bigskip
+\paragraph{Bibliography:}
+ \begin{itemize}
+    \item model based on the spatial structure of the data (sliding window [S.Keles, \textit{Biometrics} 2007], HMM [W.Li, C.A.Meyer, X.S.Liu, \textit{Bioinformatics} 2005]),
+    \item \vspace{-0.5cm} model considering that the whole population can be divided
+      into two groups.
+ \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Mixture Model of Regressions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\section{About logratios...}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \paragraph{Correlation IP / Input.} \\ 
+ All methods already published are based on the logratio IP/Input \\
+$\Rightarrow$ Assume that the logratio distribution is informative
+about the status. \\ 
+\begin{tabular}{cc}
+  \begin{tabular}{c}
+\hspace{-1.5cm}\includegraphics[scale=0.6]{Figures_Rennes/BelleDistribution.ps}
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+   \epsfig{file = Figures_Rennes/Graph_Histogramme_LogRatio_MoyDye_Rep2_chr4.ps,width=10cm,    height=12cm, angle=-90,clip=}
+  \end{tabular} \\ Good case (Buck \& Lieb, 2004) & Bad case \\ & \\
+\end{tabular}\\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+$$
+\begin{tabular}{cc}
+  \begin{tabular}{p{10cm}}
+    \paragraph{Mixture.} \\ 
+    A closer look shows that the relation between IP and Input
+    may differ between the 'normal' group and 'enriched' group.
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \epsfig{file = Figures_Rennes/Nuage.ps,width=12cm,height=12cm,clip=}
+  \end{tabular}
+\end{tabular}
+$$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Mixture model}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bigskip
+\paragraph{Model.} We assume that each probe $i$ has a probability $\pi$
+to be enriched:
+$$
+\Pr\{\text{Probe $i$ enriched}\} = \pi, \qquad \Pr\{\text{Probe $i$
+normal}\} = 1 - \pi,
+$$
+and that the relation between log-IP ($Y_i$) and log-Input ($X_i$)
+depends on the status of the probe:
+$$
+Y_i = \left\{ \begin{array}{ll}
+    a_0 + b_0 X_i + E_i & \quad \text{if $i$ is normal} \\
+    \\
+    a_1 + b_1 X_i + E_i & \quad \text{if $i$ is enriched}
+  \end{array} \right. \ \ \ V(Y_i)=\sigma^2
+$$
+
+\bigskip\bigskip
+\paragraph{Comparison with the 'Logratio' analysis.} The standard
+analysis based on the log(IP/Input) is the special case of the
+regression mixture model where
+$$
+b_0 = b_1 = 1.
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Parameter Estimation and Probe Classification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bigskip
+\paragraph{Task.} We have to estimate
+\begin{itemize}
+\item \vspace{-0.5cm} the proportion of enriched probes $\pi$
+\item \vspace{-0.5cm} the regression parameters: intercepts ($a_0$,
+  $a_1$), slopes ($b_0$, $b_1$) and variance ($\sigma^2$).
+\end{itemize}
+
+
+\bigskip\bigskip
+\paragraph{Algorithm.} This can be done using the E-M algorithm which
+alternates
+\begin{description}
+\item[E-step:] \vspace{-0.5cm} prediction of the probe status given
+  the parameters;
+\item[M-step:] \vspace{-0.5cm} estimation of the parameters given the
+  (predicted) probe status.
+\end{description}
+
+\bigskip\bigskip
+\paragraph{Model selection.} BIC criterion to select between a 1 or
+2 population model.
+
+\bigskip\bigskip
+\paragraph{Posterior probability.} The status prediction is based on
+the posterior probability $\tau_i$
+$$
+\textred{\tau_i = \Pr\{\text{$i$ enriched} \; |\; X_i, Y_i\}},
+\qquad 1 - \tau_i = \Pr\{\text{$i$ normal} \; |\; X_i, Y_i\}.
+$$
+%This probability provides a \emphase{probe classification rule}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{center}
+    %\epsfig{file=../../Figures/PosteriorPlot_MoyDye_Rep2_chr4.eps}
+    \includegraphics[scale=1]{Figures_Rennes/Graph_regression_Rep1_chr4bis.ps}
+%,
+      %      width=12cm, height=12cm, angle=0, clip=}
+\end{center}
+
+How to classify a probe according to its posterior probability ?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Limiting False Detections}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bigskip
+\paragraph{Maximum A Posteriori (MAP) rule.}
+$$
+\begin{array}{rclcl}
+  \widehat{\tau_i} & \geq & 50\% & \Rightarrow & \text{$i$ classified as
+  'enriched'}, \\
+  \widehat{\tau_i} & < & 50\% & \Rightarrow & \text{$i$ classified as
+  'normal'}.
+\end{array}
+$$
+Misclassifications in 'enriched' group or in 'normal' group have the
+same cost.
+
+\paragraph{Controlling false detections.} We want to control the
+probability for the $\tau_i$ of a normal probe to fall above the
+classification threshold.
+
+For a \emphase{fixed risk $\alpha$} we calculate the threshold $s$
+such that
+$$
+\textred{s: \qquad \Pr\{\tau_i > s \;|\; \text{$i$ normal}, \;
+  \log(\text{Input})=X_i\} = \alpha}
+$$
+and if $\widehat{\tau_i} > s$ then the probe $i$ is classified as 'enriched'.\\
+The threshold $s$ depends on both $\alpha$ and the log-Input $X_i$.\\
+This control focuses on misclassifications in 'enriched' group.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+\newpage
+\chapter{Applications}
+
+\section{Promoter DNA methylation in the human genome}
+
+\paragraph{Data} (Weber \emph{et al.} 2007)
+
+\noindent NimbleGen tiling array of promoter regions of 15\;609
+human genes.
+
+\noindent Each promoter region has 15 probes.
+
+\noindent We  consider the Intermediate CpG class of 2056 promoters.
+
+
+\paragraph{Results}
+
+\noindent A high proportion of enriched probes
+($\widehat{\pi}\approx$80\%).
+
+\noindent 403 of the 460 promoter regions found by Weber have 5
+enriched probes or more.
+
+\noindent 38 new promoter candidates with 9 enriched probes or more.
+
+\noindent 1 promoter region found by Weber has no enriched probe.
+
+\newpage
+
+
+\section{NimbleGen tiling array of \textit{Arabidopsis thaliana}}
+
+\paragraph{Data.} Study of the histone modification H3K9me3. 
+
+\noindent Very high density: more than 1,000,000 probes ($\approx$200,000 per chromosome), 
+2 biological replicates with dye-swap, normalized according to Kerr et al., 2002. \\
+
+\paragraph{Results.}\\
+At level $\alpha=0.01$, $\sim 20\%$ of the probes are enriched on each chromosome.
+Estimated parameters for chromosome 4 : $\widehat{\pi}=0.28$, $\widehat{b}_0=0.75 ,\widehat{b}_1=1.05$
+
+\noindent Study performed on two biological replicates : overlap of 2/3 
+
+\noindent Enriched probes are clustered in genomic regions.
+
+%\paragraph{Chloroplastic genome.}\\
+%No target is expected $\Rightarrow$ negative control.
+
+%\noindent \textbf{ChIPmix:} BIC selects a single regression model,
+%i.e. no probe is declared enriched.
+
+%\noindent \hspace{-0.7cm} \textbf{ ChIPOTle:} finds 10 to 16 peaks
+%(depending on parameters).
+
+%\noindent \textbf{Nimblegen:} not available.
+
+
+\newpage
+
+\paragraph{Comparison with other methods}
+% A dire ï¿½ l'oral :
+% \noindent 3 different analysis methods: NimbleGen's software, ChIPOTle , and Mixture of regression (ChIPmix).
+%(uses a permutation-based algorithm, takes spatial structure into account)
+%(takes spatial structure into account too)
+
+\begin{tabular}{cc}
+\begin{tabular}{r}
+    \\ \\
+    Annotation \\ \\
+    NimbleGen  \\ \\
+    ChIPmix    \\ \\
+    ChIPOTle
+\end{tabular}
+&
+\begin{tabular}{c}
+\includegraphics[scale=0.5]{Figures_Rennes/8516_annotation.ps}
+%\epsfig{file=../../Figures/8516_chr4_sortie_ecran_annotation.eps,scale=0.5}
+\\
+\end{tabular}
+\end{tabular} \\
+\textbf{ChIPmix: } $\alpha=0.01$. Probes are clustered in genomic
+regions, which cover especially the genes.
+
+\noindent \textbf{NimbleGen:} finds smaller genomic regions, and
+fail to identify some targets.
+
+\noindent \textbf{ChIPOTle\footnote[1]{ChIPOTle : M.J.Buck, A.B.Nobel, J.D.Lieb, \textit{Genome Biol.}, 2005}: } agrees with ChIPmix, not with
+NimbleGen.
+
+
+\newpage
+\paragraph{Biological validation} (Turck \textit{et al.}, 2007)
+
+\begin{tabular}{c}
+\includegraphics[scale=0.6]{Figures_Rennes/DiagrammeVenn_couleur_legend.ps}
+%\epsfig{file=../../Figures/8516_chr4_sortie_ecran_annotation.eps,scale=0.5}
+\end{tabular} 
+
+\begin{small}
+\noindent ChIPmix detects the greatest number of probes and more than 80\% of the probes declared enriched cover genomic regions already found in Turck \textit{et al.} (2007).
+
+\noindent \textbf{Probes detected only by ChIPmix:} $>$ 55\% are validated
+targets.
+
+\noindent \textbf{Probes detected only by NimbleGen:} $<$ 20\% are
+validated targets.
+
+\noindent \textbf{Probes detected only by ChIPOTle:} only 716 and 50\% are validated targets.
+\end{small}
+
+
+\newpage
+\chapter{Conclusions}
+
+\noindent New method for analyzing ChIP-chip data based on mixture
+model of regressions. The ChIPmix method is implemented in R and available on : \textit{www.agroparistech.fr/mmip/maths/outil.html}
+
+\paragraph{May be applied to:}
+
+$\bullet$ different biological questions (histone modification, DNA
+methylation...)
+
+$\bullet$ different organisms (Arabidopsis, Human)
+
+$\bullet$ different 2-color technologies (tiling/promoter arrays,
+high density arrays)
+
+$\bullet$ different situations, whatever the proportion $\pi$
+
+\paragraph{Extensions}
+
+Other explicative variables in the regressions can be added (Hits,
+CpG rate)
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

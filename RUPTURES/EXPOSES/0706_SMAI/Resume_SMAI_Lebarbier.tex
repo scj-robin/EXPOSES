@@ -1,0 +1,88 @@
+\documentclass[11pt,a4paper,french]{article}
+
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{enumerate}
+\usepackage{epsfig}
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\def\1{1\!{\rm l}}
+\def\0{0\!{\rm 0}}
+\textwidth 16cm \textheight 24cm \topmargin -1cm \oddsidemargin 0cm
+\evensidemargin 0cm
+
+
+%Proposition Workshop on Statistical Analysis of Post Genomic Data \\
+%15-16 January 2007
+\newcommand{\yglt}{y_{g \ell t}}
+\newcommand{\Yglt}{Y_{g \ell t}}
+\newcommand{\ec}[1]{\mathbb{E}_{\phi^{(h)}}\left\{#1 |\mathbf{Y} \right\}}
+\newcommand{\vc}[1]{\mathbb{V}_{\phi^{(h)}}\left\{#1 |\mathbf{Y} \right\}}
+
+\newcommand{\alphabf}{\text{\mathversion{bold}{$\alpha$}}}
+\newcommand{\thetabf}{\text{\mathversion{bold}{$\theta$}}}
+\newcommand{\Xbf}{\mathbf{X}}
+\newcommand{\Ybf}{\mathbf{Y}}
+\newcommand{\Zbf}{\mathbf{Z}}
+\newcommand{\Ubf}{\mathbf{U}}
+\newcommand{\Ebf}{\mathbf{E}}
+\newcommand{\Tbf}{\mathbf{T}}
+\newcommand{\mubf}{\mathbf{\mu}}
+
+\title{\large {\bf {Modèle linéaire mixte avec segmentation :
+application aux puces CGH}}}
+
+\author{ \underline{E. Lebarbier}, S. Robin \\
+      \footnotesize {UMR INA P-G/ENGREF/INRA MIA 518, Paris, France} \\
+      F. Picard \\
+      \footnotesize {UMR CNRS-8071/INRA-1152/Universit\'e d'\'Evry, \'Evry, France}\\
+      Eva Budinsk\`a \\
+      \footnotesize {Centre of Biostatistics and Analyses, Faculty of Science and Faculty
+of Medicine,}\\
+ \footnotesize {Masaryk University, Brno} }
+
+
+\date{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\
+
+\maketitle
+
+L'objectif des experiences de microarrays CGH (Comparative Genomic
+Hybridization) est de détecter des aberrations chromosomiques
+(deletion ou amplification) en comptant le nombre relatif de copies
+d'une séquence d'ADN le long du génome par rapport à une référence.
+Le profil CGH ainsi obtenu peut être vu comme une succession de
+segments dont le nombre de copies est homogène en moyenne. Le but de
+l'analyse statistique consiste donc à détecter et localiser ces
+segments. \\
+
+Les nouvelles expériences de microarrays CGH amènent désormais à
+analyser simultanément plusieurs échantillons biologiques. Dans le
+cadre de l'étude du cancer, l'objectif est d'identifier des
+aberrations récurrentes et de les relier aux stades de progression
+de la maladie. Pour cette analyse simultanée de plusieurs profils
+CGH, nous proposons un modèle linéaire mixte avec segmentation.
+L'introduction d'un effet aléatoire dans un modèle de segmentation
+permet de modéliser la structure de variance/covariance des
+observations en prenant notamment en compte la dépendance qu'il
+peut exister entre les profils de patients à une position donnée. \\
+Nous proposons une stratégie algorithmique pour estimer les
+paramètres par maximum de vraisemblance. Cette stratégie consiste à
+alterner l'algorithme EM avec un algorithme de programmation
+dynamique.\\
+Cette méthode est appliquée pour l'analyse de données CGH dans le
+cas du cancer (Nakao et al. (2004))
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

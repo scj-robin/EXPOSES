@@ -1,0 +1,103 @@
+%====================================================================
+\frame{\frametitle{Network inference: a framework} 
+
+  \bigskip
+  \paragraph{'Interaction':} vague concept 
+  \ra need for a probabilistic / statistical definition
+  
+  \pause\bigskip\bigskip
+  \paragraph{Graphical models \refer{Lau96}:} The distribution $p(U) = p(U_{1}, \dots, U_m)$ is faithful to $G$ iff
+  $$
+  p(U) \propto \prod_{C \in \Ccal(G)} \psi_C(U_{C}),
+  $$
+  where $U_{C} = \{U_{j}: j \in C\}$ and $\Ccal(G) =$ set of maximal cliques of $G$.
+
+  \pause\vspace{.1\textheight}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.35\textwidth}}
+% 	 \hspace{-.1\textwidth}
+% 	 \includegraphics[width=.6\textwidth]{../FIGURES/FigGGM-4nodes}
+	 \input{../FIGURES/SimpleGraphModel}
+    \end{tabular}
+    & 
+%     \hspace{-.15\textwidth}
+    \begin{tabular}{p{.55\textwidth}}
+    $p(U) \propto \psi_1(U_1, U_2, U_3) \; \psi_2(U_3, U_4)$ \\~
+	 \begin{itemize}
+	 \item Connected graph: %\\
+	 all variables are dependent \\~
+	 \item $U_3 =$ separator: $U_4 \perp (U_1, U_2) \gv U_3$ \\~ \\~
+	 \end{itemize}
+    \end{tabular}
+  \end{tabular} 
+  }
+
+%====================================================================
+\frame{\frametitle{Network inference: Gaussian case} 
+
+  \paragraph{Gaussian setting:} 
+  $$
+  U \sim \Ncal_m(0, \Sigma)
+  $$
+  
+  \bigskip
+  \paragraph{Property:} the edges of $G$ correspond to the non-zero terms of the precision matrix
+  $$
+  \Omega = \Sigma^{-1}
+  \qquad \Rightarrow \qquad
+  p(U) \propto \exp\left(-\frac12 \sum_{j, k} \omega_{jk} U_jU_k\right)
+  $$
+  
+  \pause\vspace{.1\textheight}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.35\textwidth}}
+% 	 \hspace{-.1\textwidth}
+% 	 \includegraphics[width=.6\textwidth]{../FIGURES/FigGGM-4nodes}
+	 \input{../FIGURES/SimpleGraphModel}
+    \end{tabular}
+    & 
+%     \hspace{-.15\textwidth}
+    \begin{tabular}{p{.55\textwidth}}
+    $$
+    \Omega = \left( \begin{array}{cccc}
+                     * & * & * & 0 \\
+                     * & * & * & 0 \\
+                     * & * & * & * \\ 
+                     0 & 0 & * & * 
+                    \end{array} \right)
+    $$
+    \end{tabular} \\~ \\~
+  \end{tabular} 
+  }
+  
+%====================================================================
+\frame{\frametitle{Network inference: some strategies} 
+
+  \bigskip
+  \paragraph{Typical setting.} 
+  $$
+  \{Y_i\}_i \text{ iid}, \quad Y_i \sim p_G 
+  \qquad \text{e.g. } p_G = \Ncal_m\left(0, \Omega^{-1}_G\right)
+  $$
+  
+  \paragraph{First idea.}
+  $$
+  \widehat{G} = \arg\max_{G \in \Gcal} \; \log p_G(Y)
+  $$
+  \ra combinatorial issue: $|\Gcal| = 2^{m(m-1)/2}$.
+  
+  \pause\bigskip\bigskip
+  \paragraph{Some strategies.}
+  \begin{enumerate}
+   \item Exhaustive / stochastic \refer{NPK11} / heuristic search over $\Gcal$ \\ ~
+   \item Regularization based on a sparsity assumption for $G$ (\refer{MeB06,FHT08}: Gaussian)
+   $$
+  \widehat{G} = \arg\max_G \; \log p_G(Y) - \lambda \|\Omega_G\|_1
+   $$ \\~
+   \item Averaging over a subset $\Tcal$ of graphs (e.g. spanning trees \refer{Cha82,MeJ06,Kir07})
+   $$
+   p(Y) = \sum_{T \in \Tcal} \pi_T p_T(Y)
+   $$
+  \end{enumerate}
+  }
+

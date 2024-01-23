@@ -1,0 +1,151 @@
+%====================================================================
+\subsection*{Problem}
+%====================================================================
+\frame{\frametitle{Inferring an ecological network} 
+
+  \paragraph{Data} for site $i \in \llbracket 1, n \rrbracket$ , species $j \in \llbracket 1, m \rrbracket$ \\~ 
+  \begin{itemize}
+   \item $Y_{ij} =$ count $\propto$ 'abundance' of species $j$ in site $i$ \\
+   \ra number of sampled individuals, number of DNA reads, ... \\~
+   \item $x_i =$ vector of covariates describing site $i$ \\
+   \ra latitude, temperature, ... \\~
+   \item $o_{ij} =$ sampling effort for species $j$ in site $i$.
+  \end{itemize}
+  
+  \pause\bigskip\bigskip
+  \paragraph{Aim:} Infer the ecological network that is
+  $$
+  \text{the set of \emphase{direct interactions} between species}
+  $$
+}
+
+%====================================================================
+\subsection*{PLN model}
+%====================================================================
+\frame{\frametitle{Poisson log-normal model} 
+  
+  \paragraph{Multivariate count distributions:} Not that many models without restriction on the dependency \refer{IYA17}
+  
+  \pause\bigskip\bigskip
+  \paragraph{Poisson log-normal (PLN) model \refer{AiH89}:}
+  \begin{align*}
+   \{Z_i\}_i & \text{ iid}: & Z_i & \sim \Ncal_p(0, \Sigma) \\
+   \{Y_{ij}\}_{i, j} & \text{ independent} \gv Z: & Y_{ij} & \sim \Pcal\left(\exp(\emphase{o_{ij} + x_i \beta + Z_{ij}})\right)
+  \end{align*}
+  \begin{itemize}
+   \item Dependency modeled in the latent layer: $\Sigma$
+   \item Fixed effects (sampling, covariates) in the observed layer: $\beta =$ regression coefficients
+  \end{itemize}
+
+  \bigskip\bigskip\pause
+  \paragraph{Inference.} Maximum likelihood not tractable because $p(Z_i | Y_i)$ has no close form \refer{Kar05}
+}
+
+%====================================================================
+\frame{\frametitle{Variational EM inference} 
+
+  \paragraph{Principle of variational EM (VEM).} Maximize a lower bound of the log-likelihood:
+  \begin{align*}
+   J(\theta, q) 
+   = \log p_\theta(Y) - KL\left(q(Z) \;||\; p_\theta(Z \gv Y)\right) 
+   = \Esp_q\left( \log p(Y, Z) \right) + \Hcal\left(q(Z)\right)
+  \end{align*}
+  where $q(Z) \simeq p(Z \gv Y)$ is chosen within an approximation class $\Qcal$.
+  
+  \pause\bigskip\bigskip
+  \paragraph{VEM for PLN \refer{CMR17}.} We choose $\Qcal$ as the set of normal distributions:
+  $$
+  \Qcal = \left\{q: q(z) = \prod_i \Ncal(z_i; \mt_i, \St_i)\right\}
+  $$
+  $\left\{\left(\mt_i, \St_i\right)\right\}_i:$ variational parameters = approximate conditional moments
+
+  \pause\bigskip\bigskip
+  \paragraph{Property.} $J(\theta, q)$ is bi-concave in $(\beta, \Sigma)$ and $(\Mt, \St)$.
+
+}
+
+%====================================================================
+\frame{\frametitle{VEM for network inference} 
+
+  \paragraph{Adding a sparsity penalty \refer{CMR18b}.} Denoting $\Omega = \Sigma^{-1}$, we define the contrast
+  \begin{align*}
+   J_\lambda(\theta, q) 
+   = \log p_\theta(Y) - KL\left(q(Z) \;||\; p_\theta(Z \gv Y)\right) \emphase{- \lambda \|\Omega\|_1}
+  \end{align*}
+  to induce sparsity in the precision matrix of the latent layer.
+
+  \pause\bigskip\bigskip
+  \paragraph{Property.} $J_\lambda(\theta, q)$ is bi-concave in $(\Omega)$ and $(\Mt, \St, \beta)$ \\
+  \ra Efficient convex optimization algorithms
+  
+  \pause\bigskip\bigskip
+  \paragraph{Remark.} Actually infers the graphical model of the \emphase{latent} layer:
+  \begin{overprint}
+    \onslide<4>
+    $$
+    \begin{array}{ccc}
+    \input{../FIGURES/CMR18b-Fig1c}
+    & \qquad \qquad &
+    \input{../FIGURES/CMR18b-Fig1d}
+    \end{array}
+    $$
+    \onslide<5>
+    $$
+    \begin{array}{ccc}
+    \input{../FIGURES/CMR18b-Fig1a}
+    & \qquad \qquad &
+    \input{../FIGURES/CMR18b-Fig1b}
+    \end{array}
+    $$
+  \end{overprint}
+}
+
+%====================================================================
+\subsection*{Illustration}
+%====================================================================
+\frame{\frametitle{Barents fish data (1/2)} 
+
+
+  \paragraph{Dataset \refer{FNA06}.} 
+  \begin{itemize}
+   \item  $n = 89$ stations from the Barents sea, $p = 30$ fish species, constant sampling effort
+   \item $Y_{ij} =$ number of individuals from species $j$ captured in station $i$
+   \item $x_i =$ covariates for station $i$ (temperature, depth, latitude, longitude)
+  \end{itemize}
+  
+  \bigskip\bigskip
+  \paragraph{Aim.}
+  \begin{itemize}
+   \item Understand interaction between species
+   \item Account for environmental conditions to avoid 'spurious edges'
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Barents fish data (2/2)} 
+
+  \begin{center}
+  \begin{tabular}{lccc}
+    & no covariate & \textcolor{blue}{temp. \& depth} & \textcolor{red}{all covariates} \\
+    \hline
+    \rotatebox{90}{$\qquad\quad\lambda=.20$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_full60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_full60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_full60edges} 
+    \vspace{-0.05\textheight} \\ \hline
+    %
+    \rotatebox{90}{$\qquad\quad\lambda=.28$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_sel60edges} & \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_sel60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_sel60edges} 
+    \vspace{-0.05\textheight} \\ \hline
+    %
+    \rotatebox{90}{$\qquad\quad\lambda=.84$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_null60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_null60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_density} 
+%     \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_null60edges}  
+  \end{tabular}
+  \end{center}
+
+}
+

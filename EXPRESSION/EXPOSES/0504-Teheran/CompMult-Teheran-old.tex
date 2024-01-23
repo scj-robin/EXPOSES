@@ -1,0 +1,779 @@
+\documentclass[dvips]{slides}
+\textwidth 20cm
+\textheight 25.7cm 
+\topmargin -1.7cm 
+\oddsidemargin  -2cm 
+\evensidemargin  -2cm
+
+% Maths
+\usepackage{amsfonts, amsmath, amssymb}
+\newcommand{\Acal}{\mathcal{A}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\alphabf}{\mbox{\mathversion{bold}{$\alpha$}}}
+\newcommand{\betabf}{\mbox{\mathversion{bold}{$\beta$}}}
+\newcommand{\gammabf}{\mbox{\mathversion{bold}{$\gamma$}}}
+\newcommand{\psibf}{\mbox{\mathversion{bold}{$\psi$}}}
+\newcommand{\taubf}{\mbox{\mathversion{bold}{$\tau$}}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Sbf}{{\bf S}}
+\newcommand{\bps}{\mbox{bps}}
+\newcommand{\ubf}{{\bf u}}
+\newcommand{\vbf}{{\bf v}}
+\newcommand{\Esp}{{\mathbb E}}
+\newcommand{\Var}{{\mathbb V}}
+\newcommand{\Indic}{{\mathbb I}}
+\newcommand{\liste}{$\bullet \quad$}
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+% Texte
+\usepackage{lscape, ../../../fancyheadings, rotating, enumerate}
+%\usepackage[french]{babel}
+%\usepackage[latin1]{inputenc}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.5}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\definecolor{jaune}{cmyk}{0, 0.5, 0.5, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\textred}[1]{\textcolor{red}{#1}}
+%\newcommand{\textgreen}[1]{\textcolor{green}{\bf #1}}
+\newcommand{\textlightgreen}[1]{\textcolor{green}{#1}}
+\newcommand{\textgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{#1}}
+\newcommand{\textyellow}[1]{\textcolor{yellow}{#1}}
+
+% Sections
+\newcommand{\chapter}[1]{\centerline{\LARGE \textgreen{#1}}}
+\newcommand{\section}[1]{\centerline{\Large \textblue{#1}}}
+\newcommand{\subsection}[1]{\noindent{\large \textblue{#1}}}
+\newcommand{\paragraph}[1]{{\textgreen{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\landscape
+\headrulewidth 0pt 
+\pagestyle{fancy} 
+\cfoot{}
+\rfoot{\begin{rotate}{90}{
+      \vspace{.5cm}
+      \hspace{-0.5cm} \tiny S. Robin (Tehran 2005)
+      }\end{rotate}}
+\rhead{\begin{rotate}{90}{
+      \hspace{-.5cm} \tiny \thepage
+      }\end{rotate}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% 2 Differential analysis of microarray data, multiple testing problems
+% and False Discovery Rate (FDR)
+
+% Microarray (DNA chips) data is a new technology that measures the
+% expression level of thousands of genes simultaneously. Many microarray
+% experiment aim at detecting differentially expressed genes between two
+% conditions. Because of the large number of genes, multiple testing
+% problems immediately rise in the statistical analysis of these
+% experiments. One of the crucial points is the control of the number of
+% false positive genes. We present the general setting of differential
+% analysis in microarray experiments and the multiple testing problem.
+% We then introduce the recent developments about the false discovery
+% rate and propose a new method, based on mixture models, to estimate
+% it.
+
+\begin{center}
+  \chapter{Differential analysis of microarray data,} 
+  \bigskip
+  \chapter{Multiple testing problems} 
+  \bigskip
+  \chapter{and Local False Discovery Rate.}
+  \bigskip
+
+   {\large S. {\sc Robin}, J.-J. {\sc Daudin}, A. {\sc Bar-Hen},
+   L. {\sc Pierre}} \\
+   robin@inapg.inra.fr
+
+   {UMR INA-PG / INRA, Paris} \\
+   {Mathématique et Informatique Appliquées}
+   
+   {Bio-Info-Math Workshop, Tehran, April 2005}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Microarray data and differential analysis}
+\bigskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Molecular biology central dogma} 
+
+\vspace{1cm}
+\centerline{
+  \begin{tabular}{c}
+    \framebox{DNA molecule (gene)} \\
+    $\mid$ \\
+    \textred{\sl transcription} \\
+    $\downarrow$ \\
+    \textgreen{\framebox{messenger RNA (transcript)}} \\
+    $\mid$ \\
+    \textred{\sl translation} \\
+    $\downarrow$ \\
+    \framebox{Protein (biological function)}
+  \end{tabular}
+}
+
+\vspace{1cm}
+\paragraph{``Definition'':}
+$
+\left(\begin{tabular}{c} Expression level\\ of a gene
+  \end{tabular}\right)
+\propto
+\left(\begin{tabular}{c} number of \\copies of mRNA \\ in the cell
+  \end{tabular}\right) 
+$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Microarray technology}
+
+\begin{tabular}{ll}
+  \begin{tabular}{p{11cm}}
+    Aims to monitor the expression level of several thousands of genes
+    simultaneously \\
+    \\
+    \\
+    1 spot = 1 gene \\
+    \\
+    \\
+    Expression level in the cell: \\
+    ~\\
+    \liste at given time, \\
+    ~\\
+    \liste in a given condition \\
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \psfig{file = ../DNAchip-green.ps, width=12cm, height =12cm,
+      bbllx=02, bblly=20, bburx=410, bbury=435, clip=}
+  \end{tabular}
+\end{tabular}
+
+\newpage 
+\psfig{file = ../MicroarrayTech.ps, angle=90, width=25cm, height=18cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Differential analysis}
+
+\paragraph{Elementary data:} $Y_{itr} = $ expression level of gene
+$i$ in condition $t$ ($t=1$ or $2$) at replicate $r$
+
+\paragraph{Differentially expressed genes} are genes for which
+$Y_{i1r}$ is not distributed as $Y_{i2r}$. 
+
+Null hypothesis for gene $i$:
+$
+\Hbf_0(i) = \{Y_{i1r} \overset{\Lcal}{=} Y_{i2r}\}
+$
+
+\paragraph{Statistical test:} Student, Wilcoxon, permutation, {\it
+  etc.} \\
+(idem with more then 2 conditions: Fisher, Kruskall-Wallis, {\it
+  etc.}.)
+
+For each gene we get:
+$$
+\begin{tabular}{ll}
+  the value of the test statistic & $T_i$ \\
+  \\
+  the corresponding $p$-value & $P_i = \Pr\{\Tcal > T_i
+  \;|\;\Hbf_0(i)\}$ 
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Multiple testing problem}
+\bigskip
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{General problem}
+
+\paragraph{Rejection rule:} For a given level $\alpha$, 
+$$
+\begin{tabular}{rcl}
+  $P_i < \alpha$ & $\qquad \Longrightarrow \qquad$ & gene $i$ is
+    declared positive \\
+  & & (i.e. differentially expressed)
+\end{tabular}
+$$
+
+\paragraph{Multiple testing:} When performing $n$ simultaneous tests
+$$
+\begin{tabular}{c|cc|c}
+  & \multicolumn{2}{c}{(Decision (random)} & \\
+  & $\Hbf_0$ accepted & $\Hbf_0$ rejected & \\
+  \hline
+  $\Hbf_0$ true 
+  & \begin{tabular}{c} $TN$ \\ true negatives \end{tabular} 
+  & \begin{tabular}{c} $FN$ \\ false negatives \end{tabular}
+  & \begin{tabular}{c} $n_0$ \\ negatives \end{tabular} \\
+  $\Hbf_0$ false 
+  & \begin{tabular}{c} $FP$ \\ false positives \end{tabular} 
+  & \begin{tabular}{c} $TP$ \\ true positives \end{tabular} 
+  & \begin{tabular}{c} $n_1$ \\ positives \end{tabular} \\
+  \hline
+  & $N$ negatives & $P$ positives & $n$
+\end{tabular}
+$$
+
+All the random quantities (capital) depend on the data and the
+pre-fixed level $\alpha$.
+
+\newpage
+\paragraph{Microarray experiment:} Typically $n=10\;000$ tests are
+performed simultaneously 
+
+For $\alpha = 5\%$, if no gene is actually differentially expressed
+($n_1 = 0, n_0 = n$), we expect
+$$
+0.05 \times 10\;000 = 500 \mbox{``positive'' genes}
+$$
+which are \paragraph{all false positives}.
+
+\paragraph{Problem:} We'd like to control some ``global risk'' $\alpha^*$
+such as \\
+\\
+\liste the probability of having some false positive (FWER), \\
+\\
+\liste or the proportion of false positives (FDR).
+
+(Dudoit \& al., Stat. Sci., 2003)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Family Wise Error Rate (FWER)}
+\bigskip
+\centerline{$FWER = \Pr\{FP \geq 1\}$}
+
+\paragraph{Sidak:} If the $n$ tests are independent, 
+$$
+FP \sim \Bcal(n, \alpha) 
+\qquad \Longrightarrow \qquad 
+\Pr\{FP \geq 1\} = 1 - (1- \alpha)^n.
+$$
+Fixing level at $\alpha = 1 - (1- \alpha^*)^{1/n} (\simeq \alpha^*/n)$
+ensures $FWER = \alpha^*$.
+
+\paragraph{Bonferroni:} In any case
+$$
+FWER = \Pr\left\{\bigcup_i i \mbox{ false positive}\right\}
+\leq \sum_i \Pr\left\{i \mbox{ false positive}\right\} = n \alpha
+$$ 
+Fixing level at $\alpha = \alpha^*/n$ ensures $FWER \leq
+\alpha^*$.
+
+\paragraph{Remark:} The independent case is, in some sens, the worst case.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{False Discovery Rate (FDR)}
+\bigskip
+\centerline{$FDR = \Esp(FP/P)$}
+
+\paragraph{Idea:} Instead of preventing any error, just control the
+proportion of errors 
+\centerline{$\Longrightarrow$ less conservative}
+
+\paragraph{Benjamini \& Hochberg (95) procedure:} Given the sorted
+$p$-values
+$$
+P_{(1)} \leq \dots \leq P_{(i)} \leq \dots \leq P_{(n)} ,
+$$
+rejecting $\Hbf_0$ for all $(i)$ such as
+$$
+P_{(i)} \leq \frac{i \alpha^*}n
+\qquad \Longrightarrow \qquad
+FDR \leq \frac{n_0}n \alpha^* \leq \alpha^*
+$$
+
+\paragraph{Benjamini \& Yakutieli (01):} For positively correlated
+test statistics
+$$
+P_{(i)} \leq \frac{i \alpha^*}{n (\sum_j 1/j)}.
+$$
+
+\newpage
+\paragraph{Number of positive genes:} Hedenfalk data ($n = 3226$, $\alpha^* = 5\%$)
+
+\begin{tabular}{ccc}
+  \begin{tabular}{l}
+    $p$-value: \\
+    {\bf $\centerdot\centerdot\centerdot$}  612 \\
+    \\
+    Bonferroni: \\
+    \textred{\bf ---} 2 \\
+    \\
+    Sidak: \\
+    \textlightgreen{\bf ---} 2 \\
+    \\
+    Holm: \\
+    \textred{$\centerdot\centerdot\centerdot$} 2 \\
+    \\
+    Sidak adp.: \\
+    \textlightgreen{$\centerdot\centerdot\centerdot$} 2 \\
+    \\
+    FDR: \\
+    \textblue{$\centerdot\centerdot\centerdot$}   70 \\
+    \\
+  \end{tabular}
+  &
+  ~\vspace{1cm} \begin{rotate}{90} $\log_{10} p$-value \end{rotate}
+  &
+  \vspace{-1cm}
+  \begin{tabular}{c}
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/FDR-FWER.eps,
+      height=17cm, width=15cm, bbllx=65, bblly=290, bburx=285,
+      bbury=480, angle=90, clip=} \\ 
+    \small{gene rank}
+  \end{tabular}
+\end{tabular}
+
+%   {\bf --} $5\%$ \\
+%   \textred{--} Bonferroni \\
+%   \textred{\dots} Holm \\
+%   \textlightgreen{--} Sidak \\
+%   \textlightgreen{\dots} Sidak ad. \\
+%   \textblue{\dots} FDR
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Local False Discovery Rate}
+
+FDR provides a general information about the risk of the whole
+procedure (up to step $i$).
+
+We are interested in a specific risk, associated to each gene.
+
+\paragraph{Local FDR ($\ell FDR$).} Initially defined by Efron \&
+al. (JASA, 2001) in a mixture model framework:
+$$
+\ell FDR(i) := \Pr\{\Hbf_0(i) \mbox{ is false} \;|\; T_i\}.
+$$
+
+
+\paragraph{Derivative of the FDR:} $\ell FDR(i)$ can be also defined as the
+derivative of the FDR, which can be estimated by 
+$$
+\widehat{n}_0 (P_{(i)} - P_{(i-1)})
+$$
+(Aubert \& al., BMC Bioinfo., 04).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Semi-parametric mixture model}
+\bigskip
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Mixture model}
+
+\paragraph{Property of the test statistic.} The standard hypotheses
+testing theory implies that, under $\Hbf_0(i)$, $P_i$ is uniformly
+distributed over $[0, 1]$: \\
+\begin{tabular}{cc}
+  \begin{tabular}{p{13.5cm}}
+    $$
+    P_i \underset{\Hbf_0(i)}{\sim} \Ucal_{[0, 1]}
+    $$
+    \\
+    ~\\
+    The $P_i$'s are distributed according to a mixture distribution
+    with density 
+    $$
+    g(p) = a f(p) + (1-a) 
+    $$
+    \\
+    ~\\
+    The problem is then to estimate
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/HistoPval.eps,
+      height=10cm, width=10cm, bbllx=82, bblly=304, bburx=277,
+      bbury=460, angle=90, clip=} 
+  \end{tabular}
+\end{tabular}
+$$
+\begin{tabular}{ll}
+  \paragraph{$a$:} & the proportion of differentially expressed genes
+  \\
+  \\
+  \paragraph{$f$:} & the  (alternative) density $f$ \\
+\end{tabular}
+$$
+
+\newpage
+\paragraph{Generalization:} We consider an i.i.d. sample $\{X_1,
+\dots, X_n\}$ with mixture density
+$$
+g(x) = a f(x) + (1-a) \phi(x)
+$$
+\begin{tabular}{lr}
+  The proportion $a$ is unknown &  $\longrightarrow$ \paragraph{parametric part} \\ 
+  \\
+  The density $f$ is completely unknown & \quad $\longrightarrow$ \paragraph{non
+    parametric part} \\ 
+  \\
+  The density $\phi$ in completely specified & ($\Ucal_{[0, 1]}$,
+  $\Ncal(0, 1)$, {\it etc.})
+\end{tabular}
+
+\bigskip \bigskip
+\paragraph{Posterior probability.} We are interested in the
+estimation of 
+$$
+\tau_i = \Pr\{Z_i = 1 \;|\; x_i\} = \Esp(Z_i \;|\; x_i) = \frac{a
+  f(x_i)}{g(x_i)}
+$$
+where $Z_i =
+\left\{
+\begin{tabular}{rll}
+  $Z_i = 1$ & if $i$ comes from $f$ & ($\Hbf_0(i)$ false), \\
+  \\
+  $Z_i = 0$ & otherwise & ($\Hbf_0(i)$ true).
+\end{tabular}
+\right.$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Density estimation}
+
+\paragraph{Kernel estimate.} A natural non-parametric estimate of $f$
+is
+$$
+\widehat{f}(x) = \frac1{\sum_i Z_i} \sum_i Z_i k_i(x)
+$$
+where
+$$
+k_i(x) = \frac1h k\left(\frac{x-x_i}h\right)
+$$ 
+$k$ being a kernel, i.e. a symmetric density function with mean 0.
+
+\paragraph{Weighted kernel estimate.} Since the $Z_i$'s are unknown,
+we propose to replace them by their conditional expectations:
+$$
+\widehat{f}(x) = \frac1{\sum_i \tau_i}\sum_i \tau_i k_i(x)
+$$
+$\tau_i$ is the weight of observation $i$ in the estimation of $f$.
+\newpage
+\paragraph{Property of the $\widehat{\tau}_i$}. The estimates of the
+$\tau_i$'s must satisfy
+$$
+\widehat{\tau}_j = \frac{a \widehat{f}(x_j)}{\widehat{g}(x_j)} 
+= \frac{a \sum_i \widehat{\tau}_i k_i(x_j)}{a \sum_i \widehat{\tau}_i
+  k_i(x_j) + (1-a) \phi(x_j) \sum_i \widehat{\tau}_i}
+$$
+or 
+$$
+\widehat{\tau}_j =\frac{\sum_i \widehat{\tau}_i b_{ij}}{\sum_i \widehat{\tau}_i b_{ij}
+  + \sum_i \widehat{\tau}_i}
+\qquad \mbox{with} \qquad
+b_{ij} = \frac{a}{1-a} \frac{k_i(x_j)}{\phi(x_j)} \geq 0
+$$
+
+\paragraph{Function $\psibf$.}
+$$
+\begin{array}{rcl}
+  \psibf: \Rbb^n & \rightarrow & \Rbb^n \\
+  \ubf & \rightarrow &  \displaystyle{\psibf(\ubf): \psi_j(\ubf) = \frac{\sum_i
+  u_i b_{ij}}{\sum_i u_i b_{ij}+ \sum_i u_i}}  
+\end{array}
+$$
+
+\bigskip \bigskip 
+\centerline{$\widehat{\taubf} = (\widehat{\tau}_1, \dots,
+  \widehat{\tau}_n)$ should be a fixed point of $\psibf$.}
+
+\newpage
+\paragraph{Estimation algorithm of $\taubf$.} Given some initial
+$\widehat{\taubf}^{0}$, iterate $\psibf$:
+$$
+\widehat{\taubf}^{h+1} = \psibf(\widehat{\taubf}^{h}).
+$$
+
+\paragraph{$a$ remains fix:} Must to be estimate
+independently.
+
+\paragraph{2 steps of the algorithm:} \\
+{\bf ''E'' step:} given $\widehat{f}^h$ and $\widehat{g}^h$, calculate
+$$
+\widehat{\taubf}^{h+1} = a \widehat{f}^h(x_i) \left/
+  \widehat{g}^h(x_i) \right..
+$$
+{\bf Other step:} given $\widehat{\taubf}^{h}$, estimate $f$ and
+$g$:
+$$
+\widehat{f}^h(x) = \sum_i \widehat{\tau}^h_i k_i(x) \left/ \sum_i
+  \widehat{\tau}^h_i \right., 
+\qquad 
+\widehat{g}^h(x) = a \widehat{f}^h(x) + (1-a) \phi(x).
+$$
+This second step does not maximize the likelihood \\
+\centerline{$\longrightarrow$ not an E-M algorithm.}
+
+\newpage
+\centerline{\framebox{
+    \begin{tabular}{rl}
+      \paragraph{Theorem:} & $\psibf$ is contracting \\
+      \\
+      $\Longrightarrow$ & the algorithm converges toward its unique
+      fix point. 
+    \end{tabular}
+    }}
+
+\paragraph{Sketch of proof.} $\psibf = \alphabf \circ \betabf \circ
+\gammabf$:
+$$
+\alpha_j(\ubf) = \frac{u_j}{u_j + 1}, 
+\qquad
+\beta_j(\ubf) = \sum_i b_{ij} u_i, 
+\qquad 
+\gamma_j(\ubf) = \frac{u_j}{\sum_i u_i},
+$$
+
+\begin{description}
+\item[1.] Simplex $\Ecal = \{\ubf: \sum_i u_i = 1\}$ ($\gammabf = $
+  projection on $\Ecal$)
+  $$
+  \ubf^* \in \Rbb^n: \psibf(\ubf) = \ubf
+  \qquad \Longleftrightarrow \qquad
+  \vbf^* = \gammabf(\ubf^*) \in \Ecal: \gammabf \circ \psibf (\vbf) = \vbf
+  $$
+  $\rightarrow$ Just consider $\gammabf \circ \psibf$ on the
+  simplex $\Ecal$.
+\item[2.] Brouwer's theroem: $\Ecal$ is compact and $\gammabf \circ
+  \psibf$ is continuous, so at least one fix point exists.
+\end{description}
+
+\newpage
+\begin{description}
+\item[3.] Interior of $\Ecal$: $\Ecal' = \{\ubf \in \Ecal: \forall i, u_i
+  > 0\}$. 
+  $$
+  d(\ubf, \vbf) = \log \left[ \max_i \left(\frac{u_i}{v_i}\right)
+    \left/ \min_i \left(\frac{u_i}{v_i}\right) \right. \right]
+  $$
+  is a distance on $\Ecal'$.
+\item[4.]  $ d[\gammabf \circ \psibf(\ubf), \gammabf \circ
+  \psibf(\vbf)] < d(\ubf, \vbf)$ \qquad (except if $\ubf =
+  \vbf$). \\
+  $\rightarrow$ $\gammabf \circ \psibf$ admits at most one fix point
+  in $\Ecal'$.
+\item[5.] If $k_{ij} > 0$ for all $(i, j)$: 
+  $$
+  \{\ubf \in \Ecal \setminus \Ecal'\} \quad \Longrightarrow \quad
+  \{\gammabf \circ \psibf(\ubf) \in \Ecal'\}.
+  $$
+\end{description}
+
+$\gammabf \circ \psibf$ (and therefore for $\psibf$) admits one unique
+fix point toward which the algorithm converges.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Estimation $a$ (and $h$)}
+
+\paragraph{Analogy with EM. } $a$ could be estimated iteratively:
+$$
+\widehat{a}^h = \frac1n \sum_i \widehat{\tau}_i^h
+$$
+but
+$$
+\widehat{\taubf} = (\begin{array}{ccc}1 & \dots & 1 \end{array}), 
+\qquad
+\widehat{a} = 1
+$$
+is a fixed point of this algorithm.
+
+\paragraph{Remark.} For a given $a$, there is a unique
+$\widehat{\taubf}$. \\
+In some sense, $a$ is the unique parameter of the problem.
+
+\newpage
+\paragraph{Cross-validation.} $a$ (and $h$) are estimated as follows
+\begin{enumerate}
+\item Split the dataset $\Dcal$ into $V$ subsets $\Dcal_1, \dots,
+  \Dcal_V$. \\
+  Typically, $V = 5$ or $10$.
+\item For $v=1 \dots V$ \\
+  \liste estimate $f$ and $g$ with the data from $\Dcal \setminus \Dcal_v$
+  ($\rightarrow \widehat{f}_v, \widehat{g}_v$), \\
+  \liste calculate
+  $$
+  \Lcal_{CV}(\Dcal; a) = \frac1V \sum_v \sum_{i \in \Dcal_v} \log \widehat{g}_v(x_i).
+  $$
+\item Miximize $\Lcal_{CV}$ (numerically):
+  $$
+  \widehat{a} = \arg\max_a \Lcal_{CV}(\Dcal; a).
+  $$
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{$FDR$ and local $FDR$ estimation}
+\bigskip
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Applications}
+\bigskip
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Probit transform}
+%Instead of modeling the distribution of the $P_i$', we consider the
+%$$
+\begin{tabular}{lcr}
+  $P_i \in [0, 1]$
+  &   
+  \qquad 
+  &
+  $X_i = \Phi^{-1}(P_i) \in \Rbb$ 
+  \\
+  \multicolumn{3}{c}{(Efron, JASA, 2005)}
+  \\
+  \textred{$\phi = \Ucal_{[0; 1]}$}
+  & 
+  & 
+  \textred{$\phi = \Ncal(0, 1)$}
+  \\
+  \psfig{file =
+  /RECHERCHE/EXPRESSION/COMPMULT/EMpondere/Article/HistoPval.ps, 
+  width=11.5cm, height=10cm, bbllx=211, bblly=322, bburx=424,
+  bbury=480, clip=} 
+  &
+  &
+%  \vspace{-2cm}
+  \psfig{file =
+  /RECHERCHE/EXPRESSION/COMPMULT/EMpondere/Article/HistoProbit.ps,
+  width=11.5cm, height=10cm, bbllx=211, bblly=322, bburx=424,
+  bbury=480, clip=} 
+  \\
+\end{tabular}
+%$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Simulations}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Hedenfalk data}
+
+\paragraph{Comparison of 2 breast cancers (BRCA1 / BRCA2):} $n = 3226$
+genes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHANGER COCHRAN -> VARMIXT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$$
+\begin{tabular}{cc} 
+  \multicolumn{2}{c}{log-likelihood $\Lcal(a, h)$, \quad ($V = 5$)} \\
+  training set & test set: $\Lcal_{CV}$ \\
+  \begin{tabular}{c}
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Cochran-Gaus.eps,
+      height=12cm, width=12cm, bbllx=330, bblly=500, bburx=550,
+      bbury=710, clip=, angle=90} 
+  \end{tabular}
+  &
+  \begin{tabular}{c} 
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Cochran-Gaus.eps,
+      height=12cm, width=12cm, bbllx=330, bblly=290, bburx=550,
+      bbury=500, clip=, angle=90} 
+  \end{tabular}
+  \\
+  $\widehat{a} \rightarrow 1, \quad \widehat{h} \rightarrow 0$
+  & $\widehat{a} = ???, \quad \widehat{h} = ???$
+\end{tabular}
+$$
+
+\newpage
+$$
+\begin{tabular}{cc} 
+  \begin{tabular}{c}
+    Mixture model \\
+    $\textblue{\widehat{g}(x)}  = a \textred{\widehat{f}(x)} + (1-a)
+    \textgreen{\widehat{f}(x)}$ \\ 
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Cochran-Gaus.eps,
+      height=12cm, width=12cm, bbllx=66, bblly=510, bburx=283,
+      bbury=691, clip=, angle=90} 
+  \end{tabular}
+  &
+  \begin{tabular}{c} 
+    $\textred{\widehat{FDR}_i}, \textblue{\widehat{\ell FDR}_i} \times
+    \Phi^{-1}(P_i)$ \\ 
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Cochran-Gaus.eps,
+      height=12cm, width=6cm, bbllx=66, bblly=295, bburx=283,
+      bbury=480, clip=, angle=90} 
+    \\
+    $\textred{\widehat{FDR}_i}, \textblue{\widehat{\ell FDR}_i} \times
+    P_i$ \\ 
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Cochran-Gaus.eps,
+      height=12cm, width=6cm, bbllx=66, bblly=85, bburx=283,
+      bbury=265, clip=, angle=90} 
+  \end{tabular}
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

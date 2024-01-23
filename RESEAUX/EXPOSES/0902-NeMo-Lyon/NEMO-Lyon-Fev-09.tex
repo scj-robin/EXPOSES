@@ -1,0 +1,638 @@
+\documentclass{beamer}
+%\usetheme{CambridgeUS}
+\usetheme{Madrid}
+%\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+\usecolortheme[rgb={0.5,0,0}]{structure}
+
+%\usefonttheme[onlymath]{serif}
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{amsmath, amsfonts}
+%\usepackage{epsfig}
+%\usepackage{/Latex/astats}
+%\usepackage[all]{xy}
+%\usepackage{graphicx}
+\beamertemplatenavigationsymbolsempty
+
+\definecolor{paleblue}{rgb}{.5 ,.5, 1}
+\definecolor{palered}{rgb}{1, .5, .5}
+\definecolor{palegreen}{rgb}{.5, 1. ,.5}
+\definecolor{paleyellow}{rgb}{1, 1, .5}
+\definecolor{darkred}{rgb}{.5, 0, 0}
+\newcommand{\bwcolor}[1]{\fcolorbox{white}{white}{#1}}
+\newcommand{\bwbcolor}[1]{\fcolorbox{white}{white}{\textbf{#1}}}
+\newcommand{\bcolor}[2]{\fcolorbox{white}{#1}{#2}}
+\newcommand{\bbcolor}[2]{\fcolorbox{white}{#1}{\textbf{#2}}}
+
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\Rm}{\mathcal{R}({\bf m})}
+\newcommand{\emphase}[1]{\textcolor{blue}{\sl #1}}
+\newcommand{\paragraph}[1]{\noindent \textcolor{blue}{#1}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\Ibb}{\mathbb{I}}
+
+%========================================================================
+\title[Classes topologiques et calcul des moments]{Algorithme de
+  calcul des moments~: Classes topologiques} 
+
+\author[GR MK SR]{G. Grasseau, M. Koskas et S. Robin}
+
+\institute{SSB}
+
+\date{\today}
+
+%========================================================================
+%========================================================================
+\begin{document}
+%========================================================================
+%========================================================================
+
+% PAGE D'ACCUEIL
+\begin{frame}
+  \titlepage
+% \includegraphics[height=1cm]{\imagespath LogoCNRS.jpg} 
+% \hspace{0.3cm}
+% \includegraphics[height=1cm]{\imagespath sg_logo.png} 
+% \hspace{0.3cm}
+% \includegraphics[height=1cm]{\imagespath logo_ueve.png}
+% \hspace{0.3cm}
+% \includegraphics[height=1cm]{\imagespath logo_inra.pdf}
+% \hspace{0.3cm}
+% \includegraphics[height=0.9cm]{\imagespath logo_ssb.jpg}
+\end{frame}
+
+%========================================================================
+\begin{frame}
+  \frametitle{Recherche de motifs dans un réseau}  
+  
+  Le calcul de $\Esp N(\mbf)$ et de $\Var N(\mbf) $ permet de juger du
+  caractère exceptionnel d'un motif, pour un modèle de graphe
+  aléatoire.
+
+  \bigskip
+  \paragraph{Objectif :} algorithme efficace du calcul de $ \Esp N(\mbf)$
+  et de $ \Var N(\mbf) $
+
+  \bigskip
+  \paragraph{Futurs développements~:} graphes orientés,
+  calcul des moments d'ordre supérieur, meilleure approximation de la
+  loi de $N(\mbf)$.
+  
+  \bigskip
+  \paragraph{Notations :}
+  \begin{itemize}
+  \item Graphe $G$~: $n$ noeuds, $X = $ matrice d'adjacence~;
+  \item Motif $\mbf$~: $k$ noeuds, $N(\mbf)$ nombre d'occurrence dans $G$~;
+  \item Modèle de graphe aléatoire~: (Erdös, ...).  Erdös-Rènyi (ER),
+    ``Expected Degre distribution'' (EDD), Mélange (MixNet).
+  \end{itemize}
+  
+\end{frame}
+
+%========================================================================
+\begin{frame}
+  \frametitle{Motif topologique}  
+  \paragraph{Définition~:} un motif topologique $\mbf$ est caractérisé par
+  sa matrice d'adjacence (notée \mbf).
+  $$
+  \includegraphics[angle=0, height=3.5cm, width=8cm, 
+  bb = 200 360 410 460, clip=true, 
+  %bbllx=200, bblly=360, bburx=400, bbury=460, clip=
+  ]{images/def_motif.pdf}   
+  $$
+  Il possède un certain nombre de permutations non-redondantes,
+  i.e. telles que
+  $$
+  \sigma \mbf \neq \mbf.
+  $$
+\end{frame}
+
+%========================================================================
+\begin{frame}
+  \frametitle{Calcul de $ \Esp N(\mbf) $}
+  
+  Comptage des motifs $\mbf $ :
+  \begin{displaymath}
+    N( \mbf ) = \sum_{\alpha \in I_k} \, \sum_{\mbf' \in \Rm }
+    Y_{\alpha} (\mbf')
+  \end{displaymath}  
+  avec :
+  \begin{itemize}
+  \item $ Y_{\alpha} (\mbf ') = \Ibb\{\mbf \text{ en } \alpha\}$~;,
+  \item $I_k = $ ensemble de toutes les positions possibles de $\mbf$
+    dans $G$, i.e. tous les $k$-uplets parmi $\{1, \dots n ,\}$~;
+  \item $\Rm = $ ensemble de toutes les permutations non
+    redondantes de $\mbf $~:
+    $$
+    \Rm = \mathcal{\sigma}(\mbf) / aut( \mbf )
+    $$
+    où $ aut(\mbf) = \{ \sigma \in \mathfrak{S}(\mbf ), \sigma(
+    \mbf ) = \mbf \} $
+  \end{itemize}
+  
+  \pause
+  Pour un modèle de graphes aléatoires donné :
+  $$
+  \Esp N(\mbf)  = |I_k| \times | \Rm | \times \mu( \mbf ), 
+  $$
+  avec $\mu( \mbf )$ proba. d'occurence du motif $\mbf$ pour le
+  modèle.
+\end{frame}
+
+%========================================================================
+\begin{frame}
+  \frametitle{Calcul de $ \Var N(\mbf) $}
+  
+  $$
+  \Var N( \mbf)  = \Esp N^2( \mbf ) - [\Esp N( \mbf ) ]^2
+  $$
+  
+  \begin{eqnarray*}%%
+    N^2( \mbf ) & = & \sum_{\alpha, \beta \, \in \, I_k} \: %%
+    \sum_{\mbf', \mbf'' \, \in \, \Rm } Y_{\alpha}
+    (\mbf')Y_{\beta} (\mbf'') \\%% 
+    N^2( \mbf ) & = & \sum_{ |\alpha \cap \beta| = 0} \sum_{\mbf',
+      \mbf'' \, \in \, \Rm } Y_{\alpha} (\mbf')Y_{\beta}
+    (\mbf'') \\%% 
+    &  + &  \sum_{s=1}^{k} \ \sum_{ |\alpha \cap \beta| = s} \
+      \sum_{\mbf', \mbf'' \, \in \, \Rm } Y_{\alpha \cup \beta}
+      (\mbf' \Omega_s \mbf'') ,\\%% 
+%\Esp[  N^2(  \mbf   )  ]  &  =  &   {{n}\choose{n-2k,  k,  k}}
+%\left[ \sum_{\mbf' \in \, \Rm } \mu( \mbf' ) \right]^2 \\%%
+%   &   +  &   \sum_{s=1}^{k}   {{n}\choose{k-s,   s,  k-s,   n-2k+s}}
+% \sum_{\mbf', \mbf'' \, \in \, \Rm } \mu( \mbf' \Omega_s \mbf'') \\%%
+    \end{eqnarray*}
+    où $ \mbf' \Omega_s \mbf'' $ représente un "super-motif" :
+    \begin{displaymath}
+      \begin{array}{c|c|c}%%
+        \mbf'_{11} &  \mbf'_{12} & 0 \\%
+        \hline %
+        \mbf'_{21} & \max( \mbf'_{22}, \mbf''_{11} ) & \mbf''_{12} \\%
+        \hline %
+        0 & \mbf''_{21} & \mbf''_{22} \\%
+      \end{array}
+    \end{displaymath}
+\end{frame}
+
+
+%========================================================================
+\begin{frame}
+  \frametitle{Calcul de $ \Var N(\mbf) $ (suite)}  
+  \begin{eqnarray*}%%
+    \Esp[  N^2(  \mbf   )  ]  &  =  &   {{n}\choose{n-2k,  k,  k}}
+    \left[ \sum_{\mbf' \in \, \Rm } \mu( \mbf' ) \right]^2 \\%%
+    &   +  &   \sum_{s=1}^{k}   {{n}\choose{\scriptstyle{k-s},   s,
+        k-s,   n-2k+s}} \sum_{\mbf', \mbf'' \, \in \, \Rm} \mu(
+    \mbf' \Omega_s \mbf'') \\%%
+  \end{eqnarray*}%%  
+  
+  \bigskip
+  \paragraph{Moments d'ordre supérieurs~:} le moment d'ordre $k$ $\Esp
+  N^k(\mbf)$ fait intervenir toutes possibilités de recouvrement de
+  $k$ occurrences de $\mbf$~:
+  $$
+  \sum_{\mbf', \mbf'', \mbf''' \in \Rm} \qquad \qquad \sum_{\mbf', \mbf'',
+    \mbf''', \mbf'''' \in \Rm} \qquad \qquad \dots
+  $$
+\end{frame}
+
+%========================================================================
+\begin{frame}
+  \frametitle{Probabilités d'occurence $ \mu( \mbf )$ }  
+  Modèle Erdös-Renyi :
+  $$
+  \mu_{ER}( \mbf ) \pi^{m_{++}/2}, \; \textrm{avec} \; m_{++} =
+  \sum_{u,v} m_{u,v}.
+  $$
+  
+  Modèle EDD :
+  $$
+  \mu_{EDD}( \mbf ) = \gamma^{m_{++}/2}\prod_{u=1}^k \,
+  \Esp[D^{m_{u+}/2}_u], \; \textrm{avec} \; \gamma =
+  \frac{1}{(n-1)\Esp[D]}.
+  $$
+  
+  Modèle MixNet :
+  $$
+  \mu_{MixNet}( \mbf ) = \sum_{c_1 = 1}^{Q} \ldots \sum_{c_k =
+    1}^{Q} \alpha_{C_1} \ldots \alpha_{C_k} \prod_{1 \leq u < v \leq k}
+  \pi^{m_{uv}/2}_{C_uC_v}
+  $$
+  avec : $Q$ nombre de classes et $\alpha_{C_1} \ldots
+  \alpha_{C_Q}$ proportion des classes.
+  
+\end{frame}
+%========================================================================
+
+%========================================================================
+\begin{frame}
+  \frametitle{Énumération de $\Rm$ } 
+  
+  \paragraph{Étapes du développement :}
+  \begin{itemize}
+  \item  algorithme de  détermination  des  $ \Rm  $  (calcul de  
+    $ \Esp $ et $\Var$),
+  \item génération des super-motifs,
+  \item optimisation (réduction des cas pour les permutations
+    équivalentes) dans 
+    $$
+    \sum_{\mbf', \mbf'' \, \in \, \Rm } \mu( \mbf'
+    \Omega_s \mbf'') .
+    $$
+  \end{itemize}
+\end{frame}
+
+%========================================================================
+\begin{frame}
+  \frametitle{Détermination des permutations non-redondantes $ \Rm $ }
+  \begin{columns}[t]
+    \begin{column}{5.5cm}
+      \begin{center}
+                                %  \epsfig{file=images/algo_main.ps}
+                                % \framebox{\includegraphics[angle=0,height=6cm,width=5.5cm]{images/algo_main.pdf}} \\ 
+        \includegraphics[angle=0,height=5cm,width=5cm]{images/triangles.pdf} \\ 
+                                %         \psfig{file = images/triangles.ps, height=5cm,
+                                %         width=5cm,bbllx=0, bblly=0, bburx=500, bbury=500, clip=} \\ 
+        \vspace{0.25cm}
+        \begin{small} 
+          {\it Identifier les classes topologiques revient à  chercher
+            les automorphismes de \mbf.}
+        \end{small}        
+      \end{center}
+    \end{column}
+    \begin{column}{6.0cm}
+      On souhaite \emphase{identifier les symétries dans un motif}
+      afin regrouper les noeuds qui y jouent un rôle équivalent en
+      \emphase{classes topologiques}.
+
+      \bigskip
+      \paragraph{Définition~:}
+      Deux noeuds $i,j$ appartiennent à  la même classe topologique
+      si 
+      \begin{itemize}
+      \item après les avoir échangés ($\tau_{ij}$),
+      \item il existe une existe une permutation $ \sigma_{|ij}$ qui
+        redonne la matrice initiale $\mbf$ :
+      $$ 
+      \sigma_{|ij} \, \tau_{ij} \, \mbf = \mbf \, .  
+      $$
+    \end{itemize}
+  \end{column}
+\end{columns} 
+\end{frame}
+
+%========================================================================
+\begin{frame}
+  \frametitle{ Construction des classes topologiques $\{C_Q\}$ }
+  
+  \paragraph{Problème} : il y a $(k)!$ permutations à  explorer pour 
+  identifier les classes topologiques $\{C_Q\}$.\\  
+  \begin{columns}[t]
+    \begin{column}{5cm}
+    \begin{center}
+      % \framebox{\includegraphics[angle=0,height=6cm,width=5.5cm]{images/algo_main.pdf}} \\
+      \includegraphics[angle=0,height=4.5cm,width=5cm]{images/algo_main.pdf} \\
+      \vspace{0.25cm}      
+      \begin{small} Boucles  principales : construction  des {\it classes
+          topologiques} 
+      \end{small}
+    \end{center}
+  \end{column}
+  \begin{column}{6.5cm}  
+     \paragraph{Solution :} \\
+     Ces classes topologiques sont \emphase{disjointes} $ \Rightarrow
+     $ une solution de $ \sigma_{|ij} $ peut s'écrire :
+     $$
+     \sigma_{|ij} = \sigma_{C_1} \times \sigma_{C_2} \times
+     \ldots \times
+     \sigma_{C_Q}, 
+     $$
+     où les $ \sigma_{C_q} $ sont les permutations
+     internes de la classe $C_q$. 
+     
+     $\rightarrow$ Reste $k_1! \times k_2! \times \ldots \times k_Q!
+     \, $ permutations à  explorer.
+
+     \bigskip
+     \paragraph{Initialisation~:} \\
+     Regroupement par degré~: $i,j \in C_q \Leftrightarrow
+     degree(i) = degree(j)$.
+   \end{column}
+ \end{columns}
+\end{frame}
+
+%========================================================================
+\begin{frame} 
+  \frametitle{Factorisation de $\sigma_{|ij}$ (Démonstration ?)}
+  
+  \begin{enumerate}
+  \item $\sigma_{|ij}$ peut être décomposée en cycles disjoints
+    portant chacun sur un élément $S_p$ d'une partition $S_1, \dots
+    S_P$ de $\{1, ... n\} \setminus \{i, j\}$~:
+    $$
+    \sigma_{|ij} = \prod_p \sigma^{S_p} \qquad \Rightarrow \qquad
+    \mbf = \sigma_{|ij} \tau_{ij} \mbf =
+    \underset{\sigma_{|S_1}}{\underbrace{\tau_{ij} \prod_{p > 1}
+        \sigma^{S_p}}} \sigma^{S_1} \mbf
+    $$
+  \item La restiction de $\mbf$ à $S_1$ est donc invariante par
+    permutation circulaire ($\sigma^{S_1} \mbf^{S_1} = \mbf^{S_1}$),
+    et est donc de la forme $\mbf^{S_1} = \left[ \begin{array}{ccc} a
+        & & b \\ & \ddots & \\ b & & a
+      \end{array} \right]$. 
+  \item Donc, pour tout couple $(u, v) \in S_1$, $\tau_{uv} \mbf^{S_1}
+    = \mbf^{S_1}$. \\
+    Tous les éléments de $S_1$ appartiennent donc à la même classe
+    topologique.
+  \end{enumerate}
+\end{frame} 
+
+% %========================================================================
+% \begin{frame} 
+%   \begin{columns}[t]
+%     \begin{column}{5cm}
+%       Two\\lines.  optimiser le calcul de $ \mu(m'\Omega_s m'')$ en
+%       remarquant que
+%     \end{column}
+%     \begin{column}{5cm}
+%       Objectifs : 
+%       \begin{itemize}
+%       \item [1)] générer les $ m'\Omega_s m'' $ dans :
+%         $$ 
+%         \sum_{m', m'' \in \mathcal{R}(m)} \mu(m'\Omega_s m'') 
+%         $$
+%       \item [2)] optimiser le calcul de $ \mu(m'\Omega_s m'')$ en remarquant que
+%         certaines permutations de $ \mathcal{R}(m) $ sont équivalentes.
+%       \end{itemize}
+%     \end{column}
+%   \end{columns}
+% \end{frame}
+ 
+% %========================================================================
+% Trouver ces classes topologiques (les automorphismes de A) permet de
+% réduire les (sommes sur $\Rm$.
+
+% \begin{itemize}  
+% \item Appartenance d'un noeud à  une {\it classe topologique}.
+%   Deux noeuds $i,j$ appartiennent à  la même classe si il existe
+%   une permutation $\sigma_{|i,j}$ (une permutation qui ne fait pas
+%   intervenir les indices $i$ et $j$, $\sigma_{|i,j}(i)=i$ et
+%   $\sigma_{|i,j}(j)=j$) telle que :
+% \end{itemize}
+%========================================================================
+
+%========================================================================
+%\include{principes}
+%========================================================================
+\begin{frame}
+  \frametitle{ Recherche de la permutation $ \sigma_{C_q}$ de la
+    classe $q$}
+  
+  Recherche des automorphismes d'une classe donnée $\{C_q\}$ :
+  \begin{displaymath}
+    \boldsymbol{\sigma_{|ij}} \,  \tau_{ij} \, \mbf =  \mbf , \textrm{  à } q
+    \textrm{ fixé}.
+  \end{displaymath}
+  
+  Exemple :
+% \begin{figure}
+  \small  
+  \begin{columns}[t]
+    \begin{column}{5cm}
+      \only<1-3> {
+        \begin{displaymath}
+          \begin{array}{c|ccccc} %
+            \mbf & 1 & 2 & 3 & 4 & 5 \\%            
+            \hline%
+            % 1 & - &  & - & - & - &  - & - & \\%
+            1 & 0 & 1 & 0 &  1 & 0  \\% 
+            2 & \bwcolor{1} & 0 & \bwcolor{1} & 0 & \bwcolor{0} \\% 
+            3 & 0 & 1 & 0 &  0 & 1  \\% 
+            4 & \bwcolor{1} & 0 & \bwcolor{0} & 0 & \bwcolor{1} \\% 
+            5 & 0 & 0 & 1 & 1 & 0 \\% 
+          \end{array}
+        \end{displaymath}
+        }
+      \only<4-> {
+        \begin{displaymath}
+          \begin{array}{c|ccccc} %
+            \mbf & 1 & 2 & 3 & 4 & 5 \\%            
+            \hline%
+            % 1 & - &  & - & - & - &  - & - & \\%
+            1 & 0 & 1 & 0 &  1 & 0  \\% 
+            2 & \bcolor{red}{1} & 0 & \bcolor{paleblue}{1} & 0 &
+            \bcolor{palegreen}{0} \\%  
+            3 & 0 & 1 & 0 &  0 & 1  \\% 
+            4 & \bcolor{red}{1} & 0 & \bcolor{paleblue}{0} & 0 &
+            \bcolor{palegreen}{1} \\%  
+            5 & 0 & 0 & 1 & 1 & 0 \\% 
+          \end{array}
+        \end{displaymath}
+        }
+      
+    \end{column}
+    \begin{column}{5cm}
+      \only<2>{
+        \begin{displaymath}
+          \begin{array}{c|ccccc} %
+            \tau_{ij} \mbf & 1 & {\bf 4} & 3 & {\bf 2} & 5 \\%           
+            \hline%
+            1 & 0 & {\bf 1} & 0 &  {\bf 1} & 0  \\% 
+            {\bf 4}    &    \bwbcolor{1}    &    {\bf 0}    &
+            \bwbcolor{0} & {\bf 0} & \bwbcolor{1} \\% 
+            3 & 0 & {\bf 0} & 0 & {\bf 1} & 1 \\% 
+            {\bf 2} & \bwbcolor{1} & {\bf 0} & \bwbcolor{1} & 
+            {\bf 0} &\bwbcolor{0} \\% 
+            5 & 0 & {\bf 1} & 1 & {\bf 0} & 0 \\%             
+          \end{array}
+        \end{displaymath}
+        }
+      \only<3->{
+        \begin{displaymath}
+          \begin{array}{c|ccccc} %
+            \tau_{ij} \mbf & 1 & {\bf 4} & 3 & {\bf 2} & 5 \\%           
+            \hline%
+            1 & 0 & {\bf 1} & 0 &  {\bf 1} & 0  \\% 
+            {\bf 4}    &    \bbcolor{red}{1}    &    {\bf 0}    &
+            \bbcolor{palegreen}{0} & {\bf 0} & \bbcolor{paleblue}{1} \\% 
+            3 & 0 & {\bf 0} & 0 & {\bf 1} & 1 \\% 
+            {\bf 2} & \bbcolor{red}{1} & {\bf 0} & \bbcolor{palegreen}{1} & 
+            {\bf 0} &\bbcolor{paleblue}{0} \\% 
+            5 & 0 & {\bf 1} & 1 & {\bf 0} & 0 \\% 
+          \end{array}
+        \end{displaymath}
+        }
+      
+    \end{column}
+  \end{columns}
+  \only<5-> {
+    \begin{displaymath}
+      \{ \sigma_{|24} \} = \{ bijections_{\fcolorbox{white}{red}{1,1}} ,
+%       bijections_{\fcolorbox{white}{paleblue}{{1,0}}} ,
+%       bijections_{\fcolorbox{white}{palegreen}{0,1}},
+      bijections_{\fcolorbox{white}{paleblue}{{1,0}} \leftrightarrow
+      \fcolorbox{white}{palegreen}{0,1}}, 
+      bijections_{\fcolorbox{white}{paleyellow}{0,0}} \} 
+    \end{displaymath}
+    \paragraph{Remarque~:} : Un solution existe seulement si
+      $|\fcolorbox{white}{paleblue}{{1,0}}| =
+      |\fcolorbox{white}{palegreen}{0,1} |$.
+    }
+     % \caption{Matrice d'adjacence initiale $\mbf$. Avant la transposition $i, j\,$, les noeuds $k, l, m$ sont dans les états suivants $(1,1)$, $(1,0)$ et $(0,1)$.}
+     % \end{figure}
+\end{frame}
+
+%========================================================================
+\begin{frame}
+  \frametitle{Algorithme simplifié}
+  \begin{columns}[t]
+    \begin{column}{5.5cm}           
+      \begin{center}
+%        \framebox{\includegraphics[angle=0,height=6cm,width=5.5cm]{images/algo_main.pdf}} \\
+        \includegraphics[angle=0,height=4.5cm,width=5cm]{images/algo_main.pdf} \\
+       \vspace{0.25cm}
+        \begin{small} Boucles  principales : construction  des {\it classes
+          topologiques} 
+        \end{small}
+      \end{center}
+    \end{column}
+    \begin{column}{5.5cm}
+      \begin{center}
+        \vspace{-1cm}
+        \includegraphics[angle=0,height=5.5cm,width=6cm]{images/algo_fperm.pdf} \\
+        \begin{small}   Recherche  de
+          noeuds {\it jouant le même rôle} dans le graphe.         
+        \end{small}
+      \end{center}
+    \end{column}
+  \end{columns}
+  $\mbf$ restreint à $(C_1, ... C_t)$ \\
+  La construction de 'perm' est longue mais $<< \mathcal{O}(\prod_q k_q!)$
+\end{frame}
+
+%========================================================================
+
+%========================================================================
+%\include{exemple}
+\begin{frame}
+  \frametitle{Exemple}    
+  \begin{columns}[t]
+    \begin{column}{5.5cm}
+      \vspace{-1.0cm}
+      \begin{center}
+        \includegraphics[angle=0,height=7cm,width=4.5cm]{images/table.pdf} \\           
+        \begin{small} 
+          {\it Super-motifs en fonction de $s$.}
+        \end{small}        
+      \end{center}      
+    \end{column}
+    
+    \begin{column}{5.5cm}
+      \vspace{-0.2cm}
+      Cas du motif :
+      \begin{center}
+        \includegraphics[angle=0,height=1cm,width=1.5cm]{images/motif.pdf} \\
+      \end{center}      
+      2 classes topologiques $C_1, C_2$
+      \begin{itemize}
+      \item $ \Esp N(\mbf) $ : $$
+        | \Rm |= \frac{(k)!}{(k_1)!
+          (k_2)!} $$
+      \item $\Var N(\mbf)$ : 
+        \begin{eqnarray*}
+          \sum_{\mbf',  \mbf'' \, \in  \, \Rm } \mu(  \mbf' \Omega_s
+          \mbf'') \\
+          = \sum_{p \, \in \, \{ patterns \} } c(p) \,
+          \mu( \scriptstyle {\bf sm}_p^s) ). \\
+        \end{eqnarray*}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%========================================================================
+
+%========================================================================
+\begin{frame}
+  \frametitle{Dénombrement des recouvrements}
+  
+  Pour chaque configuration, le nombre de recouvrements possibles
+  égale 
+  \begin{itemize} 
+  \item le nombre d'arrangements de $s$ objets dans une table $Q
+    \times Q$
+  \item en respectant les marginales $(s^\alpha_1, \dots, s^\alpha_Q)$
+    et $(s^\beta_1, \dots, s^\beta_Q)$ ($\sum_q s^\alpha_q = \sum_q
+    s^\beta_q = s$, cf. test du $\chi^2$).
+  \end{itemize}
+
+  La série génératrice
+  $$
+  \left(\sum_{\small \begin{array}{c} s_1, \dots s_Q \\
+        \sum_s s_q = s\end{array}} \prod_q\binom{k_q}{s_q} z_q^{s_q}
+    \left/ \binom{k}{s} \right.  \right)^2
+  $$
+  doit procurer (?) ces dénombrements.
+
+\end{frame}
+%========================================================================
+
+%========================================================================
+%\include{amelioration}
+\begin{frame}
+  \frametitle{Améliorations} 
+  
+  \begin{columns}[t]
+    \begin{column}{5.5cm}
+      \begin{center}
+        \includegraphics[angle=0,height=5cm,width=5cm]{images/auto.pdf} \\
+        \vspace{0.25cm}
+      \end{center}
+      \begin{small} 
+        {\it Classes topologiques initialisées avec le degré des noeuds
+          de \mbf.  (rouge : degré 3, bleu : degré 1)}      
+      \end{small}
+    \end{column}    
+    \begin{column}{6cm}
+      Optimisation concernant les classes topologiques initiales de
+      l'algorithme.
+      \begin{itemize}
+      \item Description du voisinage des noeuds pour avoir des classes
+        initiales proche des classes topologiques.
+      \item Utilisation d'un langage formé d'un alphabet \{{\it degré
+          des noeuds}\} pour décrire ce voisinage (séries génératrices
+        à l'ordre 2) :
+        \begin{eqnarray*}
+          V_a & = & \{"33.33"\} \\
+          V_b & = & \{"33.33", "31.13" \}
+        \end{eqnarray*}      
+      \end{itemize}    
+    \end{column}
+  \end{columns}
+\end{frame}
+%========================================================================
+
+%========================================================================
+%\include{conclusion}
+\begin{frame}
+  \frametitle{Conclusion} 
+  
+  \paragraph{Statut du developpement :}
+  \begin{itemize}
+  \item Détermination des classes topologiques (prototype écrit en R). 
+  \item Validation par le calcul des proba. d'occurence (en cours).
+  \item Écriture des fonctions plus spécifiques et optimales en fonction
+    des modèles statistiques (plus particulièrement MixNet).
+  \item Optimisation de l'algorithme : initialisation des classes topologiques.
+  \item Implémentation en C/C++.    
+  \end{itemize}  
+\end{frame}
+%========================================================================
+
+%========================================================================
+%========================================================================
+\end{document}
+%========================================================================
+%========================================================================

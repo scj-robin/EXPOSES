@@ -1,0 +1,15 @@
+Inférence variationnelle du modèle Poisson log-normal: application en écologie
+
+Travail conjoint avec Julien Chiquet et Mahendra Mariadassou
+
+De nombreuses applications en écologie statistique visent à analyser conjointement les abondances d'un ensemble d'espèces dans une série des sites ou sous différentes conditions. L'objectif est typiquement de comprendre les co-variations entre ces différentes abondances mesurées sous formes de comptages. D'un point de vue statistique, il s'agit alors proposer un modèle multivarié pour des données de comptage.
+
+Contrairement au cas gaussien, il n'existe pas de cadre canonique pour décrire la dépendance entre les coordonnées d'un vecteur de comptage et les modèles existant imposent fréquemment des contraintes sur la forme de ces dépendance. Le modèle Poisson log-normal (PLN) suppose l'existence d'une couche latente gaussienne, conditionnellement à laquelle les abondances sont générées indépendamment. Ce modèle offre toute la flexibilité des modèles gaussiens aussi bien pour la forme de la dépendance que pour la prise en compte de covariables.
+
+L'inférence des paramètre du modèle PLN se heurte principalement au fait que la loi conditionnelle de la couche latente sachant les observations n'a pas de forme close. On présentera une approche variationnelle dans laquelle on approche cette loi conditionnelle par un loi normale multivariée. On décrira un algorithme de type VEM qui bénéficie de quelques propriétés de convexité.
+
+Le modèle PLN fournit un cadre générique pour l'analyse de données d'abondances qui peut se décliner sous différentes formes. On présentera une technique de réduction de dimension fondée sur l'analyse en composantes principale probabiliste (pPCA). On présentera également une technique d'inférence de réseau écologique mariant le modèle PLN et le 'graphical Lasso'.
+
+Ces différentes approches seront illustrées par des applications en écologie microbienne.
+
+Référence: Chiquet, Mariadassou, and Robin. 2017. Variational Inference for Probabilistic Poisson PCA. ArXiv E-Prints. https://arxiv.org/abs/1703.06633

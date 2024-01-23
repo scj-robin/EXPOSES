@@ -1,0 +1,365 @@
+%----------------------------------------------------------------------
+\subsection{Non ML-based inference}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\jump \paragraph{\SBMo, community detection.} ($\gamma_{kk} > \gamma_{k\ell}$)
+\begin{itemize}
+\item Make use of efficient (graph) algorithms \citep{KaN11}
+\end{itemize}
+
+%----------------------------------------------------------------------
+\jump \paragraph{\SBMo.} 
+\begin{itemize}
+\item Degree $D_i = \sum_{j \neq i} \Yij: 
+\qquad (D_i \mid Z_i=k) \sim \Bcal\left((n-1), \overline{\gamma}_k\right), 
+\quad \overline{\gamma}_k = \sum_\ell \pi_\ell \gamma_{k\ell}$
+\item Fast concentration of $D_i/(n-1)$ around $\overline{\gamma}_{Z_i}$ as $n \rightarrow \infty$ \citep{CDR12}
+\end{itemize}
+
+%----------------------------------------------------------------------
+\jump \paragraph{\SBMo, affiliation network.} 
+\begin{itemize}
+\item Sparse setting: $\gamma^+_n, \gamma^-_n \rightarrow 0$ as $n \rightarrow \infty$ 
+\item Detection of (pseudo-)cliques \citep{ArV14}
+\item Question: Detection limit when $\gamma^+_n - \gamma^-_n \rightarrow 0$
+\end{itemize}
+
+%----------------------------------------------------------------------
+\jump \paragraph{And many more.} ~\\
+
+\ra Mostly limited to \SBMo: unweighted, no covariate
+
+%----------------------------------------------------------------------
+\blank
+\subsection{Some properties of SBM}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\jump \paragraph{Marginal distribution.} Each $\Yij$ has a marginal mixture distribution:
+\begin{equation} \label{eq:mixture}
+\Yij \sim \sum_{k, \ell} \pi_k \pi_\ell \Fcal(\gamma_{k\ell}).
+\end{equation}
+
+%----------------------------------------------------------------------
+\jump \paragraph{Identifiability.} Up to a permutation of the labels $\{1, \dots, K\}$.
+\begin{itemize}
+\item SBM is identifiable as soon as the mixture \eqref{eq:mixture} is, which does
+not hold for $\Fcal = \Bcal$.
+\item For $\Fcal = \Bcal$, \cite{AMR09} proved the (generic) identifiability of \SBMo, considering the joint distribution $p(\Yij, Y_{ik}, Y_{jk})$.
+\end{itemize}
+
+\ra The binary case raises a lot of identifiability issues that vanish when $\Fcal \neq \Bcal$ 
+
+\ra The affiliation version of \SBMo raises even more: $\pi_k = 1/K \Rightarrow$ same marginale distribution for all $\Yij$
+
+%----------------------------------------------------------------------
+\jump \paragraph{Likelihoods.}
+\begin{itemize}
+\item Complete likelihood:
+\begin{align} \label{eq:complik}
+    p(Y, Z) 
+    = p(Z) p(Y \mid Z) 
+    & = \prod_i p(Z_i) \prod_{i < j} p(\Yij \mid Z_i, Z_j) % \\
+%     & = \prod_{i < j} p(\Yij \mid Z_i, Z_j) \left(p(Z_i) p(Z_j)\right)^{2/(n-1)} \nonumber
+\end{align}
+\example{Def graphical model: directed}
+\drawing{Directed graphical model for $p(Y, Z)$}
+\item Marginal likelihood:
+\begin{equation*} 
+    p(Y) = \sum_{Z \in \{1, \dots K\}^n} p(Y, Z)
+\end{equation*}
+\end{itemize}
+
+%----------------------------------------------------------------------
+\jump \paragraph{Conditional distributions.}
+\begin{itemize}
+\item Moralization:
+\begin{equation} \label{eq:moralization}
+p(Z_i, Z_j \mid \Yij) 
+= \frac{p(Z_i)p(Z_j)p(\Yij \mid Z_i, Z_j)}{p(\Yij)}
+\propto p(Z_i)p(Z_j)p(\Yij \mid Z_i, Z_j),
+\end{equation}
+which does not factorize.
+\textcolor{gray}{\item Product over cliques: writing \eqref{eq:complik} as
+\begin{align*} 
+    p(Y, Z) 
+    & = \prod_{i < j} p(\Yij \mid Z_i, Z_j) \left(p(Z_i) p(Z_j)\right)^{2/(n-1)} \\
+    & = \prod_{i < j} \psi_{ij} (Z_i, Z_j, \Yij)
+\end{align*}
+induces a clique over all the $Z_i$'s, so 
+\begin{align*} 
+    p(Y, Z) 
+    & \propto \Psi_0((Z_i)_i) \prod_{i < j} \Psi_{ij}(Z_i, Z_j, \Yij)
+\end{align*}}
+\example{Def graphical model: undirected}
+\drawing{Undirected graphical model for $p(Y, Z)$}
+\drawing{Undirected graphical model for $p(Y \mid Z)$}
+\drawing{Undirected graphical model for $p(Z \mid Y)$}
+\ra $p(Z \mid Y)$ does not factorize.
+\item Denote $Z_{-i} = (Z_j)_{j \neq i}$:
+\begin{align} \label{eq:gibbs}
+p(Z_i \mid Y, Z_{-i}) & \propto p(Z_i) \prod_{j \neq i} p(\Yij \mid Z_i, Z_j). \\
+P(Z_i = k \mid Y, Z_{-i}) & \propto \pi_k \prod_{j \neq i} f(\Yij; \gamma_{kZ_j}) \nonumber
+\end{align}
+\end{itemize}
+
+%----------------------------------------------------------------------
+\blank
+\subsection{MLE via EM}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\jump \paragraph{MLE.}
+$\widehat{\theta} = \arg\max_\theta \log p_\theta(Y)$.
+
+%----------------------------------------------------------------------
+\jump \paragraph{EM decomposition.}  \citep{DLR77} 
+For incomplete data models (denoting $\Esp_\theta = \Esp_{p_\theta}$):
+\begin{equation} \label{eq:EM}
+\log p_\theta(Y) = \Esp_\theta \left( \log p_\theta(Y, Z) \mid Y \right) - \Esp_\theta \left( \log p_\theta(Z \mid Y) \mid Y \right)
+\end{equation}
+
+%----------------------------------------------------------------------
+\jump \paragraph{EM algorithm.} 
+\begin{itemize}
+\item Maximization (M) step: update $\theta$ as
+$\theta^{h+1} = \arg\max_\theta \Esp_{\theta^h} \left( \log p_\theta(Y, Z) \mid Y \right)$.
+\item Expectation (E) step: compute the conditional moments of $p_{\theta^{h+1}}(Z \mid Y)$ needed to evaluate $\Esp_{\theta^{h+1}} \left( \log p_\theta(Y, Z) \mid Y \right)$ as function of $\theta$.
+\end{itemize}
+
+\ra For SBM, the E step is intractable, because $p_\theta(Z \mid Y)$ displays no convenient factorization scheme.
+
+\ra A Gibbs sampler can be designed for $p_\theta(Z \mid Y)$ using \eqref{eq:gibbs}, which is still computationally demanding \citep{NoS01}, so stochastic EM could apply.
+
+%----------------------------------------------------------------------
+\blank
+\subsection{Variationnal EM}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\jump \paragraph{Principle of variational approximations.}  \citep{Jaa01,WaJ08,BKM17} For given 
+\begin{itemize}
+\item divergence $D$ between probability measures ($D(q; p) \geq 0$; $D(q; p) = 0$ iff $q = p$);
+\item class $\Qcal$ within which the approximate conditional distribution is looked for,
+\end{itemize}
+maximize wrt both in $\theta$ and $q \in \Qcal$ a lower bound of $\log p_\theta(Y)$:
+\begin{equation} \label{eq:lowerbound}
+J(\theta, q) := \log p_\theta(Y) - D\left(q(Z); p_\theta(Z \mid Y)\right).
+\end{equation}
+
+
+%----------------------------------------------------------------------
+\jump \paragraph{KL-based variational approximation.} A popular choice for $D(q; p)$ is $KL(q, p)$, because
+\begin{align} \label{eq:lowerboundKL}
+J(\theta, q) 
+& = \log p_\theta(Y) - KL\left(q(Z); p_\theta(Z \mid Y)\right) \nonumber \\
+& = \log p_\theta(Y) - \Esp_q\left(\log q(Z)\right) + \Esp_q\left(\log p_\theta(Y, Z)\right)  - \Esp_q\left(\log p_\theta(Y)\right)  \nonumber \\
+& = \Esp_q \left(\log p_\theta(Y, Z)\right) - \Esp_q \left(\log q(Z)\right), 
+\end{align}
+
+\ra See \cite{Min05} for alternative choices.
+
+\ra \eqref{eq:lowerboundKL} is similar to \eqref{eq:EM}, replacing $p_\theta(Z \mid Y)$ with $q(Z)$, which suggests:
+
+%----------------------------------------------------------------------
+\jump \paragraph{Variational EM.}
+\begin{itemize}
+\item M step: update $\theta$ as
+$$
+\theta^{h+1} = \arg\max_\theta \Esp_{q^h} \left(\log p_\theta(Y, Z)\right).
+$$
+\item VE step: update $q$ as
+$$
+q^{h+1} = \arg\min_{q \in \Qcal} KL\left(q(Z); p_{\theta^{h+1}}(Z \mid Y)\right).
+$$
+\end{itemize}
+
+\ra EM is a VEM for which no restriction is put on $q$, so $q^{h+1}(Z) = p_{\theta^{h+1}}(Z \mid Y)$.
+
+\ra MLE is achieved whenever $p_\theta(Z \mid Y) \in \Qcal$.
+
+
+%----------------------------------------------------------------------
+\jump \paragraph{Mean-field approximations.} A popular choice for $\Qcal$ is the set of factorable distributions:
+$$
+\Qcal = \left\{q: q(Z) = \prod_i q_i(Z_i)\right\}.
+$$
+Then, for $q \in \Qcal$, 
+\begin{align*}
+KL\left(q(Z); p(Z \mid Y)\right)
+& = \Esp_q\left(\sum_i \log q_i(Z_i) - \log p(Z \mid Y)\right)
+\end{align*}
+and calculus of variations shows that the minimizer for a given $q_i$ satisfies \citep{Bea03} 
+\begin{equation} \label{eq:meanfield}
+q_i(Z_i) \propto \exp\left(\Esp_{q_{-i}}\left(\log p(Y, Z)\right)\right),
+\end{equation}
+which is known as a 'mean-field' approximation.
+
+\ra Eq. \eqref{eq:meanfield} is a fix-point relation.
+
+%----------------------------------------------------------------------
+\jump \paragraph{Sketch of proof of \eqref{eq:meanfield}.} Taking $i=1$, $q_1$ is optimal if, for any perturbation $h$, defining 
+$$
+q_1^t(z_1) = q_1(z_1) + t h(z_ 1), \qquad 
+q_{-1}(z_{-1}) = \prod_{i > 1} q_i(z_i), \qquad 
+q^t(z) = q_1^t(z_1) q_{-1}(z_{-1})
+$$
+we have at $t=0$
+$$
+\partial_t KL\left(q^t(Z); p(Z \mid Y)\right) = 0.
+$$
+Now, at $t=0$, 
+\begin{align*}
+ \partial_t KL\left(q^t(Z); p(Z \mid Y) \right)
+ & =  \partial_t KL\left(q^t(Z); p(Y, Z) \right) \\
+ & = \int \int h(z_1) \left(\log q_1(z_1) + 1 - q_ {-1}(z_{-1}) \log p(Y, z)  \right) \d z_1 \d z_{-1}
+\end{align*}
+which is zero for all $h$ iff
+$$
+\log q_1(z_1) - \int q_ {-1}(z_{-1}) \log p(Y, z) \d z_{-1} \equiv \cst.
+$$
+
+%----------------------------------------------------------------------
+\jump \paragraph{Case of SBM.} 
+Because each $Z_i$ belongs to a finite set, denoting $Z_{ik} = \Ibb\{Z_i = k\}$, we have \citep{DPR08}
+$$
+q_i(Z_i) = \prod_k \tau_{ik}^{Z_{ik}}, 
+\qquad \text{with } \sum_k \tau_{ik} = 1
+$$
+and \eqref{eq:meanfield} gives
+$$
+\tau_{ij}:= P_q(Z_i = k) \propto \pi_k \prod_{j \neq i} \prod_\ell f(\Yij; \gamma_{k\ell})^{\tau_{j\ell}},
+$$
+to be compared with \eqref{eq:gibbs}.
+
+%----------------------------------------------------------------------
+\jump \paragraph{Case of dynamic SBM.} \citep{MaM17}
+\begin{align*}
+ p(Y, Z) & = \prod_i \prod_t p(Z_i^t \mid Z_i^{t-1}) \prod_t \prod_{i < j} p(\Yij^t \mid Z_i^t, Z_j^t).
+\end{align*}
+\example{Graphical model for the dynamic SBM} 
+
+Taking
+$$
+\Qcal = \{q: q(Z) = \prod_i q_i(Z_i)\},
+$$
+where each $q_i$ is a Markov chain (no factorization along time), gives
+\begin{align*}
+ \Esp_{q_{-i}} \left(p(Y, Z)\right) & = \sum_t p(Z_i^t \mid Z_i^{t-1}) + \Esp_{q_{-i}} \left(\sum_t \sum_{j \neq i} \sum_\ell \tau_{j\ell}^t p(\Yij^t \mid Z_i^t, Z_j^t=\ell)\right) + \cst
+\end{align*}
+to be compared with the conditional (log-)distribution of $Z$ in an HMM.
+
+\ra VE steps achieved via standard forward-backward recursion
+
+%----------------------------------------------------------------------
+\jump \paragraph{R packages using VEM for SBM.}
+\begin{description}
+\item[blockmodels] Latent and Stochastic Block Model Estimation by a 'V-EM' Algorithm
+\item[mixer] VBEM inference (out dated?)
+\item[dynsbm] Dynamic Stochastic Block Models
+\end{description}
+
+%----------------------------------------------------------------------
+\blank
+\subsection{Model selection: $K = ?$ \todo{}}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\jump \paragraph{ML-based methods.} 
+\begin{itemize}
+\item BIC penalty: derived from a Laplace approximation of $p(\theta \mid Y)$
+  $$
+  pen(n, K) = \frac12 \left((K-1) \log n + \frac{K(K+1)}2 \log \frac{n(n-1)}2\right)
+  $$
+\item Standard criteria: 
+\begin{align*}
+ BIC & = \log p_{\widehat{\theta}}(Y) - pen(n, K) \\
+ ICL & = \Esp_{\widehat{\theta}}\left(\log p_{\widehat{\theta}}(Y, Z) \mid Y\right) - pen(n, K) 
+\end{align*}
+\item Pseudo-criteria: 
+\begin{align*}
+ vBIC & = J(\widehat{q}, \widehat{\theta}) - pen(n, K) \\
+ vICL & = \Esp_{\widehat{q}}\left(\log p_{\widehat{\theta}}(Y, Z)\right) - pen(n, K) 
+\end{align*}
+\end{itemize}
+
+%----------------------------------------------------------------------
+\jump \paragraph{Non ML-based methods. \todo{}} ~
+
+%----------------------------------------------------------------------
+\blank
+\subsection{Properties of variational estimates}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\jump \paragraph{A series of properties for \SBMo.} 
+\begin{itemize}
+\item Consistency of the (variational) MLE: \citep{CDP12,BCC13}
+\item Asymptotic normality (variational) MLE: \citep{BCC13}
+\item Class recovery: \citep[][including LBM and zero-inflated SBM for the latter]{CDP12,MaM15} 
+\end{itemize}
+
+%----------------------------------------------------------------------
+\jump \paragraph{Theorem \citep[3.1 in][]{CDP12}.} 
+\begin{equation} \label{eq:CDP12}
+P\left(\sum_{z \neq z^*} \frac{p_\theta(Z=z \mid Y)}{p_\theta(Z=z^* \mid Y)} > t \right) = O\left(n e^{-\kappa n t}\right)
+\end{equation}
+uniformly in $z^*$, with $\kappa = \kappa(\theta)$.
+
+\ra $p_\theta(Z \mid Y)$ is asymptotically Dirac, which belongs to $\Qcal$.
+
+%----------------------------------------------------------------------
+\jump \paragraph{Sktech of proof.}
+Assuming that
+\begin{itemize}
+ \item the $\gamma_{k\ell}$ are all different, 
+%  \item the $\overline{\gamma}_k}$ are all different, 
+ \item $\forall k: \gamma \leq \pi_k \leq 1 - \gamma$ and the same empiricaly for $Z=z^*$,
+ \item $\forall k, \ell: \zeta \leq \gamma_{k\ell} \leq 1 - \zeta$,
+\end{itemize}
+first proove that
+$$
+P\left(\sum_{z \neq z^*} \frac{P_\theta^Y(Z=z)}{P_\theta^Y(Z=z^*)} > t \mid Z=z^*\right)
+= O\left(n e^{-\kappa n t}\right).
+$$ 
+
+\begin{enumerate}
+ \item Split the sum (letting $P_\theta^Y(Z) = P_\theta(Z \mid Y)$):
+ \begin{align*}
+ \sum_{z \neq z^*} \frac{P_\theta^Y(Z=z)}{P_\theta^Y(Z=z^*)} 
+ & = \sum_{r=1}^n \sum_{z: |z - z^*|_0=r} \frac{P_\theta^Y(Z=z)}{P_\theta^Y(Z=z^*)}.
+ \end{align*}
+ \item Union bound (letting $P^*(A) = P(A \mid Z=z^*)$):
+ \begin{align*}
+ P^*\left(\sum_{z \neq z^*} \frac{P_\theta^Y(Z=z)}{P_\theta^Y(Z=z^*)} > t\right)
+ & \leq \sum_{r=1}^n \sum_{z: |z - z^*|_0=r} P^*\left(\frac{P_\theta^Y(Z=z)}{P_\theta^Y(Z=z^*)} > \frac{t}{n^{1+r}(K-1)^r}\right)
+ \end{align*}
+ because 
+ $$
+ \#\{z: |z - z^*|_0=r\} \leq \binom{n}{r}(K-1)^r \leq n^r(K-1)^r.
+ $$
+ \item Center:
+ \begin{align*}
+  \log \frac{P_\theta^Y(Z=z)}{P_\theta^Y(Z=z^*)}
+  - \Esp^*\left( \log \frac{P_\theta^Y(Z=z)}{P_\theta^Y(Z=z^*)}\right)
+  = \sum_{i, j} (\Yij - \pi_{z^*_iz^*_j}) \log \frac{\pi_{z^*_i z^*_j} (1 - \pi_{z^*_i z^*_j})}{\pi_{z_i z_j} (1 - \pi_{z_i z_j})}
+ \end{align*}
+ which is made of $N_r(z)$ non-zero terms (when $\pi_{z^*_i z^*_j} \neq \pi_{z_i z_j}$), all independent conditional on $Z=z^*$.
+ \item Use Hoeffding:
+ \begin{align*}
+  & P^*\left(\frac{P_\theta^Y(Z=z)}{P_\theta^Y(Z=z^*)} > \frac{t}{n^{1+r}(K-1)^r}\right) \\
+  & = P^*\left(\frac1{N_r(z)} \left(\log \frac{P_\theta^Y(Z=z)}{P_\theta^Y(Z=z^*)} - \Esp^*\left( \log \frac{P_\theta^Y(Z=z)}{P_\theta^Y(Z=z^*)}\right) \right) \right. \\
+  & \qquad \left. > \underset{s}{\underbrace{\frac1{N_r(z)} \left(\log \frac{t}{n^{1+r}(K-1)^r} - \Esp^*\left( \log \frac{P_\theta^Y(Z=z)}{P_\theta^Y(Z=z^*)}\right)\right)}} \right) \\
+  & \leq \exp\left(-\frac{N_r(z) s^2}{L^2}\right)
+ \end{align*}
+ where $L = L(\zeta)$
+ \item Lower bound $s \geq c^2$ and $N_r(z) \geq \gamma^2 n r / 2$ and recollect to upper bound
+ $$
+ P^*\left(\sum_{z \neq z^*} \frac{P_\theta^Y(Z=z)}{P_\theta^Y(Z=z^*)} > t\right)
+ $$
+\end{enumerate}
+
+Because the bound is uniform in $z^*$, the same bound holds for $P()$.
+
+

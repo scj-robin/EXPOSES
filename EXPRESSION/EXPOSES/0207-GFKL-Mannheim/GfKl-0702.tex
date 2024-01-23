@@ -1,0 +1,612 @@
+\documentclass[dvips, 12pt]{slides}
+\usepackage{lscape}
+\textwidth 18cm
+\textheight 23cm 
+\topmargin 0 cm 
+\oddsidemargin  -1cm 
+\evensidemargin  -1cm
+\renewcommand{\baselinestretch}{1.1}     
+
+%\documentclass[dvips, 12pt]{d:/Latex/foiltex/foils}
+%\LogoOff
+%\usepackage{geometry}
+%\geometry{landscape,a4paper,tmargin=1cm,bmargin=1cm,lmargin=2.5cm,rmargin=2.5cm}
+
+
+                                % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                                % Graphics Gallery :                     %
+                                % http://www.accessexcellence.com/AB/GG/ %
+                                % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Maths
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{d:/Latex/astats} 
+\usepackage{multirow}
+\newcommand{\Ccal}{\mathcal{C}}
+\renewcommand{\a}{\tt a}
+\newcommand{\cc}{\tt c}
+\newcommand{\g}{\tt g}
+\renewcommand{\t}{\tt t}
+\newcommand{\Var}{\mathbb V}
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+% Texte
+\usepackage{d:/LATEX/fancyheadings}
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.4}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{\bf #1}}
+\newcommand{\textred}[1]{\textcolor{red}{\bf #1}}
+\newcommand{\textgreen}[1]{\textcolor{darkgreen}{\bf #1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{\bf #1}}
+%\newcommand{\textblue}{\textcolor{blue}}
+%\newcommand{\textgreen}{\textcolor{green}}
+%\newcommand{\arrow}{\psline[linestyle=dotted, linewidth=.05]{->}}
+
+% Sections
+\newcommand{\section}[1]{\newpage\centerline{\LARGE \bf \textred{#1}}}
+\newcommand{\subsection}[1]{\noindent{\Large \bf \textblue{#1}}}
+\newcommand{\paragraph}[1]{{\large \sl \textgreen{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%\rfoot[S. Robin]{S. Robin}
+\landscape
+{\large 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+%  \vspace{1cm} 
+  \centerline{\textred{\LARGE STATISTICAL ANALYSIS}}
+%  ~\\
+  \centerline{\textred{\LARGE OF MICROARRAY DATA }}
+
+%  \vspace{1cm} 
+  \textblue{Stéphane ROBIN} \\
+  robin@inapg.inra.fr
+
+%  \vspace{1cm}
+  \textgreen{INA-PG / INRA\\ Biométrie \& Intelligence Artificielle}
+
+%  \vspace{1cm}
+  {GfKl, Mannheim, July 02}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{CONTENTS}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{enumerate}
+\item Biological context
+\item DNA chips
+\item Biological questions
+\item Statistical issues
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{1 -- BIOLOGICAL CONTEXT}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{1.1 -- Large scaled sequencing programs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$$
+\begin{tabular}{lc}
+  Organism &  \begin{tabular}{c} 
+    Number of \textgreen{predicted} \\
+    genes ($\times 1\;000$)
+    \end{tabular} \\
+  \hline
+  Bacteria ({\sl E. coli}) & 4 \\
+  Yeast & 6 \\
+  Nematod ({\sl C. elegans}) & 19 \\
+  Drosophila ({\sl D. melanogaster}) & 13 \\
+  {\sl Arabidopsis thaliana} & 25--30 \\
+  Human & 30--50 \\
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{1.2 -- Functional genomics}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In ``superior'' organisms:  \\
+$$
+\begin{tabular}{ll}
+  \textred{5 \%} & of the genes have \textgreen{known function} \\
+  & (phenotype, experimental evidence, \dots)\\
+  \\
+  \textred{65 \%} & have a \textgreen{predicted function} \\
+  \\
+  \textred{30 \%} & have an  \textgreen{unknown function} \\
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{1.3 -- Transcriptome analysis}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Idea:}
+To know the function of a gene, one need to know \textgreen{in which
+  conditions} or \textgreen{in which tissues} it is
+\textred{expressed}
+
+\paragraph{Principle:}
+Measure the expression levels of \textred{all the genes} through the
+transcriptome, i.e. the set of \textgreen{all transcripts}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{1.4 -- Central dogma of molecular biology}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$$
+\begin{tabular}{c}
+  \framebox{DNA molecule (gene)} \\
+  $\mid$ \\
+  \textred{\sl transcription} \\
+  $\downarrow$ \\
+  \textgreen{\framebox{messenger RNA (transcript)}} \\
+  $\mid$ \\
+  \textred{\sl translation} \\
+  $\downarrow$ \\
+  \framebox{Protein (biological function)}
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\hspace{-1cm}\epsfig{figure=CentralDogma.ps, height=25cm, width=16cm,
+  angle=270, bbllx=60, bblly=120, bburx=530, bbury=680, clip=}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\centerline{ \epsfig{figure=mRNA-Gal.ps, height=16cm,
+    width=16cm, clip=}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{2 -- DNA CHIPS}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{2.1 -- Hybridization reaction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Complementary DNA fragments \textgreen{match spontaneously} (Watson-Crick):\\
+$$
+\begin{array}{rcccccccccl}
+  \mbox{\textgreen{target} (solution)}
+  & \a & \t & \g  & \g  & \t & \a & \textred{\t}  & \cc & \a \\
+  & |  & |  & |   & |   & |  & |  & \textred{|}   & |   & |  \\ 
+  & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & & \vdots & \vdots \\
+  & |  & |  & |   & |   & |  & |  & \textred{|}   & |   & |  &  \\ 
+  & \t & \a & \cc & \cc & \a & \t & \textred{\cc} & \g  & \t &  
+  \mbox{\textgreen{probe} (chip)}
+\end{array}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{2.2 -- Different techniques}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Glass slides (microarrays):} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\hspace{-1cm}\epsfig{figure=FabPuces.ps, height=25cm,
+  width=18cm, angle=90}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\hspace{-2cm} \vspace{-2cm}\epsfig{figure=MicroarrayTech.ps, height=27cm,
+  width=18cm, angle=90}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\centerline{\epsfig{figure=DNAChip.ps, height=18cm, width=18cm}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{tabular}{l}
+  \paragraph{Membranes} \\
+  \paragraph{(macroarrays):} \\
+  ~\\
+  nylon \\
+  ~\\
+  radioactive \\ 
+  labeling
+\end{tabular}
+\begin{tabular}{l}
+  \epsfig{figure=Membranes.ps, height=15cm, width=15cm}
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{tabular}{l}
+  \paragraph{Affymetrix:} \\
+  ~\\
+  oligo- \\
+  nucleotides \\
+  ~\\
+  20 couples \\
+  perfect match \\
+  / mismatch \\
+  for each gene \\
+\end{tabular}
+\begin{tabular}{l}
+  \epsfig{figure=Affymetrix.ps, height=15cm, width=15cm}
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{2.3 -- Applications}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Transcriptome analysis :}
+The expression levels of \textred{``all the genes''} are measured in
+one experiment
+
+\paragraph{Other applications:}\\
+$\bullet$ sequencing by hybridization \\
+$\bullet$ chromosomic chips \\
+$\bullet$ etc.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{3 -- BIOLOGICAL QUESTIONS}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Expression profiles:} \\
+Define groups of genes having \textred{similar profiles} in a given set
+of conditions
+
+\paragraph{Genes affected by a condition change:} \\
+Detect ``\textred{differentially expressed}'' genes
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Tumour classification:}\\
+$\bullet$ \textred{Classify} a tumour according to the expression levels \\
+$\bullet$ Design \textred{reduced chips} for routine analyses
+
+\paragraph{Regulation networks:}\\
+Determine regulation activities (activation or inhibition)
+\textred{between genes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{4 -- STATISTICAL ISSUES}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{enumerate}
+\item Statistical problems are numerous
+\item Much more than biologists thought at first
+\item New problems raise (almost) every day
+\end{enumerate}
+
+\begin{itemize}
+\item[$+$] Some can be solved using standard statistical tools
+\item[$-$] Some can not
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.1 -- Image analysis}
+
+\textred{Quantify} the signal arising from each ``spot''
+
+$\bullet$ Tune the laser intensity (when using fluorescent dyes) \\
+$\bullet$ Determine the contour of each spot \\
+$\bullet$ Estimate the background 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.2 -- Genes clustering}
+$$
+\begin{tabular}{l}
+  \epsfig{figure=ESB98-Fig1.ps, height=24cm, width=10cm,
+    angle=270, bbllx=22, bblly=15, bburx=300, bbury=825, clip=} \\
+  ~\\
+  {\small Eisen \& al. (98): {\sl Cluster analysis and display of genome-wide expression patterns}} \\
+  \\
+  + free \textred{software} ``{\sl Cluster}'' 
+\end{tabular}
+$$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+Groups are characterized by mean expression profiles
+$$
+\epsfig{figure=SLA01-Fig3.ps, height=24cm, width=12cm, angle=270, clip=}
+$$
+{\small Schaffer \& al. (01): {\sl Diurnal and Circadian-Regulated
+    Genes in Arabidopsis }}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+Clustering techniques are used for \\
+\paragraph{Supervised classification:}\\
+\centerline{
+\epsfig{figure=AEDM00-p3.ps, height=4cm, width=18cm, bbllx=234, bblly=507,
+  bburx=516, bbury=567, clip=} 
+}
+\paragraph{Unsupervised classification:} \\
+\centerline{
+\epsfig{figure=AEDM00-p5.ps, height=6cm, width=18cm, bbllx=47, bblly=162,
+  bburx=290, bbury=260, clip=} 
+}
+{\small Alizadeh \& al. (00): {\sl Distinct Type of Diffuse Large
+    B-cell Lymphoma ... }}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Most popular methods} (provided by ``{\sl Cluster}'')\\
+$\bullet$ Hierarchical clustering \\
+$\bullet$ $K$-means \\
+$\bullet$ Self-organized maps (Kohonen's networks) \\
+$\rightarrow$ the (great) \textred{ experimental variability} is not
+taken into account
+
+\paragraph{Other approaches:}\\
+$\bullet$ Bootstrapping the trees \\
+$\bullet$ Mixture models
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.3 -- Probes sampling}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textgreen{Which genes are spotted on the chip?}
+
+\begin{tabular}{ll}
+  $\bullet$ & DNA coming from ``banks'' \\
+  \\
+  & $\rightarrow$ only genes \textred{already encountered} in some
+  other \\
+  & experiment \\
+  \\
+  \\
+  $\bullet$ & DNA synthesized according to predicted genes  \\
+  \\
+  & $\rightarrow$ some of them \textred{do not exist} in the real world
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.4 -- Data normalization} \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Experimental variability is extremely high
+$$
+{\small
+  \begin{tabular}{l|ccc}
+%  \begin{tabular}{p{7cm}|p{4cm}p{4cm}p{4cm}}
+     Source  &  Df  
+    &  \begin{tabular}{c}Mean\\square\end{tabular}  
+    &  \begin{tabular}{c}Fisher \\ratio\end{tabular}  
+%    & \begin{tabular}{c}Probabilité\\critique\end{tabular}
+    \\
+    \hline
+    Quantity               &     1  &  614.279  &  624~373.11  \\ %&            0
+    Date                   &     1  &   63.126  &   64~163.02  \\ %&            0
+    Date*Quantity          &     1  &   51.885  &   52~737.69  \\ %&            0
+%    Condition*Date*Quantity  &     1  &    5.846  &    5~942.51  \\ %&            0
+    Condition*Quantity       &     1  &    2.527  &    2~568.92  \\ %&            0
+    Condition*Date           &     1  &    2.122  &    2~156.76  \\ %&            0
+    Gene                   &  4106  &    1.119  &    1~137.52  \\ %&            0
+    Condition                &     1  &    0.687  &      697.93  \\ %&   10^2.206E-152
+    Gene*Quantity          &  4106  &    0.026  &       26.63  \\ %&            0
+    Gene*Date              &  4106  &    0.012  &       12.69  \\ %&            0
+    Gene*Date*Quantity     &  4106  &    0.008  &        7.69  \\ %&            0
+    \dots & \dots & \dots & \dots \\
+%\hline
+{\bf Condition*Gene}         &  4106  &    0.004  &  {\bf 4.23}  \\ %&            0
+%\hline
+%    Condition*Gene*Date      &  4106  &    0.003  &        3.25  \\ %&            0
+%    Condition*Gene*Quantity  &  4106  &    0.003  &        2.79  \\ %&            0
+  \end{tabular}
+  }
+$$ 
+
+{\small Sekowska \& al. (01): {\sl Extracting biological information
+    from DNA arrays: \dots}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Bias in DNA labeling:}
+$$
+\begin{tabular}{l}
+  $R = $ red signal \\
+  \qquad (cond. 1) \\ 
+  \\
+  $V = $ green signal \\
+  \qquad (cond. 2) \\
+  \\
+  $M = R - V$ \\
+  $A = R + V$ \\
+  \\
+  lowess \\
+  correction \\
+  for each tip \\
+\end{tabular}
+\begin{tabular}{c}
+  \epsfig{figure=DYCS00-Fig4, height=12cm, width=15cm,
+    bbllx=80, bblly=290, bburx=520, bbury=560, clip=} \\
+\end{tabular}
+$$
+{\small Dudoit \& al. (00): {\sl Statistical for identifying
+    differentially expressed genes ...}}
+                                
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.5 -- Planning experiments}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{``Swap'':} dye inversion between two experiments
+$$
+\mbox{\textred{latin square}:} \qquad
+\begin{tabular}{c|cc}
+  & Chip 1 & Chip 2 \\
+  \hline
+  Red & Cond. 1 & Cond. 2 \\
+  Green & Cond. 2 & Cond. 1 \\
+\end{tabular}
+$$
+
+\paragraph{Use of a control:} 
+$$
+\begin{tabular}{cl}
+  $\bullet$ & each condition is compared to the control \\
+  & C1/T \quad C2/T \quad C3/T \\
+  \\
+  $\bullet$ & ``\textred{loop}'' design \\
+  & T/C1 \quad C1/C2 \quad C2/C3 \quad C3/T
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.6 -- Differential analysis} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+${\bf H}_0$ = ``the gene is not differentially expressed''
+
+\paragraph{Tests statistics:} Student, Wilcoxon, etc
+
+\paragraph{Distribution under ${\bf H}_0$:} 
+``${\bf H}_0$ genes'' are not known \\
+$\rightarrow$ use of control gene \\
+$\rightarrow$ bootstrap
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Variance modeling:} \\
+\centerline{
+  \epsfig{figure=Swap700-700-2.ps, height=22cm, width=15cm,
+    angle=270, bbllx=70, bblly=35, bburx=575, bbury=750, clip=}
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+A given statistic provides a \textred{differential score} $\Delta_g$
+
+Problem: \hspace{5cm}\textblue{$\sigma_g^2 = \Var(\Delta_g) = ?$}
+\begin{enumerate}
+\item[0.] \textred{Homoscedasticity} $\sigma_g \equiv \sigma$
+  does not hold
+\item[1.] $\sigma_g = \mbox{constant} + \widehat{\sigma}_g$
+\item[2.] $\sigma_g = f(\mbox{\textred{mean expression level} of }g)$
+\item[3.] \textred{Mixture model} on the variance estimate
+\item[4.] \textred{Gene specific} estimate $\widehat{\sigma}_g$ lowers
+  dramatically the power of the tests (+ problems with outliers)
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Mixture model / Bayesian classification:} \\
+\centerline{$f(x) = \pi_0 f_0(x) + \pi_1 f_1(x)$}
+\centerline{\epsfig{figure=ETG00-Fig1-red.ps, height=12cm,
+    width=22cm,clip=}} \\
+                                %, bbllx=500, bblly=330, bburx=90,
+                                %bbury=580}} 
+{\small Efron \& al. (00): {\sl Microarrays and their Use in a
+    Comparative Experiment}}
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Multiple comparison:} 
+List all the differentially expressed gene, controlling the 
+\textred{overall risk} \\
+$-$ genes are \textred{not independent}
+
+\paragraph{Statistical Analysis of Microarray (SAM):} \\ 
+\textred{Simultaneous permutations} on all the genes \\
+Requires a minimal number of \textred{replicates} \\
+{\small Tusher et al. (01) {\sl SAM applied to ionization data}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.7 -- Tissue classification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{tabular}{l}
+  {\small Van't Veer et al} \\
+  {\small Nature (2002)} \\
+  {\small \sl Gene expression} \\
+  {\small \sl profiling predicts} \\ 
+  {\small \sl clinical outcome} \\ 
+  {\small \sl of breast cancer} \\
+\end{tabular}
+\begin{tabular}{l}
+    \epsfig{figure=Nature415-Fig.ps, height=15cm, width=15cm,
+      bbllx=30, bblly=10, bburx=560, bbury=500, clip=} \\
+\end{tabular}
+                             
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Classification:} 
+Classify normal / ill tissues according to the gene expression levels
+
+Good performances of the \textred{Support Vector Machines} (SVM), but
+are they really necessary?
+
+\paragraph{Genes selection:}
+Define a \textred{subset of genes} that are sufficient to get a law
+error rate in the classification (\textred{$\neq$} differential
+analysis)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{UMR INA-PG / INRA Biometrics}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Collaborations} \\
+\paragraph{Biology labs:} Pasteur, ENS Ulm, INRA Jouy \\
+\paragraph{Biochips centers:} CEA Évry, INRA Évry \\
+\subsection{Research fields} \\
+\paragraph{Differential analysis:} Analysis of variance, Mixture
+models, Model selection (S. Huet, INRA Jouy) \\
+\paragraph{Classification:} Discriminant analysis, Variable selection,
+SVM
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\centerline{\LARGE \bf \textred{Informatique, Mathématique et Physique}}
+\centerline{\LARGE \bf \textred{ pour la Génomique}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\centerline{\textgreen{\tt www.impg.prd.fr}}
+
+Initiative of the French department of Research \\
+Several groups, including
+
+\centerline{\Large \textblue{Statistical analysis of transcriptome}}
+
+Biologist / statisticians meetings
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+}
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

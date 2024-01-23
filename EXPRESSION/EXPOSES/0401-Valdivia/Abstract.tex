@@ -1,0 +1,175 @@
+\documentclass[a4paper, 12pt]{article}
+
+\usepackage{amsfonts, amsmath, amssymb}
+\usepackage{astats}
+
+\usepackage{enumerate}
+\usepackage{epsfig}
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+
+\textwidth 16cm
+\textheight 24cm 
+\topmargin -1 cm 
+\oddsidemargin 0cm 
+\evensidemargin 0cm
+
+%\renewcommand{\baselinestretch}{1.3}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+{\Large \bf Statistical analysis of microarray data} \\
+\bigskip
+{\large \sc S. Robin} \\
+\bigskip
+{INA PG / INRA Biométrie, Paris, {\sc France}} \\
+\bigskip
+{\tt robin@inapg.inra.fr} \\
+\bigskip
+{\large \sl Preliminary program: \today}
+\bigskip
+\bigskip
+\bigskip
+\end{center}
+
+The aim of this course is to present the main issues in statistical
+analysis of microarray. Most popular and standard tools will be
+presented and discussed and some more recent approaches will be
+introduced. This program gives a sketch of the content of each of the
+four lectures.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction and preliminary studies}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The first lecture will be devoted to a general introduction to
+microarray technology, to underlying biological issues and their
+translation into statistical terms. Planing of experiments and
+normalization techniques will be presented as necessary preliminary
+steps before further statistical analysis.
+\begin{description}
+\item[Biological context:] functional genomics.
+\item[Microarray technology:] hybridization reaction, different
+  technologies.
+\item[Statistical issues:] the high variability of the data requires
+  careful statistical analysis. Typical problems are class discovery,
+  class comparison and class prediction.
+\item[Experimental designs:] how to organize the experiments in view
+  of analyzing a specific contrast. A special attention will be paid
+  to the glass slide technology (loop designs, star designs, swaps).
+\item[Normalization:] due to numerous technical biases, data have to
+  be normalized. Which effects should be normalized and by which mean?
+\end{description}
+
+\paragraph{\slshape Background:}
+{Elementary biology, basic statistics and analysis of variance.}
+
+\paragraph{\slshape Bibliography:} \cite{BrB99}, \cite{Chu02}, \cite{KAB02}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Class discovery}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The second lecture will deal with the discovery of groups of genes
+having similar expression profile in a given set of conditions.
+Clustering techniques have become most popular tools in microarray
+data analysis. However their relevance is not always obvious and
+underlying hypotheses are generally not clearly stated.
+\begin{description}
+\item[Similarity and dissimilarity:] the definition of groups of genes
+  is always based on some (arbitrary) measurement of the `distance'
+  between genes.
+\item[Hierarchical clustering:] this technique, which provides the famous
+  `Eisen' plots, will be described in details and discussed.
+\item[$K$ means] is another frequently used algorithm. Its properties
+  will be presented, partly as an introduction to mixture models.
+\item[Mixture models] allow to take into account the variability of
+  the data in a clustering procedure. The
+  `expectation-maximization'(EM) algorithm will be described.
+\item[How many groups?] Some standard criterion to choose the number
+  of groups will be presented.
+\end{description}
+
+\paragraph{\slshape Background:}
+{Statistics and probability (likelihood, conditional
+  probability and Bayes rule).}
+
+\paragraph{\slshape Bibliography:} \cite{ESB98}, \cite{GST99}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Class comparison}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A typical problem is the detection of genes associated with some
+disease. Such genes will be revealed by their differential expression
+between, says, normal tissues and tumors. This is often called
+differential analysis.
+\begin{description}
+\item[Hypothesis testing:] the basic principles of statistical testing
+  will be briefly reminded (test statistic, risk, power, etc).
+\item[Variance modeling:] the estimation of the residual variability
+  has strong consequences on the power of the test. Gene by gene
+  estimates lead to un-powerful tests while unique estimate is often
+  unrealistic. Intermediate solution must be found
+\item[Multiple testing:] performing thousands of tests at the same
+  time may lead to numerous false positives. Some multiple testing
+  procedure will be discussed.
+\end{description}
+
+\paragraph{\slshape Background:}
+{Hypothesis testing, risks, $t$-test, $p$-value.}
+
+\paragraph{\slshape Bibliography:} \cite{DYC02}, \cite{RLM02},
+\cite{DSB02}, \cite{Pan02}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Class prediction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A last typical problem is the prediction of the type of tissue (normal
+or tumor) according to their expression profiles. Classifiers are
+fitted to tissues of known types and then applied to unknown tissues.
+\begin{description}
+\item[Discriminant analysis:] linear (LDA) and quadratic (QDA) methods
+  are based on a gaussian modeling of the data.
+\item[`Algorithmic' approaches:] support vector machines (SVM),
+  classification trees (CART) or other methods that do not make
+  distribution assumptions have often better performances.
+\item[Generalization risk:] classifiers always present good
+  performances on the training data set. The problem is to evaluate
+  error risk on new data.
+\item[Gene selection:] how to select a reduced subset of genes to
+  predict the type of the tissue with a reasonably low error rate.
+\end{description}
+
+\paragraph{\slshape Background:}
+{Conditional probability, Bayes rule and multivariate statistics.
+  Other notions will be introduced during the lecture.}
+
+\paragraph{\slshape Bibliography:} \cite{GWB02}, \cite{DFS02}, \cite{BGL00}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliography{../../../AST}
+\bibliographystyle{astats}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Other sources.}
+Interesting papers appear also in {\em Bioinformatics} or {\em J.
+  Comp. Biology}. Vol. {\bf 12} of Statistica Sinica and {\bf 32} of
+Nature Genetics in 2002 were specially devoted to the analysis of
+microarray data.  Recent and up-to-date methods are generally
+available on the web, several months (or years!) before their
+publication in regular journals.
+
+Some groups working on statistical analysis of microarray data give
+access to their manuscripts or slides. See for example  \\
+$\bullet$ \quad {\tt www.bioconductor.org}, \\
+$\bullet$ \quad {\tt www.stat.berkeley.edu/users/terry/zarray/Html}, \\
+$\bullet$ \quad {\tt www.jax.org/staff/churchill/labsite/research/expression/}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

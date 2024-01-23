@@ -1,0 +1,1592 @@
+\documentclass{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+\usetheme{CambridgeUS}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+%\usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{stmaryrd}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage{/Latex/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+% Commands
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+%\newcommand{\emphase}[1]{{#1}}
+\newcommand{\paragraph}[1]{\textcolor{darkred}{#1}}
+\newcommand{\refer}[1]{\textcolor{blue}{\sl \cite{#1}}}
+\newcommand{\Refer}[1]{\textcolor{blue}{\sl #1}}
+\newcommand{\newblock}{}
+
+% Symbols
+\newcommand{\Abf}{{\bf A}}
+\newcommand{\Bias}{\mathbb{B}}
+\newcommand{\Bbf}{{\bf B}}
+\newcommand{\Beta}{\text{B}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\BIC}{\text{BIC}}
+\newcommand{\dd}{\text{d}}
+\newcommand{\dbf}{{\bf d}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Ebf}{{\bf E}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Gbf}{{\bf G}}
+\newcommand{\Gam}{\mathcal{G}\mbox{am}}
+\newcommand{\Ibb}{\mathbb{I}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\ICL}{\text{ICL}}
+\newcommand{\Cov}{\mathbb{C}\text{ov}}
+\newcommand{\Corr}{\mathbb{C}\text{orr}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\Vsf}{\mathsf{V}}
+\newcommand{\pen}{\text{pen}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Jcal}{\mathcal{J}}
+\newcommand{\Kbf}{{\bf K}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\mum}{\mu(\mbf)}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Nbf}{{\bf N}}
+\newcommand{\Nm}{N(\mbf)}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\Obf}{{\bf 0}}
+\newcommand{\Omegas}{\underset{s}{\Omega}}
+\newcommand{\Pbf}{{\bf P}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\sbf}{{\bf s}}
+\newcommand{\Sbf}{{\bf S}}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\Tbf}{{\bf T}}
+\newcommand{\ubf}{{\bf u}}
+\newcommand{\Ubf}{{\bf U}}
+\newcommand{\Vbf}{{\bf V}}
+\newcommand{\Wbf}{{\bf W}}
+\newcommand{\xbf}{{\bf x}}
+\newcommand{\Xbf}{{\bf X}}
+\newcommand{\ybf}{{\bf y}}
+\newcommand{\Ybf}{{\bf Y}}
+\newcommand{\zbf}{{\bf z}}
+\newcommand{\Zbf}{{\bf Z}}
+\newcommand{\betabf}{\mbox{\mathversion{bold}{$\beta$}}}
+\newcommand{\pibf}{\mbox{\mathversion{bold}{$\pi$}}}
+\newcommand{\Sigmabf}{\mbox{\mathversion{bold}{$\Sigma$}}}
+\newcommand{\gammabf}{\mbox{\mathversion{bold}{$\gamma$}}}
+\newcommand{\mubf}{\mbox{\mathversion{bold}{$\mu$}}}
+\newcommand{\nubf}{\mbox{\mathversion{bold}{$\nu$}}}
+\newcommand{\Thetabf}{\mbox{\mathversion{bold}{$\Theta$}}}
+\newcommand{\thetabf}{\mbox{\mathversion{bold}{$\theta$}}}
+\newcommand{\BP}{\text{BP}}
+\newcommand{\EM}{\text{EM}}
+\newcommand{\VEM}{\text{VEM}}
+\newcommand{\VBEM}{\text{VB}}
+\newcommand{\cst}{\text{cst}}
+\newcommand{\obs}{\text{obs}}
+\newcommand{\ra}{\emphase{\mathversion{bold}{$\rightarrow$}~}}
+\newcommand{\QZ}{Q_{\Zbf}}
+\newcommand{\Qt}{Q_{\thetabf}}
+
+% Directory
+\newcommand{\fignet}{/RECHERCHE/RESEAUX/Exposes/Figures}
+\newcommand{\figmotif}{/RECHERCHE/RESEAUX/Motifs/Figures}
+
+
+%--------------------------------------------------------------------
+\title[Statistical models for quantitative variations]{Some
+  statistical modeling approaches for quantitative variations}
+
+\author{S. Robin}
+
+\institute[INRA / AgroParisTech]{INRA / AgroParisTech \\
+  \bigskip
+  \begin{tabular}{ccccc}
+    \epsfig{file=/RECHERCHE/RESEAUX/Exposes/Figures/LogoINRA-Couleur.ps,
+      width=2.5cm} & 
+    \hspace{.5cm} &
+    \epsfig{file=/RECHERCHE/RESEAUX/Exposes/Figures/logagroptechsolo.eps,
+      width=3.75cm} & 
+    \hspace{.5cm} &
+    \epsfig{file=/RECHERCHE/RESEAUX/Exposes/Figures/Logo-SSB.eps,
+      width=2.5cm} \\ 
+  \end{tabular} \\
+  \bigskip
+  }
+
+\date[G2DC school]{G2DC school, May 2011, La Colle sur Loup}
+%--------------------------------------------------------------------
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\begin{document}
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+
+%--------------------------------------------------------------------
+\frame{\titlepage}
+
+% %--------------------------------------------------------------------
+% \frame{ \frametitle{Outline}
+%   \tableofcontents}
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\section*{Modeling quantitative variations}
+%--------------------------------------------------------------------
+\frame{ \frametitle{Modeling quantitative variations}
+
+  \paragraph{Statistical modeling} is the classical framework to describe the
+  way data have been (or will be) collected, accounting for the
+  intrinsic variability of the biological processes.
+
+  \pause\bigskip\bigskip
+  \paragraph{Complex dependency structures.} Genetic and phenotypic
+  characteristics of living organisms may typically depend on space,
+  time, pedigree, etc... \\
+  \ra All these influences induce complex --~well described or not~--
+  dependency between the observations.
+
+  \pause\bigskip\bigskip
+  \paragraph{High dimension of the observations.} High throughput
+  technologies currently provide thousands to billions of data
+%   \begin{itemize}
+%   \item thousands (gene expression), 
+%   \item millions (SNP) 
+%   \item or even billions (whole genome sequence) 
+%   \end{itemize}
+%   of measurement 
+  per individual, which almost always exceeds the
+  number of individuals:
+  $$
+  \emphase{p \gg n.}
+  $$
+  }
+
+% %--------------------------------------------------------------------
+% \frame{ \frametitle{Two specificities of genetic studies (among
+%     others) (1/2)}
+
+%   \paragraph{1 - Complex dependency structures.} Genetic and phenotypic
+%   characteristics of living organisms may typically depend on
+%   \begin{itemize}
+%   \item space (where they live),
+%   \item time (when the observation is made), 
+%   \item pedigree (how they are related),
+%   \item \dots
+%   \end{itemize}
+%   All these influences induce complex --~well described or not~--
+%   dependency between the observations.
+
+%   \bigskip\bigskip\pause
+%   \paragraph{Graphical models} constitute a fairly general way to
+%   describe such dependencies, using hidden variables, hierarchical
+%   structures, etc. 
+
+%   \bigskip
+%   \paragraph{Their inference} often raise difficult statistical issues
+%   for which both frequentist and Bayesian approaches have been
+%   developed.
+
+%   \bigskip
+%   \paragraph{Still, for very complex models,} only approximate inference
+%     techniques are manageable.
+%   }
+
+% %--------------------------------------------------------------------
+% \frame{ \frametitle{Two specificities of genetic studies (among
+%     others) (2/2)}
+
+%   \paragraph{2 - High dimension of the observations.} High throughput
+%   technologies currently provide 
+%   \begin{itemize}
+%   \item thousands (gene expression), 
+%   \item millions (SNP) 
+%   \item or even billions (whole genome sequence) 
+%   \end{itemize}
+%   of measurement per individual, which almost always exceeds the
+%   number of individuals:
+%   $$
+%   \emphase{p \gg n.}
+%   $$
+  
+%   \bigskip\pause
+%   \paragraph{Regularization techniques.} Even very classical methods,
+%   such as linear regression need to be adapted to the $p \gg n$
+%   situation. 
+%   \begin{itemize}
+%   \item Ridge or LASSO approaches have become a standard way to cope
+%     with this dimensionality issues.
+%   \end{itemize}
+
+%   }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Outline}
+  \tableofcontents}
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\section{Complex dependency structure}
+\frame{ \frametitle{Complex dependency structure} }
+%--------------------------------------------------------------------
+
+%--------------------------------------------------------------------
+\subsection{Graphical models}
+%--------------------------------------------------------------------
+\frame{ \frametitle{Graphical models}
+  
+  \paragraph{Definition:} A graphical model is a graph, i.e. a set of
+  \emphase{nodes linked by edges}.
+  \begin{itemize}
+  \item Each node represent a variable involved in the model.
+  \item Edges display the dependency between the variables.
+  \end{itemize}
+
+  \pause\bigskip
+  \paragraph{Interest:} Graphical models constitutes a natural way to
+  describe a complex model and to apprehend the underlying dependency
+  structure.
+
+  \pause\bigskip\bigskip
+  \paragraph{Properties:} The topology of the graph (chains, loops,
+  trees, etc.) gives insights about
+  \begin{itemize}
+  \item the dependencies between the variables,
+  \item the conditional dependencies between the variables,
+  \item the way the likelihood of the data can be calculated (or not).
+  \end{itemize}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{An agronomic design}
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Incomplete block design:} \\
+      \begin{tabular}{c|ccc}
+        & Bl. 1 & Bl. 2 & Bl. 3 \\
+        \hline
+        Var 1 & $T_{11}$ & & $T_{13}$ \\
+        Var 2 & $T_{21}$ & $T_{22}$ & \\
+        Var 3 & & $T_{32}$ & $T_{33}$ \\
+      \end{tabular}
+
+      \bigskip
+      \onslide+<2->{        
+        \paragraph{Variance component model:} 
+        $$
+        T_{ij} = \mu + V_i + B_j + E_{ij}
+        $$
+        }
+
+      \onslide+<3>{        
+        \paragraph{Marginal model:} 
+        $$
+        T_{ij} = \mu + \varepsilon_{ij}, 
+        \qquad
+        \Var(\Tbf) = \Sigmabf
+        $$
+        }
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<2>
+        \epsfig{file=../Figures/GM-FactDes-BVT.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<3>
+        \epsfig{file=../Figures/GM-FactDes-T_BV.eps, clip=,
+          width=0.6\textwidth}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Animal breeding}
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Aim:} study the variations of a quantitative trait.
+      
+      \bigskip
+      \paragraph{Data:} 
+      \begin{itemize}
+      \item a pedigree relating a set of individuals;
+      \item the trait observed for some of them.
+      \end{itemize}
+
+      \bigskip
+      \paragraph{Typical question:} 
+      estimate the heritability of the trait.
+    \end{tabular}
+    & 
+    %\hspace{-.5cm} 
+    \pause
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{A toy example:} \\ ~\\
+      \epsfig{file=../Figures/GenPerf-Arbre.ps, width=0.5\textwidth,
+        bbllx=105, bblly=70, bburx=440, bbury=290, clip=} \\
+      Source: \Refer{E. Verrier}
+%       The picture displays
+%       \begin{itemize}
+%       \item the pedigree;
+%       \item the observed phenotypes.
+%       \end{itemize}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Animal breeding}
+  \begin{tabular}{ll}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{From the graphical representation...} \\ 
+      \epsfig{file=../Figures/GenPerf-Arbre.ps, width=0.5\textwidth,
+        bbllx=105, bblly=70, bburx=440, bbury=290, clip=} \\
+%       The picture displays
+%       \begin{itemize}
+%       \item the pedigree;
+%       \item the observed phenotypes.
+%       \end{itemize} 
+      ~\\
+      \vspace{2.2cm}
+    \end{tabular}
+    & 
+    \hspace{-.5cm} \pause
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{..to the graphical model} \\
+      \epsfig{file=../Figures/GM-GenPerf-GP.eps, clip=,
+      width=0.6\textwidth} \\
+    Denoting
+    \begin{itemize}
+    \item $G_i = $ genotype of individual $i$;
+    \item $T_i = $ trait for individual $i$.
+    \end{itemize}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Animal breeding}
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<1->{
+      \paragraph{The complete model} involves \emphase{unobserved
+        variables}, e.g. the genotypes of the individual s: 
+      $$
+      \Tbf = \Xbf \thetabf + \Abf \Gbf + \Ebf
+      $$              
+      }
+
+      \onslide+<2>{
+      \paragraph{The marginal model} describes the
+      correlations between the observed variables: 
+      $$
+      \Tbf = \Xbf \thetabf + \Ebf, \qquad \Var(\Ebf) = \Sigmabf
+      $$        
+      inherited from their connections with the unobserved variables.
+      }
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \epsfig{file=../Figures/GM-GenPerf-GP.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<2>
+        \epsfig{file=../Figures/GM-GenPerf-P.eps, clip=,
+          width=0.6\textwidth}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Population genetic structure}
+  \paragraph{Data:} Genotypes of a set of individuals at $p$ loci:
+  $G_{i1}, \dots, G_{ip}$.
+
+  \bigskip
+  \paragraph{Aim:} Find a structure in terms of populations.
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \pause
+      \paragraph{First modeling = Mixture model}
+      \begin{itemize}
+      \item Each individual belongs to one (unknown) population
+        $P_i$.
+      \item The allelic frequencies at each locus depends on the
+        population.
+      \end{itemize}
+      ~\\~\\
+    \end{tabular}
+    & 
+    %\hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \pause
+      \epsfig{file=../Figures/GM-Structure-Mixture.eps, clip=,
+        width=0.6\textwidth}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Population genetic structure}
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<1->{
+        \paragraph{More subtle modeling} than the simple mixture can
+        be proposed.
+        }     
+
+      \onslide+<2->{
+        \bigskip\bigskip
+        \paragraph{'Structure' software:} the origin may be
+        different at each locus. \\
+        \ra {'Admixture'}
+        }
+
+      \onslide+<3->{
+        \bigskip\bigskip
+        \paragraph{Linkage along the genome:} the origin of
+        neighbor loci are dependent. \\ 
+        \ra {'Hidden Markov model' (HMM)}
+        }
+    \end{tabular}
+    & 
+    %\hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \vspace{1cm}
+      \begin{overprint}
+        \onslide<1>
+        \epsfig{file=../Figures/GM-Structure-Mixture.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<2>
+        \epsfig{file=../Figures/GM-Structure-Admixture.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<3>
+        \epsfig{file=../Figures/GM-Structure-HMM.eps, clip=,
+          width=0.6\textwidth}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Calculating the likelihood}
+
+  \paragraph{Many different inference methods do exist} but
+  likelihood-based methods are among the most popular.
+  
+  \bigskip
+  \paragraph{The complexity} of its calculation depends on the
+  topology of the graph. 
+  
+
+  \begin{overprint}
+    \onslide<2>
+    \begin{tabular}{cc}
+      \hspace{-.5cm}
+      \begin{tabular}{p{.5\textwidth}}
+        ~\\
+        \paragraph{Model with unobserved variables:}
+        $ T_{ij} = \mu + V_i + B_j + E_{ij} $
+
+        \bigskip
+        \paragraph{Likelihood:}
+        \begin{eqnarray*}
+          p(\Vbf, \Bbf, \Tbf) & = & \prod_i p(V_i; \sigma^2_V) \\
+          & & \times \prod_j p(B_j; \sigma^2_B) \\
+          & & \times \prod_{i,j} p(T_{ij}|V_i, B_j; \mu, \sigma^2_E)
+        \end{eqnarray*}          
+      \end{tabular}
+      & 
+      %\hspace{-.5cm}
+      \begin{tabular}{p{.5\textwidth}}
+        \epsfig{file=../Figures/GM-FactDes-BVT.eps, clip=,
+          width=0.6\textwidth}
+      \end{tabular}
+    \end{tabular}
+    \onslide<3>
+    \begin{tabular}{cc}
+      \hspace{-.5cm}
+      \begin{tabular}{p{.5\textwidth}}
+        \paragraph{Model with observed variables only:}
+         $$
+         T_{ij} = \mu + \varepsilon_{ij}, 
+         \qquad
+         \Var(\Tbf) = \Sigmabf
+         $$
+
+        \bigskip
+        \paragraph{Likelihood:}
+        $$
+        p(\Tbf) = p(T_{11}, \dots T_{33}; \mu,
+        \underset{\Sigmabf}{\underbrace{\sigma^2_V, \sigma^2_B, \sigma^2_E}})  
+        $$
+        ~\\~\\~\\
+      \end{tabular}
+      &
+    %\hspace{-.5cm}
+      \begin{tabular}{p{.5\textwidth}}
+        \epsfig{file=../Figures/GM-FactDes-T_BV.eps, clip=,
+          width=0.6\textwidth}
+      \end{tabular}
+    \end{tabular}
+  \end{overprint}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Calculating the likelihood}
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<1->{
+        \paragraph{Factorization.} The likelihood can be
+        factorized between isolated sets of variables.
+        }
+      
+      \onslide+<3->{
+        \bigskip\bigskip        
+        \paragraph{Recursion.} It can be efficiently computed 
+        for directed acyclic graphs (DAG), i.e.'tree-like'.
+        }
+      
+      \onslide+<5->{
+        \bigskip\bigskip        
+        \paragraph{Non-factorable cases.} For very intricate
+        dependencies (loops, large cliques, ...), the calculation may be
+        out of reach.
+      }
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \vspace{1cm}
+      \begin{overprint}
+        \onslide<1>
+        \epsfig{file=../Figures/GM-GenPerf-GP.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<2>
+        \epsfig{file=../Figures/GM-GenPerf-P.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<3>
+        \epsfig{file=../Figures/GM-Structure-HMM.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<4>
+        \epsfig{file=../Figures/GM-Phylogeny.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<5>
+        \epsfig{file=../Figures/GM-HMRF-Z.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<6>
+        \epsfig{file=../Figures/GM-HMRF-ZX.eps, clip=,
+          width=0.6\textwidth}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+  }
+
+%--------------------------------------------------------------------
+\subsection{Frequentist inference}
+%--------------------------------------------------------------------
+\frame{ \frametitle{Frequentist inference: Maximum likelihood}
+
+  \paragraph{Some notations:}
+  \begin{itemize}
+  \item $\thetabf=$ parameters; 
+    \pause
+  \item $\Xbf=$ observed variables \ra \emphase{'Observed' likelihood}
+      $= p (\Xbf; \thetabf)$;
+    \pause
+  \item $\Zbf=$ unobserved variables \ra \emphase{'Complete' likelihood}
+      $= p (\Xbf, \Zbf; \thetabf)$.
+  \end{itemize}  
+
+  \pause\bigskip\bigskip
+  \paragraph{General principle.} Estimate $\thetabf$ with the value that
+  maximizes the 'observed' likelihood of the observed data
+  $$
+  \widehat{\thetabf} = \arg\max_{\thetabf} p(\Xbf; \thetabf) 
+  \pause  
+  = \arg\max_{\thetabf} \int p(\Xbf, \Zbf; \thetabf) \;\dd\Zbf.
+  $$
+
+  \paragraph{For complex models} the maximization is achieved numerically via
+  \begin{itemize}
+  \item deterministic optimization algorithms (e.g. Newton-Raphson);
+  \item stochastic optimization algorithms (e.g. simulated annealing);
+  \item combination of both.
+  \end{itemize}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{E-M strategies}
+
+  \paragraph{Models with unobserved variables.}
+  \begin{enumerate}
+  \item We are often interested in the value of the unobserved
+    variables $\Zbf$ (e.g. BLUP, classification, etc.).
+  \item The complete likelihood $p(\Xbf, \Zbf; \thetabf)$ has often a
+    simpler form than the observed (i.e. marginal) one $p(\Xbf;
+    \thetabf)$.
+  \end{enumerate}
+
+  \pause\bigskip
+  \paragraph{E-M algorithms} alternate
+  \begin{description}
+  \item[E-step:] calculation of the conditional distribution of the
+    unobserved variables: $p(\Zbf|\Xbf; \widehat{\thetabf})$.
+  \item[M-step:] maximization of the (expectation of) the complete
+    likelihood: $\widehat{\thetabf} = \arg\max_{\thetabf} p(\Xbf, \Zbf;
+    \thetabf)$.
+  \end{description}
+  to maximize the observed likelihood $p(\Xbf;\thetabf)$ (at least in
+  theory).  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Example for 'Structure' (at a given locus)}
+  \paragraph{Data:} Genotypes $G_i = G_{it}$.
+  
+  \bigskip
+  \paragraph{Parameters:} 
+  \begin{itemize}
+  \item $\pi_p =$ proportion of individuals in population $p$,
+  \item $\theta_{pg} =$ frequency of allele $g$ in population $p$.
+  \end{itemize}
+  
+  \bigskip\pause
+  \paragraph{E-step:} using Bayes formula
+  $$
+  \tau_{ip} := \Pr\{P_i = p | G_i=g\} = \frac{\Pr\{P_i = p,
+    G_i=g\}}{\Pr\{G_i=g\}} = \frac{\widehat{\pi}_p
+    \widehat{\theta}_{pg}}{\sum_q \widehat{\pi}_q
+    \widehat{\theta}_{pg}}. 
+  $$
+
+  \pause
+  \paragraph{M-step:} 
+  $$
+  \widehat{\pi}_p = \frac{\sum_i \tau_{ip}}{n}, 
+  \qquad
+  \widehat{\theta}_{pg} = \frac{\sum_i \tau_{ip} \Ibb\{G_i=g\}}{\sum_i
+    \tau_{ip}}. 
+  $$ 
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Example for 'Structure' (at a given locus)}
+
+  \paragraph{Interpretation.} The probability $\tau_{ip}(t)$ is the
+  probability for locus $t$ of individual $i$ to come from population
+  $p$, given its genotype:
+  $$
+  \tau_{ip}(t) = \Pr\{P_{it} = p | G_{it}\}.
+  $$
+
+  \pause
+  \paragraph{Graphical model:} remind 
+  $$
+  \epsfig{file=../Figures/GM-Structure-Admixture-1-tmp.eps, clip=,
+    width=.45\textwidth}
+  $$
+  
+  \pause
+  \paragraph{Structure output:} for individual $i$
+  \epsfig{file=../Figures/Rosenberg4.ps, clip=,width=.95\textwidth} \\
+   $\tau_{ip}(t) =$ height of the bar with color $p$ at locus $t$ 
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Limitations of E-M strategies}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{The conditional distribution $p(\Zbf|\Xbf)$}
+      can be
+      \begin{itemize}
+      \item \onslide+<1->{straightforward (e.g. ad-mixture models),}
+      \item \onslide+<2->{non explicit (e.g. HMM, molecular evolution),}
+      \item \onslide+<3->{not possible for a large number of hidden
+          variables or very complex dependency structure.}
+      \end{itemize}
+      
+      \onslide+<5>{
+        \paragraph{In practice.}
+        \begin{itemize}
+        \item Computation time,
+        \item Local maxima,
+        \item Sensitivity to initialization.
+        \end{itemize}
+        }
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+         \onslide<1>
+         \epsfig{file=../Figures/GM-Structure-Admixture.eps, clip=,
+           width=0.6\textwidth}
+         \onslide<2>
+         \epsfig{file=../Figures/GM-Structure-HMM.eps, clip=,
+           width=0.6\textwidth}
+         \onslide<3>
+         \epsfig{file=../Figures/GM-FactDes-BVT.eps, clip=,
+           width=0.6\textwidth}
+         \onslide<4->
+         \epsfig{file=../Figures/GM-FactDes-BV.eps, clip=,
+           width=0.6\textwidth}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%--------------------------------------------------------------------
+\subsection{Bayesian inference}
+%--------------------------------------------------------------------
+\frame{ \frametitle{Bayesian inference}
+  
+  \paragraph{Bayesian paradigm:} parameters ($\thetabf$) are
+  themselves random.
+
+  \pause\bigskip
+  \paragraph{Prior distribution.} According to the prior (absence of)
+  knowledge a distribution a priori is set for the parameters:
+  \emphase{$p(\thetabf)$}. 
+
+  \pause\bigskip
+  \paragraph{Model.} The model specifies the way the data $\Xbf$ depend on
+  the parameters trough the likelihood \emphase{$p(\Xbf  | \thetabf)$}.
+
+  \pause\bigskip
+  \paragraph{Posterior distribution.} The aim of Bayesian inference is
+  to compute the distribution of the $\thetabf$ given the data $\Xbf$
+  (using \emphase{Bayes rule}):
+  $$
+  p(\thetabf | \Xbf) = \frac{p(\thetabf, \Xbf)}{p(\Xbf)} =
+  \frac{p(\thetabf) p(\Xbf|\thetabf)}{p(\Xbf)} = \frac{p(\thetabf)
+    p(\Xbf|\thetabf)}{\int p(\thetabf) p(\Xbf|\thetabf) \;\dd \thetabf}.
+  $$
+
+  \pause\bigskip
+  \paragraph{Hypothesis testing} does not (formally) make sense in a
+  Bayesian setting. 
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{The mechanics}
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{enumerate}
+        \onslide+<1->{
+        \item Set a prior distribution \textcolor{blue}{$p(\theta)$}.
+          }
+      \onslide+<2->{
+        \item Get the observed data $X$.
+        }
+      \onslide+<3->{
+        \item Compute the posterior distribution
+          \textcolor{red}{$p(\theta|X)$}. 
+        }
+      \onslide+<4->{
+        \item Compute any posterior quantity of interest: posterior
+          mean, credibility interval, etc.
+        }
+      \end{enumerate}
+      
+      \onslide+<5->{
+        \bigskip\bigskip
+        The posterior depends on both the data and the prior.
+        }
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \vspace{-.5cm}
+      \begin{overprint}
+        \onslide<1>
+        \epsfig{file=../Figures/BetaBinom-n30-x4-a1-b1-Prior.ps, clip=,
+          height=0.5\textwidth, angle=270}
+        \onslide<2>
+        \epsfig{file=../Figures/BetaBinom-n30-x4-a1-b1-Data.ps, clip=,
+          height=0.5\textwidth, angle=270}
+        \onslide<3>
+        \epsfig{file=../Figures/BetaBinom-n30-x4-a1-b1-Posterior.ps, clip=,
+          height=0.5\textwidth, angle=270}
+        \onslide<4->
+        \epsfig{file=../Figures/BetaBinom-n30-x4-a1-b1-Credibility.ps, clip=,
+          height=0.5\textwidth, angle=270}
+      \end{overprint} \\  
+      \vspace{-1cm}
+      \begin{overprint}
+        \onslide<5>
+        \epsfig{file=../Figures/BetaBinom-n30-x4-a10-b5-Data.ps, clip=,
+          height=0.5\textwidth, angle=270}
+        \onslide<6>
+        \epsfig{file=../Figures/BetaBinom-n30-x4-a10-b5-Posterior.ps, clip=,
+          height=0.5\textwidth, angle=270}
+      \end{overprint} 
+    \end{tabular}
+  \end{tabular}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Sampling integrals}
+
+  \paragraph{Computing integrals.}
+  \begin{itemize} 
+  \item Due the Bayes formula, Bayesian inference often requires the
+    calculation of integrals.
+  \item Except for rather convenient models, these integrals can not
+    be computed neither analytically, nor numerically.
+  \end{itemize}
+ 
+ \pause\bigskip
+  \paragraph{Monte-Carlo.} They can still be estimated via 
+  Monte-Carlo techniques based on the law of large numbers.
+
+  \pause\bigskip
+  \paragraph{Example.} The computation of $p(\thetabf|\Xbf)$ requires
+  this of
+  $$
+  \int p(\thetabf) p(\Xbf|\thetabf) \;\dd \thetabf
+  $$
+  \pause that can be estimated by 
+  $$
+  \frac1B \sum_b p(\Xbf|\thetabf^b), 
+  \qquad \text{where }
+  \{\thetabf^1, \dots \thetabf^B\} \text{ i.i.d. } \sim p(\thetabf)
+  $$
+  (note that $p(\theta)$ is far from being the best choice).
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Bayesian inference \& graphical models}
+
+  \paragraph{Block design.}\\
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<1->{
+        \paragraph{Marginal model} (observed variables only): 
+        $$
+        \thetabf = (\sigma_V, \sigma_B, \mu, \sigma_E)
+        $$
+        }
+
+      \onslide+<3->{
+        \paragraph{Complete model} (with unobserved variables):} 
+      \begin{itemize}
+      \item \onslide+<4->{$\thetabf_\Vbf = \sigma_V$,} 
+      \item \onslide+<6->{$\thetabf_\Bbf = \sigma_B$,}
+      \item \onslide+<8->{$\thetabf_{\Tbf|\Vbf, \Bbf} = (\mu,
+          \sigma_E)$.}
+      \end{itemize}
+    \end{tabular}
+    & 
+    %\hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \epsfig{file=../Figures/GM-FactDes-T-B-Theta1.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<2>
+        \epsfig{file=../Figures/GM-FactDes-T-B-Theta2.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<3>
+        \epsfig{file=../Figures/GM-FactDes-BVT-B.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<4>
+        \epsfig{file=../Figures/GM-FactDes-BVT-B-V1.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<5>
+        \epsfig{file=../Figures/GM-FactDes-BVT-B-V2.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<6>
+        \epsfig{file=../Figures/GM-FactDes-BVT-B-VB1.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<7>
+        \epsfig{file=../Figures/GM-FactDes-BVT-B-VB2.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<8>
+        \epsfig{file=../Figures/GM-FactDes-BVT-B-VBT1.eps, clip=,
+          width=0.6\textwidth}
+        \onslide<9>
+        \epsfig{file=../Figures/GM-FactDes-BVT-B-VBT2.eps, clip=,
+          width=0.6\textwidth}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Posterior with unobserved variables}
+
+  \paragraph{Posterior distributions.} Conditional distributions of
+  interest, such as
+  $$
+  p(\thetabf|\Xbf), \qquad p(\Zbf|\Xbf), \qquad p(\Zbf,
+  \thetabf|\Xbf)
+  $$
+  involve the double integral
+  $$
+  p(\Xbf) = \iint p(\thetabf) p(\Zbf|\thetabf) p(\Xbf|\Zbf,
+  \thetabf) \;\dd \Zbf \;\dd \thetabf.
+  $$
+  
+  \pause\bigskip 
+  This often leads to intractable calculations and these distributions
+  are either
+  \begin{itemize}
+  \item approximated, via e.g. variational Bayes approaches
+  \item or sampled, via Monte-Carlo algorithms.
+  \end{itemize}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Monte-Carlo, MCMC, Importance sampling and others}
+
+  \paragraph{Gibbs sampling.} To simulate a joint distribution
+  $p^*(\thetabf) = p^*(\theta_1, ... \theta_p)$, 
+  $$
+  \theta_i^{b+1} \sim p^*(\theta_1^{b+1}, \dots, \theta_{i-1}^{b+1},
+  \theta_{i+1}^b, \dots, \theta_p^b).
+  $$
+  converge toward $p^*(\thetabf)$ for large $b$.
+
+  \pause\bigskip\bigskip
+  \paragraph{Monte-Carlo Markov chain (MCMC).} Design a Markov chain that
+  converges toward the target distribution $p^*(\thetabf)$, e.g.
+  Metropolis Hastings:
+  \begin{eqnarray*}
+  \text{Draw } \thetabf & \sim & q(\thetabf^b; \thetabf) \\
+  \text{Accept } \thetabf^{b+1} & = & \thetabf \qquad \text{ with probability
+  } \frac{p^*(\theta) q(\thetabf^b; \thetabf)}{p^*(\theta^b) q(\thetabf;
+  \thetabf^b)}.
+  \end{eqnarray*}
+
+  \pause\bigskip
+  \paragraph{Importance sampling.} Using alternative proposal:
+  $\{\thetabf^1, \dots \thetabf^B\} \text{ i.i.d. } \sim q(\thetabf)$ 
+  $$
+  \int q(\thetabf) \frac{p(\thetabf)}{q(\thetabf)} p(\Xbf|\thetabf)
+  \;\dd \thetabf
+  \simeq
+  \frac1B \sum_b \frac{p(\thetabf^b)}{q(\thetabf^b)} p(\Xbf|\thetabf^b).
+  $$
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Monte-Carlo, MCMC, Importance sampling and others}
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Tuning stochastic algorithms.}
+      \begin{itemize}
+      \item Choosing a sufficiently large $B$ to guaranty convergence,
+      \item Getting a sufficiently large acceptance rate,
+      \item Defining a clever proposal, 
+      \item etc.
+      \end{itemize}
+      \emphase{does matter...} 
+
+      \bigskip\pause
+      \paragraph{Consequences:}
+      \begin{itemize}
+      \item Computation time,
+      \item Precision of the estimated distribution.
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \vspace{-.5cm}
+      \onslide+<2->
+      \epsfig{file=../Figures/BetaBinom-n30-x4-a10-b5-SampPost-0.ps,
+        clip=, height=0.5\textwidth, angle=270} \\
+      \vspace{-1cm}
+      \onslide+<3>
+      \epsfig{file=../Figures/BetaBinom-n30-x4-a10-b5-SampPost-1.ps,
+      clip=, height=0.5\textwidth, angle=270}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Likelihood-free methods: ABC}
+
+  \paragraph{Approximate Bayesian Computing (ABC).} For complex
+  models, it may be both impossible
+  \begin{itemize}
+  \item to calculate the likelihood
+  \item or to get a sample of the posterior distribution.
+  \end{itemize}
+
+  \pause\bigskip
+  \paragraph{Rational of ABC.} Get a sample of $\thetabf$ which
+  provide simulated data that are 'similar' to the observed ones.
+
+  \pause\bigskip
+  \paragraph{3 key user-defined ingredients:.} 
+  \begin{description}
+  \item[Summary statistics:] $\Sbf = ($means, variances, frequencies,
+    correlations, etc.$)$ that provide a relevant description of the
+    data.
+  \item[Distance] $d(\Sbf, \Sbf')$ to compare to vectors of summary
+    statistics (e.g. Euclidian).
+  \item[Threshold] $\varepsilon$ for the distance below which two
+    datasets are said 'similar'.
+  \end{description}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Likelihood-free methods: ABC}
+
+  \begin{tabular}{p{.4\textwidth}p{.5\textwidth}}
+    \paragraph{Summary statistics:} \\
+    $
+    \Sbf^* = S(\Xbf)
+    $
+    & 
+    Compute the vector of summary statistics
+    for the observed data. 
+%  \end{tabular} 
+  \\
+%  \begin{tabular}{p{.4\textwidth}p{.5\textwidth}}
+    \pause\paragraph{Sampling parameters:} \\
+    $
+    (\thetabf^1, \dots, \thetabf^B) \text{ i.i.d. } \sim q(\thetabf)
+    $
+    &
+    Draw parameter values
+    $\thetabf^b$ from a 'clever' proposal distribution. 
+%  \end{tabular} 
+  \\
+%  \begin{tabular}{p{.4\textwidth}p{.5\textwidth}}
+  \pause\paragraph{Simulated data:} \\
+    $
+    \Xbf^b \sim p(\Xbf|\thetabf^b)
+    $
+    & 
+    From each $\thetabf^b$, simulate fake data
+    according to the model.
+%  \end{tabular} 
+  \\  
+%  \begin{tabular}{p{.4\textwidth}p{.5\textwidth}}
+  \pause\paragraph{Simulated statistics:} \\
+    $
+    \Sbf^b = S(\Xbf^b)
+    $
+    & 
+    For each fake dataset $\Xbf^b$, compute
+    the simulated summary statistics:
+%  \end{tabular} 
+  \\
+%  \begin{tabular}{p{.4\textwidth}p{.5\textwidth}}
+  \pause\paragraph{Acceptance:} \\
+    $
+    d(\Sbf^b, \Sbf^*) < \varepsilon
+    $
+    & 
+    Accept $\thetabf^b$ if $\Sbf^b$ is  close enough to $\Sbf^*$.
+  \end{tabular}
+
+  }
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\section{Large dimension}
+%--------------------------------------------------------------------
+\frame{ \frametitle{Large dimension}
+ }
+%--------------------------------------------------------------------
+\subsection{Genetical genomics}
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\frame{ \frametitle{Genetical genomics}
+  
+  \paragraph{Aim.} Understand the relation between the variations of
+  phenotypic traits and genomic information.
+  
+  \pause\bigskip
+  \begin{description}
+  \item[Genotype:] $10^4 - 10^6$ SNP
+  \item[Trait:] Quantitative (height, growth rate, etc.) or qualitative
+    (presence/absence) phenotype.
+  \end{description}
+
+  \pause\bigskip\bigskip
+  \paragraph{Data.} For a set of individuals ($i = 1, \dots n$):
+  \begin{itemize}
+  \item Genotype at $p$ loci: $\Xbf_i = (X_{i1}, \dots, X_{ip})$,
+  \item Trait $Y_i$
+  \end{itemize}
+  gathered into
+  $$
+  \underset{(n \times 1)}{\Ybf} = \left[\begin{array}{c}Y_1\\
+      \vdots\\Y_n\end{array}\right],  
+  \quad
+    \underset{(n \times p)}{\Xbf} = \left[\begin{array}{ccc}
+      X_{11} & \dots & X_{1p} \\ 
+      \vdots &  \vdots \\
+      X_{n1} & \dots & X_{np}
+    \end{array}\right]
+  \qquad \text{where}
+  \quad p \gg n.
+  $$
+ }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Genetical genomics}
+  
+  \paragraph{2 distinct questions} (and the statistical issues they raise)
+  \begin{description}
+  \item[Test:] Determine the loci associated with (responsible for?) the
+    variations of the trait (GWAS). \\
+    \ra Multiple testing, FDR, etc.
+  \item[Prediction:] \pause Predict the variation of the trait based on the
+    genotype (Genomic selection). \\
+    \ra Precision of the prediction, regularization.
+  \end{description}
+  
+  \pause\bigskip\bigskip
+  And a third one
+  \begin{description}
+  \item[Variable selection:] Find the subset of locus that best predicts
+    the trait. \\
+    \ra Algorithmics, stability of the result.
+  \end{description}
+  }
+
+%--------------------------------------------------------------------
+\subsection{Regularization}
+%--------------------------------------------------------------------
+\frame{ \frametitle{Regression}
+
+   \paragraph{Variability of the trait.} The value of the trait observed
+   for individual $i$ can be decomposed as
+   $$
+   Y_i = \mu_i + E_i
+   $$
+   where
+   \begin{itemize}
+   \item $\mu_i$ stands for its 'theoretical' value; 
+   \item $E_i$ is the random term accounting for its
+     variability.  
+   \end{itemize}
+
+   \pause\bigskip
+   \paragraph{Regression framework.} Our aim is to estimate $\mu_i$ as
+   a (linear) function of the genotype:
+   $$
+   \widehat{\mu}_i = \widehat{\theta}_1 x_{i1} + \widehat{\theta}_1
+   x_{i2} + ... + \widehat{\theta}_p x_{ip}
+   \qquad \Leftrightarrow \qquad
+   \widehat{\mubf} = \Xbf \widehat{\thetabf}
+   $$
+
+   \pause\bigskip
+   \paragraph{Aim.} Find an estimator $\widehat{\thetabf}$ warranting
+   \emphase{a small risk
+   $$
+   \Esp\left(\|\widehat{\mubf} - \mubf\|^2\right).
+   $$}
+
+   }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Regression}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \vspace{-2cm}      
+      \paragraph{Geometric view:}
+      \begin{itemize}
+      \item \onslide+<1->{Data: $\Ybf$.}
+      \item \onslide+<2->{Truth: $\Ybf = \mubf + \Ebf$.}
+      \item \onslide+<3->{Covariates: $\Xbf$.}
+      \item \onslide+<4->{Fit: $\widehat{\mubf} =
+          \Xbf\widehat{\thetabf}$.} 
+      \end{itemize}
+
+      \onslide+<5->{
+        \bigskip
+        \paragraph{Decomposition of the risk.}
+        $$
+        \Esp\left(\|\widehat{\mubf} - \mubf\|^2\right) = 
+        [\Bias(\widehat{\mubf}]^2 + \Var(\widehat{\mubf})
+        $$
+        }
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \epsfig{file=../Figures/Reg-Y.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<2>
+        \epsfig{file=../Figures/Reg-Ymu.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<3>
+        \epsfig{file=../Figures/Reg-YmuX.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<4>
+        \epsfig{file=../Figures/Reg-YmuX-fit.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<5->
+        \epsfig{file=../Figures/Reg-YmuX-BV.eps, clip=,
+          width=0.7\textwidth}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  
+  \onslide+<6>{
+    \vspace{-1cm}
+    \paragraph{Bias-Variance compromise.} When $p$ increases,
+    $$
+    \Bias(\widehat{\mubf}) \text{ decreases whereas }
+    \Var(\widehat{\mubf}) \text{ increases.}
+    $$
+    }
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Ridge regression}
+
+  \paragraph{Least square estimate.} $\widehat{\thetabf}$ defined as
+  $$
+  \widehat{\thetabf} = \arg\min_{\thetabf} \|\Ybf - \Xbf \thetabf\|^2
+        = \arg\min_{\theta_1, ...\theta_p} \sum_i (Y_i - x_{i1}
+        \theta_1 - ... - x_{ip} \theta_p)^2.
+  $$
+
+  \pause
+  \paragraph{Ridge regularization.} Prevent $\widehat{\thetabf}$ from
+  having large coordinates via
+  $$
+  \widehat{\thetabf}_{\text{Ridge}} = \arg\min_{\thetabf} \|\Ybf - \Xbf
+  \thetabf\|^2 + \lambda \|\thetabf\|^2
+  $$
+  where $\|\thetabf\|^2 = \sum_j \theta_j^2$.
+
+  \pause\bigskip\bigskip
+  \paragraph{Several interpretations.}
+  \begin{itemize}
+  \item Variance reduction: $\Var(\widehat{\thetabf}_{\text{Ridge}}) <
+    \Var(\widehat{\thetabf})$. 
+  \item Tykhonov regularization: makes $(\Xbf'\Xbf)$ invertible when
+    $p > n$.
+  \item Gaussian prior for $\thetabf$ in a Bayesian context.
+  \end{itemize}
+
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Ridge regression}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \vspace{-2cm}      
+      \paragraph{Geometric view:}
+      \begin{itemize}
+      \item \onslide+<1->{Least square estimate: $\widehat{\thetabf}$.}
+      \item \onslide+<2->{Ball with radius $1/\lambda$.}
+      \item \onslide+<3->{$\widehat{\thetabf}_{\text{Ridge}} =$
+          projection of $\widehat{\thetabf}$ onto the ball.}
+      \end{itemize}
+
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \epsfig{file=../Figures/Reg-Theta.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<2>
+        \epsfig{file=../Figures/Reg-Ridge1.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<3->
+        \epsfig{file=../Figures/Reg-Ridge2.eps, clip=,
+          width=0.7\textwidth}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+  \onslide+<4->{
+    \vspace{-2cm}
+    \paragraph{Shrinkage.} The projection shrinks the regression
+    coefficients towards 0:   
+    $$
+    \|\widehat{\thetabf}_{\text{Ridge}}\| < \|\widehat{\thetabf}\|.
+    $$
+    }
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{LASSO regression}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \vspace{-2cm}
+      \onslide+<1->{
+        \paragraph{Ridge penalization} relies on the $\ell_2$ norm
+        $$
+        \|\thetabf\| = \sqrt{\sum_j \theta_j^2}
+        $$
+        for which 'balls' are round. 
+        }
+
+      \onslide+<2->{
+        \bigskip
+        \paragraph{LASSO penalization} relies on the $\ell_1$ norm
+        $$
+        |\thetabf| = \sum_j |\theta_j|
+        $$
+        for which 'balls' are diamond shaped. 
+        }
+
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \epsfig{file=../Figures/Reg-Ridge1.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<2>
+        \epsfig{file=../Figures/Reg-Lasso1.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<3->
+        \epsfig{file=../Figures/Reg-Lasso2.eps, clip=,
+          width=0.7\textwidth}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+  \onslide+<3->{
+    \vspace{-1cm}
+    \paragraph{Projection.} The projection on such a ball sets some
+    coefficients to 0. \\
+    \ra Lasso achieves \emphase{variables selection}.
+    }
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{LARS heuristic}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \vspace{-5cm}
+      \onslide+<1->{
+        \paragraph{Lasso regression.}
+        $$
+        \widehat{\thetabf}_{\text{Lasso}} 
+        = \arg\min_{\thetabf} \| \Ybf - \Xbf \thetabf\|^2 + \lambda |\thetabf|.
+        $$
+        }
+
+      \onslide+<2->{
+        \paragraph{The number of non-0 coefficients
+          $\widehat{\theta}_j$} increases as the penalty $\lambda$ decreases. 
+        }
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \epsfig{file=../Figures/Reg-Lasso2.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<2>
+        \epsfig{file=../Figures/Reg-Lasso3.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<3>
+        \epsfig{file=../Figures/Fig-LARS-coef.ps, clip=,
+          height=0.5\textwidth, width=0.5\textwidth, angle=270}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+  \onslide+<3->{
+    \vspace{-6cm}
+    \paragraph{LARS algorithm.} All the estimates
+    $\widehat{\thetabf}_{\text{Lasso}}(\lambda)$ (i.e. the 'solution
+    path') can be computed in a linear time ($\Ocal(p)$) for all
+    possible value of $\lambda$.  }  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{How to choose $\lambda$?}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<1->{
+        \vspace{-1cm}
+        \paragraph{$V$-fold cross-validation.} Split the data set into
+        $V$ equal subsets. For a given $\lambda$ and for each subset
+        $v = 1 ... V$:  
+        \begin{enumerate}
+        \item Compute $\widehat{\thetabf}^{-v}(\lambda)$ without $v$;
+        \item For each element $i$ of $v$, predict
+          $\widehat{\mu}_i^{-v}(\lambda) = \xbf_i
+          \widehat{\thetabf}^{-v}(\lambda)$ ; 
+        \item Compare $Y_i$ with $\widehat{\mu}_i^{-v}(\lambda)$.
+        \end{enumerate}
+        }
+    \end{tabular}      
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<3->{
+        \epsfig{file=../Figures/Fig-LARS-cv.ps, clip=,
+          height=0.5\textwidth, width=0.5\textwidth, angle=270}
+        }
+    \end{tabular}
+  \end{tabular}
+  
+  \onslide+<2->{
+    \vspace{-0.5cm}
+    Choose the $\lambda$ with best $V$-fold risk:
+    $$
+    R_V(\lambda) = \frac1n \sum_v \sum_{i \in v} (Y_i -
+    \widehat{\mu}_i^{-v}(\lambda))^2.
+    $$
+    }
+  }
+
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Playing with penalties}
+
+  Each penalty defines a specific set of constraints on the regression
+  parameters.
+
+%   \begin{tabular}{p{.2\textwidth}p{.35\textwidth}p{.35\textwidth}}
+%     \paragraph{Ridge} & $\lambda \|\thetabf\|$ & gives similar
+%   regression coefficients to correlated covariates. \\ 
+%     \paragraph{Lasso} & $\lambda_1 |\thetabf|$ & sets some
+%     coefficients to 0. \\ 
+%     \paragraph{Elastic net} & $\lambda_1 |\thetabf| + \lambda_2
+%     \|\thetabf\|$ & does both. \\
+%     \paragraph{Fuzzed Lasso} & $\lambda_1 |\thetabf| + \lambda_2
+%     \sum_j |\theta_j - \theta_{j-1}|$ & sets some coefficients and
+%     differences between neighbor coefficients to 0. \\
+%     \paragraph{Group Lasso} & $\sum_g \lambda_g \|\thetabf^g\|$ & sets
+%     the coefficients of some predefined groups of covariates to 0. \\
+%   \end{tabular}
+
+  \pause\medskip
+  \paragraph{Ridge} gives similar regression coefficients to
+  correlated covariates: \emphase{$\lambda \|\thetabf\|$}.
+  
+  \pause\medskip
+  \paragraph{Lasso} sets some coefficients to 0: \emphase{$\lambda
+  |\thetabf|$}.
+  
+  \pause\medskip
+  \paragraph{Elastic net} does both: \emphase{$\lambda_1 |\thetabf| +
+  \lambda_2 \|\thetabf\|$}.
+  
+  \pause\medskip
+  \paragraph{Fuzzed Lasso} sets some coefficients and
+  differences between neighbor coefficients to 0: \emphase{$\lambda_1
+  |\thetabf| + \lambda_2 \sum_j |\theta_j - \theta_{j-1}|$}.
+  
+  \pause\medskip
+  \paragraph{Group Lasso} sets the coefficients of some
+  predefined groups of covariates to 0: \emphase{$\sum_g \lambda_g
+    \|\thetabf^g\|$}.
+  
+  \pause\bigskip   
+  An efficient optimization algorithms (or at leats a good heuristic)
+  exists for each of them.
+
+  }
+
+%--------------------------------------------------------------------
+\section{To conclude}
+%--------------------------------------------------------------------
+\frame{ \frametitle{To conclude (?)}
+
+  \paragraph{Graphical models} constitute a convenient (and
+  theoretically grounded) way to define models with complex dependency
+  structure. 
+
+  \pause\bigskip\bigskip
+  \paragraph{The inference of complex models} involving latent
+  variables can often not be achieved is a standard way but
+  approximates techniques exist.
+
+  \pause\bigskip\bigskip
+  \paragraph{Regression models} involving a large number of
+  covariates can be handled using penalization combined with
+  efficient optimization algorithm.
+  }
+
+%====================================================================
+\frame{ \frametitle{}
+  \tiny{
+    \nocite{WaJ08,Jaa00,MaP00,Lau96,BeG03,BZB02,MaR07}
+    \bibliography{/Biblio/AST,/Biblio/ARC}
+    \bibliographystyle{/Latex/astats}
+    }
+  }
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\end{document}
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+
+

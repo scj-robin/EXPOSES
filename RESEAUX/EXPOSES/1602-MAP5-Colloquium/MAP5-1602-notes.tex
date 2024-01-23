@@ -1,0 +1,459 @@
+\documentclass[french, 12pt]{article}
+
+% Packages
+\usepackage{amsfonts,amsmath,amssymb,epsfig,epsf,psfrag}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+\usepackage[latin1]{inputenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{url}
+\RequirePackage{natbib}
+
+% Margins
+\textwidth  19cm 
+\textheight 24cm
+\topmargin -2 cm
+\oddsidemargin -1.5 cm
+\evensidemargin -1.5 cm
+
+% Commands
+\newtheorem{theorem}{Theorem}
+\newcommand{\proofbegin}{\noindent{\sl Proof.}~}
+\newcommand{\proofend}{$\blacksquare$\bigskip}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+
+% Symboles
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\dd}{\text{d}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Espt}{\widetilde{\Esp}}
+\newcommand{\logit}{\text{logit}}
+\newcommand{\Hcal}{\mathcal{H}}
+\renewcommand{\Pr}{{\mathbb{P}}}
+\newcommand{\Prt}{\widetilde{\Pr}}
+\newcommand{\pt}{\widetilde{p}}
+\newcommand{\Qcal}{\mathcal{Q}}
+
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------
+\begin{document}
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------
+
+\title{Introduction au modèle à blocs stochastiques et à son inférence variationnelle}
+
+\author{}
+
+\date{\today}
+
+\maketitle
+
+\abstract{\small Les réseaux d'interaction constituent une façon naturelle de représenter sous forme de graphe les échanges ou relations existant entre un ensemble d'individus. Le modèle à blocs stochastiques ('stochastic block-model', SBM) est un des modèles les plus populaires qui permet de rendre compte de l'hétérogénéité observée dans ces graphes. Ce modèle est un modèle à variables latentes et, du fait de la structure de graphe, son inférence pose des problèmes spécifiques. \\
+En effet, les techniques d'inférence fondées sur la vraisemblance dédiées aux modèles à variables latentes et requièrent de déterminer la distribution de ces variables conditionnellement aux variables observées, en l'occurrence les arêtes. Cette distribution n'est pas calculable en général pour les modèles de graphes et les techniques variationnelles en fournissent une approximation efficace à la fois d'un point de vue pratique et d'un point de vue théorique. \\
+Dans cet exposé, on rappellera d'abord différents modèles à variables latentes dédiés aux graphes, dont le SBM. On présentera ensuite l'approche variationnelle dans le cadre de l'inférence du SBM. Plusieurs extensions du SBM seront également présentées. Pour finir, un lien avec un autre modèle populaire, le $W$-graphe, sera discuté.}
+
+\tableofcontents
+
+%----------------------------------------------------------------------
+\newpage
+\section{Modèles à variables latente pour les graphes}
+%----------------------------------------------------------------------
+
+\paragraph{Cadre général.} \cite{BJR07,MaR14}. 
+\begin{eqnarray*}
+n \text{ noeuds} \quad i & = & 1, \dots n \\
+  (Z_i) \text{ i.i.d.} & \sim & \pi \\
+  (Y_{ij}) \text{ indépendants } | (Z_i) & \sim & \mathcal{B}(\gamma_{Z_i, Z_j})
+\end{eqnarray*}
+\begin{itemize}
+ \item $Y =$ graphe observé;
+ \item $Z =$ variables latentes (cachées);
+ \item $\theta = (\pi, \gamma)$ paramètre à estimer.
+\end{itemize}
+
+
+\paragraph{SBM :} \cite{NoS01}
+$$
+\pi = \mathcal{M}
+$$
+
+\paragraph{Latent position model :} \cite{HRH02}
+$$\pi = \mathcal{N}, \qquad \logit(\gamma_{Z_i, Z_j}) = a - b|Z_i-Z_j|$$
+
+\paragraph{Model-based clustering :} \cite{HRT07}
+$$
+\pi = \sum_k w_k \mathcal{N}(\mu_k, \Sigma)
+$$
+
+\paragraph{$W$-graph :} \cite{LoS06,DiJ08}
+$$\pi = \mathcal{U}[0, 1], \qquad \gamma_{Z_i, Z_j} = \gamma(Z_i, Z_j),$$ 
+$W$ = fonction graphon.
+
+
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------
+\newpage
+\section{Inférence variationnelle pour le SBM}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\subsection{Cadre fréquentiste}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\subsubsection{Structure de dépendance}
+
+\paragraph{Maximum de vraisemblance et EM.}
+\begin{eqnarray*}
+ \log p_\theta(Y) & = & \log p_\theta(Y, Z) - \log p_\theta(Z|Y) \\
+ & = & \Esp[\log p_\theta(Y, Z) |Y] - \Esp[\log p_\theta(Z|Y) | Y] \\
+ & = & \Esp[\log p_\theta(Y, Z) |Y] + \Hcal[p_\theta(Z|Y)]
+\end{eqnarray*}
+\begin{itemize}
+ \item Etape E: calcul de l'espérance selon $p_{\theta^h}(Z|Y)$;
+ \item Etape M: maximisation $\theta^{h+1} = \arg\max_\theta \Esp_{\theta^h}[\log p_\theta(Y, Z) |Y]$.
+\end{itemize}
+
+\paragraph{Modèle graphique et dépendance conditionnelle.} \cite{Lau96,WaJ08}
+\begin{itemize}
+ \item Modèle graphique orientés: 
+ $$
+ p(X) = \prod_i p(X_i | X_{pa(i)})
+ $$
+ \item Modèle graphique non-orientés 
+ $$
+ p(X) \propto \prod_{C \in \mathcal{C}} \psi(X_C)
+ $$
+\end{itemize}
+
+\paragraph{Cas des modèle de graphe avec variable latente.}
+\begin{itemize}
+ \item Modèle graphique de $p(Y, Z) = p(Z) p(Y|Z)$
+ \item Modèle graphique de $p(Z | Y)$ : moralisation.
+\end{itemize}
+
+\paragraph{Alternative par vraisemblance composite:} \cite{AmM09}.
+
+%----------------------------------------------------------------------
+\subsubsection{Inférence variationnelle}
+
+\paragraph{Approximation variationnelle.} Pour une distribution $p$ incalculable on cherche la meilleure approximation $\pt$ selon une divergence $D$ au sein d'une classe $\Qcal$ (\cite{Min05}, \cite{Jaa00}):
+$$
+\pt = \arg\min_{q \in \Qcal} D(q||p).
+$$
+Exemple classique~: 
+\begin{eqnarray*}
+  D(q||p) & = & KL(q||p) \; = \; \Esp_q[\log(q/p)] \\
+  \Qcal & = & \{\text{lois factorisables}\}
+\end{eqnarray*}
+Lien avec la vraisemblance composite~: \cite{Lyu11} ?
+
+\paragraph{EM variationnel.} Pour toute distribution $q(Z)$:
+\begin{eqnarray*}
+ \log p_\theta(Y) & \geq & \log p_\theta(Y) - KL[q(Z)||p_\theta(Z|Y)] \; =: \; J(\theta, q)\\
+ & = & \log p_\theta(Y) - \Espt[\log q(Z)] + \Espt[\log p_\theta(Y, Z)] - \Espt[\log p_\theta(Y)] \\
+ & = & \Espt[\log p_\theta(Y, Z)] - \Espt[\log q(Z)] \\
+ & = & \Espt[\log p_\theta(Y, Z)] + \Hcal[q(Z)] 
+\end{eqnarray*}
+\begin{itemize}
+ \item Etape VE: calcul de la loi approchée 
+ $$
+ \pt = \arg\min_{q \in \Qcal}KL(q||p);
+ $$
+ \item Etape M: maximisation 
+ $$
+ \theta^{h+1} = \arg\max_\theta \Espt[\log p_\theta(Y, Z)].
+ $$
+\end{itemize}
+
+$J(\theta, \pt)$ augmente à chaque itération~:
+\begin{eqnarray*}
+ \text{VE augmente} & & \log p_\theta(Y) - KL[\pt(Z)||p_\theta(Z|Y)], \\
+ \text{M augmente} & & \Espt[\log p_\theta(Y, Z)] + \Hcal[\pt(Z)] .
+\end{eqnarray*}
+
+
+\paragraph{Application au SBM.} On note $Z_{ik} = \mathbb{I}\{Z_i = k\}$. Borne inférieure de la log-vraisemblance~:
+$$
+\sum_i \sum_k \Esp_q(Z_{ik}) \log \pi_k 
++ \sum_{i, j} \sum_{k, \ell} \Esp_q(Z_{ik} Z_{j\ell}) \log p(Y_{ij} | Z_i=k, Z_j\ell)
++ \sum_i \sum_k \Esp_q(Z_{ik}) \log [\Esp_q(Z_{ik})]
+$$
+Classe de distribution~:
+$$
+\Qcal = \left\{q: q(Z) = \prod_i \prod_k \tau_{ik}^{Z_{ik}}\right\}
+\qquad \Rightarrow \qquad \Esp_q(Z_{ik}) = \tau_{ik}, 
+\quad \Esp_q(Z_{ik} Z_{j\ell}) = \tau_{ik}\tau_{j\ell}.
+$$
+On obtient une approximation de type champ moyen~:
+$$
+\tau_{ik} \propto \pi_k \prod_{j \neq i} \prod_{\ell} p(Y_{ij}|Z_i=k, Z_j=\ell)^{\tau_{j\ell}}
+$$
+qui est aussi une relation de point fixe.
+
+%----------------------------------------------------------------------
+\subsection{Cadre bayésien}
+%----------------------------------------------------------------------
+
+\paragraph{Cadre général:}
+\begin{itemize}
+ \item loi a priori~: $\theta \sim p(\theta)$;
+ \item vraisemblance~: $Y | \theta \sim p(Y|\theta)$;
+ \item loi a posteriori~: $\theta|Y \sim p(\theta|Y)$.
+\end{itemize}
+Ici, variable latente~:
+\begin{itemize}
+ \item loi a priori~: $(\pi, \gamma) = \theta \sim p(\theta)$;
+ \item vraisemblance complète~: $(Y, Z) | \theta \sim p(Y, Z|\theta)$;
+ \item loi conditionnelle conjointe $p(\theta, Z|Y)$.
+\end{itemize}
+$\longrightarrow$ modèle graphique.
+
+\paragraph{Approximation variationnelle.} Loi $p(\theta, Z|Y)$ pas calculable. On cherche
+$$
+\pt(\theta, Z) = \arg\min_{q \in \Qcal} KL[q(\theta, Z)||p(\theta, Z|Y)].
+$$
+
+\paragraph{EM bayésien variationnel (VBEM).}
+$$
+\Qcal = \{q: q(\theta, Z) = q(\theta)q(Z)\}
+$$
+\begin{itemize}
+ \item Etape 'E':
+ $ 
+ \pt^{h+1}(Z) = \arg\min_{q(Z)} KL[q^{h}(\theta)q(Z)||p(\theta, Z|Y)] \propto \exp\left[\Esp_{q^{h}(\theta)} \log p(\theta, Z, Y) \right]
+ $; 
+ \item Etape 'M': 
+ $ 
+ \pt^{h+1}(\theta) = \arg\min_{q(\theta)} KL[q(\theta)q^{h+1}(Z)||p(\theta, Z|Y)] \propto \exp\left[\Esp_{q^{h+1}(Z)} \log p(\theta, Z, Y) \right]
+ $; 
+\end{itemize}
+L'algorithme vise à maximiser en $q \in \Qcal$ 
+$$
+J(q) := \log p(Y) - KL[q(\theta, Z) || p(\theta, Z|Y)].
+$$
+
+Formules explicites dans le cas où $p(\theta)$ est la conjuguée de $p(Z, Y|\theta)$.
+
+\paragraph{Application au SBM.}
+$$
+\theta = (\pi, \gamma) \sim \mathcal{D}(p) \bigotimes_{k = 1}^K \text{B}(a_k, b_k).
+$$
+Dirichlet conjuguée de la multinomiale et Béta conjuguée de la Bernoulli.
+
+%----------------------------------------------------------------------
+\subsection{Qualité de l'approximation variationnelle}
+%----------------------------------------------------------------------
+
+\paragraph{Résultats théoriques.} Cadre fréquentiste: $p(\theta(Z|y) \rightarrow$ Dirac (\cite{CDP12})
+$$
+P\left(\sum_{z_{[n]} \neq z^*_{[n]}} \frac{P(Z_{[n]}=z_{[n]}|Y_{[n]})}{P(Z_{[n]}=z^*_{[n]}|Y_{[n]})} > t\right) = \mathcal{O}(n e^{-\kappa_t n})
+$$
+or la Dirac est factorisable. Voir aussi \cite{MaM15}.
+
+\paragraph{Résultats sur simulations.} Pour $K = 2$ groupes, dès que $n \geq 20, 30$, le niveau des intervalles de crédibilité approché atteint le niveau nominal, e.g.~:
+\begin{eqnarray*}
+ \widetilde{I} = \widetilde{IC}_{1-\alpha} & : & \int_{\theta \in I} \pt(\theta) \dd \theta = 1-\alpha \\
+ \frac{\#\{b: \theta^b \in \widetilde{I}_b\}}{B} & \simeq & 1-\alpha
+\end{eqnarray*}
+
+
+\paragraph{Intuition.} SBM prévoit que la loi conditionnelle du degré $D_i = \sum_{j \neq i} Y_{ij}$ est binomiale~:
+$$
+D_i | Z_i \sim \mathcal{B}(n-1, \overline{\gamma}_{Z_i})
+\qquad \text{où} \qquad
+\overline{\gamma}_K = \sum_\ell \pi_\ell \gamma_{k \ell}
+$$
+qui se concentre rapidement autour de son espérance~:
+$$
+\Pr\left\{\left|T_i - \overline{\gamma}_{Z_i}\right| > t | Z_i\right\} \leq 2e^{2(n-1)t^2}
+$$
+$\longrightarrow$ Un algorithme linéaire fondé sur les degrés normalisés $T_i = D_i/(n-1)$ fournit un estimateur consistant (\cite{CDR12}).
+
+%----------------------------------------------------------------------
+\subsection{Choix du nombre de groupes}
+%----------------------------------------------------------------------
+
+\paragraph{Critères classiques pour les mélanges.} $d =$ nb paramètres
+\begin{eqnarray*}
+ BIC(K) & := & \log p_{\widehat{\theta}}(Y) - \frac{d}2 \log n \; = \; \log p(K, Y) + \mathcal{O}(1) \\
+ ICL(K) & := & \Esp_{\widehat{\theta}}[\log p_{\widehat{\theta}}(Y, Z)] - \frac{d}2 \log n 
+ \; = \; \log p_{\widehat{\theta}}(Y) - \mathcal{H}[p_{\widehat{\theta}}(Z|Y)] - \frac{d}2 \log n 
+\end{eqnarray*}
+via une approximation de Laplace.
+
+\paragraph{ICL pour SBM.} $p(Y)$ pas calculable, mais $\Espt[\log p(Y, Z)] \simeq \Esp_{\widehat{\theta}}[\log p_{\widehat{\theta}}(Y, Z)]$. On obtient
+$$
+ICL(K) = \Espt[\log p(Y, Z)] - \frac{K-1}2 \log n - \frac{K^2}2 \log \frac{n(n-1)}2
+$$
+NB: comme $p(Z|Y) \rightarrow$ Dirac, $\Hcal[p(Z|Y)] \rightarrow 0$, donc $ICL \simeq BIC$.
+
+\paragraph{Approximation variationnelle.} Dans le cas du VBEM avec loi conjuguées, les intégrales en $\theta$ sont explicites donc pas besoin d'approximation de Laplace: \cite{LBA11b}.
+
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------
+\newpage
+\section{Extensions du SBM}
+%----------------------------------------------------------------------
+Voir la revue : \cite{MaR14}.
+
+%----------------------------------------------------------------------
+\subsection{Structure latente}
+%----------------------------------------------------------------------
+
+\paragraph{Groupes recouvrants.}
+Autorise les noeuds à appartenir à plusieurs groupes: \cite{ABF08}, \cite{LBA11a}.
+
+\paragraph{Version continue.} $Z_i \in $ simplexe et vus comme des paramètres~: \cite{DPV10}
+
+%----------------------------------------------------------------------
+\subsection{Loi d'émission}
+%----------------------------------------------------------------------
+
+\paragraph{Graphes valués.} Si les arêtes ne sont pas binaires, on change simplement la loi d'émission 
+$$
+Y_{ij}|Z_i, Z_j \sim F(\gamma_{Z_i, Z_j})
+$$
+e.g. $F = $ Poisson, normale, ...~ : \cite{MRV10}.
+
+\paragraph{Covariables.} Si on dispose de covariables $x_{ij}$ pour chaque arêtes, idem~:
+$$
+Y_{ij}|Z_i, Z_j \sim F(x_{ij}, \gamma_{Z_i, Z_j})
+$$
+cadre général = modèle linéaire (généralisé) : \cite{MRV10}.
+
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------
+\newpage
+\section{Lien avec le $W$-graphe }
+%----------------------------------------------------------------------
+\cite{LaR13}
+
+%----------------------------------------------------------------------
+\subsection{Lien SBM / graphon}
+%----------------------------------------------------------------------
+
+SBM = $W$-graphe où la fonction $W$ est constante par bloc~: 
+\begin{eqnarray*}
+  \sigma_k & = & \sum_{\ell \leq k} \pi_\ell, \qquad \sigma_0 = 0, \\
+  I_k & = & (\sigma_{k-1}, \sigma_k), \\
+  \gamma(u, v) & = & \sum_{k, \ell} \gamma_{k, \ell} \mathbb{I}\{u \in I_k, v \in I_\ell\}
+\end{eqnarray*}
+
+\paragraph{VBEM 'à $K$ connu'.} Inférence bayésienne~:
+$$
+\Esp[\gamma(u, v) |Y] = \sum_{k, \ell} \Esp[\gamma_{k, \ell} \mathbb{I}\{u \in I_k, v \in I_\ell\} | Y].
+$$
+Inférence bayésienne variationnelle~:
+\begin{eqnarray*}
+\Espt[\gamma(u, v)] & = & \sum_{k, \ell} \Espt[\gamma_{k, \ell} \mathbb{I}\{u \in I_k, v \in I_\ell\}] \\
+& = & \sum_{k, \ell} \Espt(\gamma_{k, \ell}) \Prt\{\sigma_{k-1} < u < \sigma_k\} \Prt\{\sigma_{\ell-1} < v < \sigma_\ell\} 
+\end{eqnarray*}
+
+%----------------------------------------------------------------------
+\subsection{Agrégation de modèle}
+%----------------------------------------------------------------------
+
+Pas de vrai $K$ pour le $W$-graphe.
+
+\paragraph{Principe général.} $\Delta$ paramètre d'intérêt estimable par une série de modèles $K \in \mathcal{K}$~:
+$$
+p(\Delta|Y) = \sum_K p(\Delta|Y, K) p(K|Y)
+$$
+$\longrightarrow$ 'Bayesian model averaging' (BMA) où $p(K|Y)$ est le poids du modèle $K$ dans l'agrégation.
+
+\paragraph{Approximation variationnelle.} On considère $K$ comme un paramètre et s'intéresse à
+$$
+p(K, \theta, Z|Y)
+$$
+qu'on approche par
+$$
+\pt(K, \theta, Z) = \arg\min_{q \in \Qcal} KL[q(K, \theta, Y) || p(K, \theta, Z|Y)]
+$$
+en prenant
+$$
+\Qcal = \{q: q(K, \theta, Z) = q(K) q(\theta|K)q(Z|K)\}
+$$
+(pas d'approximation supplémentaire par rapport au VBEM au sein de chaque modèle. 
+
+BMA variationnel (VBMA~ :\cite{VMR12})~:
+\begin{eqnarray*}
+  \pt(K) & \propto & p(K|Y) \exp^{-KL[\pt(\theta, Z|K)||p(\theta, Z|Y, K)]} \\
+  & = & p(K) \exp[J_K(\pt)]
+\end{eqnarray*}
+
+\paragraph{Application au $W$-graphe.} Estimation du graphon par VBMA:
+\begin{eqnarray*}
+\Espt[\gamma(u, v)] & = & \sum_K \sum_{k, \ell} \Espt[\gamma(u, v) | K] \; \pt(K)
+\end{eqnarray*}
+Marche aussi pour la fréquence d'apparition d'un motif (étoile, triangle, etc.).
+
+%----------------------------------------------------------------------
+\subsection{Ajustement à un modèle}
+%----------------------------------------------------------------------
+
+\cite{LRO15}
+
+\paragraph{Modélisation.} 
+\begin{itemize}
+ \item Problème d'identifiabilité de $\gamma(\cdot, \cdot)$~: difficile d'interpréter
+ \item Cas limite $\gamma(\cdot, \cdot) \equiv p$ correspond à $ER(p)$.
+\end{itemize}
+
+\paragraph{Modèle de régression logistique.}
+$$
+(Y_{ij})_{i, j} \text{ indep.}: \qquad 
+Y_{ij} \sim \Bcal[\logit(x_{ij} \beta)]
+$$
+Introduction d'un terme résiduel de sous forme de graphon
+$$
+(U_i)_i \text{ i.i.d.}, \quad 
+(Y_{ij})_{i, j} \text{ indep.}: \qquad 
+Y_{ij} \sim \Bcal[\logit(x_{ij} \beta) + \gamma(U_i, U_j)]
+$$
+Introduction d'un terme résiduel de sous forme d'une combinaison de SBM à $K = 1, 2, \dots$ classes~:
+$$
+(U_i)_i \text{ i.i.d.}, \quad 
+(Y_{ij})_{i, j} \text{ indep.}: \qquad 
+Y_{ij} \sim \Bcal[\logit(x_{ij} \beta) + Z_i' \alpha Z_j]
+$$
+
+\paragraph{Test d'ajustement.} Inférence par VBEM
+$$
+\pt(K) \simeq p(K|Y)
+$$
+'Goodeness-of-fit' mesuré par $\Prt\{K = 1\} \simeq \Pr\{K=1|Y\}$.
+
+%----------------------------------------------------------------------
+\newpage
+\bibliography{/home/robin/Biblio/BibGene}
+\bibliographystyle{/home/robin/LATEX/Biblio/astats}
+
+% %----------------------------------------------------------------------
+% \newpage
+% \section{Proofs}
+% %----------------------------------------------------------------------
+% 
+% \paragraph{EM increases $\log p_\theta(Y)$:}
+% Because $\theta^{h+1} = \arg\max_\theta \Esp_{\theta^h}[\log p_\theta(Y, Z) |Y]$, we have
+% \begin{eqnarray*}
+%   0 & \leq & \Esp_{\theta^h}[\log p_{\theta^{h+1}}(Y, Z) |Y] - \Esp_{\theta^h}[\log p_{\theta^{h}}(Y, Z) |Y] \\
+%   & = & \Esp_{\theta^h} \left[\log \frac{p_{\theta^{h+1}}(Y, Z)}{p_{\theta^{h}}(Y, Z)} | Y \right] 
+%   \quad \leq \quad \log \Esp_{\theta^h} \left[\frac{p_{\theta^{h+1}}(Y, Z)}{p_{\theta^{h}}(Y, Z)} | Y \right]
+% \end{eqnarray*}
+% by Jensen's inequality. We further develop $\log \Esp_{\theta^h} \left[p_{\theta^{h+1}}(Y, Z) \left/ p_{\theta^{h}}(Y, Z) \right. | Y \right]$ as
+% \begin{eqnarray*}
+%   \log \int \frac{p_{\theta^{h+1}}(Y, Z)}{p_{\theta^{h}}(Y, Z)} p_{\theta^h}(Z | Y) \dd Z 
+%   & = & \log \int \frac{p_{\theta^{h+1}}(Y, Z)}{p_{\theta^{h}}(Y, Z)} \frac{p_{\theta^h}(Y, Z)}{p_{\theta^h}(Y)} \dd Z \\
+%   & = & \log \left[ \frac1{p_{\theta^h}(Y)} \int p_{\theta^{h+1}}(Y, Z) \dd Z \right]  	\quad = \quad \log \left[ \frac{p_{\theta^{h+1}}(Y)}{p_{\theta^h}(Y)} \right]
+% \end{eqnarray*}
+% and the proof is completed.
+
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------
+\end{document}
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------

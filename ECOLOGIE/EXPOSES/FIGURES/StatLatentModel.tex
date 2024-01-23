@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+  \node[observed] (X) at (-1*\edgeunit, 1*\edgeunit) {$X$};
+  \node[hidden] (Z) at (0*\edgeunit, 1*\edgeunit) {$Z$};
+  \node[hidden] (theta) at (1*\edgeunit, 1*\edgeunit) {$\theta$};
+  \node[observed] (Y) at (0, 0) {$Y$};
+
+  \draw[dashedarrow] (X) to (Z);
+  \draw[arrow] (theta) to (Z);
+  \draw[arrow] (X) to (Y);
+  \draw[arrow] (Z) to (Y);
+  \draw[arrow] (theta) to (Y);
+\end{tikzpicture}

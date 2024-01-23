@@ -1,0 +1,330 @@
+\documentclass{beamer}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{url}
+% \usepackage{natbib}
+\input{../MyLatexCommands.tex}
+\usepackage{tabularx}
+\usepackage{array}
+
+% Beamer commands
+\useoutertheme{infolines} 
+\mode<presentation>{ \usetheme{Frankfurt} }
+\setbeamertemplate{navigation symbols}{} 
+\AtBeginSection[]
+{
+   \begin{frame}[squeeze]
+       \frametitle{Outline}
+       \tableofcontents[currentsection,hideothersubsections]
+   \end{frame}
+}
+\setbeamertemplate{bibliography entry title}{}
+\setbeamertemplate{bibliography entry location}{}
+\setbeamertemplate{bibliography entry note}{}
+
+
+\begin{document}
+
+\title{Number of Species in Metagenomics}
+\subtitle{Mixtures and Truncations}
+\author[Li-Thiao-Té S.]{Li-Thiao-Té Sébastien}
+\date{}
+\institute[AgroParisTech]{Equipe Statistique et Génomes, UMR 518 INRA / AgroParisTech}
+% \institute[CMLA et Institut Pasteur]{Centre de Mathématiques et de Leurs Applications, ENS Cachan \and Unité de Biologie Systémique, Institut Pasteur}
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Metagenomics}
+\subsection*{}
+
+\begin{frame} \frametitle{Metagenomics pipeline}
+Metagenomics sample $\longrightarrow$ Reads $\longrightarrow$ Contigs / Scaffolds $\longrightarrow$ Species + abundance $\longrightarrow$ Estimated Number of Species.
+
+\begin{block}{Objective}
+\begin{itemize}
+ \item Model the Species Abundance Distribution (SAD)
+ \item Estimate the total number of species
+\end{itemize}
+\end{block}
+\begin{center}
+ \includegraphics[width=0.5\textwidth]{./figure1.pdf}
+ % figure1.pdf: 431x287 pixel, 72dpi, 15.20x10.12 cm, bb=0 0 431 287
+\end{center}
+
+                                                        % distribution
+\end{frame}
+
+\begin{frame}\frametitle{Current approaches}
+
+\begin{tabular}{r|c|c}
+            & Parametric & Non-Parametric  \\ \hline
+Frequentist & Mixture Models, lognormal & Chao estimators, NP-MLE \\ \hline
+Bayesian    & Barger & \\ \hline
+\end{tabular} 
+\end{frame}
+
+\section{Mixture Model for SAD}
+\subsection*{}
+
+\begin{frame}\frametitle{Poisson-mixing}
+Let $C$ denote the total number of species. \\
+Each species $i$ contributes $X_i$ observed individuals. \\
+$X_i \sim \Poisson(\lambda_i)$, i.e.\ $\bbP[X_i = x | \lambda_i] = \frac{e^{-\lambda_i} {\lambda_i}^x}{x!}$ \\
+\hfill \\
+
+The Species Abundance Distribution is the distribution of $\lambda_i$
+and $\lambda_i$ is the mean abundance of species $i$. \\
+$\lambda_i$ iid samples of $\Lambda$ with distribution $f_\Lambda$. \\
+\[\bbP[X = x] = \int \frac{e^{-\lambda} \lambda^x}{x!} f_\Lambda(\lambda) \mathrm{d}\lambda\]
+
+\end{frame}
+
+\begin{frame}[shrink=10] \frametitle{SAD models}
+Several SAD models for $f$:
+\begin{itemize}
+ \item Poisson
+ \item lognormal %% References
+ \item geometric
+ \item inverse Gaussian
+ \item mixture of exponentials %% Bunge
+\end{itemize}
+
+\hfill \\
+
+Mixture models:
+\[ f_\Lambda(\lambda,\theta) = \sum_{j=1}^g \pi_j f_{\Lambda j} (\lambda,\theta) \]
+\[ \bbP[X = x | \theta] = f(x,\theta) = \sum_{j=1}^g \pi_j f_j (x,\theta) \]
+where \[f_j(x,\theta) = \int \frac{e^{-\lambda} \lambda^x}{x!} f_j(\lambda) \mathrm{d}\lambda\]
+
+\end{frame}
+
+\begin{frame}\frametitle{Observations}
+$X_i$ is not directly observable. \\
+We observe $n$ species with counts $(x_1, \ldots, x_n)$. The remaining $C - n$ species have zero observations. \\
+
+The likelihood is:
+\[ L(x_1,\ldots, x_n) = C_C^n \, {f(0)}^{C-n} \, \prod_{i=1}^{n} f(x_i) \]
+\hfill \\ 
+The ML-estimate $(\hat C_{UML}, \hat \theta_{UML})$ can be obtained, but optimization problems.
+\end{frame}
+
+
+\begin{frame}\frametitle{Conditional likelihood}
+ \[ L(x_1,\ldots, x_n) = \underbrace{C_C^n \, f(0)^{C-n} (1-f(0))^n}_{L_1} \, 
+                         \underbrace{\prod_{i=1}^{n} f_+(x_i) }_{L_2} \]
+where $f_+(x) = \frac{\bbP[X=x]}{1-\bbP[X=0]} = \bbP[X = x | X > 0]$. \\
+\hfill \\
+Define the conditional estimate
+$
+\begin{cases}
+ \hat \theta_{CML} & = \text{argmax} \, L_2(x_1,\ldots,x_n) \\
+ \hat C_{CML} & = \text{argmax} \, L_1(x_1,\ldots,x_n | \theta = \hat \theta_{CML})
+\end{cases}
+$
+
+\begin{theorem}
+\begin{itemize}
+ \item $\hat C_{CML} = \dfrac{n}{1 - \hat {p_0} }$ (Horvitz-Thomson estimator)
+ \item $\hat C_{UML}$ and $\hat C_{CML}$ are asymptotically equivalent (Sanathanan77)
+\end{itemize}
+\end{theorem}
+\end{frame}
+
+\section{Mixture of Truncated Distributions}
+\subsection*{}
+
+\begin{frame}[shrink=14]\frametitle{EM algorithm for mixture models}
+
+\begin{columns}[t]
+ \begin{column}{0.45\textwidth}
+Standard mixture
+% \[ \log L_2 = \sum_{i=1}^{n} \log \left( \sum_{j=1}^g \pi_j f_j(x,\theta_j) \right) \]
+\[ \log L_{2c} = \sum_{i=1}^{n} \sum_{j=1}^g z_{ij} \log \left\{ \pi_j f_j \left(x,\theta_j \right) \right\} \]
+
+E step: $Q = \bbE[ \log L_{2c} | (x_1,\ldots,x_n) ]$ 
+\[Q = \sum_{i=1}^{n} \sum_{j=1}^g \tau_{j}(x_i) \log \left\{ \pi_j f_j \left(x,\theta_j \right) \right\}\] \\
+where $\tau_j(x) = \frac{\pi_j f_j(x,\theta_j)}{\sum_{j=1}^g \pi_j f_j(x,\theta_j) }$ \\
+\hfill \\
+M step: maximize $Q$ \\
+$ \begin{cases}
+  \pi_j = \frac{1}{n} \sum_{i=1}^{n} \tau_j(x_i) \\
+  \sum_{i=1}^{n} \tau_j(x_i) \frac{\partial}{\partial \theta_j} \log f_j(x,\theta_j) = 0
+ \end{cases}
+$
+ \end{column}
+\pause
+ \begin{column}{0.55\textwidth}
+Truncated mixture
+% \[ \log L_2 = \sum_{i=1}^{n} \log \left( \sum_{j=1}^g \pi_j f_j(x,\theta_j) \right) \]
+\[ \log L_{2c} = \sum_{i=1}^{n} \sum_{j=1}^g z_{ij} \log \left\{ \frac{ \pi_j f_j \left(x,\theta_j \right)}{1-\sum_{j=1}^g \pi_j f_j(0,\theta_j)} \right\} \]
+
+E step: $Q = \bbE[ \log L_{2c} | (x_1,\ldots,x_n) ]$ 
+\[ Q = \sum_{i=1}^{n} \sum_{j=1}^g \tau_{j}(x_i) \log \left\{ \frac{ \pi_j f_j \left(x,\theta_j \right)}{1-\sum_{j=1}^g \pi_j f_j(0,\theta_j)} \right\} \]
+where $\tau_j(x) = \frac{\pi_j f_j(x,\theta_j)}{\sum_{j=1}^g \pi_j f_j(x,\theta_j) }$ \\
+\hfill \\
+M step: maximize $Q$ ?
+
+ \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{Approximation: Mixtures of truncated distributions}
+Truncated mixture of distributions:
+\[ f_+(x,\theta) = \frac{\sum_{j=1}^g \pi_j f_j(x,\theta_j)}{1-\sum_{j=1}^g \pi_j f_j(0,\theta_j)} \]
+Mixture of truncated distributions:
+\[ f'(x,\theta) = \sum_{j=1}^g \pi'_j \frac{ f_j(x,\theta'_j)}{1- f_j(0,\theta'_j)} = \sum_{j=1}^g \pi'_j f_{j+}(x,\theta'_j) \]
+
+Estimate the parameters $(\hat \pi',\hat \theta')$ with standard EM for mixtures. \\
+
+Then $\hat f'(0) = \sum_{j=1}^g \hat \pi'_j f_j(0,\hat \theta'_j)$ \\
+
+And $\hat C' = \frac{n}{1 - f'(0)}$ \\
+
+Pb1: $f_{j+}(0,\theta'_j)$ has no meaning.
+
+\end{frame}
+
+\begin{frame}\frametitle{Simulations}
+
+\begin{center}
+ \includegraphics[width=0.7\textwidth]{./figure3.pdf}
+ % figure2.pdf: 359x215 pixel, 72dpi, 12.66x7.58 cm, bb=0 0 359 215
+\end{center}
+
+The parameters are correctly estimated.
+
+\end{frame}
+
+\begin{frame}\frametitle{Simulations}
+
+Pb2: the estimated proportions $\hat \pi' $ are biased.
+\[
+ \begin{cases}
+  \text{if } \theta_j \text{ small, then } \hat \pi'_j < \pi_j \\
+  \text{if } \theta_j \text{ large, then } \hat \pi'_j > \pi_j 
+ \end{cases}
+\]
+
+\begin{center}
+ \includegraphics[width=0.7\textwidth]{./figure2.pdf}
+ % figure2.pdf: 359x215 pixel, 72dpi, 12.66x7.58 cm, bb=0 0 359 215
+\end{center}
+
+\end{frame}
+
+\section[Corrected Mixture]{Corrected Mixture of Truncated Distributions}
+\subsection*{}
+
+\begin{frame}[shrink=3]\frametitle{Equivalence of the two models}
+\begin{columns}[t]
+ \begin{column}{0.5\textwidth} \centering
+  Truncated mixture of distributions
+  \[ f_+(x,\theta) = \frac{\sum_{j=1}^g \pi_j f_j(x,\theta_j)}{1-\sum_{j=1}^g \pi_j f_j(0,\theta_j)} \]
+ \end{column}
+ \begin{column}{0.5\textwidth} \centering
+  Mixture of truncated distributions
+\[ f'(x,\theta) = \sum_{j=1}^g \pi'_j \frac{ f_j(x,\theta'_j)}{1- f_j(0,\theta'_j)} \]
+ \end{column}
+\end{columns}
+\begin{theorem}[Bohning2006]
+ The two sets of models are identical.
+\end{theorem}
+\begin{tabularx}{\textwidth}{Xp{0.65cm}X}
+\centering $(\pi_j,\theta_j)$ & $\longrightarrow$ &
+ $(\pi'_j = \frac{\pi_j (1-f_j(0,\theta_j))}{1-\sum_{j=1}^g \pi_j f_j(0,\theta_j)}, \theta'_j = \theta_j)$ \\
+ \centering $(\pi_j = \frac{\pi'_j /(1-f_j(0,\theta'_j))}{\sum_{j=1}^g \pi'_j / (1-f_j(0,\theta'_j))}, \theta_j = \theta'_j)$ & $\longleftarrow$ & \centering $(\pi'_j,\theta'_j)$ 
+\end{tabularx} 
+ 
+\end{frame}
+
+\begin{frame}\frametitle{Consequences}
+\begin{theorem}
+ If $(\pi'_j,\theta'_j) = \text{argmax} \, L'_2(x_1,\ldots,x_n)$, then
+$(\pi_j =  \frac{\pi'_j /(1-f_j(0,\theta'_j))}{\sum_{j=1}^g \pi'_j / (1-f_j(0,\theta'_j))}, \theta_j = \theta'_j) = \text{argmax} \, L_2(x_1,\ldots,x_n)$.
+\end{theorem}
+\begin{proof}
+ $(\pi_j,\theta_j)$ and $(\pi'_j,\theta'_j)$ represent the same model. Therefore same likelihood.
+\end{proof}
+Algorithm:
+\begin{itemize}
+ \item fit a mixture of truncated distributions via EM $\longrightarrow (\hat \pi'_j,\hat \theta'_j) = \text{argmax} \, L'_2$
+ \item correct the abundances $(\hat \pi'_j, \hat \theta'_j) \longrightarrow (\hat \pi_j,\hat \theta_j) = \text{argmax} \, L_2$
+ \item compute the number of species $\hat C = n / (1 - \hat f_0) = \text{argmax} \, L_1 L_2$
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Simulations}
+
+\begin{itemize}
+ \item Pb1 solved: corrected $(\hat \pi_j,\hat \theta_j)$ correspond to the truncated mixture
+ \item Pb2 solved: bias is corrected
+\end{itemize}
+
+\begin{center}
+ \includegraphics[width=0.7\textwidth]{./figure4.pdf}
+ % figure2.pdf: 359x215 pixel, 72dpi, 12.66x7.58 cm, bb=0 0 359 215
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}\frametitle{Total number of species}
+ \begin{center}
+ \includegraphics[width=0.7\textwidth]{./figure5.pdf}
+ % figure2.pdf: 359x215 pixel, 72dpi, 12.66x7.58 cm, bb=0 0 359 215
+\end{center}
+
+\end{frame}
+
+\section{Next Steps}
+\subsection*{}
+
+\begin{frame}\frametitle{Bayesian Model Averaging}
+The estimator depends on the model order $g$: $\displaystyle \hat C_g = \frac{n}{1 - f_g(0,\hat \theta)}$ \\
+where $\displaystyle f_g(0,\hat \theta) = \frac{ \sum_{j=1}^g \hat \pi_j f_j (x,\hat \theta_j )}{1-\sum_{j=1}^g \hat \pi_j f_j(0,\hat \theta_j)} $ \\
+
+\hfill \\
+\hfill \\
+
+How to select the model order $g$ ?
+\begin{itemize}
+ \item model selection: find $\hat g$ then compute $\displaystyle \hat C_{\hat g} = \frac{n}{1 - f_{\hat g}(0,\hat \theta)}$
+ \item Bayesian model averaging:
+ $\displaystyle \hat C = \sum_{k} \hat C_k w_k$ \\
+ where $w_k \propto \bbP[k|(x_1,\ldots,x_n)]$ 
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}\frametitle{Data}
+
+Already at AgroParisTech:
+\begin{itemize}
+ \item MicroObes \\
+    gg35: reads + localization on one genome \\
+    mix: reads
+ \item Mavromatis simulated data sets \\
+    \url{http://fames.jgi-psf.org/} \\
+    reads + contigs + phylogeny \\
+    question: how many missing species when the dataset is simulated?
+\end{itemize}
+
+Wishes?
+\begin{itemize}
+ \item Bunge data ? \\
+    program executable available for download. \\
+    his data corresponds to 16S rRNA clustered into OTUs ?
+ \item counting contigs / species is not appropriate. \\
+    should do reads / species.
+\end{itemize}
+\end{frame}
+
+% \begin{frame}\frametitle{}
+%  
+% \end{frame}
+
+\end{document}

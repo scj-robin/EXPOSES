@@ -1,0 +1,519 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+\usepackage{xspace}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+% \newcommand{\GMSBM}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/1903-SemStat/}
+% \newcommand{\figeconet}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/1904-EcoNet-Lyon/Figs}
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
+% \newcommand{\figbayes}{/home/robin/RECHERCHE/BAYES/EXPOSES/FIGURES}
+% \newcommand{\figCMR}{/home/robin/Bureau/RECHERCHE/ECOLOGIE/CountPCA/sparsepca/Article/Network_JCGS/trunk/figs}
+% \newcommand{\figtree}{/home/robin/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Data/Tree/Fig}
+% \newcommand{\figDoR}{/home/robin/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Paper/JRSSC-V3/Figs}
+
+\renewcommand{\nodesize}{1.75em}
+\renewcommand{\edgeunit}{2.25*\nodesize}
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+\title[R\'eseaux et variables latentes pour l'\'ecologie des communaut\'es]{Mod\`eles de r\'eseaux et mod\`eles \`a variables latentes \\
+(pour l'\'ecologie des communaut\'es)}
+
+\author{S. Robin}
+
+\date[Oct'21, LPSM]{October 2021, LPSM}
+
+\maketitle
+
+%====================================================================
+\frame{\frametitle{Community ecology}
+
+{\sl A community is a group [\dots] of populations of [\dots] different species occupying the same geographical area at the same time }
+
+\medskip
+{\sl Community ecology [\dots] is the study of the interactions between species in communities [\dots].} \Refer{Wikipedia}
+
+\bigskip \bigskip
+\paragraph{Need for statistical models to}
+\begin{itemize}
+ \item \bigskip decipher / describe / evaluate environmental effects on species ({\sl abiotic} interactions) and between species interactions ({\sl biotic} interactions) \\ ~\\
+ \ra \emphase{joint species distribution models}
+ \item \bigskip describe / understand the organisation of species interaction networks \\ ~\\
+  \ra \emphase{network models}
+\end{itemize}
+
+}
+
+%====================================================================
+%====================================================================
+\section{Models with latent variables}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+
+%====================================================================
+\subsection{Two models}
+%====================================================================
+\frame{\frametitle{Joint species distribution models}
+
+  \paragraph{Abundance data:} 
+  \begin{itemize}
+  \item $n$ sites, $p$ species, $d$ covariates (site descriptors)
+  \item Abundance table: $Y = [Y_{ij}]$
+  $$
+  Y_{ij} = \text{number of individual from species $j$ observed in site $i$}
+  $$
+  \item Covariate table: $X = [x_{ik}]$
+  $$
+  x_{ik} = \text{value of descriptor $k$ for site $i$}
+  $$
+  \end{itemize}
+
+  \bigskip \bigskip 
+  \paragraph{Poisson log-normal model (PLN):} \refer{AiH89}
+  \begin{itemize}
+  \item $Z_i =$ latent vector associated with site $i$
+  $$
+  \{Z_i\}_{1 \leq i \leq n} \text{ iid}, \qquad 
+  Z_i \sim \Ncal_p(0, \Sigma)
+  $$
+  \item $Y_{ij} = $ observed abundance for species $j$ in site $i$
+  $$
+  \{Y_{ij}\}_{1 \leq i \leq n, 1 \leq j \leq p} \text{ indep} \mid Z, \qquad 
+  Y_{ij} \mid Z_{ij} \sim \Pcal(\exp(x_i^\intercal \beta_j + Z_{ij}))
+  $$
+  \item $\theta = (\beta = \text{ abiotic}, \Sigma = \text{ biotic})$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Illustration}
+
+  \paragraph{Barents fish:}
+  $n = 89$ sites, $p = 30$ species, $d = 4$ covariates (lat., long., depth, temp.)
+
+  \begin{tabular}{rlrl}
+  \begin{tabular}{c} $\widehat{\beta} = $ \end{tabular} & 
+  \hspace{-.05\textwidth} \begin{tabular}{c} \includegraphics[width=.35\textwidth]{\figeco/BarentsFish-coeffAll-woIntercept}  \end{tabular} & 
+%   \begin{tabular}{c} \qquad \end{tabular} &
+  \begin{tabular}{c} $\widehat{\Sigma} = $ \end{tabular} &  
+  \hspace{-.05\textwidth} \begin{tabular}{c} \includegraphics[width=.35\textwidth]{\figeco/BarentsFish-corrAll} \end{tabular}
+  \end{tabular}
+
+  \bigskip \bigskip 
+  \begin{itemize}
+   \item Several extensions (dimension reduction, network inference, clustering, discriminant analysis)
+   \item \url{PLNmodels} R package \refer{CMR18a,CMR19,CMR21}
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Models for interaction networks}
+  \paragraph{Interaction data:} 
+  \begin{itemize}
+  \item $p$ species, $d$ covariates 
+  \item Interaction matrix: $Y = [Y_{ij}]$
+  $$
+  Y_{ij} = \text{intensity of the interaction between species $i$ and $j$}
+  $$
+  \item Covariates: $x_{ij} = [x_{ij1}, \dots, x_{ijd}]$
+  $$
+  x_{ijk} = \text{value of descriptor $k$ for the species pair $(i, j)$}
+  $$
+  \end{itemize}
+  
+  \bigskip \bigskip 
+  \paragraph{Stochastic block model (SBM):} \refer{HoL79} $K$ groups,
+  \begin{itemize}
+  \item $Z_i =$ latent variable indicating to which group node $i$ belongs to
+  $$
+  \{Z_i\}_{1 \leq i \leq n} \text{ iid}, \qquad 
+  \Pr\{Z_i = k\} = {\pi_k}
+  $$
+  \item $Y_{ij} =$ observed number of interactions between species $i$ and $j$
+  $$
+  \{Y_{ij}\}_{1 \leq i \leq n, 1 \leq j \leq p} \text{ indep} \mid Z, \qquad 
+  Y_{ij} \mid Z_i, Z_j \sim \Pcal(\exp(x_{ij}^\intercal {\beta} + \alpha_{Z_i Z_j}))
+  $$
+  \item ${\theta} = (\pi, \alpha, \beta)$ \qquad (and $K$)
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Illustration}
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.525\textwidth}}
+      \paragraph{Data.}
+      \begin{itemize}
+        \setlength{\itemsep}{1.25\baselineskip}
+        \item $n = 51$ tree species, 
+        \item $Y_{ij} = $ number of fungal parasites shared by species $i$ and $j$,
+        \item $x_{ij} =$ taxonomic distance btw species $i$ and $j$.
+      \end{itemize}
+
+    
+      \bigskip \bigskip \pause
+      \paragraph{Results.} \refer{MRV10}
+      \begin{itemize}
+        \setlength{\itemsep}{1.25\baselineskip}
+        \item {$\widehat{\beta} = -.417$}
+        \item $\widehat{K} = 4$ species groups \\
+        (not due to taxonomic similarity)
+      \end{itemize}
+
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+%       \includegraphics[height=.3\textwidth,width=.3\textwidth]{\fignet/Tree-ICL-SBMall}  \\
+      \includegraphics[height=.35\textwidth,width=.35\textwidth]{\fignet/Tree-adjMat-SBMtaxo}
+    \end{tabular}
+  \end{tabular}
+  
+\bigskip \bigskip 
+\paragraph{R packages:} \url{blockmodels} \refer{Leg16}, \url{sbm}.
+  
+}
+
+%====================================================================
+\subsection{Variational inference}
+%====================================================================
+\frame{\frametitle{A reminder on the EM algorithm}
+
+  \paragraph{Maximum likelihood inference.}
+  $$
+  \widehat{\theta} = \arg\max_\theta \; \log p_\theta(Y)
+  $$
+  \ra no closed form for $\displaystyle{{p_\theta(Y) = \int \underset{\text{complete likelihood}}{\underbrace{p_\theta(Y, Z)}} \d Z}}$ in latent variable models
+
+  \bigskip \bigskip
+  \paragraph{Incomplete data models.} EM algorithm \refer{DLR77}
+  $$
+  \theta^{h+1} 
+  = \underset{\text{\normalsize \emphase{M step}}}{\underbrace{\argmax_\theta}} \; \underset{\text{\normalsize \emphase{E step}}}{\underbrace{\Esp_{\theta^h}}}[\log p_\theta(Y, Z) \mid Y]
+  $$
+
+  \bigskip \bigskip
+  \paragraph{Critical step = E step.} Evaluate $p_\theta(Z \mid Y)$
+  \begin{itemize}
+  \item easy: mixture models, Gaussian linear mixed-models, ...
+  \item use a trick: hidden Markov models, phylogenetic or evolutionary models, ...
+  \item intractable: many models, including PLN \& SBM
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Variational approximation} 
+
+  \paragraph{Twisted problem:} \refer{Jaa01,WaJ08,BKM17} maximize a lower bound of the log-likelihood:
+  \begin{align*}
+  J(Y; \theta, q)
+  & = \log p_\theta(Y)
+  - \underset{\text{\normalsize {VE step}}}{\underbrace{\emphase{KL(q(Z) \mid\mid p_\theta(Z \mid Y))}}} \\
+  & = 
+  \underset{\text{\normalsize {M step}}}{\underbrace{\emphase{\Esp_q (\log p_\theta(Y, Z))}}} 
+  - \Esp_q(\log q(Z)) 
+  \end{align*}
+  where $q(\cdot) \simeq p_\theta(\cdot \mid Y)$ is chosen within the approximation class $\Qcal$.
+  
+
+  \bigskip \bigskip \pause
+  \paragraph{Many avatars.} 
+  \begin{itemize}
+    \item Alternative divergences \refer{Min01,Min05}
+    \item Extension to Bayesian inference w/o latent variables \refer{BeG03} 
+  \end{itemize}   
+
+  \bigskip
+  \ra Reasonably easy to implement and computationally efficient
+
+}
+
+%====================================================================
+\frame{\frametitle{Approximate distribution} 
+
+  \paragraph{Critical choice:} $\Qcal$ needs to be 
+  \begin{itemize}
+  \item 'large' enough to include good approximations of $p_\theta(Z \mid Y)$ 
+  \item 'small' enough to make the calculations tractable
+  \end{itemize}
+
+  \bigskip \bigskip
+  \paragraph{Examples:} 
+  \begin{itemize}
+   \item PLN model for species abundance ($Z \sim \Ncal, Y\mid Z \sim \Pcal$):
+   $$
+   \Qcal := \{\text{multivariate Gaussian distributions}\}
+   $$ \\ ~
+   \item SBM model for networks ($Z \sim \Mcal, Y\mid Z \sim \Pcal$): \refer{DPR08,MRV10}
+   $$
+   \Qcal := \{\text{factorable discrete distributions}\}
+   $$ 
+   ('mean-field' approximation)
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Statistical guarantees for variational estimates} \label{back:statGuarantees} 
+  \paragraph{Statistical guaranties for variational inference.} 
+  \begin{itemize}
+  \item Very scarce \\
+  \ra binary SBM without covariate \refer{CDP12,BCC13,MaM15}, specific PLN \refer{HOW11,WeM19}
+  \item Many (positive) empirical results %\Refer{\#\ref{goto:vbemSBM}}
+  \item No generic theoretical result about consistency, asymptotic normality, \dots
+  \end{itemize}
+ 
+  \bigskip \bigskip \pause
+  \paragraph{VEM with statistical guarantees?}
+  \begin{itemize}
+  \item Make a theoretical analysis of
+  $$
+  \widehat{\theta}_{VEM} = \argmax_\theta \left(\argmax_{q \in \Qcal} J(Y; \theta, q) \right)
+  $$
+  \ra Very problem specific \refer{WeM19} \\ ~
+  \item Use VEM to accelerate computationally demanding procedures for frequentist or Bayesian inference \refer{DoR21}
+  \end{itemize}
+
+}
+
+%====================================================================
+%====================================================================
+\section{A model for exchangeable graphs}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+
+%====================================================================
+\subsection{Row-column exchangeable matrices}
+%====================================================================
+\frame{\frametitle{Row-column exchangeable matrix}
+
+  \paragraph{Row-column exchangeabibility (RCE).} $Y = [Y_{ij}] = (m \times n)$ random matrix.
+  $$
+  Y \text{ is RCE} \qquad \Leftrightarrow \qquad
+  \forall \sigma_1, \sigma_2: \quad \Lcal([Y_{ij}]) = \Lcal([Y_{\sigma_1(i)\sigma_2(j)}])
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Example: Bipartite expected 'degree' distribution (BEDD).} 
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item $f, g: [0, 1] \mapsto \Rbb^+$, with $\int f = \int g = 1$;
+    \item $\{U_i\}_{1 \leq i \leq m}, \{V_j\}_{1 \leq j \leq n} \text{ iid } \sim \Ucal[0, 1]$;
+    \item $\{Y_{ij}\}_{1 \leq i \leq m, 1 \leq j \leq n} \text{ independent } \mid \{U_i\}, \{V_j\}$, with
+    $$
+    Y_{ij} \mid U_i, V_j \sim 
+      \left\{\begin{array}{ll}
+        \Bcal(\rho \; f(U_i) \; g(V_j)) & \text{binary matrix} \\ ~
+        \\
+        \Pcal(\lambda \; f(U_i) \; g(V_j)) & \text{count matrix} \\ ~
+        \\
+        \Fcal(\theta, f(U_i), g(V_j)) & \text{general case}
+      \end{array}\right.
+    $$
+  \end{itemize}
+
+}
+
+%====================================================================
+\subsection{Analyzing bipartite network}
+%====================================================================
+%====================================================================
+\frame{\frametitle{Bipartite species interaction networks}
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.55\textwidth}}
+      \paragraph{Species interactions:} 
+      \begin{itemize}
+      \setlength{\itemsep}{1.25\baselineskip}
+      \item plant-pollinator (mutualistic)
+      \item plant-herbivors (antagonistic)
+      \end{itemize}
+
+      \bigskip \bigskip 
+      \onslide+<2->{
+        \paragraph{Specialists vs generalists:} some insects interact with almost any plant, whereas some others interact only with few specific plants. \\
+        (same for plants $\leftrightarrow$ insects).
+      }
+      
+      \bigskip \bigskip 
+      \onslide+<3->{
+        \paragraph{$f$ encodes} the difference between specialist and generalist plants:
+        $$
+        \{f \equiv 1\} \quad \Leftrightarrow \quad \text{no generalist vs specialist}.
+        $$
+        (same for $g$ and insects)
+        }
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+      \includegraphics[width=.35\textwidth, trim=0 50 0 50]{\fignet/Zackenberg-1996_12-red-net} \\
+      \includegraphics[width=.35\textwidth, angle=90, trim=0 50 0 50, clip]{\fignet/Zackenberg-1996_12-red-6node-orderedAdj}  
+    \end{tabular}
+  \end{tabular}
+ 
+}
+
+%====================================================================
+\frame{\frametitle{Motif in bipartite networks}
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Motif count $N_s =$} number of occurrences of motif $s$ in the (binary) network $Y$.
+      
+      \onslide+<2->{
+        \bigskip 
+        \paragraph{Moments under BEDD.} $\Esp N_s$ and $\Var N_s$ are functions of $\rho$, $F_k = \int f^k$ and $G_k = \int g^k$.
+      }
+      
+      \onslide+<3->{
+        \bigskip 
+        \paragraph{Estimates} of $\rho$, $F_k$ and $G_k$ can be derived from the counts of 'star' motifs.
+      }
+      
+      \onslide+<4->{
+        \bigskip 
+        \paragraph{Asymptotic normality.} Under sparsity conditions $\rho \propto m^{-a} n^{-b}$ 
+        $$
+        \left(N_s - \widehat{\Esp}N_s\right) \left/ \sqrt{\widehat{\Var}N_s}\right.
+        \overset{\Lcal}{\longrightarrow}
+        \Ncal(0, 1).
+        $$
+      }
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+      \includegraphics[width=.4\textwidth]{\fignet/SCB19-Oikos-Fig3-6motifs} \\
+      \refer{SCB19,SSS19}
+    \end{tabular}
+  \end{tabular}
+  
+  \onslide+<5->{
+  \bigskip 
+  \paragraph{Tests} \refer{OLR21} can be derived for
+  \begin{align*}
+    \text{Goodness of fit:} & & H_0 & = \{Y \sim BEDD\} \\
+    \text{Absence of imbalance:} & & H_0 & = \{f \equiv 1\}, & 
+    \text{Network comparison:} & & H_0 & = \{f^A = f^B\}
+  \end{align*}
+  }
+
+}
+
+%====================================================================
+\frame{ \frametitle{$U$-statistics for weighted RCE networks}
+  
+  \paragraph{Order-2 $U$-statistic.} Given a kernel $h : \Rbb^4 \mapsto \Rbb$, define
+  $$
+  U_{m, n} = \binom{m}{2}^{-1} \binom{n}{2}^{-1} 
+  \sum_{1 \leq i_1 < i_2 \leq m} \sum_{1 \leq j_1 < j_2 \leq n} 
+  h(Y_{i_1j_1}, Y_{i_1j_2}, Y_{i_2j_1}, Y_{i_2j_2}).
+  $$
+  Tam Le Minh's PhD \refer{LeM21}: asymptotic normality of $U_{m, n}$ when $Y$ is {\sl separable} RCE\footnote{plus some technical conditions}. \\
+  \medskip
+  \ra Order-2 $U$-statistics can be used for estimation or tests.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Example.} For $Y_{ij} \mid U_i, V_j \sim \Pcal(\lambda f(U_i) g(V_j))$:
+  \begin{align*}
+    h_1 & = \frac14 (Y_{i_1j_1} + Y_{i_1j_2} + Y_{i_2j_1} + Y_{i_2j_2}) & 
+    \Rightarrow \quad \Esp h_1 & = \lambda, \\
+    h_2 & = \frac12 (Y_{i_1j_1}Y_{i_1j_2} + Y_{i_2j_1}Y_{i_2j_2}) & 
+    \Rightarrow \quad \Esp h_2 & = \lambda^2 F_2, \\
+    h_3 & = \frac12 (Y_{i_1j_1}Y_{i_2j_2} + Y_{i_2j_1}Y_{i_1j_2}) & 
+    \Rightarrow \quad \Esp h_3 & = \lambda^2.
+  \end{align*}
+  
+}
+  
+%====================================================================
+\frame{ \frametitle{Variance degeneracy for some kernels}
+
+  \paragraph{Technical conditions} impose that $\Var U_{m, n}$ is controlled by the 'leading' covariances
+  \begin{align*}
+    \Cov(h(Y_{i_1j_1}, Y_{i_1j_2}, Y_{i_2j_1}, Y_{i_2j_2}), h(Y_{i_1j_3}, Y_{i_1j_4}, Y_{i_3j_3}, Y_{i_3j_3})) & & & (\text{one common row}) \\
+    \text{and} \quad \Cov(h(Y_{i_1j_1}, Y_{i_1j_2}, Y_{i_2j_1}, Y_{i_2j_2}), h(Y_{i_3j_1}, Y_{i_3j_3}, Y_{i_4j_1}, Y_{i_4j_3})) & & & (\text{one common column})  
+  \end{align*}
+  (if not: wrong scaling for the TCL).
+  
+  \bigskip \bigskip \pause
+  \paragraph{Not only a technical issue.} Suppose we want to test $H_0 = \{F_2 = 1\}$ (no imbalance among plants), a natural kernel is
+  \begin{align*}
+    h & = h_2 - h_3 
+    = \frac12 (Y_{i_1j_1}Y_{i_1j_2} + Y_{i_2j_1}Y_{i_2j_2} - Y_{i_1j_1}Y_{i_2j_2} - Y_{i_2j_1}Y_{i_1j_2}) \\
+    \Rightarrow \quad \Esp h & = \lambda^2(F_2 - 1) \overset{H_0}{=} 0
+  \end{align*}
+  but then, both leading covariances are 0...
+
+}
+
+%====================================================================
+%====================================================================
+\backupbegin 
+\section*{Backup}
+%====================================================================
+\frame[allowframebreaks]{\frametitle{References} 
+
+  {\tiny 
+  \bibliography{/home/robin/Biblio/BibGene}
+  \bibliographystyle{alpha}
+  }
+
+}
+
+%====================================================================
+\backupend 
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\frame{\frametitle{}
+}
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

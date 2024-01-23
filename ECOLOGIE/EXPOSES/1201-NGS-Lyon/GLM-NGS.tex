@@ -1,0 +1,1734 @@
+\documentclass{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+\usetheme{CambridgeUS}
+\useinnertheme{rectangles}
+%\usefonttheme[onlymath]{serif}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{stmaryrd}
+\usepackage{verbatim}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage{/media/donnees/LATEX/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+\usepackage{arydshln}
+
+% Commands
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+\newcommand{\paragraph}[1]{\emphase{#1}}
+\newcommand{\refer}[1]{\textcolor{blue}{\sl \cite{#1}}}
+\newcommand{\Refer}[1]{\textcolor{blue}{\sl #1}}
+\newcommand{\newblock}{}
+\newcommand{\Pause}{\pause}
+%\newcommand{\Pause}{}
+
+% Symbols
+\newcommand{\Abf}{{\bf A}}
+\newcommand{\Beta}{\text{B}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\BIC}{\text{BIC}}
+\newcommand{\cbf}{{\bf c}}
+\newcommand{\dd}{\text{d}}
+\newcommand{\dbf}{{\bf d}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Ebf}{{\bf E}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Gam}{\mathcal{G}\mbox{am}}
+\newcommand{\Ibb}{\mathbb{I}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\ICL}{\text{ICL}}
+\newcommand{\Cov}{\mathbb{C}\text{ov}}
+\newcommand{\Corr}{\mathbb{C}\text{orr}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\Vsf}{\mathsf{V}}
+\newcommand{\pen}{\text{pen}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Jcal}{\mathcal{J}}
+\newcommand{\Kbf}{{\bf K}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\mum}{\mu(\mbf)}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Nbf}{{\bf N}}
+\newcommand{\Nm}{N(\mbf)}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\Obf}{{\bf 0}}
+\newcommand{\Omegas}{\underset{s}{\Omega}}
+\newcommand{\Pbf}{{\bf P}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\sbf}{{\bf s}}
+\newcommand{\Sbf}{{\bf S}}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\Tbf}{{\bf T}}
+\newcommand{\ubf}{{\bf u}}
+\newcommand{\Ubf}{{\bf U}}
+\newcommand{\Wbf}{{\bf W}}
+\newcommand{\xbf}{{\bf x}}
+\newcommand{\Xbf}{{\bf X}}
+\newcommand{\Ybf}{{\bf Y}}
+\newcommand{\Zbf}{{\bf Z}}
+\newcommand{\pibf}{\mbox{\mathversion{bold}{$\pi$}}}
+\newcommand{\Sigmabf}{\mbox{\mathversion{bold}{$\Sigma$}}}
+\newcommand{\gammabf}{\mbox{\mathversion{bold}{$\gamma$}}}
+\newcommand{\mubf}{\mbox{\mathversion{bold}{$\mu$}}}
+\newcommand{\nubf}{\mbox{\mathversion{bold}{$\nu$}}}
+\newcommand{\Thetabf}{\mbox{\mathversion{bold}{$\Theta$}}}
+\newcommand{\thetabf}{\mbox{\mathversion{bold}{$\theta$}}}
+\newcommand{\BP}{\text{BP}}
+\newcommand{\EM}{\text{EM}}
+\newcommand{\VEM}{\text{VEM}}
+\newcommand{\VBEM}{\text{VB}}
+\newcommand{\cst}{\text{cst}}
+\newcommand{\obs}{\text{obs}}
+\newcommand{\ra}{\emphase{${\bf \rightarrow}$~}}
+\newcommand{\QZ}{Q_{\Zbf}}
+\newcommand{\Qt}{Q_{\thetabf}}
+
+\newcommand{\vecOne}{\begin{array}{c} 1\\ \vdots\\ 1\end{array}}
+\newcommand{\vecZero}{\begin{array}{c} 0\\ \vdots\\ 0\end{array}}
+
+%====================================================================
+\title[Statistical models for count data]{Some statistical models for
+  count data analysis}
+
+\author{S. Robin}
+
+\institute[AgroParisTech / INRA]{AgroParisTech / INRA \\
+  \bigskip
+  \begin{tabular}{ccccc}
+    \epsfig{file=/media/donnees/RECHERCHE/RESEAUX/EXPOSES/FIGURES/LogoINRA-Couleur.ps, 
+    width=2.5cm} & 
+    \hspace{.5cm} &
+    \epsfig{file=/media/donnees/RECHERCHE/RESEAUX/EXPOSES/FIGURES/logagroptechsolo.eps, 
+    width=3.75cm} & 
+    \hspace{.5cm} &
+    \epsfig{file=/media/donnees/RECHERCHE/RESEAUX/EXPOSES/FIGURES/logo-ssb.eps,
+    width=2.5cm} \\ 
+  \end{tabular} \\
+  \bigskip
+  }
+
+\date[NGS, Jan 2012, Lyon]{De la production à l'analyse des données NGS,
+  January 2012, Lyon}
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\frame{\titlepage}
+
+%====================================================================
+\frame{\frametitle{Outline}
+  \tableofcontents
+  }
+
+%====================================================================
+%====================================================================
+\section{A statistical model: what for?}
+\frame{\frametitle{A statistical model: what for?} \Pause
+  \paragraph{Aim of an experiment:} answer to a biological question
+
+  \Pause \bigskip 
+  \paragraph{Results of an experiment:} (numerous, numerical)
+  measurements
+  
+  \Pause \bigskip 
+  \paragraph{Model:} mathematical formula that relates the experimental
+  conditions and the observed measurements (response) 
+  
+  \Pause \bigskip 
+  \paragraph{(Statistical) modelling:} translating a biological
+  question into a mathematical model \Pause (\emphase{\ra $\neq$ PIPELINE!})
+
+  \Pause \bigskip 
+  \paragraph{Statistical model:} mathematical formula involving
+  \begin{itemize}
+  \item the \emphase{experimental conditions},  
+  \item the \emphase{biological response},  
+  \item the \emphase{parameters} that describe the influence of the
+    conditions on the (mean, theoretical) response,  
+  \item and a description of the (technical, biological)
+    \emphase{variability}.
+  \end{itemize}
+  }
+
+%====================================================================
+\subsection*{A general framework}
+\frame{\frametitle{A general framework}
+  
+  \paragraph{Linear models:} an old, flexible, well established framework.  
+  $$
+  \begin{tabular}{cc}
+    \hspace{-.5cm} \Pause
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Most common setting:}
+      \begin{itemize}
+      \item \emphase{Continuous} (Gaussian) measurements (e.g.
+        \emphase{microarray} signal),
+      \item with arbitrary experimental conditions (covariates, factor),
+      \item and (reasonable) \emphase{dependency} between
+        observations.
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.5cm} \Pause
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Generalisation:}
+      \begin{itemize}
+      \item \emphase{Almost arbitrary} (binary, count) measurements
+        (e.g. \emphase{NGS}),
+      \item with arbitrary experimental conditions (covariates, factor),
+      \item and (\emphase{rather simple}) dependency between
+        observations.
+      \end{itemize}
+    \end{tabular}
+  \end{tabular}
+  $$
+  
+  \Pause
+  \paragraph{(Commercial and open-source) softwares} provide packages
+  and procedures for the inference for such models 
+  ... at least for \emphase{most standard designs}.
+  }
+  
+%====================================================================
+\frame{\frametitle{An example} \Pause
+  
+  \paragraph{Response $Y$:} 
+  \begin{itemize}
+  % \item abundance of a given microbial species measured by RNA 16S arrays,
+  % \item abundance of a given microbial species measured by NGS,
+  % \item (or expression level of a given gene).
+  \item expression level of a given gene measured with microarray,
+  \item expression level of a given gene measured with RNAseq,
+  \item (or abundance of a given species).
+  \end{itemize}
+  
+  \Pause \bigskip 
+  \paragraph{Conditions $\xbf$:} 
+  \begin{itemize}
+  \item medium ($A, B$), 
+  \item dose (or concentration: $0, 1, ..., 4$),
+  \item sample preparation ($1, 2$).
+  \end{itemize}
+
+  \Pause \bigskip 
+  \paragraph{Questions:} 
+  \begin{enumerate}
+  % \item Does the species have the same abundance in the two
+  %   mediums at maximal dose?
+  % \item Does the species have same response dynamics to the dose in
+  %   the two mediums?
+  \item Does the gene have the same expression level in the two
+    mediums at maximal dose?
+  \item Does the gene have same response dynamics to the dose in
+    the two mediums?
+  \item (Does the sample preparation affect the measurements?)
+  \end{enumerate}
+  }
+  
+%====================================================================
+\frame{\frametitle{An example (cont'd)}
+
+  \paragraph{Data:} Series of $n$ couples 
+  $
+  \qquad (\xbf_i, Y_i), 
+  \quad i = 1..n.
+  $  
+  \bigskip 
+  \begin{tabular}{cc}
+     \Pause \hspace{-.5cm}
+    \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[clip=,
+      width=.45\textwidth]{../FIGURES/MICA-Ancova.eps} \\
+      Medium: \textcolor{red}{$A$} / \textcolor{green}{$B$},
+      Prep.: $\vartriangle / \triangledown$.
+    \end{tabular}
+    &
+    \hspace{-.75cm}
+    \begin{tabular}{p{.5\textwidth}}      
+      \Pause\paragraph{Statistical model:}
+      \begin{itemize}
+      \item Mean (or 'theoretical') response for condition $\xbf$:
+        $$
+        \Esp(Y) = \mu(\xbf, \thetabf),
+        $$
+      \item \Pause Observed response at experiment
+        ${\emphase{i}}$:
+        $$
+        Y_{\emphase{i}} \sim \Fcal[\mu(\xbf_{\emphase{i}}, \thetabf)].
+        $$
+      \end{itemize}
+      
+      \Pause\paragraph{Aim:} Estimate $\thetabf$ or
+      some function of it.
+    \end{tabular}
+  \end{tabular}
+  }
+
+%====================================================================
+\frame[containsverbatim]{\frametitle{An example (cont'd)}
+
+  \paragraph{Data format.}  
+
+  \bigskip 
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{One row = one experimental unit:} \\
+      e.g. one culture, \\
+      in a given medium, \\
+      at a given dose, \\
+      with a given preparation.
+
+      \bigskip
+      \paragraph{One column = one variable:} \\
+      conditions (medium, dose, prep.) \\
+      % and response (e.g. abundance).
+      and response (e.g. expression).
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}    
+\begin{verbatim}
+"i" "Med" "Prep" "Dose" "Resp" 
+"1"    1     1     0    0.358
+"2"    1     1     1    3.712
+"3"    1     1     2   10.113
+"6"    1     1     0    1.330
+"7"    1     1     1    3.822
+"8"    1     1     2   11.268
+"29"   1     2     3   18.756
+"45"   2     1     4   35.297
+\end{verbatim}
+    \end{tabular}
+  \end{tabular} 
+  
+  \bigskip\bigskip
+  Not optimal in terms of space storage ... but required by most softwares.
+
+  }
+
+% %====================================================================
+% \frame{\frametitle{An example: 3 models}
+%   \paragraph{Additive effects.} The respective effects of the medium ($m$),
+%   dose ($d$) and preparation ($p$) \emphase{simply add} to each other:
+%   $$
+%   \Esp(Y_{i = m, d, p}) = \alpha_m + \beta_d + \delta_p
+%   \qquad (\text{or } \mu + \alpha_m + \beta_d + \delta_p).
+%   $$
+
+%   \bigskip\bigskip\Pause
+%   \paragraph{Model with interaction.} The dose effect \emphase{depends
+%     on the medium} (and conversely):
+%   $$
+%   \Esp(Y_{i = m, d, p}) = \alpha_m + \beta_d + \gamma_{md} + \delta_p.
+%   $$
+
+%   \bigskip\bigskip\Pause
+%   \paragraph{Dose as a continuous covariate.} The effect of the dose
+%   has a \emphase{specific form} (e.g. quadratic) with medium-specific
+%   coefficients:
+%   $$
+%   \Esp(Y_{i = m, d, p}) = \alpha_m + b_m d  + c_m d^2 + \delta_p.
+%   $$
+%   }
+
+%====================================================================
+\frame{\frametitle{An example: 3 models}
+
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<1->{
+        \paragraph{Response $Y = f(\text{dose } d)$.} \\ 
+        \includegraphics[clip=,
+        width=.45\textwidth]{../FIGURES/MICA-Ancova.eps} \\
+        Medium ($m$): \textcolor{red}{$A$} / \textcolor{green}{$B$}, \\
+        Prep. ($p$): $\vartriangle / \triangledown$. \\
+        ~\\ ~\\
+      }
+    \end{tabular}
+    &
+    \hspace{-1.25cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<2->{
+        \paragraph{Additive model.} Effects {simply add}:
+        $$
+        \Esp(Y_{i = m, d, p}) = \alpha_m + \beta_d + \delta_p.
+        $$
+        % $
+        % (\text{or } \mu + \alpha_m + \beta_d + \delta_p).
+        % $ \\ ~\\
+      }
+
+      \onslide+<3->{
+        \smallskip\Pause
+        \paragraph{Model with interaction} between the dose and the medium:
+        $$
+        \Esp(Y_{i = m, d, p}) = \alpha_m + \beta_d +
+        \emphase{\gamma_{md}} + \delta_p. 
+        $$
+      }
+      
+      \onslide+<4->{
+        \smallskip\Pause
+        \paragraph{Dose as a covariate.} The dose effect has
+        {specific form}: 
+        $$
+        \Esp(Y_{i = m, d, p}) = \alpha_m + \emphase{b_m d  + c_m d^2} + \delta_p.
+        $$ \\
+        }
+    \end{tabular} 
+  \end{tabular}
+  }
+
+%====================================================================
+%====================================================================
+\section{Linear models}
+\subsection*{General definition}
+\frame{\frametitle{Linear models: Regression, Analysis of variance,
+    etc.} \Pause
+  
+  \paragraph{'Linear':} the \emphase{mean response} $\mu$ can be
+  written as a scalar product
+  $$
+  \emphase{\mu(\xbf, \thetabf) = \xbf . \thetabf}.
+  $$
+  \Pause 
+  \vspace{-.4cm}\hspace{-.4cm}$
+  \begin{array}{llc}
+    \text{Model} & \hspace{-.4cm} \xbf \text{ (medium $A$, dose $d=3$,
+    prep. $2$)} & \hspace{-.25cm} \thetabf \\ 
+
+    \vspace{-.4cm}
+    \begin{array}{l}
+      \text{\emphase{Additive effects}} \\
+      \alpha_m + \beta_d + \delta_p 
+    \end{array}
+    & \hspace{-.4cm} [\underset{medium}{\underbrace{1\;0}} \;
+    \underset{dose}{\underbrace{0\;0\;0\;1\;0}} \;
+    \underset{prep.}{\underbrace{0\;1}}] 
+    & \hspace{-.25cm} \left[ \begin{array}{c} (\alpha_m) \\ (\beta_d) \\
+        (\delta_p) \end{array} \right] \\
+    \\
+
+    \vspace{-.4cm}
+    \Pause \begin{array}{l}
+      \text{\emphase{Interaction}} \\
+      \alpha_m + \beta_d + \gamma_{md} + \delta_p 
+    \end{array}
+    & \hspace{-.4cm} [\underset{medium}{\underbrace{1\;0}} \;
+    \underset{dose}{\underbrace{0\;0\;0\;1\;0}} \;
+    \underset{medium*dose}{\underbrace{0\;0\;0\;1\;0\;0\;0\;0\;0\;0}} \;
+    \underset{prep.}{\underbrace{0\;1}}] 
+    & \hspace{-.25cm} \left[ \begin{array}{c} (\alpha_m) \\ (\beta_d) \\
+        (\gamma_{md}) \\ (\delta_p) \end{array} \right] \\
+    \\
+    
+    \Pause \begin{array}{l}
+      \text{\emphase{Polynomial}} \\
+      \alpha_m + b_m d + c_m d^2 + \delta_p 
+    \end{array}
+    & \hspace{-.4cm} [\underset{medium}{\underbrace{1\;0}} \;
+    \underset{dose}{\underbrace{3\;0}} \;
+    \underset{dose^2}{\underbrace{9\;0}} \;
+    \underset{prep.}{\underbrace{0\;1}}] 
+    & \hspace{-.25cm} \left[ \begin{array}{c} (\alpha_m) \\ (b_m) \\ (c_m) \\
+        (\delta_p) \end{array} \right] \\
+  \end{array}
+  $
+  }
+
+%====================================================================
+\frame{\frametitle{Contrasts of interest}
+
+  \paragraph{Model:} $m=$ medium, $d=$ dose, $p=$ preparation
+  $$
+  \mu(\xbf, \thetabf) = \alpha_m + \beta_d + \gamma_{md} + \delta_p 
+  $$
+  
+  \Pause \bigskip 
+  \paragraph{Aim = answering questions} based on the value of $\thetabf$
+  \begin{enumerate}
+  % \item \Pause Does the species have the same abundance in the two
+  %   mediums at dose $d_{\max}$?
+  \item \Pause Does the gene have the same expression level in the two
+    mediums at dose $d_{\max}$ (with same preparation $p$)?
+    $$
+    (\alpha_A + \gamma_{A, d_{\max}}) - (\alpha_B + \gamma_{B, d_{\max}})
+    \overset{?}{=} 0 
+    $$
+  % \item \Pause Does the species have same response dynamics to the dose in
+  %   the two mediums (at dose $d$)?
+  \item \Pause Does the gene have same response dynamics to the dose in
+    the two mediums (at dose $d$,  with same preparation $p$)?
+    $$
+    (\gamma_{A,d+1} - 2 \gamma_{A,d} + \gamma_{A,d-1}) -
+    (\gamma_{B,d+1} - 2 \gamma_{B,d} + \gamma_{B,d-1}) \overset{?}{=}
+    0
+    $$
+  \item \Pause Does the sample preparation affect the measurements?
+    $$
+    \delta_1 - \delta_2 \overset{?}{=} 0
+    $$
+  \end{enumerate}
+
+  }
+
+%====================================================================
+\frame{\frametitle{Contrasts of interest in the polynomial model}
+
+  \paragraph{Model:} $m=$ medium, $d=$ dose, $p=$ preparation
+  $$
+  \mu(\xbf, \thetabf) =  \alpha_m + b_m d + c_m d^2 + \delta_p 
+  $$
+  
+  \Pause \bigskip 
+  \paragraph{Aim = answering questions} based on the value of $\thetabf$
+  \begin{enumerate}
+  % \item \Pause Does the species have the same abundance in the two
+  %   mediums at dose $d_{\max}$?
+  \item \Pause Does the gene have the same expression level in the two
+    mediums at dose $d_{\max} = 4$ (with same preparation $p$)?
+    $$
+    (\alpha_A + 4 b_A + 16 c_A) - (\alpha_B + 4 b_B + 16 c_B)
+    \overset{?}{=} 0 
+    $$
+  % \item \Pause Does the species have same response dynamics to the dose in
+  %   the two mediums (at dose $d$)?
+  \item \Pause Does the gene have same response dynamics to the dose in
+    the two mediums (with same preparation $p$)?
+    $$
+    c_A - c_B \overset{?}{=} 0 
+    \qquad \qquad \text{(at any dose $d$)}.
+    $$
+  \item \Pause Does the sample preparation affect the measurements?
+    $$
+    \delta_1 - \delta_2 \overset{?}{=} 0
+    $$
+  \end{enumerate}
+
+  }
+
+%====================================================================
+\frame{\frametitle{Most classical (and simplest) setting}
+  
+  The responses $(Y_i)$ are \emphase{independent} with \emphase{same
+    variance} $\sigma^2$.
+  
+  \Pause \bigskip 
+  The experimental conditions and the responses can be gathered into
+  $$
+  \Xbf = \left[ \begin{array}{c} \xbf_1 \\ \vdots \\ \xbf_n
+    \end{array} \right] =  \text{\emphase{design matrix}}, 
+  \qquad
+  \Ybf = \left[ \begin{array}{c} Y_1 \\ \vdots \\ Y_n
+    \end{array} \right] = \text{\emphase{response vector.}}
+  $$
+  \Pause The model can then rewritten as (with $\Esp(\Ebf) = \Obf$,
+  $\Var(\Ebf) = \sigma^2 \Ibf$) 
+  $$
+  \underset{\emphase{response}}{\Ybf} =
+  \underset{\emphase{design}}{\Xbf} .
+  \underset{\emphase{parameter}}{\thetabf } +
+  \underset{\emphase{variability}}{\Ebf}. 
+  $$
+
+  \Pause \bigskip 
+  \paragraph{Least square estimate.} \qquad
+  $
+  \widehat{\thetabf} = (\Xbf' \Xbf)^{-1} \Xbf' \Ybf.
+  $
+
+  }
+
+%====================================================================
+\frame{\frametitle{Experimental design}
+
+  \paragraph{Precision of the estimates:}
+  $$
+  \Var(\widehat{\thetabf}) = \emphase{(\Xbf' \Xbf)^{-1}} \sigma^2
+  $$
+  depends neither on $\Ybf$, nor on $\thetabf$.
+
+  \Pause \bigskip 
+  \paragraph{Variance of a contrast:} $\phi = (\alpha_A + \gamma_{Ad_{\max}})
+  - (\alpha_B + \gamma_{Bd_{\max}}) = \cbf' \thetabf$, 
+  \begin{eqnarray*}
+    \text{where } \cbf' & = &
+%     \phi & = & (\alpha_A + \gamma_{Ad_{\max}}) - (\alpha_B + \gamma_{Bd_{\max}}) \\
+    [\underset{medium}{\underbrace{1\;-1}} \;
+    \underset{dose}{\underbrace{0\;0\;0\;0\;0}} \;
+    \underset{medium*dose}{\underbrace{0\;0\;0\;0\;1\;0\;0\;0\;0\;-1}} \;
+    \underset{prep.}{\underbrace{0\;0}}] . \thetabf \\
+%     \Rightarrow \qquad \Var(\widehat{\phi)} & = & \emphase{\cbf' (\Xbf'
+%     \Xbf)^{-1} \cbf} \; \sigma^2 
+%     \text{or } \cbf' & = &
+% %     \phi & = & (\alpha_A + \gamma_{Ad_{\max}}) - (\alpha_B + \gamma_{Bd_{\max}}) \\
+%     [\underset{medium}{\underbrace{0\;0}} \;
+%     \underset{dose}{\underbrace{0\;0\;0\;0\;0}} \;
+%     \underset{medium*dose}{\underbrace{1\;-2\;1\;0\;0\;-1\;2\;1\;0\;0} \;
+%     \underset{prep.}{\underbrace{0\;0}}] . \thetabf \\
+    \Rightarrow \qquad \Var(\widehat{\phi)} & = & \emphase{\cbf' (\Xbf'
+    \Xbf)^{-1} \cbf} \; \sigma^2 
+  \end{eqnarray*}
+  \Pause
+  \begin{itemize}
+  \item The \emphase{power of a test depends on the precision} of the
+    estimate $\widehat{\phi}$.
+  \item The experimental design $\Xbf$ \emphase{can be optimised for
+    the contrast of interest}.
+  \item A same design $\Xbf$ is, in general, \emphase{not
+    optimal for different contrasts}. 
+  \end{itemize}
+  }
+
+%====================================================================
+%====================================================================
+\subsection*{Continuous data}
+\frame{\frametitle{Continuous data: Gaussian linear models} \Pause
+
+  \paragraph{Continuous response:} e.g. (log-)intensity measured in a
+  microarray experiment.
+
+  \Pause \bigskip 
+  \paragraph{Independent homoscedastic Gaussian setting.} For experiment $i$:
+  $$
+  (Y_i) \text{ independent,} \qquad Y_i \sim \Ncal(\xbf_i.\thetabf,
+  \sigma^2),
+  $$
+  comprises linear regression, analysis of variance, etc.
+
+  \Pause \bigskip 
+  \paragraph{Most comfortable setting:}
+  \begin{itemize}
+  \item \emphase{Explicite} estimates of the parameters (maximum
+    likelihood = least squares, no numerical optimisation);
+  \item \emphase{Exact} confidence intervals and tests (not asymptotic);
+  \item \emphase{Robust} to (reasonable) non-normality and
+    non-homogeneity of the variance.
+  \end{itemize}
+  }
+
+%====================================================================
+\frame[containsverbatim]{\frametitle{Practical implementation with R}
+  
+  All (reasonable) statistical softwares include Gaussian linear model
+  inference as a basic option.
+
+  \bigskip %\Pause
+  \paragraph{Model:}
+  $$
+  \mu(\xbf, \thetabf) = \alpha_m + \beta_d + \gamma_{md} + \delta_p.
+  $$
+  \paragraph{Call:} \\
+{\tt 
+\emphase{lm}(\emphase{Response $\sim$ Medium + Dose +
+  Medium:Dose + Prep}) \\ 
+}
+
+\bigskip %\Pause
+\paragraph{Result:} 
+\begin{verbatim}
+Coefficients:
+  (Intercept)        Medium2          Dose1          Dose2  
+       1.5791        -0.4794         2.2577         8.6825  
+        Dose3          Dose4          Prep2  Medium2:Dose1  
+      17.9051        29.7461        -0.6982         1.1839  
+Medium2:Dose2  Medium2:Dose3  Medium2:Dose4  
+       2.0200         3.0369         4.0448  
+\end{verbatim}
+  }
+
+%====================================================================
+\frame[containsverbatim]{\frametitle{Practical implementation with SAS}
+  
+{\tt
+proc \emphase{GLM}; \\
+\qquad class Medium Dose Prep; \\
+\qquad model \emphase{Response = Medium Dose Medium*Dose Prep}; \\
+\qquad estimate 'DoseMax' Medium 1 -1 \\
+\qquad \qquad \qquad Medium*Dose 0 0 0 0 1 0 0 0 0 -1; \\
+\qquad estimate 'TakeOff' Medium*Dose 1 -2 1 0 0 -1 2 -1 0 0; \\
+} 
+%\bigskip %\Pause 
+\paragraph{Result:} 
+\begin{verbatim}
+Source      DF     Type I SS   Carré moyen        F   Pr > F
+Medium       1     37.339135     37.339135    90.02   <.0001
+Dose         4   8114.016004   2028.504001  4890.59   <.0001
+Medium*Dose  4     29.719231      7.429808    17.91   <.0001
+Prep         1      7.313087      7.313087    17.63   0.0001
+------------------------------------------------------------
+Paramètre   Estimation      Ecart type    Test t    Pr > |t|
+DoseMax    -3.56543357      0.37183181     -9.59      <.0001
+TakeOff     0.34774687      0.91079820      0.38      0.7043
+\end{verbatim}
+  }
+
+%====================================================================
+\frame{\frametitle{Data transformation}
+  
+  As this setting is so comfortable, we may try to force the data to
+  enter the homoscedastic Gaussian framework.
+
+  \Pause \bigskip 
+  \paragraph{Variance stabilisation.} Transformations exist for many situations
+  $$
+  \begin{array}{rlll}
+%     \text{Variance heterogeneity} & \qquad & \text{Data transformation} \\
+%     \hline
+    \Var(Y) \propto & \Esp(Y) & \quad\rightarrow\quad & \widetilde{Y} =
+    \sqrt{Y} \\ 
+     \\
+    \sqrt{\Var(Y)} \propto & \Esp(Y) & \quad\rightarrow\quad &
+    \widetilde{Y} = \log{Y} \\ 
+     \\
+    Y = & \text{ proportion} & \quad\rightarrow\quad & \widetilde{Y} = \arcsin
+    \sqrt{Y} \\  
+    \\
+    \text{Box-Cox} & & \quad\rightarrow\quad & \widetilde{Y} =
+    (Y^\lambda - 1) / \lambda  \Pause
+  \end{array}
+  $$
+  ... but the interpretability of the results may not be easy.
+  }
+
+%====================================================================
+%====================================================================
+\subsection*{Count data}
+\frame{\frametitle{Count data: Generalised linear models} \Pause
+
+  Linear models can be generalised to
+  other distributions than Gaussian
+  $$
+  \rightarrow \text{General\emphase{ised} Linear Model } \qquad
+  (\neq \text{General Linear Model}).
+  $$
+  
+  \Pause \bigskip 
+  \paragraph{General framework.} 
+  The standard methods refer to distributions from the
+  \emphase{exponential family}, which includes the most commonly used:
+  $$
+  \begin{tabular}{lll}
+    Gaussian, & \qquad & Binomial, \\
+    Poisson, & & Exponential, \\
+    Gamma, & & Negative binomial, \\
+    etc.
+  \end{tabular}
+  $$
+
+  }
+
+%====================================================================
+\frame{\frametitle{Link function}
+
+  \paragraph{Constraint on the mean.} For many distributions, the mean
+  parameter cannot take any real value, e.g.:
+  $$
+  \text{Bernoulli: } \mu \in [0, 1], 
+  \qquad
+  \text{Poisson: } \mu \geq 0.
+  $$
+  The direct modelling $\mu = \xbf \thetabf$ may lead to
+  \emphase{meaningless estimates}.
+
+  \bigskip \Pause \bigskip 
+  \paragraph{Modelling the mean.} We assume that a given (link)
+  function of the mean is linear:
+  $$
+  \emphase{g}[\mu(\xbf, \thetabf)] = \xbf. \thetabf, 
+  \qquad \Leftrightarrow \qquad
+  \mu(\xbf, \thetabf) = \emphase{g^{-1}}(\xbf. \thetabf).
+  $$
+  \Pause \begin{itemize}
+  \item The \emphase{link function does matter for the interpretation}
+    of the results.  
+  \item It is the price to pay to preserve the
+    \emphase{flexibility of linear models} and the
+    \emphase{statistical guaranty} for the inference. 
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{\frametitle{Link function (cont'd)}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Binomial:} $\mu = $ 'success' probability. \Pause 
+      $$
+      \begin{array}{c}
+        \text{logit}(\mu) = \log[\mu/(1-\mu)] = \xbf.\thetabf \\ 
+        \includegraphics[clip=,width=.35\textwidth]{../FIGURES/MICA-Logit.eps}
+        \\ \Pause 
+        \mu = \exp(\xbf.\thetabf) / [1-\exp(\xbf.\thetabf)] \\ 
+        \\ 
+        \rightarrow \text{\emphase{'Odd-ratio'}}
+        =\displaystyle{\frac{\pi_{Trt} / (1-\pi_{Trt})}{\pi_{Ref} /
+        (1-\pi_{Ref})}}.   
+      \end{array}
+      $$
+    \end{tabular}
+    & 
+    \hspace{-.5cm}\Pause 
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Poisson:} $\mu = $ 'intensity'. \Pause 
+      $$
+      \begin{array}{c}
+        \log(\mu) = \xbf.\thetabf \\
+        \includegraphics[clip=,width=.35\textwidth]{../FIGURES/MICA-Log.eps}
+        \\ \Pause 
+        \mu = \exp(\xbf.\thetabf) \\ 
+        \\
+        \rightarrow \text{\emphase{Multiplicative model}:} \\
+        e^{\alpha_m + \beta_d + \delta_p}. 
+        ~
+      \end{array}
+      $$
+    \end{tabular}
+  \end{tabular}
+  }
+
+%====================================================================
+\frame{\frametitle{Statistical inference}
+
+  \paragraph{Parameter estimates.} Most common strategy = Maximum
+  likelihood (but also generalized least-squares).
+  
+  \Pause \bigskip \bigskip 
+  \paragraph{General case.}
+  \begin{itemize}
+  \item \Pause \emphase{No explicite} estimate of the parameters \ra
+    \emphase{Numerical optimisation} \\
+    Newton-Raphson algorithm \emphase{will converge} (for the
+    'canonic' link function); 
+  \item \Pause \emphase{No exact} confidence intervals and tests \ra
+    \emphase{Asymptotic results} \\
+    Wald or likelihood ratio (LR) tests.
+  \end{itemize}
+
+  \Pause \bigskip \bigskip 
+  \paragraph{Some simple cases.} e.g. two sample comparison for Poisson: \\
+  \ra Both explicit estimates and exact tests can be derived.
+  
+  }
+
+%====================================================================
+\frame[containsverbatim]{\frametitle{Practical implementation}
+
+  \begin{tabular}{ll}
+  \paragraph{R:} & {\tt \emphase{glm}(Response $\sim$
+    Medium + Dose + Medium:Dose + Prep,} \\ 
+    & {\tt \qquad \emphase{family = poisson(link = "log")})} \\
+  \paragraph{SAS:} & {\tt proc \emphase{GenMod};} \\
+    & {\tt \qquad class Medium Dose Prep;} \\
+    & {\tt \qquad model Response = Medium Dose Medium*Dose Prep} \\
+    & {\tt \qquad \qquad \qquad / \emphase{dist = Poisson link = log};} \\
+  \end{tabular}
+  
+%   \paragraph{Call with R:} \\
+%   {\tt
+%     \emphase{glm}(Response $\sim$ Medium+Dose+Medium:Dose+Prep, \\
+%     \qquad     \emphase{family = poisson(link = "log")}) \\
+%     }
+
+%   \bigskip %\Pause 
+%   \paragraph{Call with SAS:} \\
+%   {\tt
+%     proc \emphase{GenMod}; \\
+%     \qquad class Medium Dose Prep; \\
+%     \qquad model Response = Medium Dose Medium*Dose Prep \\
+%     \qquad \qquad \qquad / \emphase{dist = Poisson link = log}; \\
+%     }
+  
+  \bigskip %\Pause 
+  \paragraph{Results with SAS:} 
+\begin{verbatim}
+          Algorithm converged.
+     Scaled param.          1.2615
+\end{verbatim}
+\begin{verbatim}
+Source              Écart        DF      Khi 2    Pr > Khi 2
+Medium           689.3750         1       4.62        0.0317
+../..
+\end{verbatim}
+\begin{verbatim}
+Param.    Estimat   E-type   IC 95% (Wald)    Khi2  Pr>Khi2
+DoseMax   -0.2364   0.1092  -0.4505 -0.0223   4.68   0.0304
+TakeOff    0.6066   1.1066  -1.5624  2.7755   0.30   0.5836
+\end{verbatim}
+  }
+
+
+%====================================================================
+\frame{\frametitle{Practical use of generalised linear models}
+
+  \paragraph{Modelling.} 
+  \begin{itemize}
+  \item Completely equivalent to the Gaussian case.
+  \item Same way of thinking about the relevant contrasts.
+  \end{itemize}
+
+  \Pause \bigskip 
+  \paragraph{Parameter estimation and inference.}
+  \begin{itemize}
+  \item Numerical optimisation (but softwares do the job).
+  \item Asymptotic CI and tests \ra reasonably large samples.
+  \end{itemize}
+
+  \Pause \bigskip 
+  \paragraph{Interpretation.}
+  \begin{itemize}
+  \item Contribution of each effect: equivalent to the Gaussian case.
+  \item Idem for the significance of a contrast.
+  \item The interpretation of parameters depends on the link function.
+  \end{itemize}
+  }
+
+%====================================================================
+%====================================================================
+\section{Accounting for correlations}
+\subsection*{Different sources of variability}
+\frame{\frametitle{Different sources of variability} \Pause
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{An example.} 
+      \begin{itemize}
+      \item consider 3 {treatments}, 
+      \item with 2 {individuals} per treatments ('biological' rep.),
+      \item and 3 ('technical') replicates per individual.
+      \end{itemize}
+
+      \Pause \paragraph{Aim.}
+      \begin{itemize}
+      \item \emphase{Differences between the treatments?}
+      \item Accounting for the \emphase{correlation between technical
+          replicates}.
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.5cm} \Pause
+    \begin{tabular}{c}
+      \textcolor{red}{'biological'} / \textcolor{blue}{'technical'}
+      variability \\
+      \includegraphics[clip=,
+      width=.5\textwidth]{../FIGURES/MICA-VarComp.eps} \\
+    \end{tabular}
+  \end{tabular}
+
+  \Pause \bigskip 
+  \paragraph{'Mixed' model:} 
+  $
+  \qquad Y_{Trt, Ind, Rep} = \alpha_{Trt} + \textcolor{red}{A_{Trt, Ind}} +
+  \textcolor{blue}{E_{Trt, Ind, Rep}}.
+  $
+  }
+
+%====================================================================
+%====================================================================
+\subsection*{Linear mixed models}
+\frame{\frametitle{Gaussian mixed models}
+ 
+  \paragraph{Modelling the variance.} The 
+  $$
+  \text{'biological' variance} = \gamma^2 \quad  \text{and 'technical'
+    variance} = \sigma^2
+  $$
+  are called the \emphase{variance components}:
+  $$
+  \text{response variance } = \Var(Y_{Trt, Ind, Rep}) =
+  \gamma^2 + \sigma^2.
+  $$
+  \Pause The hierarchical structure induces a
+  \emphase{within-individual correlation}:
+  $$
+  \Corr(Y_{Trt, Ind, 1}, Y_{Trt, Ind, 2}) =  {\gamma^2}/{(\gamma^2 +
+    \sigma^2)}. 
+  $$
+
+  \Pause \bigskip 
+  \paragraph{'Mixed' models} involve both
+  \begin{itemize}
+  \item \emphase{fix} effects: medium, dose, treatment, ... preparation?,
+  \item and \emphase{random} (Gaussian) effects: individual.
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{\frametitle{Inference}
+
+  \paragraph{Parameters.} In such a model, we need to both estimate
+  \begin{itemize}
+  \item \emphase{fix effects} parameters: $\thetabf$
+  \item and \emphase{variance} parameter: $\gamma^2$, $\sigma^2$.
+  \end{itemize}
+
+  \Pause \bigskip 
+  \paragraph{Estimation.} Several methods exist
+  \begin{itemize}
+  \item Maximum likelihood or Restricted maximum likelihood
+    (\emphase{ReML}): general but \emphase{iterative, sometimes long}
+    (but computers still do the job),
+  \item Moments (e.g. Henderson: direct but \emphase{limited to some 
+      models}).
+  \end{itemize}
+
+  \Pause \bigskip 
+  \paragraph{Tests.}
+  \begin{itemize}
+  \item Exact for balanced designs,
+  \item (Asymptotic) approximations are used in general,
+  \item Depend on the experimental unit and on the reference
+    variability.
+  \end{itemize}
+  }
+
+%====================================================================
+\frame[containsverbatim]{\frametitle{Practical implementation}
+  \paragraph{Call with SAS:} \\
+{\tt
+proc \emphase{Mixed}; \\
+\qquad class Trt Indiv; \\
+\qquad model Response = Trt; \\
+\qquad \emphase{random Indiv(Trt)}; \\
+\qquad estimate 'Trt1-Trt2' Trt 1 -1 0; \\
+}
+
+\bigskip %\Pause 
+\paragraph{Results with SAS:} 
+\begin{verbatim}
+           Estimation Method:        REML
+              Convergence criteria met.
+\end{verbatim}
+\begin{verbatim}
+             Parm cov       Estimation
+             Indiv(Trt)         0.3456
+             Residual          0.09990
+\end{verbatim}
+\begin{verbatim}
+Paramètre   Estimat   Ecart type   Ddl   Test t    Pr > |t|
+Trt1-Trt2   -5.5741       0.6156     3    -9.06      0.0028
+\end{verbatim}
+  }
+
+%====================================================================
+\frame{\frametitle{Tests in 'split-plot' designs}
+  
+  \paragraph{Design.} 2 genotypes, 5 individuals / genotype, 3 treatments,
+  $n=30$
+  $$
+  \begin{tabular}{ll}
+    Genotype 1 &   
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+      \hline
+      \multicolumn{3}{|c|}{Indiv. 1} & \multicolumn{3}{|c|}{\quad
+      \dots \quad~} &
+      \multicolumn{3}{|c|}{Indiv. 5} \\
+      Trt 1 & Trt 2 & Trt 3 & \multicolumn{3}{|c|}{\quad
+      \dots \quad~} & Trt 1 & Trt 2 & Trt 3 \\
+      \hline
+    \end{tabular} \\
+%    & \\
+    Genotype 2 &   
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+      \hline
+      \multicolumn{3}{|c|}{Indiv. 1} & \multicolumn{3}{|c|}{\quad
+      \dots \quad~} &
+      \multicolumn{3}{|c|}{Indiv. 5} \\
+      Trt 1 & Trt 2 & Trt 3 & \multicolumn{3}{|c|}{\quad
+      \dots \quad~} & Trt 1 & Trt 2 & Trt 3 \\
+      \hline
+    \end{tabular} 
+  \end{tabular}
+  $$
+
+  \Pause \paragraph{Model.}   
+  $$
+  Y_{Gen,Ind,Trt} = \textcolor{red}{\alpha_{Gen} + A_{Gen, Ind}}
+  \textcolor{blue}{ + \beta_{Trt} + \delta_{Gen,Trt} + E_{Trt,
+      Ind, Rep}}.
+  $$
+
+  \Pause \paragraph{Tests.}
+  $$
+  \begin{tabular}{llcc}
+    Effect & Exp. unit & Nb "obs" & Ref variance \\
+    \hline
+    Genotype & Individual & \emphase{10} & \emphase{$\gamma^2 +
+    \sigma^2/3$} \\ 
+    Treatment & Indiv*Treat & \emphase{30} & \emphase{$\sigma^2$}
+  \end{tabular}
+  $$
+  \ra The two tests have different powers.
+  }
+
+%====================================================================
+%====================================================================
+\subsection*{Generalised linear mixed models}
+\frame{\frametitle{Generalised mixed linear models} \Pause
+
+  \paragraph{Random effects} can be introduced similarly, via the link
+  function.
+
+  \Pause \bigskip
+  \paragraph{Count data: Poisson model.} 
+  \begin{itemize}
+  \item Design: Treatment / Individual / Replicate
+  \item \emphase{Fix Treatment} effect $\alpha_{Trt}$,
+  \item \emphase{Random Individual} effect $A_{Trt, Ind}$,
+  \item Model: \emphase{Response $Y_{Trt, Ind, Red}$ is Poisson}
+    distributed with mean
+    \begin{eqnarray*}
+    \mu_{Trt, Ind} & = & \exp(\alpha_{Trt} + A_{Trt, Ind}) \\
+    \text{or} \qquad \mu_{Trt, Ind} & = & \exp(\alpha_{Trt}) \times
+    G_{Trt, Ind} 
+    \end{eqnarray*}
+  \end{itemize}
+  
+  \Pause \bigskip
+  \paragraph{Distribution of the random effects.} Chosen to combine
+  well with the distribution of the response, e.g.:
+  \begin{itemize}
+  \item Gaussian response: Gaussian (additive) random effect,
+  \item Poisson response: Gamma (multiplicative) random effect,
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{\frametitle{Random effects}
+
+  As in Gaussian linear mixed models, a random effect induces a
+  \emphase{within individual correlation} and an
+  \emphase{over-dispersion} of the data.
+  $$
+  \begin{tabular}{ccc}
+    Poisson & \multicolumn{2}{c}{Poisson-Gamma = Negative Binomial} \\
+    \includegraphics[clip=, width=0.3\textwidth,
+    height=0.35\textheight, bbllx=0, bblly=210, bburx=594, bbury=630
+    ]{../FIGURES/MICA-Poisson.eps} 
+    & 
+    \includegraphics[clip=, width=0.3\textwidth,
+    height=0.35\textheight, bbllx=0, bblly=210, bburx=594,
+    bbury=630]{../FIGURES/MICA-PoissonGamma.eps} 
+    & 
+    \includegraphics[clip=, width=0.3\textwidth,
+    height=0.35\textheight, bbllx=0, bblly=210, bburx=594,
+    bbury=630]{../FIGURES/MICA-PoissonGammaBis.eps} 
+    \end{tabular}
+  $$
+  \vspace{-.5cm}
+  \begin{itemize}
+    \item \Pause \emphase{NGS data} often display over-dispersion and
+    Negative Binomial is often used to account for it.      
+    \item \Pause \emphase{Mixed model interpretation}: over-dispersion
+    is due to the addition of \emphase{several sources of variations}
+    (that could possibly be investigated).
+  \end{itemize} 
+  }
+
+%====================================================================
+\frame{\frametitle{Inference}
+  
+  The inference of generalised mixed linear models suffers the
+  difficulty of all models presented above.
+
+  \bigskip \Pause
+  \paragraph{Parameter estimation.}
+  \begin{itemize}
+  \item No explicite estimates \ra numerical optimisation \\
+    with few guaranty about the convergence of the algorithm \\
+    and potentially long computational times.
+  \item 'Scale' parameters ($\sim$ variances) are often difficult to
+    estimate \\
+    \ra preprocessing to get a prior estimate.
+  \end{itemize}
+  
+  \bigskip \Pause
+  \paragraph{Tests.}
+  \begin{itemize}
+  \item No exact tests \ra asymptotic approximations
+  \item Standard approximations used in the Gaussian framework are not
+    valid anymore
+  \end{itemize}
+
+%   \bigskip \Pause
+%   \paragraph{Modelling flexibility:} 
+%   \begin{itemize}
+%   \item Choice of the link function
+%   \item Choice of the distribution of the random effects.
+%   \end{itemize}
+  }
+
+%====================================================================
+\frame[containsverbatim]{\frametitle{Practical implementation}
+  
+  \paragraph{SAS:} \\
+{\tt
+proc \emphase{GLiMMix}; \\
+\qquad class Trt Indiv; \\
+\qquad model Response = Trt / \emphase{dist = Poisson link = log}; \\
+\qquad \emphase{random Indiv(Trt)}; \\
+%\qquad estimate 'Trt1-Trt2' Trt 1 -1 0; \\
+} 
+
+\bigskip %\Pause 
+\paragraph{Results with SAS:} 
+\begin{verbatim}
+        Convergence criterion (PCONV=1.11022E-8) satisfied.
+\end{verbatim}
+\begin{verbatim}
+             Parm cov       Estimation    Ecart type
+             Indiv             0.07947       0.07574
+\end{verbatim}
+\begin{verbatim}
+   Effet   Num DDL   Den DDL          F    Pr > F
+   Trt           2         3      18.50    0.0205
+\end{verbatim}
+\begin{verbatim}
+Paramètre   Estimat   Ecart type   Ddl   Test t    Pr > |t|
+Trt1-Trt2   -1.3348       0.3451     3    -3.87      0.0306
+\end{verbatim}
+  }
+
+%====================================================================
+%====================================================================
+\section{Multiple analyses}
+\frame{\frametitle{Pangenomic analysis} \Pause
+
+  \paragraph{High-throughput technologies} often address the same
+  question for a \emphase{large number of entities:}
+  \begin{itemize}
+  \item differential expression of \emphase{all genes} from a
+    given species,
+  \item differential abundance of \emphase{all species} in a given
+    medium.
+  \end{itemize}
+
+  \bigskip \Pause
+  \paragraph{The same design and the same (linear) model} is then used
+  for each entity (e.g. species), with specific parameter:
+  % $$
+  % \mu(\xbf_{Condition}, \thetabf^{\emphase{Species}})
+  % $$
+  % $$
+  % \text{e.g.} \quad \mu(\xbf_{Condition}, \thetabf^{\emphase{Species}}) =
+  % \alpha^{\emphase{Species}}_{Medium} + \beta^{\emphase{Species}}_{Dose} +
+  % \gamma^{\emphase{Species}}_{Medium, Dose} + \delta^{\emphase{Species}}_{Prep}
+  % $$
+  $$
+  \mu(\xbf_{Condition}, \thetabf^{\emphase{Gene}})
+  $$
+  $$
+  \text{e.g.} \quad \mu(\xbf_{Condition}, \thetabf^{\emphase{Gene}}) =
+  \alpha^{\emphase{Gene}}_{Medium} + \beta^{\emphase{Gene}}_{Dose} +
+  \gamma^{\emphase{Gene}}_{Medium, Dose} + \delta^{\emphase{Gene}}_{Prep}
+  $$
+
+  \bigskip \Pause
+  % \ra The same analysis is achieved '\emphase{species by species}'.
+  \ra The same analysis is achieved '\emphase{gene by gene}'.
+  }
+
+%====================================================================
+%====================================================================
+\subsection*{Sharing information}
+\frame{\frametitle{Sharing information}
+  
+  One may take advantage of the dimension to \emphase{better estimate
+    'common' parameters}, especially when the number of experiments
+  (arrays, runs) is small.
+
+  \bigskip 
+  \begin{description}
+  \item[Normalisation.]  
+    % \Pause E.g. $\delta^{\emphase{Species}}_{Prep}$ can be supposed to
+    % be \emphase{the same for all species} or \emphase{smoothed}
+    % (e.g. 'lowess' for microarray data). \\ 
+    \Pause E.g. $\delta^{\emphase{Gene}}_{Prep}$ can be supposed to
+    be \emphase{the same for all genes} or \emphase{smoothed}
+    (e.g. 'lowess' for microarray data). \\ 
+    \medskip
+  \item[Variance modelling.] \Pause Idem for the residual variance
+    $\sigma^2$ in differential gene expression studies:
+    %  $
+    %  \quad 
+    %  \widehat{\sigma}^{\emphase{Cst}} \quad \text{or} \quad 
+    %  \widehat{\sigma}^{\emphase{Species~group}} \quad \text{or} \quad 
+    %  \widehat{\sigma}^{\emphase{Species}}.
+    %  $ \\
+      $
+      \quad 
+      \widehat{\sigma}^{\emphase{Cst}} \quad \text{or} \quad 
+      \widehat{\sigma}^{\emphase{Gene\; group}} \quad \text{or} \quad 
+      \widehat{\sigma}^{\emphase{Gene}}.
+      $ \\
+    \medskip
+    \item[Dispersion parameter for Negative Binomial.] \Pause 
+    %  $
+    %  \widehat{\phi}^{\emphase{Cst}} \text{ or } 
+    %  \widehat{\phi}^{\emphase{Species~group}} \text{ or }
+    %  \widehat{\phi}^{\emphase{Species}}.  
+    %  $
+      $
+      \widehat{\phi}^{\emphase{Cst}} \text{ or } 
+      \widehat{\phi}^{\emphase{Gene\; group}} \text{ or }
+      \widehat{\phi}^{\emphase{Gene}}.  
+      $
+  \end{description}
+
+  \bigskip \Pause 
+  \begin{itemize}
+  \item Scale parameters (e.g. variance) are often difficult to
+    estimate with few observations.
+  \item The \emphase{power of the tests} in often improved,
+    when regularising 'scale' parameters.
+  \item \paragraph{Bayesian inference} typically encodes such a
+    \emphase{regularisation} in the prior.  
+  \end{itemize}
+}
+
+%====================================================================
+%====================================================================
+\subsection*{Multiple testing}
+\frame{\frametitle{Multiple testing}
+
+  \paragraph{General problem.} When testing a given contrast for each
+  gene or species, one wants to control the number of \emphase{false
+    positives}. 
+  $$
+  \begin{tabular}{cc}
+    \hspace{-.5cm} \Pause
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Bonferroni, False Discovery Rate (FDR) procedures}
+      rely on several statistical assumptions:
+      \begin{itemize}
+      \item model goodness-of-fit, 
+      \item independence between the tests, 
+      \item etc.
+      \end{itemize}  
+    \end{tabular}
+    & 
+    \hspace{-.5cm} \Pause
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{tabular}{l}
+        \quad Histogram of the $p$-values \\
+        \\
+        \includegraphics[clip=, width=0.5\textwidth,
+        height=0.35\textheight, bbllx=70, bblly=210, bburx=530, bbury=630
+        ]{../FIGURES/MICA-PvalIndep.eps} 
+      \end{tabular}
+    \end{tabular}
+  \end{tabular}
+  $$
+  These assumptions must be \emphase{checked beforehand}.
+  }
+
+%====================================================================
+\frame{\frametitle{Multiple testing under dependence}
+
+  $$
+  \begin{tabular}{cc}
+    \hspace{-.5cm} 
+    \begin{tabular}{p{.45\textwidth}}    
+      \paragraph{Interactions between the genes or species} do cause 
+      correlations between the tests.
+      
+      \bigskip \Pause
+      \paragraph{Correlations} between the test can dramatically alter
+      the performances of FDR-like procedures. 
+    \end{tabular}
+    & 
+    \hspace{-.5cm} \Pause
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{tabular}{l}
+        Histogram of 
+        correlated $p$-values \\
+        \\
+        \includegraphics[clip=, width=0.5\textwidth,
+        height=0.35\textheight, bbllx=70, bblly=210, bburx=530, bbury=630
+        ]{../FIGURES/MICA-PvalDep.eps} 
+      \end{tabular}
+    \end{tabular}
+  \end{tabular}
+  $$
+  
+  \Pause
+  Such correlations (must and) can be accounted for, either in a
+  '\emphase{black-box}' way, or based on \emphase{biological
+    information} (e.g. KEGG).  }
+
+%====================================================================
+%====================================================================
+\section{Segmentation}
+\frame{\frametitle{Looking for change-points along the genome} \Pause 
+
+  The question is not always 
+  $$
+  \text{'How does the response vary between conditions ?'}
+  $$
+  but sometimes
+  $$
+  \text{'How is the signal organized along the genome ?'}
+  $$
+
+  \Pause\bigskip\bigskip
+  \paragraph{Re-annotation:} RNAseq experiments (or tiling arrays)
+  \begin{itemize}
+  \item give access to a high-resolution mapping of the transcribed
+    regions,
+  \item which allows to reconsider the existing annotation.
+  \end{itemize}
+
+  \Pause\bigskip
+  \paragraph{Copy number variation (CNV):} DNAseq experiments (or SNP
+  arrays)
+  \begin{itemize}
+  \item give access to a high-resolution quantification of the copy number,
+  \item which allows to precisely determined the location of genomic
+    alterations.
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Segmentation} 
+
+  \vspace{-.25cm}
+  The problem can be stated in similar terms, whatever the
+  technology.
+
+  \smallskip
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \Pause
+      \paragraph{Tiling array data:} \\
+      \includegraphics[clip=, bbllx=0, bblly=360, bburx=435, bbury=600,
+      width=.35\textwidth, height=.3\textheight]{../FIGURES/CBerard-Evry-25}
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \Pause
+      \paragraph{RNA-seq data: } \\
+      \includegraphics[clip=, width=.35\textwidth,
+      height=.3\textheight]{../FIGURES/geneYAL030W-ypdrep-1400-2500-raw} 
+    \end{tabular}
+  \end{tabular}
+  
+  \Pause \bigskip
+  \paragraph{We have in mind that}
+  \begin{itemize}
+  \item the 'theoretical' signal $\lambda_t$ is affected by abrupt
+    changes:
+    $$
+    \includegraphics[clip=, bbllx=90, bblly=300, bburx=540,
+    bbury=400,
+    width=.6\textwidth]{../../../RUPTURES/Exposes/Figures/FigSeg_Intro.eps}  
+    $$
+  \item the observed signal $Y_t$ is noisy, with 'mean' $\mu_k$ within
+    segment $I_k$.
+  \end{itemize}  
+  }
+
+
+%====================================================================
+%====================================================================
+\subsection*{Statistical model}
+\frame{\frametitle{Statistical model (... as usual)} \Pause
+
+  \paragraph{Data.}
+  \begin{itemize}
+  \item $t =$ position (nucleotide with NGS / probe with arrays);
+  \item $Y_t =$ observed signal at position $t$
+  \end{itemize}
+
+  \Pause \bigskip
+  \paragraph{Parameters.}
+  \begin{itemize}
+  \item $K = $ number of segments;
+  \item $\tau_1, \tau_2, ..., \tau_{K-1} = $ change-points positions, \\
+    $I_k = [\tau_{k-1}+1; \tau_k] = k$-th segment;
+  \item $\mu_k =$ 'theoretical' (or 'mean') signal in segment $I_k$.
+  \end{itemize}
+
+  \Pause \bigskip
+  \paragraph{(Proposed) Model.}
+  \begin{itemize}
+  \item $\{Y_t\}$ are independent (!!!);
+  \item if position $t$ is in segment $I_k$:
+    $$
+    Y_t \sim \Fcal(\mu_k) \qquad \mbox{e.g.} \quad 
+    \left\{
+      \begin{array}{rclll}
+        Y__t & \sim & \Pcal(\mu_k) & & \text{for NGS}, \\
+        Y__t & \sim & \Ncal(\mu_k, \sigma^2) & & \text{for arrays}.
+      \end{array}
+    \right.
+    $$
+  \end{itemize}
+   }
+
+%====================================================================
+%====================================================================
+\frame{\frametitle{Segmentation as a linear model} 
+
+  The segmentation model can be written as a linear model:
+  $$
+  \Esp(\Ybf) = \Tbf \mubf,  \Pause \quad
+  \Tbf = \left[ \tiny{
+    \begin{array}{rrrr}
+      I_1 \left\{\vecOne\right.&\vecZero&&\vecZero\Pause\\ 
+      \hdashline
+      \vecZero&I_2 \left\{\vecOne\right.&&\vecZero\Pause\\ 
+      \hdashline
+      && \ddots & \\
+      \hdashline
+      \vecZero&\vecZero&&I_K \left\{\vecOne\right.\\
+    \end{array} }
+    % \begin{array}{cccc}
+    %   I_1 \tiny{\left\{\begin{array}{c} 1\\ \vdots\\ 1\end{array}\right.}&&\\
+    %   &I_2 \tiny{\left\{\begin{array}{c} 1\\ \vdots\\ 1\end{array}\right.}&\\
+    %   && \ddots & \\
+    %   &&&I_K \tiny{\left\{\begin{array}{c} 1\\ \vdots\\ 1\end{array}\right.}\\
+    % \end{array} 
+  \right], 
+  \quad
+  \mubf = \left[ \begin{array}{c}
+      \mu_1 \\ \mu_2 \\ \vdots \\ \mu_K
+      \end{array} \right] 
+  $$
+
+  \Pause 
+  ...except that we do not know the matrix $\Tbf$, that is
+  \begin{itemize}
+  \item where the blocks $I_k$ start and end \ra algorithmic issue,
+  \item how many blocks $I_k$ there are \ra statistical issue.
+  \end{itemize}
+  }
+
+%====================================================================
+\subsection*{Inference}
+\frame{\frametitle{Algorithmic issue} \Pause 
+
+  \paragraph{Statistical inference.}
+  \begin{itemize}
+  \item Estimating the parameters $\mubf$ for given segmentation $\Tbf$;
+  \item Estimating the segmentation $\Tbf$ (i.e. the $\tau_k$'s) is the
+    main issue.
+  \end{itemize}
+
+  \Pause \bigskip
+  \paragraph{Segmentation.}
+  \begin{itemize}
+  \item We look for $\widehat{\Tbf}$ that provide the best fit (e.g. maximum
+    likelihood);
+  \item We can not explore all possible segmentations $\Tbf$:
+    $$
+    n=1\,000, \quad K = 20 \quad \longrightarrow \quad
+    \binom{n-1}{K-1} \simeq 10^{40} \text{ possibilities}.
+    $$
+  \item \Pause Well known algorithms (dynamic programming) retrieve
+    the \emphase{optimal segmentation $\widehat{\Tbf}$ with complexity
+      $\Ocal(K n^2)$}.
+  \item \Pause $\Ocal(K n^2)$ is \emphase{still too much} for NGS where
+    $n$ ranges from $10^4$ to $10^8$.
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{\frametitle{Statistical issue} 
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.38\textwidth}}
+      \paragraph{How many segments?} \\
+      The fit increases with $K$. 
+      \begin{overprint}
+        \onslide<2>
+        \includegraphics[clip=, width=.3\textwidth,
+        height=.4\textheight]
+        {../FIGURES/geneYAL030W-ypdrep-1400-2500-J}
+        \onslide<3->
+        \includegraphics[clip=, width=.3\textwidth,
+        height=.4\textheight]
+        {../FIGURES/geneYAL030W-ypdrep-1400-2500-J-K}
+      \end{overprint}
+      \onslide+<3->{
+        \paragraph{Penalized constrast:} add a penalty term to account
+        for the complexity of the model: \\
+        \smallskip
+        $
+        - \Lcal(\widehat{\Tbf}_K, \widehat{\mubf}_K) + c \times
+        \text{pen}(K) 
+        $
+      }
+    \end{tabular}
+    & 
+    \hspace{-.75cm}
+    \onslide+<4>{
+      \begin{tabular}{p{.58\textwidth}}
+        The result \emphase{strongly depends} on the choice of
+        $\widehat{K}$ \\
+        \includegraphics[clip=, width=.6\textwidth,
+        height=.6\textheight]
+        {../FIGURES/geneYAL030W-ypdrep-1400-2500-seg} \\
+        but also one the choice of distribution $\Fcal$. 
+      \end{tabular}
+    }  
+  \end{tabular} 
+  }
+
+%====================================================================
+%====================================================================
+\subsection*{Extensions}
+\frame{\frametitle{Extensions} 
+
+  \paragraph{Accounting for other effects.} Thanks to the linear model
+  formulation, segmentation can be combined with other linear effects:
+  $$
+  \Esp(\Ybf) = \Tbf \mubf \Pause + \Xbf \thetabf + \Zbf \Ubf \Pause
+  $$
+  to account for, say,
+  \begin{itemize}
+  \item fix local GC-contents effect, 
+  \item random probe (tiling array) or patient effect, ...
+  \end{itemize}
+
+  \Pause \bigskip
+  \paragraph{CGHseg R package:}   
+  \begin{itemize}
+  \item available at {\tt cran.r-project.org/web/packages/cghseg},
+  \item segmentation of multiple profiles,
+  \item with fixed and random effects,
+  \item designed for microarrays (... but may deserve to be tried on
+    NGS).
+  \end{itemize}
+  }
+
+
+% %====================================================================
+% %====================================================================
+% \section{Conclusion}
+% \frame{\frametitle{Linear models} \Pause
+
+%   \paragraph{Linear models} provide a general framework to both plan the
+%   experiments and analyse their results for a large category of
+%   data-type and dependency structures.
+
+%   \bigskip \Pause
+%   \paragraph{Commercial and open-source softwares} allows one to
+%   perform such analyses for a reasonable investment (time, money,
+%   brain, ...) for count data.
+
+%   \bigskip \Pause
+%   \paragraph{... but} generalised linear model inference still raises
+%   \emphase{several open problems}
+%   \begin{itemize}
+%   \item \emphase{efficient algorithms} for repeated inference high
+%     throughput technology,
+%   \item \emphase{accurate tests procedures} especially for complex
+%     dependency structure (e.g. time-course, spatial data),
+%   \item \emphase{models for between-test} dependence,
+%   \item ...
+%   \end{itemize} 
+%   }
+
+% %====================================================================
+% \frame{\frametitle{NGS data} 
+
+%   \paragraph{Species abundance, gene expression} analyses require the
+%   prior knowledge of the species / genes  \\
+%   \ra one measurement for each species/gene in each condition \\
+%   \ra fits into the \emphase{linear model framework}
+
+%   \Pause \bigskip
+%   \paragraph{NGS with (few) prior knowledge:} looking for new genes
+%   (RNA-seq), for protein-DNA interaction loci (ChIP-seq) \\
+%   \ra distribution of reads along the genome \\
+%   \ra \emphase{'point process'} $\notin$ classical linear model
+%   frameworks
+
+%   }
+
+%====================================================================
+%====================================================================
+\section*{Announcement}
+\subsection*{}
+\frame{\frametitle{SMPGD 2012}
+  
+  \paragraph{Statistical Methods for Post-Genomic Data  - SMPGD'12:} 
+  $$
+  \begin{tabular}{c}
+    26-27 January 2012,\\
+    Université Lyon - Claude Bernard: \\
+    \url{smpgd2012.univ-lyon1.fr}
+  \end{tabular}
+  $$
+
+  \bigskip
+  Sessions:
+  \begin{itemize}
+  \item NGS data analysis
+  \item Ecology \& genomics
+  \item Data integration
+  \end{itemize} 
+}
+
+%====================================================================
+{\tiny
+  \bibliography{/Biblio/ARC,/Biblio/AST,/Biblio/SSB}
+  \bibliographystyle{/media/donnees/LATEX/astats}
+  %\bibliographystyle{plain}
+  }
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\frame{\frametitle{}
+  }
+%====================================================================
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}

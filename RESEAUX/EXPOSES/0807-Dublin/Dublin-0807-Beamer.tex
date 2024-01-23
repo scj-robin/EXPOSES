@@ -1,0 +1,202 @@
+\documentclass[5pt]{beamer}
+\mode<presentation>
+\usetheme{Malmoe}
+% \usetheme{Copenhagen}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Couleur et graphiques
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Maths
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Bcal}{\mathcal{B}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Texte
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[latin1]{inputenc}
+\newcommand{\textblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\textgreen}[1]{\textcolor{green}{ #1}}
+\newcommand{\paragraph}[1]{\noindent{\textblue{#1}}}
+\newcommand{\refer}[1]{\alert{\sl #1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Uncovering (Global) Structure and (Local) Motifs in Networks}
+
+\author{S. Robin \\
+  {\tt robin@agroparistech.fr}}
+
+\date[IBC '08]{International Biometric Conference, Dublin}
+
+\institute{  
+  AgroParisTech / INRA, Paris, \\
+%    UMR 518 Mathématique et Informatique Appliquées \\
+  \url{www.agroparistech.fr/mia/} \\
+  ~\\
+  {Statistics for Biological Sequences (SSB) group:} \\
+  \url{genome.jouy.inra.fr/ssb/} \\
+  ~\\
+%  \noindent\includegraphics[scale=0.25]{../Figures/Logo-3.png}
+     \includegraphics[scale=0.1]{../Figures/LogoINRA-Couleur.png}
+     \qquad
+     \includegraphics[scale=0.5]{../Figures/logagroptechsolo.png}
+     \qquad
+     \includegraphics[scale=0.2]{../Figures/../Figures/Logo-SSB.png}
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Looking for structure in networks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+  \frametitle{Looking for structure in networks}
+  \begin{columns}
+    \column{.5\textwidth}
+    \begin{block}{Networks}
+      \begin{itemize}
+      \item Arise in many fields:
+        \begin{itemize}
+        \item[\bf{$\rightarrow$}] Biology, Chemistry
+        \item[\bf{$\rightarrow$}] Physics, Internet.
+        \end{itemize} 
+        ~\\
+      \item Represent an interaction pattern:
+        \begin{itemize}
+        \item[\bf{$\rightarrow$}] $\mathcal{O}(n^2)$ interactions
+        \item[\bf{$\rightarrow$}] between $n$ elements.
+        \end{itemize} 
+        ~\\
+      \item Have a topology which:
+        \begin{itemize}
+        \item[\bf{$\rightarrow$}] reflects the structure / function
+          relationship
+        \end{itemize}
+      \end{itemize}
+    \end{block}
+    \column{.5\textwidth}
+    \begin{block}{}
+       \includegraphics[angle=270,
+       width=8.5cm]{../Figures/caida2_lg(brown).pdf} \\ 
+      \begin{tiny} From Barab\'asi website \end{tiny}
+    \end{block}
+  \end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Mixture model for random graphs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Heterogeneity in networks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+  \frametitle{Nodes may have different connectivity behaviour}  
+  \begin{block}{Looking for connected sub-groups:}
+    \begin{itemize}
+    \item Detection of cliques or groups of highly
+      connected nodes: \refer{Gethor \& Diehl, 04} 
+    \item Edge betweenness: \refer{Girvan \& Newman, 02}
+    \item Spectral clustering: \refer{Von Luxburg \& al.,
+        07}
+    \end{itemize}
+  \end{block}
+
+  \pause
+  \begin{block}{Model based:}
+    \begin{itemize}
+    \item Underlying topology: \refer{Hoff \& al., 02}
+      (Latent space)
+    \item Mixture model \refer{Nowicki \& Snijders, 01}
+      (Block structure), \refer{Daudin \& al., 08} (Mixture for graphs)
+    \item General model for heterogeneous networks:
+      \refer{Bollob\'as \ al., 07}       
+%       (Topological properties: Giant component, diameter, degree
+%       distribution = compound Poisson, {\it etc.}).
+    \item General review on random graph models:
+      \refer{Pattison \& Robbins, 07}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{{Random graph model}}
+  We denote $i=1..n$ the \alert{fixed nodes} and $X_{ij}$ the
+  \alert{random edges}. 
+  
+  A random graph $G$ is completely characterised by $n$ and the
+  by the \alert{joint distribution} of the $X_{ij}$'s.
+  
+  The distribution of the degrees of the nodes is \alert{not sufficient}.
+
+  \pause
+  \begin{block}{Classical models for binary graphs}
+    \begin{itemize}
+    \item \paragraph{Erdös-Rényi:} Edges all exist with the same
+      probability: 
+      $$
+      \{X_{ij}\} \text{ i.i.d.}, \qquad X_{ij} \sim \Bcal(\pi).
+      $$
+      \pause
+    \item \paragraph{Expected Degree Distribution (EDD):}
+      For given (expected) degrees of the nodes $\{k_1, .. k_n\}$,
+      $$
+      \{X_{ij}\} \text{ indep.}, \qquad \Pr\{X_{ij} = 1\} \propto
+      \lambda k_i k_j. 
+      $$
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Variational inference}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Motifs in interaction graphs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Approximate distribution for the count}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Discussion \& Work in progress}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

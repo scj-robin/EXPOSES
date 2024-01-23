@@ -1,0 +1,652 @@
+\documentclass{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+\usetheme{CambridgeUS}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+%\usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+%\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+%\usepackage{stmaryrd}
+\usepackage{epsfig}
+\usepackage{../../../../LATEX/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+% Commands
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\definecolor{darkgreen}{rgb}{0,0.4,0}
+%\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+\newcommand{\emphase}[1]{{#1}}
+\newcommand{\paragraph}[1]{\textcolor{darkred}{#1}}
+\newcommand{\refer}[1]{\textcolor{gray}{\sl \cite{#1}}}
+\newcommand{\Refer}[1]{\textcolor{gray}{\sl #1}}
+\newcommand{\newblock}{}
+\newcommand{\ra}{$\emphase{\rightarrow}$}
+
+% Symbols
+
+
+%====================================================================
+\title[Joint CNV-LOH analysis]{Joint CNV-LOH analysis \\ using HMM with mixtures as emission distributions}
+
+\author[S. Robin]{C. Bérard$^1$, S. Robin$^2$, S. Volant$^3$}
+
+\institute[AgroParisTech / INRA]{
+  ($^1$)univ. Rouen, \quad ($^2$) INRA / Agroparistech, \quad ($^3$) XL-stat \\
+  \bigskip
+ \begin{tabular}{ccccc}
+    \includegraphics[width=.2\textwidth]{../Figures/LogoINRA-Couleur} & 
+    \hspace{.02\textwidth} &
+    \includegraphics[width=.3\textwidth]{../Figures/logagroptechsolo} & 
+    \hspace{.02\textwidth} &
+    \includegraphics[width=.2\textwidth]{../Figures/logo-ssb} \\ 
+  \end{tabular} \\
+  \bigskip
+  }
+
+  \date[SSB]{SSB, May 2013}
+
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\frame{\titlepage
+  }
+
+%====================================================================
+%====================================================================
+\section{CNV / LOH}
+\frame{\frametitle{Copy number variation (CNV) / Loss of heterozygosity (LOH)}
+
+  \paragraph{A hot topic:} In last SSB meetings
+  \begin{itemize}
+  \item 12/2/13, Cyril Dalmasso: Etiquetage des r\'egions issues d'une segmentation dans le cadre de la d\'etection d'alt\'erations g\'enomiques en oncologie clinique
+  \item 16/4/13, Morgane Pierre-Jean: Comparaison des m\'ethodes de segmentation du nombre de copies d'ADN et de la fraction d'all\`ele B.
+  \end{itemize}
+  
+  \bigskip\bigskip \pause
+  \paragraph{Data at hand:} SNP array data
+  \begin{itemize}
+   \item $t = 1..n$ single nucleotide polymorphism (SNP) loci;
+   \item $A_t =$ signal corresponding to allele A at loci $t$;
+   \item $B_t =$ signal corresponding to allele B at loci $t$.
+  \end{itemize}
+}
+
+%====================================================================
+\newcommand{\figdir}{/home/robin/RECHERCHE/RUPTURES/LOH/Data/NA06991}
+\newcommand{\figname}{NA06991-Chr6}
+
+%====================================================================
+\frame{\frametitle{An example (from \refer{SLV08})}
+
+  \begin{tabular}{cc}
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.45\textwidth}}
+      The relative ratio 
+      $$RR_t = (A_t + B_t) / 2$$
+      reveals copy number variations.
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-LRR}
+    \end{tabular} \\ \pause
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-BAF}
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      The B allele frequency 
+      $$BAF_t = B_t / (A_t + B_t)$$
+      reveals loss of heterozygosity.
+    \end{tabular} \\    
+  \end{tabular}
+}
+
+
+%====================================================================
+\renewcommand{\figdir}{/home/robin/RECHERCHE/RUPTURES/LOH/Simul}
+\renewcommand{\figname}{SimulAB_gamma_s0.3}
+
+%====================================================================
+\frame{\frametitle{Data: 3 representations}
+
+  \begin{tabular}{cc}
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Synthetic data.}
+      \begin{itemize}
+      \item \onslide+<2->{$(A_t + B_t)$ $\times$  position $t$ (CNV)}
+      \item \onslide+<3->{$B_t/(A_t + B_t)$ $\times$  $t$ (LOH)}
+      \item \onslide+<4->{$A_t$ $\times$ $B_t$ (genotype)}
+      \end{itemize}
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \vspace{-.35cm}
+      \onslide+<2->{
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-LRR}
+      }
+    \end{tabular} \\
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \vspace{-.35cm}
+      \onslide+<3->{
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-BAF}
+      }
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \vspace{-.35cm}
+      \onslide+<4->{
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-AB}
+      }
+    \end{tabular} \\    
+  \end{tabular}
+}
+
+%====================================================================
+\renewcommand{\figname}{SimulAB_gamma_s0.3-c2-3}
+
+%====================================================================
+\frame{\frametitle{A classification problem}
+
+  \begin{tabular}{cc}
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Aim:} retrieve both CNV and LOH status. 
+      
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-LRR}
+    \end{tabular} \\
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-BAF}
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-AB}
+    \end{tabular} \\    
+  \end{tabular}
+}
+
+%====================================================================
+%====================================================================
+\section{Model}
+\subsection{CNV/LOH status}
+\frame{\frametitle{CNV/LOH status}
+
+  \paragraph{Principle.}
+  \begin{itemize}
+  \item CNV refers to the local number of copies.
+  \item LOH refers to the (relative) abundance of each copies.
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Remark.} we are not interested by the genotype $(a, b)$ at each locus, denoted:
+  $$
+  \text{AA} = (1, 1), \quad
+  \text{AAB} = (2, 1), \quad
+  \text{ABBB} = (1, 3).  
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{State:} couple $s = (c, m)$
+  \begin{itemize}
+  \item $c =$ total copy number
+  \item $m =$ number of copies of the minority chromosome
+  \end{itemize}
+  $$
+  \mathcal S = \left\{(c, m): c_{\min} \leq c \leq c_{\max}, 
+  \; 0 \leq m \leq \lfloor \frac{c}2 \rfloor \right\}
+  $$
+
+}
+
+%====================================================================
+\renewcommand{\figdir}{/home/robin/RECHERCHE/RUPTURES/LOH/Fig}
+
+%===================================================================
+\renewcommand{\figname}{FigLOH}
+\newcommand{\cparm}{2} \newcommand{\mparm}{1}
+\newcommand{\statename}{Normal state}
+\newcommand{\statedesc}{Two different copies}
+\newcommand{\stategeno}{AA, AB, BB}
+\input{State-cparm-mparm.tex}
+
+\renewcommand{\cparm}{2} \renewcommand{\mparm}{0}
+\renewcommand{\statename}{Regular LOH}
+\renewcommand{\statedesc}{Loss of one copy}
+\renewcommand{\stategeno}{AA, BB}
+\input{State-cparm-mparm.tex}
+
+\renewcommand{\cparm}{0} \renewcommand{\mparm}{0}
+\renewcommand{\statename}{Homozygous loss}
+\renewcommand{\statedesc}{Loss of the two copies}
+\renewcommand{\stategeno}{-}
+\input{State-cparm-mparm.tex}
+
+\renewcommand{\cparm}{1} \renewcommand{\mparm}{0}
+\renewcommand{\statename}{Heterozygous loss}
+\renewcommand{\statedesc}{Loss of one copy}
+\renewcommand{\stategeno}{A, B}
+\input{State-cparm-mparm.tex}
+
+\renewcommand{\cparm}{3} \renewcommand{\mparm}{0}
+\renewcommand{\statename}{Three identical copies}
+\renewcommand{\statedesc}{Loss of one copy + triplication}
+\renewcommand{\stategeno}{AAA, BBB}
+\input{State-cparm-mparm.tex}
+
+\renewcommand{\cparm}{3} \renewcommand{\mparm}{1}
+\renewcommand{\statename}{Duplication}
+\renewcommand{\statedesc}{One copy amplified}
+\renewcommand{\stategeno}{AAA, AAB, ABB, BBB}
+\input{State-cparm-mparm.tex}
+
+\renewcommand{\cparm}{4} \renewcommand{\mparm}{0}
+\renewcommand{\statename}{Four identical copies}
+\renewcommand{\statedesc}{Loss of one copy + quadruplication}
+\renewcommand{\stategeno}{AAAA, BBBB}
+\input{State-cparm-mparm.tex}
+
+\renewcommand{\cparm}{4} \renewcommand{\mparm}{1}
+\renewcommand{\statename}{Triplication}
+\renewcommand{\statedesc}{One copy amplified twice}
+\renewcommand{\stategeno}{AAAA, AAAB, ABBB, BBBB}
+\input{State-cparm-mparm.tex}
+
+\renewcommand{\cparm}{4} \renewcommand{\mparm}{2}
+\renewcommand{\statename}{Double duplication}
+\renewcommand{\statedesc}{Both copies amplified}
+\renewcommand{\stategeno}{AAAA, AABB, BBBB}
+\input{State-cparm-mparm.tex}
+
+%====================================================================
+\subsection{Genotype}
+\frame{\frametitle{Genotype}
+
+  Denote $z = (a, b)$, $a = \#$ copies of allele A: $z = (2, 1) = AAB$.\begin{itemize}
+  \item A same genotype $z$ can be found in several states $s = (c, m)$. \\ ~
+  \item \pause Denoting $p$ the frequency of allele A at the current locus:
+  \end{itemize}
+  \footnotesize{
+  $$
+  \begin{array}{r|ccccccccccccccc}
+  s=& \multicolumn{15}{c}{z = (a ,b)} \\
+  (c, m) & 00 & 10 & 01 & 20 & 11 & 02 & 30 & 21 & 12 & 03 & 40 & 31 & 22 & 13 & 04 \\
+  \hline
+  (0, 0) & 1 \\
+  (1, 0) & & p & q \\
+  (2, 0) & & & & p &  & q\\
+  (2, 1) & & & & p^2 & 2pq & q^2\\
+  (3, 0) & & & & & & & p & & & q \\
+  (3, 1) & & & & & & & p^2 & pq & pq & q^2 \\
+  (4, 0) & & & & & & & & & & & p & & & & q \\
+  (4, 1) & & & & & & & & & & & p^2 & pq & & pq & q^2 \\
+  (4, 2) & & & & & & & & & & & p^2 & & 2pq & & q^2
+  \end{array}
+  $$}
+  where $q = 1-p$.
+
+}
+
+%====================================================================
+\subsection{Hidden Markov model}
+\frame{\frametitle{HMM with mixture emissions}
+
+  \begin{itemize}
+   \item \pause CNV/LOH status $S_t =$ homogeneous Markov chain:
+   $$
+   (S_t)_t \sim MC(\pi);
+   $$
+   \item \pause Genotypes $(Z_t)_t$ independent conditional on $(S_t)_t$:
+   $$
+   (Z_t | S_t = s) \sim {\mathcal M}(1; \nu_s), 
+   \qquad \nu_s = \nu_s(p_t, q_t);
+   $$
+   \item \pause SNP signal $Y_t = (A_t, B_t)$ independent conditional on $(Z_t)_t$:
+   $$
+   [Y_t | Z_t=z] \sim f_{z = (a, b)} = f(\mu_a, \mu_b, ...).
+   $$
+  \end{itemize}
+  
+  \pause
+  \paragraph{Mixture emissions:}
+   $$
+   (Y_t | S_t=s) \sim \phi_z = \sum_{z} \nu_{sz} f_z.
+   $$
+}
+
+%====================================================================
+\frame{\frametitle{Identifiability}
+
+  \paragraph{Theorem (Gassiat, 2013).} Hidden Markov models are identifiable as soon as the emission distributions are linearly independent.
+  
+  \bigskip
+  {\sl Sketch of proof.} Consider the joint distribution of $(Y_{t-1}, Y_t, Y_{t+1})$. The rest follows from \refer{AMR09}
+
+  \pause \bigskip \bigskip
+  \paragraph{Corollary.} The proposed HMM for CNV/LOH analysis is identifiable as soon as the emission distributions $f_z$ are linearly independent.
+  
+  \bigskip
+  {\sl Proof.} The matrix $\nu = [\nu_{sz}]$ has full rank.
+}
+
+%====================================================================
+\section{Inference}
+\subsection{EM}
+\frame{\frametitle{Inference}
+
+  \paragraph{Maximum likelihood:} use a regular EM algorithm.
+  
+  \pause \bigskip %\bigskip
+  \paragraph{E step.}   $(S_t, Z_t)$ is a Markov chain with specific transition matrix 
+  $$
+  P = f(\pi, \nu).
+  $$
+  \ra~Forward-backward recursion directly applies.
+
+  \pause \bigskip %\bigskip
+  \paragraph{M step.} Some specificities:
+  \begin{itemize}
+   \item The emission parameters $\mu_a$, $\mu_b$ are supposed to be organized along a grid (see examples).
+   \item Allelic frequencies $(p_t, q_t)$ are 
+    \begin{itemize}
+    \item either known (provided by Affymetrix) 
+    \item or supposed constant ($p_t \equiv p$) 
+    \item or simply fixed (e.g. $p = q = .5$)
+    \end{itemize}
+  \end{itemize}
+
+  }
+
+%====================================================================
+\frame{\frametitle{Model selection}
+
+  The performances may vary according to the choice of $c_{\min}$ and $c_{\max}$. 
+  
+  \pause \bigskip \bigskip
+  \paragraph{Criterion.} As we are in a classification context, we use
+  $$
+  ICL 
+  = \mathbb E(\log P(Y, H) | Y; \widehat{\theta}) - .5 d \log n 
+  = BIC - \mathbb H(H | Y) 
+  $$
+  where $H$ stands for the hidden variables.
+  
+  \pause \bigskip \bigskip
+  \paragraph{Dedicated version.} As we are only interested in $S$, we use
+  \begin{eqnarray*}
+  ICL = BIC - \mathbb H(S | Y) 
+  \end{eqnarray*}
+  which does not penalize for the posterior entropy of $Z$.
+  }
+
+%====================================================================
+\section{Illustrations}
+\subsection{Simulations}
+%====================================================================
+\frame{\frametitle{Some simulations}
+
+  \paragraph{Simulation design:} According to the model with $n = 10^5$ and emission distributions
+  $$
+  f_{(a, b)} = \text{Gam}(.1+a, \sigma^2) \otimes
+  \text{Gam}(.1+b, \sigma^2)
+  $$
+  denoting Gam(mean, variance).
+  
+  \pause \bigskip \bigskip
+  \paragraph{Model fitted.}
+   $$
+   f_{(a, b)} =  \mathcal N \left(\left[\begin{array}{c} \mu_a \\ \mu_b \end{array} \right], \left[\begin{array}{cc} \sigma^2 & 0 \\ 0 & \sigma^2 \end{array} \right] \right)
+   $$
+  }
+
+%====================================================================
+\renewcommand{\figdir}{/home/robin/RECHERCHE/RUPTURES/LOH/Simul}
+\renewcommand{\figname}{SimulAB_gamma_s0.1-c2-3}
+
+%====================================================================
+\frame{\frametitle{Low variance ($\sigma^2 = .1$)}
+
+  \begin{tabular}{cc}
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Model choice:} 
+      $$c_{\min} = 2, c_{\max} = 3$$
+%       \paragraph{Rand index:} 99.8 \%. 
+      
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-LRR}
+    \end{tabular} \\
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-BAF}
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-AB}
+    \end{tabular} \\    
+  \end{tabular}
+}
+
+%====================================================================
+\renewcommand{\figname}{SimulAB_gamma_s0.5-c0-3}
+
+%====================================================================
+\frame{\frametitle{High variance ($\sigma^2 = .5$)}
+
+  \begin{tabular}{cc}
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Model choice:} 
+      $$c_{\min} = 0, c_{\max} = 3$$
+%       \paragraph{Rand index:} 99.4 \%. 
+      
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-LRR}
+    \end{tabular} \\
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-BAF}
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-AB}
+    \end{tabular} \\    
+  \end{tabular}
+}
+
+%====================================================================
+\frame{\frametitle{Model choice matters}
+
+  Series of combinations $(c_{\min}, c_{\max})$ with various variances $\sigma^2 = .1, \textcolor{red}{.2}, \textcolor{green}{.3}, \textcolor{blue}{.4}, \textcolor{cyan}{.5}$
+
+  $$
+  \includegraphics[width=.5\textwidth]{\figdir/randIndexBIC}
+  $$
+}
+
+%====================================================================
+\renewcommand{\figdir}{/home/robin/RECHERCHE/RUPTURES/LOH/Data/NA06991}
+\renewcommand{\figname}{NA06991-BAF-R-Chr6-c0-3}
+
+%====================================================================
+\subsection{Examples}
+\frame{\frametitle{Chromosome 6 from \refer{SLV08}}
+
+  \begin{tabular}{cc}
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Normalization matters:} 
+      $$c_{\min} = 0, c_{\max} = 3$$
+       
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-LRR}
+    \end{tabular} \\
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-BAF}
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-AB}
+    \end{tabular} \\    
+  \end{tabular}
+}
+
+%====================================================================
+\renewcommand{\figname}{NA06991-Chr6-c0-3}
+
+%====================================================================
+\frame{\frametitle{Chromosome 6 from \refer{SLV08}}
+
+  \begin{tabular}{cc}
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Normalization matters:} 
+      $$c_{\min} = 0, c_{\max} = 3$$
+      
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-LRR}
+    \end{tabular} \\
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-BAF}
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-AB}
+    \end{tabular} \\    
+  \end{tabular}
+}
+
+%====================================================================
+\renewcommand{\figname}{NA06991-Chr6-c2-2}
+
+%====================================================================
+\frame{\frametitle{Chromosome 6 from \refer{SLV08}}
+
+  \begin{tabular}{cc}
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Model choice matters matters:} 
+      $$
+      \text{Plot:} \quad (c_{\min}, c_{\max}) = (2, 2)
+      $$
+      but
+      $
+      \arg\max ICL = (0, 3).
+      $
+      
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-LRR}
+    \end{tabular} \\
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-BAF}
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, height=.45\textheight]{\figdir/\figname-AB}
+    \end{tabular} \\    
+  \end{tabular}
+}
+
+%====================================================================
+\section{Conclusion}
+\subsection{}
+\frame{\frametitle{To be continued}
+
+  \paragraph{Summary:}
+  \begin{itemize}
+   \item A (first?) joint modeling for CNV and LOH analysis.
+   \item A comfortable framework for parameter inference and classification.
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Still to be done:}
+  \begin{itemize}
+   \item Complete simulation study 
+   \item Improve model selection ?
+   \item Consider alternative emission distribution (Gamma?) 
+ %  \item Knowing the phase would still improve (neighbor genotypes are not independent)
+   \item Accounting for contamination
+  \end{itemize}
+
+
+}
+
+%====================================================================
+%====================================================================
+\section*{Appendix}
+%====================================================================
+{\tiny
+  \bibliography{../../../../Biblio/ARC,../../../../Biblio/AST,../../../../Biblio/SSB}
+  \bibliographystyle{../../../../LATEX/astats}
+  %\bibliographystyle{plain}
+  }
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+
+\frame{\frametitle{}
+  }
+
+  \vspace{-0.5cm}
+  \begin{tabular}{cc}
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    &
+    \hspace{-1cm}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}

@@ -1,0 +1,178 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%               PRIERE DE NE RIEN MODIFIER CI-DESSOUS                      %
+%       JUSQU'A LA LIGNE "PRIERE DE NE RIEN MODIFIER CI-DESSUS"            %
+%   TOUT LE BLOC QUI SUIT SERA SUPPRIME LORS DE L'EDITION FINALE DU POLY   %
+%   CONTENANT LES RESUMES                                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[10pt,french]{article}
+%===  Priere de ne pas utiliser d'autres modules
+\usepackage{latexsym}
+\usepackage[latin1]{inputenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}         % pour d'eventuelles figures 
+%\usepackage{epsfig}           % (preferer graphicx, si possible)
+\usepackage{amsmath}          % AMSTEX
+\usepackage{amsfonts}
+\usepackage{enumerate}
+%
+\setlength{\paperheight}{297mm}\setlength{\paperwidth}{210mm}
+\setlength{\oddsidemargin}{10mm}\setlength{\evensidemargin}{10mm}
+\setlength{\topmargin}{0mm}\setlength{\headheight}{10mm}\setlength{\headsep}{8mm}
+\setlength{\textheight}{240mm}\setlength{\textwidth}{160mm}
+\setlength{\marginparsep}{0mm}\setlength{\marginparwidth}{0mm}
+\setlength{\footskip}{10mm}
+\voffset -13mm\hoffset -10mm\parindent=0cm
+\def\titre#1{\begin{center}{\Large{\bf #1}}\end{center}}
+\def\orateur#1#2{\begin{center}{\underline{\large{\bf #1}}}, {#2}\end{center}}
+\def\auteur#1#2{\begin{center}{\large{\bf #1}}, {#2}\end{center}}
+\def\auteurenbasdepage#1#2#3{\small{\bf #1}, \small{#2}\\ \small{\tt #3}\\ }
+\def\motscles#1{%
+	\ifx#1\IsUndefined\relax\else\noindent{\normalsize{\bf Mots-cl\'es :}} #1\\ \fi}
+\renewcommand{\refname}{\normalsize R\'ef\'erences}
+%
+\begin{document}
+\thispagestyle{empty}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%               PRIERE DE NE RIEN MODIFIER CI-DESSUS                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% DANS TOUTE LA SUITE NOUS PRIONS LES AUTEURS DE BIEN VOULOIR UTILISER
+% LA SYNTAXE TeX STRICTE POUR LES LETTRES ACCENTUEES.
+% ON PEUT AU BESOIN LES REMPLACER APR\'ES LA FRAPPE DU DOCUMENT 
+% PAR LEUR \'EQUIVALENT TeX.
+% DANS LE CAS CONTRAIRE LES LETTRES ACCENTU\'ES N'APPARA\^ITRONT PAS
+% DANS LE DOCUMENT FINAL.
+%
+%                   ORATEUR ET CO-AUTEURS
+%---------------------------------------------------------------
+%
+% LES AUTEURS SONT PRIES DE FOURNIR LES BONS ARGUMENTS AUX MACROS CI-DESSOUS :
+%   \Titre         : Titre de la communication
+%   \NomOrateur    : Pr\'enom(s) NOM de l'Orateur
+%   \AdresseCourteOrateur : Exemple : Universit\'e de Rennes 1
+%   \AdresseLongueOrateur : Exemple : IRMAR, Universit\'e de Rennes 1, 263 avenue du G\'en\'eral Leclerc, 35000 Rennes
+%   \EmailOrateur : Adresse electronique
+%
+% ET DE MEME POUR LES EVENTUELS CO-AUTEURS :
+%   \NomAuteurI ...
+%   \AdresseCourteAuteurI ...
+%---------------------------------------------------------------
+% DEFINIR ICI LE TITRE DE VOTRE COMMUNICATION
+\def\Titre{QUELQUES EXEMPLES D'ANALYSE DE R\'ESEAU EN \'ECOLOGIE}
+%
+% DEFINIR ICI LES NOMS, ADRESSES, ... DE l'ORATEUR OU UNIQUE AUTEUR
+\def\NomOrateur{Stephane ROBIN}
+\def\AdresseCourteOrateur{INRA/AroParisTech/Paris-Saclay}
+\def\AdresseLongueOrateur{UMR MIA-Paris, AgroParisTech, INRA, Université Paris-Saclay, 75005 Paris, France}
+\def\EmailOrateur{robin@agroparistech.fr}
+%
+% DEFINIR ICI LES NOMS, ADRESSES, ... DES EVENTUELS CO-AUTEURS
+% \def\NomAuteurI{}
+% \def\AdresseCourteAuteurI{}
+% \def\AdresseLongueAuteurI{}
+% \def\EmailAuteurI{}
+
+% \def\NomAuteurII{}
+% \def\AdresseCourteAuteurII{}
+% \def\AdresseLongueAuteurII{}
+% \def\EmailAuteurII{}
+%=== et ainsi de suite II, III, IV, V ... pour les suivants
+%
+%=== Liste des mots-cles separes par des virgules si besoin
+\def\listmotcles{graphes aléatoires, modèles graphiques, statistiques, réseaux}
+%
+%
+%                   DEBUT DE LA COMMUNICATION
+%---------------------------------------------------------------
+% NE PAS MODIFIER LA LIGNE SUIVANTE 
+% Le titre est a definir dans la macro \Titre (23 lignes plus haut)
+\titre{\Titre}% 
+%---------------------------------------------------------------
+% TITRE & AUTEUR(S) 
+% RETIRER LES SIGNES % SI NECESSAIRE ET PLACER DANS L'ORDRE SOUHAITE
+% DANS LES LIGNES SUIVANTES NE MODIFIER QUE LES SIGNES COMMENTAIRES '%'
+% Les noms, adresses, email de l'orateur et des co-auteurs sont a definir
+% dans les macros \NomOrateur, \AdresseCourteOrateur etc. plus haut
+%---------------------------------------------------------------
+\orateur{\NomOrateur}{\AdresseCourteOrateur}
+% NE PAS MODIFIER LES 4 LIGNES SUIVANTES sauf a retirer le signe commentaire '%'
+%\auteur{\NomAuteurI}{\AdresseCourteAuteurI}
+%\auteur{\NomAuteurII}{\AdresseCourteAuteurII}
+%\auteur{\NomAuteurIII}{\AdresseCourteAuteurIII}
+%\auteur{\NomAuteurIV}{\AdresseCourteAuteurIV}
+%
+\motscles{\listmotcles}
+%---------------------------------------------------------------
+% TEXTE DE LA COMMUNICATION
+%---------------------------------------------------------------
+
+L'analyse de réseau a pris une place prépondérante dans bon nombre de domaines d'application et notamment dans les sciences du vivant. De façon générale un réseau est un graphe dont les noeuds sont identifiées à des entités (gènes, espèces, molécules) et dans lequel la présence d'une arête indique l'existence d'une interaction entre deux entités. Le terme d'analyse de réseau recouvre un grand nombre de problèmes statistiques différents dont {\sl l'inférence de réseau} qui vise, à partir d'observations faites sur les noeuds, à inférer l'existence des arêtes et {\sl l'analyse topologique} qui cherche à comprendre l'organisation globale ou locale d'un réseau directement observé. 
+
+Dans cet exposé, on décrira rapidement ces deux problèmes. D'un point de vue statistique, l'inférence de réseau est généralement formulée en terme d'inférence de la structure d'un modèle graphique sous-jacent \cite{Lau96} et les modèles graphiques gaussiens 
+% (GGM: \cite{MeB06,FHT08}) 
+y sont un cas d'école. Les méthodes statistiques développées pour l'analyse topologique reposent généralement sur la définition de modèles de graphes aléatoires hétérogènes \cite{MaR14}.
+
+On présentera ensuite deux développements dédiés à l'analyse de réseaux écologiques. Le premier porte sur l'inférence de réseau d'interactions entre espèces à partir de données d'abondance. L'approche proposée tire partie de méthodes développées dans le cadre gaussien pour les étendre à l'analyse de données de comptages dans le cadre du modèle Poisson log-normal \cite{AiH89}. L'inférence de ce modèle repose sur un approximation variationnelle qui bénéficie de la convexité partielle de la fonction objectif \cite{CMR18b}. 
+
+Le second développement porte sur la prise en compte de covariables pour expliquer la topologie d'un réseau. Plus précisément, il s'agit de déterminer si les covariables disponibles suffisent à expliquer la topologie observée. Ici encore, une première inférence repose sur une approximation (bayésienne) variationnelle. On montrera comment une approche par échantillonnage séquentiel permet d'utiliser le résultat de cette approximation comme point de départ pour échantillonner efficacement dans la loi {\sl a posteriori} des paramètres \cite{DoR17}.
+
+\paragraph{Co-auteurs:} Julien {\sc Chiquet}, Sophie {\sc Donnet} et Mahendra {\sc Mariadassou}.
+
+
+%---------------------------------------------------------------
+% REFERENCES BIBLIOGRAPHIQUES
+%---------------------------------------------------------------
+% \bibliography{/home/robin/Biblio/BibGene}
+% \bibliographystyle{plain}
+% NE PAS MODIFIER LES 2 LIGNES SUIVANTES
+\bibliographystyle{plain}
+\begin{thebibliography}{99}
+
+\bibitem{AiH89}
+J.~Aitchison and C.H Ho.
+\newblock The multivariate {P}oisson-log normal distribution.
+\newblock {\em Biometrika}, 76(4):643--653, 1989.
+
+\bibitem{CMR18b}
+J.~{Chiquet}, M.~{Mariadassou}, and S.~{Robin}.
+\newblock Variational inference for sparse network reconstruction from count
+  data.
+\newblock Technical Report 1806.03120, arXiv, 2018.
+
+\bibitem{DoR17}
+S.~{Donnet} and S.~{Robin}.
+\newblock {Using deterministic approximations to accelerate SMC for posterior
+  sampling}.
+\newblock Technical Report 1612.06928, arXiv, 2017.
+
+\bibitem{Lau96}
+S.~L. Lauritzen.
+\newblock {\em Graphical Models}.
+\newblock Oxford Statistical Science Series. Clarendon Press, 1996.
+
+\bibitem{MaR14}
+C.~Matias and S.~Robin.
+\newblock Modeling heterogeneity in random graphs through latent space models:
+  a selective review.
+\newblock {\em ESAIM: Proc.}, 47:55--74, 2014.
+
+% NE PAS MODIFIER LA LIGNE SUIVANTE
+\end{thebibliography}
+%
+%---------------------------------------------------------------
+% NOM & ADRESSE COMPLETE & EMAIL DU OU DES AUTEURS
+% RETIRER LES SIGNES % SI NECESSAIRE ET PLACER DANS L'ORDRE SOUHAITE
+% DANS LES LIGNES SUIVANTES NE MODIFIER QUE LES SIGNES COMMENTAIRES '%'
+%---------------------------------------------------------------
+\vfill
+\auteurenbasdepage{\NomOrateur}{\AdresseLongueOrateur}{\EmailOrateur}
+% Les noms, adresses, email de l'orateur et des co-auteurs sont a definir
+% dans les macros \NomOrateur, \AdresseCourteOrateur etc. plus haut
+%
+%\auteurenbasdepage{\NomAuteurI}{\AdresseLongueAuteurI}{\EmailAuteurI}
+%\auteurenbasdepage{\NomAuteurII}{\AdresseLongueAuteurII}{\EmailAuteurII}
+%\auteurenbasdepage{\NomAuteurIII}{\AdresseLongueAuteurIII}{\EmailAuteurIII}
+%\auteurenbasdepage{\NomAuteurIV}{\AdresseLongueAuteurIV}{\EmailAuteurIV}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+

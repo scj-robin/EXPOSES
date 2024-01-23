@@ -1,0 +1,299 @@
+\documentclass[a4paper, 12pt, times]{article}
+
+\usepackage{amsfonts}
+%\usepackage[french]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{astats}
+\usepackage[latin1]{inputenc}
+
+
+\textwidth 17cm
+\textheight 24cm 
+\topmargin 0 cm 
+\oddsidemargin 0 cm 
+\evensidemargin 0 cm
+
+\newcommand{\Ncal}{{\mathcal N}}
+\newcommand{\HH}{{\bf H}}
+\renewcommand{\familydefault}{cmss}
+%\renewcommand{\section}{\section\LARGE}
+%\renewcommand{\subsection}{\section\Large}
+%\renewcommand{\paragraph}{\paragraph\large}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%\fontsize{14.4}{17}\selectfont{cmss}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+{\bf \LARGE Microarrays and Their Use in a Comparative Experiment}
+
+\vspace{0.5cm}
+{\sc B. Efron, R. Tibshirani, V. Goss, G. Chu}
+
+{06 / 02 / 01}
+\end{center}
+
+%\tableofcontents \pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problème et Dispositif}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Sensibilité aux radiations}
+
+Certains malades du cancer ne supportent pas les traitements par
+radiations.
+
+\paragraph{Objectif~:} Déterminer les gènes responsables de cette sensibilité.
+
+\paragraph{Étude de type~:} Comparaison de type Cas / Témoin avec
+\begin{itemize}
+\item Cas = cellules soumises à des radiations,
+\item Témoins = cellules non-soumises
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Dispositif expérimental}
+
+\paragraph{Plan factoriel $2 \times 2 \times 2$}
+\begin{itemize}
+\item 2 (1, 2) {\bf lignées de cellules} lymphoblastoide
+  humaine sauvages~;
+\item 2 {\bf niveaux de radiation}~:\\
+ - $U$ = non exposé, \\
+ - $I$ = exposé à 4 h de 5 Gy de radiations~;
+\item les échantillons d'ARN sont divisés en 2 {\bf aliquots} ($A$, $B$)
+  indépendants (répétitions).
+\end{itemize}
+On numérote les conditions expérimentales~:
+$$
+\begin{array}{c|c|c|c|c|c|c|c|c}
+k = & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+\hline
+\mbox{condition} & U1A & U1B & I1A & I1B & U2A & U2B & I2A & I2B
+\end{array}
+$$
+
+\paragraph{6\;810 gènes humains} En fait $7\;129$ dont $319$ ayant des
+données manquantes.
+
+\paragraph{Oligonucléotides arrays~:} Pour chaque gène, on dispose de
+20 paires de sondes $pm$ et $mm$~:
+\begin{itemize}
+\item $pm$ = {\sl perfect match} = environ 25 nucléotides du gène~;
+\item $mm$ = {\sl mismatch} = mêmes 25 nucléotides que $pm$ mais celui du
+  centre est changé en sa base complémentaire
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\section{Mesures d'expression des gènes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Normalisation des mesures}
+
+Au total on a
+$$
+8 \times 6\;810 \times 20 \times 2 = 2\;179\;200 \mbox{ mesures}.
+$$
+On note 
+\begin{eqnarray*}
+pm_{ijk} & = & \mbox{mesure obtenu pour le gène $i$ dans le {\sl perfect match}} \\
+& & \mbox{du couple de sonde $j$ dans la condition $k$}, \\
+mm_{ijk} & = & \dots \mbox{ \sl mismatch } \dots.
+\end{eqnarray*}
+
+\paragraph{Mesure de l'expression d'un gène~: $M_{ik} =$}
+\begin{itemize}
+\item Moyenne des écarts $(pm - mm)$~:
+$$
+M_{ik} = \frac{1}{20} \sum_{j=1}^{20} (pm_{ijk} - mm_{ijk})
+$$
+\item ou plutôt moyenne des $\log pm$ normalisés~:
+$$
+M_{ik} = \frac{1}{20} \sum_{j=1}^{20} \log\left(\frac{pm_{ijk}}{\sqrt{mm_{ijk}}}\right)
+$$
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Score d'un gène}
+
+\paragraph{Mesure différentielle~:} On calcule les différences
+$$
+D = \mbox{Mesure exposée} - \mbox{Mesure non-exposée} 
+$$
+pour les 4 couples d'expressions obtenues pour {\bf la même lignée
+  et le même aliquot}~:
+$$
+D_{i1} = M_{i3} - M_{i1}, \quad D_{i2} = M_{i4} - M_{i2}, \quad
+D_{i3} = M_{i7} - M_{i5}, \quad D_{i4} = M_{i8} - M_{i6}. 
+$$
+
+\paragraph{Score $Z_i$ d'un gène~:}
+$$
+Z_i = \frac{\bar{D}_i}{a_0 + \sigma_{D_i}}
+$$
+où $a_0$ est le 90-ème percentile des $\sigma_{D_i}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\pagebreak
+\section{Modèle d'analyse}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Modèle bayésien}
+
+\paragraph{Idée~:} On veut savoir quels sont les gènes {\bf affectés}
+({\bf positivement ou négativement}) par le rayonnement et ceux qui ne le
+sont pas ({\bf non-affectés}).
+
+\paragraph{Modèle~:} On définit les {\bf probabilités a priori}
+\begin{eqnarray*}
+p_1 & = & \mbox{probabilité qu'un gène soit affecté,} \\
+p_0 & = & 1 - p_1 = \mbox{probabilité qu'un gène ne soit pas affecté}
+\end{eqnarray*}
+et les densités de probabilités
+\begin{eqnarray*}
+f_1(z) & = & \mbox{densité du score $Z$ pour un gène affecté,} \\
+f_0(z) & = & \mbox{densité du score $Z$ pour un gène non- affecté.}
+\end{eqnarray*}
+Pour un gène dont on ignore a priori la nature la densité de $Z$ est
+$$
+f(z) = p_1 f_1(z) + p_0 f_0(z).
+$$
+
+\paragraph{Règle de Bayes~:} Si on connaît tous les paramètres ($p_0$,
+$p_1$, $f_0$, $f_1$), on peut calculer la {\bf probabilité a
+  posteriori} ({\sl i.e.} connaissant le score $Z$) qu'un gène soit
+affecté~:
+$$
+p_1(Z) = \frac{p_1 f_1(Z)}{f(Z)} = 1 - \frac{p_0 f_0(Z)}{f(Z)}.
+$$
+
+\vspace{3cm}
+$$
+\mbox{Figure 1~: Probabilité $p_1(Z)$ pour les 6\;180 gènes.}
+$$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\pagebreak
+\subsection{Estimation des distributions $f$, $f_0$ et $f_1$}
+
+\paragraph{Score ``nul''~:} Pour estimer $f_0$ on calcule cette
+fois les différences
+$$
+\Delta = \mbox{Mesure de l'aliquot $B$} - \mbox{Mesure de l'aliquot $A$} 
+$$
+pour les 4 couples d'expressions obtenues pour {\bf la même lignée
+  et la même exposition}~:
+$$
+\Delta_{i1} = M_{i2} - M_{i1}, \quad \Delta_{i4} = M_{i3} - M_{i2}, \quad
+\Delta_{i3} = M_{i6} - M_{i5}, \quad \Delta_{i4} = M_{i8} - M_{i7}. 
+$$
+On en déduit une score ``nul'' $Y$ par la même formule que pour $Z$~:
+$$
+Y_i = \frac{\bar{\Delta}_i}{a_0 + \sigma_{\Delta_i}}
+$$
+La distribution de $Y_i$ donne une estimation de $f_0$.
+
+\paragraph{Méthode paramétrique~:} Si on suppose que les
+densités $f_0$ et $f_1$ sont gaussiennes, par exemple 
+$$
+f_0 = \Ncal(0, \sigma), \qquad f_1 = \Ncal(\mu, \sigma),
+$$
+on peut estimer directement tous les paramètres ($p_0$, $p_1$,
+$\mu_0$, $\mu_1$, $\sigma_0$, $\sigma_1$).  Et c'est fini.
+
+\paragraph{Méthode non-paramétrique~:} Si on a pas d'idée a priori sur 
+la forme des densités, il faut les estimer globalement. C'est le cas
+ici.
+\begin{itemize}
+\item La distribution empirique des $Z_i$ donne une estimation de
+  $f$~;
+\item la distribution empiriques des $Y_i$ donne une estimation de
+  $f_0$.
+\end{itemize}
+
+\paragraph{Méthode hybride~:} Ici, on opère une transformation sur les
+$Z_i$ pour rendre $f$ gaussienne et on estime $f_0$ par un modèle
+logistique utilisant les $Z_i$ et les $Y_i$. $f_1$ se déduit.
+
+\vspace{3cm}
+$$
+\mbox{Figure 2~: Estimation de $f$, $f_0$ et $f_1$.}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\pagebreak
+\section{Affectation des gènes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+Le problème final consiste à ranger chaque gène dans le groupe des
+``affectés'' ou des ``non-affectés''.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Approche bayésienne}
+
+\paragraph{Affectation bayésienne~:} Pour décider si un gène est
+affecté ou non, il faut fixer un {\bf seuil} $p^*$ sur la probabilité
+a posteriori $p_1(Z_i)$~:
+$$
+p_1(Z_i) \geq p^*  \qquad \Rightarrow \qquad \mbox{on décide que $i$ est affecté}.
+$$
+
+\paragraph{Choix du seuil~:} Pour choisir le seuil $p^*$, on
+l'applique aux scores ``nuls'' $Y_i$. Par construction, on a un faux
+positif chaque fois qu'une probabilité passe le  seuil~:
+$$
+p_1(Y_i) \geq p^* \qquad \Rightarrow \qquad \mbox{faux positif}.
+$$
+Ici, on applique cette méthode au $Y_i$ 16 fois en tirant leur signe
+au sort et on obtient
+$$
+\begin{tabular}{ccc}
+$p^*$ & \begin{tabular}{c}Nombre moyen ($Y_i$)\\ de faux positifs
+  \end{tabular}
+       & \begin{tabular}{c}Nombre de gènes ($Z_i$)\\ au dessus du seuil
+         \end{tabular} \\
+\hline
+0.900 & 0.38 & 79 \\
+0.950 & 0.13 & 49 \\
+0.975 & 0.06 & 34 \\
+0.990 & 0.00 & 25
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Test d'hypothèse} 
+
+Affecter un gène à une catégorie revient à tester
+\begin{eqnarray*}
+\mbox{l'hypothèse } \HH_0 & = & \{\mbox{le gène n'est pas affecté}\} \\
+\mbox{contre l'hypothèse } \HH_1 & = & \{\mbox{le gène est affecté}\}.
+\end{eqnarray*}
+
+On utilise le {\bf test du rapport de vraisemblance}~: $f_1(Z) /
+f_0(Z)$. On calcule un seuil $c$ tel que, pour un gène non affecté, le
+rapport $f_1(Z) / f_0(Z)$ ne dépasse $c$ qu'avec une faible
+probabilité $\alpha$ (souvent 1\%, 5\%)~:
+$$
+\Pr\{f_1(Z) / f_0(Z) \geq c \;|\; \mbox{non affecté}\} = \alpha.
+$$ 
+
+\paragraph{Limite~:}Si on applique ce test à un grand nombre de gène, le 
+risque $\alpha$ (ou la $p$-value) devient difficile à interpréter. On
+utilise une méthode de validation analogue à celle utilisée pour
+l'approche bayésienne.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

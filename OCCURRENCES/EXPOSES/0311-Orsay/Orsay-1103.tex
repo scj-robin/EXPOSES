@@ -1,0 +1,989 @@
+\documentclass[dvips]{slides}
+\usepackage{lscape}
+\textwidth 19cm
+\textheight 23cm 
+\topmargin 0 cm 
+\oddsidemargin  -1cm 
+\evensidemargin  -1cm
+%\renewcommand{\baselinestretch}{1.1}     
+
+%\documentclass[dvips, 12pt]{d:/Latex/foiltex/foils}
+%\LogoOff
+%\usepackage{geometry}
+%\geometry{landscape,a4paper,tmargin=1cm,bmargin=1cm,lmargin=2.5cm,rmargin=2.5cm}
+
+
+                                % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                                % Graphics Gallery :                     %
+                                % http://www.accessexcellence.com/AB/GG/ %
+                                % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Maths
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{c:/Stephane/Tex/AjoutSR/astats} 
+%\usepackage{d:/Latex/astats} 
+\newcommand{\Acal}{\mathcal{A}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Wcal}{\mathcal{W}}
+\newcommand{\att}{{\tt a}}
+\newcommand{\ctt}{{\tt c}}
+\newcommand{\gtt}{{\tt g}}
+\newcommand{\ttt}{{\tt t}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\Phibf}{\mbox{\mathversion{bold}{$\Phi$}}}
+\newcommand{\Pibf}{\mbox{\mathversion{bold}{$\Pi$}}}
+\newcommand{\Sbf}{{\bf S}}
+\newcommand{\bps}{\mbox{bps}}
+\newcommand{\vbf}{{\bf v}}
+\newcommand{\wbf}{{\bf w}}
+\newcommand{\Esp}{{\mathbb E}}
+\newcommand{\Var}{{\mathbb V}}
+\newcommand{\Indic}{{\mathbb I}}
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+% Texte
+%\usepackage{d:/LATEX/fancyheadings}
+%\usepackage{multirow}
+\usepackage{enumerate}
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+%\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.4}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.4}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\definecolor{jaune}{cmyk}{0, 0.5, 0.5, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{\bf #1}}
+\newcommand{\textred}[1]{\textcolor{red}{\bf #1}}
+%\newcommand{\textgreen}[1]{\textcolor{darkgreen}{\bf #1}}
+\newcommand{\textgreen}[1]{\textcolor{green}{\bf #1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{\bf #1}}
+\newcommand{\textyellow}[1]{\textcolor{yellow}{\bf #1}}
+\newcommand{\emphase}[1]{{\bf #1}}
+% Sections
+\newcommand{\chapter}[1]{\centerline{\LARGE \bf \textgreen{#1}}}
+\newcommand{\section}[1]{\centerline{\Large \bf \textyellow{#1}}}
+\newcommand{\subsection}[1]{\noindent{\large \bf \textyellow{#1}}}
+\newcommand{\paragraph}[1]{{\textgreen{#1}}}
+
+% Définition de dessins
+\newcommand{\reddot}{\pscircle*[linecolor=red, fillcolor=red]}
+\newcommand{\redcircle}{\pscircle[linecolor=red, linewidth=.05]}
+\newcommand{\bluedot}{\pscircle*[linecolor=blue, fillcolor=blue]}
+\newcommand{\bluesquare}{\psframe[linecolor=blue, fillcolor=blue, 
+  linewidth=0.1]}
+\newcommand{\greendot}{\pscircle*[linecolor=green, fillcolor=green]}
+\newcommand{\greensquare}{\psframe*[linecolor=green, fillcolor=blue]}
+\newcommand{\losange}{\psdots[dotstyle=diamond*, dotscale=4 4]}
+\newcommand{\arrow}{\psline[linestyle=dotted, linewidth=.05]{->}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\landscape
+\pagecolor{blue}
+\color{white}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+  \textgreen{\Large MODELING MOTIF DISTRIBUTION}
+  
+  \textgreen{\Large IN BIOLOGICAL SEQUENCES}
+  
+  {\large Stéphane ROBIN} \\
+  {\tt robin@inapg.inra.fr}
+  
+  {UMR INA-PG / INRA, Paris} \\
+  {Biométrie \& Intelligence Artificielle}
+  
+  {Statistiques des séquences biologiques (SSB): {\tt
+      www-mig.jouy.inra.fr/ssb/}} 
+  \vspace{1cm}
+
+  {Séminaire ``Langage du génome'', Orsay, 6 / 11 / 03}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+% \section{Contents}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{enumerate}
+% \item Biological interest of motif statistics \\
+% \item A model: what for ? \\
+% \item Motifs occurrences in Markov chains \\
+% \item Compound Poisson model \\
+% \item Motifs distribution along a sequence
+% \end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Biological interest of motif statistics}
+\chapter{~}
+\section{Vocabulary}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Letter} = nucleotide $\in \{\att, \ctt ,\gtt,
+\ttt\}$ (= base pair)
+
+\paragraph{Word} = short, exact sequence of letters:
+$$
+\wbf = \gtt\ctt\ttt\gtt\gtt\ttt\gtt\gtt
+$$
+\paragraph{Motif} = set of words:
+$$
+\begin{array}{rclcll}
+  \mbf & = & \{\gtt{\tt N}\ttt\gtt\gtt\ttt\gtt\gtt\} 
+  & = \{ & \wbf_1 = \gtt \emphase{\tt a} \ttt\gtt\gtt\ttt\gtt\gtt, \\
+  & & &  & \wbf_2 = \gtt \emphase{\tt c} \ttt\gtt\gtt\ttt\gtt\gtt, \\
+  & & &  & \wbf_3 = \gtt \emphase{\tt g} \ttt\gtt\gtt\ttt\gtt\gtt, \\
+  & & &  & \wbf_4 = \gtt \emphase{\tt t} \ttt\gtt\gtt\ttt\gtt\gtt & \} \\
+\end{array}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Three examples}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Ex 1: Promoter motifs} = structured motifs where
+polymerase binds to DNA
+$$
+\begin{pspicture}(20, 2.5)(0, -2.5)
+  \psline[linewidth=0.05, linestyle=dashed, linecolor=white]{<-|}(0,
+  1.2)(14.2, 1.2) 
+  \rput[B]{0}(6.85, 1.4){$\simeq$ 100 bps}
+
+  \psline[linewidth=0.1, linecolor=white](0, 0)(3.3, 0)
+  \rput[B]{0}(4, -0.1){\fbox{\rule[-0.2cm]{0cm}{0.8cm}$\;\vbf\;$}}
+  \psline[linewidth=0.1, linecolor=white](4.7, 0)(7.3, 0)
+  \rput[B]{0}(8, -0.1){\fbox{\rule[-0.2cm]{0cm}{0.8cm}$\;\wbf\;$}}
+  \psline[linewidth=0.1, linecolor=white](8.7, 0)(14.2, 0)
+  \rput[B]{0}(17, -0.1){\fbox{\rule[-0.2cm]{0cm}{0.8cm}\qquad gene\qquad}}
+  
+  \psline[linewidth=0.05, linestyle=dashed, linecolor=white]{<->}(4.7,
+  -1)(7.2, -1) 
+  \rput[B]{0}(5.95, -2){16 bps $\leq d \leq$ 18 bps}
+\end{pspicture}
+$$
+Which structured motifs are \emphase{unexpectedly frequent} in
+upstream regions of the genes of a given species?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Ex 2: CHI motifs in bacterial genomes} 
+
+{\sl Crossover Hot-spot Initiator}: \emphase{defense function} of the
+genome against the degradation activity of an enzyme 
+
+Exists in {\sl E. coli} = {\gtt\ctt\ttt\gtt\gtt\ttt\gtt\gtt} and {\sl H.
+  influenza} = \gtt{\tt N}\ttt\gtt\gtt\ttt\gtt\gtt
+
+Is this motif \emphase{unexpectedly frequent} in some regions of the
+genome?
+
+If so, these regions may contain crucial functions
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Ex 3: Palindromes} = self-complementary words 
+$$
+  \begin{pspicture}(10, 4.5)
+    \psline[linewidth=0.1, linecolor=white]{->}(2, 3.5)(8, 3.5)
+    \rput[B]{0}(5, 1.5){$
+      \begin{array}{cccccc}
+        \gtt  & \ttt & \ttt & \att & \att & \ctt \\
+        |  & |  & |  & |  & |  & | \\
+        \ctt & \att & \att & \ttt & \ttt & \gtt 
+      \end{array}
+      $}
+    \psline[linewidth=0.1, linecolor=white]{<-}(2, 0)(8, 0)
+  \end{pspicture}
+$$
+
+Palindromes of length 6 are restriction sites (i.e. \emphase{frailty
+  sites}) of the genome of {\sl E. coli}
+
+If they are \emphase{especially avoided} in some regions, these
+regions may be of major importance for the organism
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{A model: what for ?}
+\chapter{~}
+\subsection{Model = Reference} \\
+To be able to decide if something is \emphase{unexpected}, one
+first need to know \emphase{what to expect} 
+\begin{enumerate}[$\bullet$]
+\item The model must be \emphase{well fitted} to the data to avoid artifacts and
+  non-interesting discoveries
+\item but \emphase{not too well} fitted to let unexpected events
+  happen 
+\end{enumerate}
+
+\emphase{Interesting} cases are revealed when the model is (very)
+\emphase{wrong}
+
+The choice of the model depends on the problem
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Overlapping structure of the word} \\
+Some words can \emphase{overlap themselves} \dots
+$$
+\begin{tabular}{lcccccccc|ccccccc}
+  1 letter : &  &  &  &  &  &  &  & \emphase{g}& \gtt & \ttt & \gtt
+  & \gtt & \ttt & \gtt & \gtt \\
+  \hline
+  \emphase{w} & \emphase{g} & \emphase{g} &  \emphase{t} 
+  & \emphase{g} & \emphase{g} & \emphase{t} & \emphase{g} 
+  & \emphase{g} &  &  &  &  &  &  & \\
+  \hline
+  5 letters : &  &  &  & \emphase{g} & \emphase{g} &
+  \emphase{t} & \emphase{g} & \emphase{g} & \ttt & \gtt &
+  \gtt &  &  &  & \\
+  2 letters :  &  &  &  &  &  &  & \emphase{g} & \emphase{g} 
+  & \ttt & \gtt & \gtt & \ttt & \gtt & \gtt & 
+\end{tabular}
+$$ {\sl Conway (Gardner, 74); Guibas \& Odlyzko, 81}
+
+ \dots and tend therefore to occur in \emphase{clumps}
+$$
+\begin{tabular}{cc}
+  $\wbf=({\tt gatc})$ & $\wbf=({\tt aaaa})$ \\ 
+  \epsfig{file = ../RSS-03/RoD99-JAP-Fig1-1.eps, height = 6cm, width = 10cm} & 
+  \epsfig{file = ../RSS-03/RoD99-JAP-Fig1-2.eps, height = 6cm, width = 10cm} \\
+  $\begin{array}{ll}
+    \mbox{M00}: & \Esp(Y) = 256\;\bps \\
+    & \Var(Y) = (256.2\;\bps)^2
+  \end{array}$
+  &
+  $\begin{array}{ll}
+    \mbox{M00}: & \Esp(Y) = 256\;\bps \\
+    & \Var(Y) = (326.7\;\bps)^2
+  \end{array}$
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Statistical issues}
+\begin{enumerate}[$\bullet$]
+\item \emphase{Probability for a motif to occur} in a
+  sequence \\
+  $\longrightarrow$ promoter motifs
+\item Distribution of the \emphase{number} of occurrences ({\sl Prum
+    \& al, Schbath, 95; Nicodème \& al, 99; Regnier, 00; Nuel, 01})
+\item \emphase{Distribution} of the occurrences along the
+  sequence \\
+  $\longrightarrow$ CHI motifs, palindromes
+\end{enumerate}
+
+\vspace{-0.5cm}
+\paragraph{Positions, distances, counts} 
+$$
+                                %FigUnMot.ps
+\begin{pspicture}(25, 8.1)
+  \rput[bl](-1.5, 0){  \colorbox{white}{
+      \psfig{file = ../RSS-03/FigUnMot.ps,
+        height=8.1cm, width=25cm, bbllx=75 , bblly=525 , bburx=520 ,
+        bbury=670 , clip=} } }
+  \rput[Br](24.5, 6.5){\colorbox{white}{\textcolor{black}{$N(\wbf) = 6$}}}
+\end{pspicture}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Motifs occurrences in Markov chains}
+\chapter{~}
+\section{Markov chains = Discrete modeling}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$\Sbf = (S_1, \dots, S_{\ell})$ is an homogeneous stationary Markov
+chain 
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item of \emphase{order} $m$ (M$m$ model)
+\item with \emphase{transition probabilities} $\pi(s_1, \dots,
+  s_m; s_{m+1}) =$
+  $$
+  \Pr\{S_x = s_{m+1} | S_{x-m}=s_1, \dots, S_{x-1} = s_m\} 
+  $$
+\end{enumerate}
+M$m$ model is fitted to the frequencies of \emphase{all the words of
+  length $(m+1)$}
+$$
+\widehat{\pi}(s_1, \dots, s_m; s_{m+1}) = \frac{N(s_1 \dots s_m
+  s_{m+1})}{N(s_1 \dots s_m)}
+$$
+
+\emphase{Theoretically}, properties derived under M1 can be
+generalized to M$m$: M2 is equivalent to M1 on the alphabet $\Acal^2 =
+\{\att\att, \att\ctt, \dots, \ttt\ttt\}$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Principle for one word under M1}
+
+\vspace{-1cm} \begin{flushright} 
+  {\sl Blom \& Thorburn, 82} (M0); {\sl R. \& Daudin, 99} (M1) 
+\end{flushright} \vspace{-1cm}
+
+
+Distribution of the distance $Y$
+$$
+p(y) =\Pr \{ Y=y \}
+$$
+\begin{enumerate}
+\item \emphase{Recursive formula} of order $y-1$ $(\emphase{O(y^2)})$
+  $$
+  p(y) = f [ p(1), \dots, p(y-1) ]
+  $$
+\item Probability \emphase{generating function}
+  $$
+  \phi_Y (t) = \sum_{y\geq 1}p(y) t^{y} = U_Y(t) / V_Y(t)
+  $$
+\item \emphase{Taylor expansion} of $\phi_Y$
+  $$
+  p(y) = g [ p(y-|\wbf|), \dots, p(y-1)]
+  $$
+  $\longrightarrow$ recurrence of order $|\wbf|$ $(\emphase{O(y)})$
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Principle for a motif} 
+\qquad \qquad {\sl R. \& Daudin, 01} (M1) 
+
+Consider the distribution of the occurrences of the motif 
+$$
+\mbf = \{\wbf_1, \dots, \wbf_I\}
+$$
+The distribution of the distances \emphase{depends on the
+  words} themselves 
+$$
+                                %FigMultiMot.ps  
+  \hspace{-1.5cm}
+  \colorbox{white}{
+    \psfig{file = ../RSS-03/FigMultiMot.ps, height=4.8cm,
+      width=25cm, bbllx=75, bblly=255 , bburx=520 , bbury=350 , clip=}
+    }
+$$
+
+Steps 1, 2, 3 follow the same principle as for one word but involve
+\emphase{generating matrices}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+Denoting $\phi_{ij}(t) = \phi_{Y_{ij}}(t)$, ($i, j = 1..I$)
+$$
+\underset{I \times I}{\Phibf(t)} = \left[ 
+  \begin{array}{ccc}
+    \phi_{11}(t) & \dots & \phi_{1I}(t) \\
+    \vdots       &       & \vdots       \\
+    \phi_{I1}(t) & \dots & \phi_{II}(t) \\
+  \end{array}
+\right], 
+\qquad \phi_{ij}(t) = \frac{U_{ij}(t)}{V_{ij}(t)}
+$$
+
+Step 2 requires the \emphase{inversion} of a generating matrix:
+$$
+\Phibf(t) = {\bf F}(t)[{\bf I} - {\bf F}(t)]^{-1}
+$$
+\vspace{0.5cm}
+\paragraph{Limitations:}
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$] 
+\item \emphase{Complexity} of this last step: \emphase{$O(I^3
+    |\mbf|)$}
+\item \emphase{Numerical instability} except if $[{\bf I} -
+  {\bf F}(t)]$ is inverted formally \\
+  $\Longrightarrow$ small set of short words (small $I$ and
+  $|\mbf|$)
+\end{enumerate}
+\paragraph{Other approaches} 
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item grammars: {\sl Nicodème, 00}
+\item embedded Markov chain: {\sl Fu \& Koutras, 94};
+{\sl Koutras, 97} 
+\item porperties of the exponential family: {\sl Stefanov \& Pakes,
+    99}
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Application to structured motifs} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Difficulty:} Complexity of the overlapping structure of structured
+motif 
+$$
+\begin{pspicture}(11, 1.75)(0, 0.75)
+  \rput[B]{0}(1, 1){$\mbf = \framebox{\quad$\vbf$\quad}$}
+  \psline[linewidth=0.1, linecolor=white]{<->}(3.2, 1.1)(8.7, 1.1)
+  \rput[B]{0}(10, 1){\framebox{\quad$\wbf$\quad}}
+  \rput[B](6, 1.3){$d$}
+\end{pspicture}
+$$
+$\Longrightarrow$ (almost) impossible to calculate the exact distribution of
+$X_1(\mbf)$
+
+\paragraph{Approximation} ({\sl R. \& al, 02})
+\vspace{-0.5cm}
+\begin{enumerate}
+\item Probability for $\mbf$ \emphase{to occur at a given
+    position} (using the distribution of the distances): $ \mu(\mbf)$ \\
+\item Approximation of \emphase{order 0} (geometric): 
+  $$
+  \Pr \left\{ N(\wbf) \geq 1 \right\}
+  \approx
+  1 - [1 - \mu(\mbf)]^{\ell - |\mbf| + 1} 
+  $$
+  does not work (\emphase{simulations}, next slide) \\
+\item Approximation of \emphase{order 1}: 
+  $$
+  \Pr \left\{ N(\wbf) \geq 1 \right\}
+  \approx
+  1 - [1 - \mu(\mbf)] [1 - \mu_1(\mbf)]^{\ell-|\mbf|}
+  $$
+  where 
+  $
+  \mu_1(\mbf) = \Pr\{\mbf \mbox{ at }x | \mbf \mbox{ not at } x-1\}
+  $ 
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage 
+\paragraph{Comparison of approximations:} (order 0 left, order 1 right)
+$$
+\hspace{-2cm}
+\begin{tabular}{lc}
+%  \mbox{order 0} & \mbox{order 1} \\
+  \begin{tabular}{l}
+    $x$: \\
+    simulations \\
+    \\
+    \\
+    $y$: \\
+    approximation \\
+    \\
+    \\
+    dotted line: \\
+    95\% conf. lim.
+  \end{tabular}
+  & 
+  \hspace{-1.5cm}
+  \begin{tabular}{cc}
+    \epsfig{file = RDRSS02-FigSub0.eps, height = 12cm, width = 10cm} 
+    & \epsfig{file = RDRSS02-FigSub1.eps, height = 12cm, width = 10cm}
+  \end{tabular}
+\end{tabular}
+$$
+Structure motifs for which order 0 works bad ($\circ$) are those
+for which $\vbf$ is very overlapping (eg $\vbf =
+\ttt\ttt\ttt\ttt\ttt\ttt$).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\hspace{-3.5cm}
+\begin{tabular}{lc}
+  \begin{tabular}{l}
+    \textgreen{\Large Promoters} \\
+    \textgreen{\Large in} \\
+    \textgreen{\Large {\sl B. subtilis}:} \\
+    \\
+    131 upstream \\
+    regions \\
+    of 100 bps \\
+    \\
+    $p$-value \\
+    $< 10^{-16}$ \\
+    \\
+    (putative \\
+    alignment) \\
+  \end{tabular}
+  &
+  {\small
+    \begin{tabular}{lclccc}
+%      $\qquad\vbf$ & $(d_1:d_2)$ & $\qquad\wbf$ & $N_{\mbox{obs}}$& $\Esp_1(N)$ \\
+%      $\qquad\vbf$ & $(d_1:d_2)$ & $\qquad\wbf$ 
+      \multicolumn{3}{c}{$\begin{array}{c}
+          \mbf \\
+          \overbrace{\vbf \hspace{2cm} (d_1:d_2) \hspace{2cm} \wbf} \\
+        \end{array}$
+        }
+      & \begin{tabular}{c} number of\\ regions\\ containing
+      $\mbf$\end{tabular} 
+      & \begin{tabular}{c} expected\\ number\end{tabular}\\
+      \hline 
+      {\tt\ \ \ gttgaca\ } & $(16:18)$ & {\tt atataat}     &  7 &   2.43 $10^{-2}$ \\  
+      {\tt\ \ \ gttgaca\ } & $(16:18)$ & {\tt \ tataata}   &  8 &   2.23 $10^{-2}$ \\  
+      {\tt\ \ tgttgac\ \ } & $(16:18)$ & {\tt \ tataata}   & 10 &   2.12 $10^{-2}$ \\
+      {\tt\ \ \ \ ttgacaa} & $(16:18)$ & {\tt \ tacaat}    &  9 &   9.82 $10^{-2}$ \\
+      {\tt\ \ \ \ ttgacaa} & $(16:18)$ & {\tt \ tataata}   & 10 &   5.07 $10^{-2}$ \\
+      {\tt\ \ \ \ ttgacag} & $(16:18)$ & {\tt \ tataat}    &  9 &   7.12 $10^{-2}$ \\
+      {\tt\ \ \ \ ttgacaa} & $(17:19)$ & {\tt \ \ ataataa} &  9 &   6.97 $10^{-2}$ \\
+      {\tt \ ttgttga\ \ } & $(17:19)$ & {\tt \ tataata}    &  8 &   5.17 $10^{-2}$ \\
+      {\tt\ \ \ gttgaca\ } & $(17:19)$ & {\tt \ \ ataataa} &  8 &   3.09 $10^{-2}$ \\
+      {\tt\ \ \ gttgaca\ } & $(17:19)$ & {\tt \ tataata}   &  8 &   2.19 $10^{-2}$ \\
+      {\tt\ \ \ cttgaca\ } & $(17:19)$ & {\tt \ tataat}    &  8 &   6.04 $10^{-2}$ \\
+      {\tt\ \ tgttgac\ \ } & $(17:19)$ & {\tt \ tataata}   & 12 &   2.09 $10^{-2}$ \\
+      {\tt\ \ tgttgac\ \ } & $(17:19)$ & {\tt atataat}     &  7 &   2.29 $10^{-2}$ \\
+      {\tt\ ttgttga\ \ \ } & $(18:20)$ & {\tt \ tataata}   &  8 &   5.09 $10^{-2}$ \\
+      {\tt\ \ \ gttgaca\ } & $(18:20)$ & {\tt \ \ ataatga} &  7 &   1.79 $10^{-2}$ \\
+      {\tt gttgttg\ \ \ \ } & $(18:20)$ & {\tt \ tataata}  &  7 &   2.53 $10^{-2}$ \\
+      {\tt\ \ tgttgac\ \ } & $(18:20)$ & {\tt \ \ ataataa} & 10 &   2.90 $10^{-2}$ \\
+      {\tt\ \ tgttgac\ \ } & $(18:20)$ & {\tt \ \ atacta}  &  7 &   2.77 $10^{-2}$ \\
+      {\tt\ \ tgttgac\ \ } & $(19:21)$ & {\tt \ \ ataataa} & 10 &   2.86 $10^{-2}$ \\
+      {\tt\ \ tgttgac\ \ } & $(19:21)$ & {\tt \ \ atacta}  &  7 &   2.73 $10^{-2}$ \\
+      {\tt\ \ tgttgac\ \ } & $(19:21)$ & {\tt \ \ \ \ tataat}    & 10 &   6.53 $10^{-2}$ \\
+      {\tt\ \ \ gttgact\ } & $(19:21)$ & {\tt \ \ \ \ \ ataata}  &  8 &   6.25 $10^{-2}$ \\
+    \end{tabular}
+    }
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Compound Poisson model}
+\chapter{~}
+\section{Compound Poisson process}
+\section{= Continuous modeling} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+For rare words, the sequence $\Sbf$ can be viewed as a
+\emphase{continuous line} $[0; \ell]$ 
+$$
+\hspace{-1.5cm}
+\begin{tabular}{c}
+  Real occurrences  \\
+                                %FigPoissonComp.ps
+  \colorbox{white}{      
+    \psfig{file = ../RSS-03/FigPoissonComp.ps,
+      height=2cm, width=25cm, bbllx=80 , bblly=370 , bburx=525 ,
+      bbury=405, clip=}
+    }  \\
+  \\
+  Compound Poisson modeling \\
+                                %FigPoissonComp.ps
+  \colorbox{white}{
+    \psfig{file = ../RSS-03/FigPoissonComp.ps,
+      height=3.9cm, width=25cm, bbllx=80 , bblly=260 , bburx=525 ,
+      bbury=330, clip=}
+    }  \\
+\end{tabular}
+$$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Clump process} $\{C(x)\} =$ Poisson process
+$\Pcal(\lambda x)$
+
+\paragraph{Clump sizes} $\{K_1, K_2, \dots\}$ are i.i.d. 
+$$
+Pr\{K = k\} = g(k)
+$$
+
+\paragraph{Counting process} of the occurrences $\{N(x)\} = $
+compound Poisson process:
+$$
+N(x) = \sum_{c = 1}^{C(x)} K_c
+$$
+
+\emphase{Non overlapping} word $\Longrightarrow$ \emphase{simple Poisson}
+process
+
+\paragraph{Interpretation:} Poisson modeling implies that the clump are
+  \emphase{uniformly distributed} along the genome \\
+  \centerline{$\longrightarrow$ \emphase{Null hypothesis} of the next
+    part}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{P\'olya-Aeppli model} \\
+When considering one single word $\wbf$, the clump sizes have a
+\emphase{geometric distribution}$$
+g(k) = a^{k-1} (1-a)
+\quad \Longrightarrow \quad
+\Esp(K) = 1 / (1-a)
+$$
+where $a$ is the overlapping probability of $\wbf$
+
+\paragraph{Parameter estimates:} In a sequence of length $\ell$
+\begin{enumerate}[$\bullet$]
+\item $\widehat{\lambda}$ is the empirical frequency of the clumps:
+  $$
+  \widehat{\lambda} = \frac{C(\ell)}{\ell}
+  $$
+\item $\widehat{a}$ is the proportion of overlapped occurrences:
+  $$
+  \widehat{a} = \frac{N(\ell) - C(\ell)}{C(\ell)}
+  $$
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Properties}
+\begin{enumerate}[$\bullet$]
+\item In the P\'olya-Aeppli model, distances $Y$ are
+  \emphase{i.i.d.} with mixture distribution
+  $$
+  \begin{array}{rclll}
+    Y & = & 0 & \mbox{with probability }a & \mbox{(overlap)} \\
+    & \sim & \Ecal(\lambda) & \mbox{with probability }1-a & \mbox{(no overlap)}
+  \end{array}
+  $$ 
+  \smallskip
+\item P\'olya-Aeppli is the \emphase{best approximation} of the
+  distribution of the word count in the Markov
+  model \\
+\item $\Esp[N(\ell)] = \ell \times \lambda \times \Esp(K)$ 
+  $$
+  \Longrightarrow \quad
+  \widehat{\Esp}N(\ell) = \ell \widehat{\lambda} / (1-\widehat{a}) = N(\ell)
+  $$
+  \centerline{$\Longrightarrow \quad$ \emphase{no word has an ``unexpected''
+      count}}
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Clump size modeling}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{-1cm} \begin{flushright} {\sl R., 02} \end{flushright} \vspace{-1cm}
+
+In the general case (e.g. \emphase{motif} $\mbf =\{\wbf_1$, $\wbf_2$,
+$\dots$\}), the clump sizes do not have a geometric distribution
+
+One may use
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item empirical estimates of an \emphase{arbitrary} distribution $g(k)$ 
+\item empirical estimates of the \emphase{overlapping
+    probabilities} between words $\wbf_1$, $\wbf_2$, $\dots$
+\item \emphase{Markov estimates} of the overlapping probabilities
+\end{enumerate}
+
+However, distances $Y$ between words are \emphase{not i.i.d.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Motifs distribution along a sequence}
+\chapter{~}
+\section{Two statistics}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We aim to detect \emphase{poor} or \emphase{rich} regions in terms of
+occurrences of a given motif
+
+A natural criterion for a given region is the \emphase{ratio}
+$$
+\frac{\mbox{\emphase{number of occurrences} in the
+    region}}{\mbox{\emphase{size} of the region}}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Cumulated distances:} 
+\begin{tabular}{c}
+  fixed numerator \emphase{$r$} \\
+  \hline
+  random denominator \emphase{$Y^r$}
+\end{tabular}\\ 
+\vspace{-1.25cm} \begin{flushright} 
+  {\sl Karlin \& Macken, 91}: $r$-scans
+\end{flushright} \vspace{-1cm}
+
+ 
+$$
+\hspace{-1.5cm}
+                                %FigHomogene.ps
+\colorbox{white}{
+  \psfig{file = ../RSS-03/FigHomogene.ps, height=7.6cm,
+    width=25cm, bbllx=70 , bblly=590 , bburx=515 , bbury=725 , clip=}  
+  }
+$$
+
+\paragraph{Moving windows:} 
+\begin{tabular}{c}
+  random numerator \emphase{$\Delta N$} \\
+  \hline
+  fixed denominator \emphase{$y$}
+\end{tabular} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Distribution of the statistics}
+\qquad \qquad \qquad {\sl R., 02}
+
+\paragraph{Cumulated distance:} the distribution of 
+$$
+Y_i^r = \sum_{j=i}^{i+r-1} Y_j  = X_{i+r} - X_i
+$$
+is known \emphase{when the distances $Y_i$ are i.i.d.} (e.g. in the
+one word case) for Markov and compound Poisson models
+
+\paragraph{Moving window:} the distribution of
+$$
+\Delta N(x) =  N(x) - N(x-y)
+$$
+is known for Markov and compound Poisson models ({\sl Barbour \&
+  al, 92})
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Extremal statistics}
+We are interested in the \emphase{richest} region, i.e.
+$$
+Y^r_{\min} = \min_i \{Y_i^r\}\qquad \mbox{or} \qquad \Delta N_{\sup} = \sup_x \{\Delta N(x)\}
+$$
+
+\subsection{Poisson approximation} \\
+If the $\{Y_i^r\}$ or the $\{\Delta N(x)\}$ were \emphase{independent}
+$$
+\Pr\{Y^r_{\min} \leq y\} \underset{n \rightarrow
+  \infty}{\longrightarrow} \exp[-(n-r)\Pr\{Y^r \leq y\}]
+$$
+$$
+\Pr\{\Delta N_{\sup} > n\} \underset{\ell \rightarrow
+  \infty}{\longrightarrow} \exp[-(\ell - y)\Pr\{\Delta N > n\}]
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Chen-Stein method}\\
+$\{Y_i^r\}$ and $\{\Delta N(x)\}$ are \emphase{not independent} but
+the quality of the Poisson approximation can be controlled in total
+variation distance ({\sl Arratia \& al, 89}):
+$$
+\max_y \left| \Pr\{Y^r_{\min} \leq y\} - e^{-(n-r)\Pr\{Y^r \leq y\}}\right|
+\leq \mbox{bound}
+$$
+
+\paragraph{Cumulated distances:} an \emphase{explicit bound} can be calculated 
+({\sl Dembo \& Karlin, 92})
+
+\paragraph{Moving windows:} \emphase{no explicit bound} can be
+derived, but this approximation is \emphase{optimal} ({\sl Barbour \&
+  Brown, 92})
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage 
+\section{Applications}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{CHI motif in {\sl H. influenza}} \\
+In terms of overlap, $\mbf = (\gtt{\tt N}\ttt\gtt\gtt\ttt\gtt\gtt)$
+behaves as one single word 
+
+$\longrightarrow$ \emphase{cumulated distances} can be used 
+
+\paragraph{Number of occurrences:} $\ell = 1\;903\;356$ bps
+$$
+\begin{tabular}{lcl}
+  observed number of occurrences & = & 223 \\
+  expected under Markov (M1) & = & \emphase{58.5} \\
+  expected under compound Poisson & = & 223 \\
+\end{tabular}
+$$
+
+\paragraph{Significancy thresholds:} for $\alpha = 5\%$ 
+$$
+\begin{tabular}{lr}
+  for $Y^r$: & 6 312 bps \\
+  for $\displaystyle{\min_{i=1...222}Y_i^r}$: & 238 bps 
+\end{tabular}
+$$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Distribution:} cumulated distances of order $r=3$ 
+
+$$
+\hspace{-1.5cm}
+\begin{tabular}{cc}
+  \multicolumn{2}{c}{plot of the \emphase{ratio} $3/Y^3$ ($\times
+    10^{-3}$) versus the 
+    \emphase{position} $x$} \\
+  \\
+  \psfig{file = ../RSS-03/Rob02-JRSSC-Fig2-1.eps, height=8cm, width=12cm} &
+  \psfig{file = ../RSS-03/Rob02-JRSSC-Fig2-2.eps, height=8cm, width=12cm} \\
+  Markov (M1) & compound Poisson  \\
+  \emphase{overall bias} &  \emphase{no significant peak} \\
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage 
+\paragraph{Remarks:}
+\begin{enumerate}
+\item[$\bullet$] \emphase{Markov model M7} would be unbiased (since
+  $|\mbf| = 8$) but involves more than \emphase{$12\;000$ parameters} \\
+\item[$\bullet$] In the compound Poisson model, the peak around 1.0 Mb
+  (replication termination) is significant \emphase{on its own}:
+  \begin{eqnarray*}
+  \Pr\{Y^3 \leq 208\} = 1.6 10^{-4} \\
+  \\
+  \Pr\left\{\min_{i=1..220}\left(Y_i^3\right) \leq 208\right\} > 0.05
+  \end{eqnarray*}
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Palindromes in {\sl E. coli}} ({$\ell = 4\;638\;868$)\\
+There are 64 palindromes of length 6\\
+They occur 54\;724 times in 50\;941 clumps
+
+\paragraph{Clump size:} Because of their overlapping structure, clumps 
+can not be considered as geometric \\
+$\longrightarrow$ \emphase{Moving windows}
+
+We use a \emphase{parsimonious modeling} based the overlapping
+probabilities given by the \emphase{M0 model} (4 parameters)
+
+\paragraph{Results: } Moving windows of width $y = 10\;000$ bps
+\begin{enumerate}
+\item[$\bullet$] \emphase{Poorest region}: 73 occurrences ($p$-value $>
+  10\%$) \\
+  \centerline{\emphase{non significant}}
+\item[$\bullet$] \emphase{Richest region}: 185 occurrences ($p$-value
+  $< 5\%$) \\
+  \centerline{\emphase{[2\;460\;567 bps; 2\;461\;566 bps]}}
+\end{enumerate}
+... interpretation: horizontal transfert?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage 
+\section{Distribution in heterogeneous sequences} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Biological sequences are generally heterogeneous because of succession
+of different ``states'' (coding / non-coding, $\gtt$-$\ttt$ content,
+etc.)
+
+\paragraph{Aim:} Account for this heterogeneity to avoid statistical
+biases. 
+
+\paragraph{Example:} $\gtt$-$\ttt$ rich motif are more frequent in
+$\gtt$-$\ttt$ rich regions.
+
+\paragraph{Prior information:} 
+The segmentation of the sequence related to this heterogeneity is
+often known \\
+$\bullet \quad$ sequence annotations give coding / non-coding regions
+\\
+$\bullet \quad$ HMM provide a probabilistic segmentation based on the
+sequence composition \\
+
+\centerline{$\Longrightarrow \quad \pi_s(x) = \Pr\{\mbox{position } x \in \mbox{state
+  } s\}$ \emphase{known a priori}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Model:} \hspace{14cm} {\sl Ledent \& R., 03} 
+
+$\bullet \quad$ Clump process $\{C(x)\}$ is an \emphase{heterogeneous Poisson} process with intensity
+$$
+\lambda(x) = \sum_s \lambda_s \pi_s(x)
+$$
+$\bullet \quad$ Clump sizes $\{K_c\}$ have heterogeneous
+distributions:
+$$
+g(k \;|\; x) = \sum_s \pi_s(x) g_s(k)
+$$
+typically
+$$
+g(k \;|\; x) = \sum_s \pi_s(x) a_s^{k-1} (1-a_s)
+$$
+
+Once the parameters are estimated, the occurrences processes can be
+\emphase{homogenized} and former techniques can be applied to the
+homogenized data
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{3 steps analysis:} 
+
+\hspace{-4cm}
+\begin{tabular}{rl}
+  \colorbox{white}{
+    \epsfig{file = ../RSS-03/lambda-aatt-hetero.ps, height = 9cm, width =
+      12cm} 
+    } & 
+  \colorbox{white}{
+    \epsfig{file = ../RSS-03/lambda-aatt-homo.ps, height = 9cm, width =
+      12cm} 
+    } \\
+  $\left.
+    \begin{tabular}{r}
+      Estimate an \emphase{heterogeneous} \emphase{Poisson} \\
+      \emphase{process} with some \emphase{prior heterogeneity} \\
+      (coding / non-coding, $\gtt$-$\ctt$ content, etc)
+    \end{tabular}
+  \right\}$
+  & {\bf 1} \\
+  {\bf 2} &
+  $\left\{
+    \begin{tabular}{l}
+      ``\emphase{Homogenize}'' the scan process \\
+      and calculate thresholds 
+    \end{tabular}
+  \right.$ \\
+  $\left.
+    \begin{tabular}{r}
+      come back to the original process
+    \end{tabular}
+  \right\}$
+  &
+  {\bf 3}
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Work in progress}
+
+\paragraph{Comparing exceptionalities:} \hspace{6cm}({\sl with
+  S. Schbath}) 
+
+The word $\wbf$ is unexpectedly frequent in sequence $\Sbf_1$ and
+$\Sbf_2$ (with different lengths and compositions) \\
+\centerline{Is $\wbf$ more exceptional in $\Sbf_1$ than in $\Sbf_2$?} \\
+
+\paragraph{Refining results about structured motifs:}
+\begin{flushright}
+  \vspace{-1cm}
+  ({\sl with S. Schbath and V. Stefanov}) 
+\end{flushright}
+
+$\bullet \quad$ exact results on the distribution of structured motifs \\
+$\bullet \quad$ extension to more complex motifs (3 boxes ?)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

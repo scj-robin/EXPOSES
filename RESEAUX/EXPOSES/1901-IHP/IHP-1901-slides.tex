@@ -1,0 +1,532 @@
+\documentclass[9pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+\usepackage{xspace}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/Commands}
+
+% Directory
+\newcommand{\fignet}{/home/robin/Bureau/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figtree}{/home/robin/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Data/Tree/Fig}
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title{The stochastic block-model and its (variational) inference}
+
+\author{S. Robin}
+
+\institute[INRA/AgroParisTech/Paris-Saclay]{INRA / AgroParisTech /univ. Paris-Saclay}
+
+\date[Stat. Math., IHP]{3ème journée du groupe Statistique Mathématique de la SFdS \\ ~\\ 
+  Graphes aléatoires et Statistique \\ ~\\
+  Paris, IHP, Janvier 2019}
+
+%====================================================================
+%====================================================================
+\maketitle
+%====================================================================
+
+%====================================================================
+\frame{\frametitle{Karate club}
+
+  $n = 34$ nodes (individuals), link = mutual friendship
+  $$
+  \includegraphics[height=.6\textheight, width=.4\textwidth]{\fignet/Karate-Graph1}
+  \qquad \pause
+  \includegraphics[height=.6\textheight, width=.4\textwidth]{\fignet/Karate-Graph2}
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{Tree ecological network}
+
+\begin{itemize}
+ \item $n = 51$ tree species, 
+ \item $Y_{ij} =$ number of shared parasites, 
+ \item $x_{ij} =$ (taxonomic, geographic, genetic distances)
+\end{itemize}
+
+\begin{tabular}{cc}
+ \begin{tabular}{p{.5\textwidth}}
+  \onslide+<2->{Without covariates: $\Pcal(e^{\gamma_{k\ell}})$ \\
+  \includegraphics[height=.65\textheight, width=.35\textwidth, angle=270]{\fignet/MRV10_AoAS_Q7_group}
+  }
+  \end{tabular}
+  & 
+  \hspace{-.05\textwidth}
+  \begin{tabular}{p{.5\textwidth}}
+  \onslide+<3->{With covariates: $\Pcal(e^{\gamma_{k\ell} + x_{ij}^\trans \beta})$ \\
+  \includegraphics[height=.6\textheight, width=.35\textwidth, angle=270]{\fignet/MRV10_AoAS_Q4_group}
+  }
+ \end{tabular}
+\end{tabular}
+
+\footnotesize{Mariadassou \& al., Ann. Applied Stat., 2010}
+
+}
+
+%====================================================================
+\frame{\frametitle{Onager network}
+
+$n = 23$ individuals, $T = 4$ dates, $\widehat{K} = 4$ groups
+
+$$
+\includegraphics[height=.5\textheight, width=.8\textwidth]{\fignet/MaM17-JRSSB-Fig8b}
+$$
+\footnotesize{Matias \& Miele, JRSSB, 2017}
+
+}
+
+
+%====================================================================
+\frame{\frametitle{$W$-graph}
+
+  \begin{tabular}{cc}
+	\onslide+<1->{
+	\begin{tabular}{p{.5\textwidth}}
+	\paragraph{A graphon function: $w(u, u')$.} ~ \\
+	\includegraphics[width=.4\textwidth]{../FIGURES/FigCLADAG-W-graphon2} 
+	\end{tabular}
+	} 
+    & 
+    \hspace{-.1\textwidth}
+	\onslide+<2->{
+	\begin{tabular}{p{.5\textwidth}}
+	\paragraph{Graphon function of an SBM.} ~ \\
+	\includegraphics[width=.4\textwidth]{../FIGURES/FigCLADAG-SBM-graphon} 
+	\end{tabular}
+	}
+  \end{tabular}
+
+}
+
+
+%====================================================================
+\frame{\frametitle{Graphical models (Lauritzen, 96)}
+
+\paragraph{Directed graphical models:} $p$ faithfull to $G$ (DAG) iff
+$$
+p(U_1, \dots U_m) = \prod_j p(U_j \mid U_{pa_G(j)})
+$$
+where $U_J = \{U_j: j \in J\}$ and $pa_G(j) =$ sets of parents of $j$ in $G$.
+
+\bigskip \bigskip \bigskip \pause
+\paragraph{Undirected graphical models:} $p$ faithfull to $G$ iff
+$$
+p(U_1, \dots U_m) \propto \prod_{C \in \Ccal(G)} \Psi_C(U_C)
+$$
+where $\Ccal(G) =$ set of all maximal cliques of $G$.
+
+\bigskip \bigskip 
+\begin{itemize}
+\item Directed GM $\rightarrow$ Undirected GM, via moralization.
+\item Undirected GM: Equivalence between separation and conditional independence.
+\end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Graphical models for the dynamic SBM}
+
+  \begin{overprint}
+  \onslide<1>
+  \paragraph{Hidden Markov chains.} $n = 3$, $T = 3$~ \\
+  $$
+  \begin{tikzpicture}
+  \node[hidden] (Z11) at (0, 2*\edgeunit) {$Z_1^1$};
+  \node[hidden] (Z21) at (-.5*\edgeunit, \edgeunit) {$Z_2^1$};
+  \node[hidden] (Z31) at (0, 0) {$Z_3^1$};
+
+  \node[hidden] (Z12) at (2*\edgeunit, 2*\edgeunit) {$Z_1^2$};
+  \node[hidden] (Z22) at (1.5*\edgeunit, \edgeunit) {$Z_2^2$};
+  \node[hidden] (Z32) at (2*\edgeunit, 0) {$Z_3^2$};
+
+  \node[hidden] (Z13) at (4*\edgeunit, 2*\edgeunit) {$Z_1^3$};
+  \node[hidden] (Z23) at (3.5*\edgeunit, \edgeunit) {$Z_2^3$};
+  \node[hidden] (Z33) at (4*\edgeunit, 0) {$Z_3^3$};
+  
+  \node[blank] (Y121) at (.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^1$};
+  \node[blank] (Y131) at (.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^1$};
+  \node[blank] (Y231) at (.75*\edgeunit, .25*\edgeunit) {$Y_{23}^1$};
+  
+  \node[blank] (Y122) at (2.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^2$};
+  \node[blank] (Y132) at (2.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^2$};
+  \node[blank] (Y232) at (2.75*\edgeunit, .25*\edgeunit) {$Y_{23}^2$};
+  
+  \node[blank] (Y123) at (4.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^3$};
+  \node[blank] (Y133) at (4.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^3$};
+  \node[blank] (Y233) at (4.75*\edgeunit, .25*\edgeunit) {$Y_{23}^3$};
+
+  \draw[arrow] (Z11) to (Z12);  \draw[arrow] (Z12) to (Z13);
+  \draw[arrow] (Z21) to (Z22);  \draw[arrow] (Z22) to (Z23);
+  \draw[arrow] (Z31) to (Z32);  \draw[arrow] (Z32) to (Z33);
+  
+  \end{tikzpicture}
+  $$
+  \onslide<2>
+  \paragraph{Observed network at $t=1$.} \\
+  $$
+  \begin{tikzpicture}
+  \node[hidden] (Z11) at (0, 2*\edgeunit) {$Z_1^1$};
+  \node[hidden] (Z21) at (-.5*\edgeunit, \edgeunit) {$Z_2^1$};
+  \node[hidden] (Z31) at (0, 0) {$Z_3^1$};
+
+  \node[hidden] (Z12) at (2*\edgeunit, 2*\edgeunit) {$Z_1^2$};
+  \node[hidden] (Z22) at (1.5*\edgeunit, \edgeunit) {$Z_2^2$};
+  \node[hidden] (Z32) at (2*\edgeunit, 0) {$Z_3^2$};
+
+  \node[hidden] (Z13) at (4*\edgeunit, 2*\edgeunit) {$Z_1^3$};
+  \node[hidden] (Z23) at (3.5*\edgeunit, \edgeunit) {$Z_2^3$};
+  \node[hidden] (Z33) at (4*\edgeunit, 0) {$Z_3^3$};
+
+  \node[observed] (Y121) at (.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^1$};
+  \node[observed] (Y131) at (.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^1$};
+  \node[observed] (Y231) at (.75*\edgeunit, .25*\edgeunit) {$Y_{23}^1$};
+  
+  \node[blank] (Y122) at (2.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^2$};
+  \node[blank] (Y132) at (2.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^2$};
+  \node[blank] (Y232) at (2.75*\edgeunit, .25*\edgeunit) {$Y_{23}^2$};
+  
+  \node[blank] (Y123) at (4.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^3$};
+  \node[blank] (Y133) at (4.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^3$};
+  \node[blank] (Y233) at (4.75*\edgeunit, .25*\edgeunit) {$Y_{23}^3$};
+
+  \draw[arrow] (Z11) to (Z12);  \draw[arrow] (Z12) to (Z13);
+  \draw[arrow] (Z21) to (Z22);  \draw[arrow] (Z22) to (Z23);
+  \draw[arrow] (Z31) to (Z32);  \draw[arrow] (Z32) to (Z33);
+  
+  \draw[arrow] (Z11) to (Y121);  \draw[arrow] (Z21) to (Y121);
+  \draw[arrow] (Z11) to (Y131);  \draw[arrow] (Z31) to (Y131);
+  \draw[arrow] (Z21) to (Y231);  \draw[arrow] (Z31) to (Y231);
+  
+  \end{tikzpicture}
+  $$
+  \onslide<3>
+  \paragraph{Observed networks at $t = 1, \dots T$.} ~ \\
+  $$
+  \begin{tikzpicture}
+  \node[hidden] (Z11) at (0, 2*\edgeunit) {$Z_1^1$};
+  \node[hidden] (Z21) at (-.5*\edgeunit, \edgeunit) {$Z_2^1$};
+  \node[hidden] (Z31) at (0, 0) {$Z_3^1$};
+
+  \node[hidden] (Z12) at (2*\edgeunit, 2*\edgeunit) {$Z_1^2$};
+  \node[hidden] (Z22) at (1.5*\edgeunit, \edgeunit) {$Z_2^2$};
+  \node[hidden] (Z32) at (2*\edgeunit, 0) {$Z_3^2$};
+
+  \node[hidden] (Z13) at (4*\edgeunit, 2*\edgeunit) {$Z_1^3$};
+  \node[hidden] (Z23) at (3.5*\edgeunit, \edgeunit) {$Z_2^3$};
+  \node[hidden] (Z33) at (4*\edgeunit, 0) {$Z_3^3$};
+
+  \node[observed] (Y121) at (.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^1$};
+  \node[observed] (Y131) at (.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^1$};
+  \node[observed] (Y231) at (.75*\edgeunit, .25*\edgeunit) {$Y_{23}^1$};
+  
+  \node[observed] (Y122) at (2.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^2$};
+  \node[observed] (Y132) at (2.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^2$};
+  \node[observed] (Y232) at (2.75*\edgeunit, .25*\edgeunit) {$Y_{23}^2$};
+  
+  \node[observed] (Y123) at (4.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^3$};
+  \node[observed] (Y133) at (4.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^3$};
+  \node[observed] (Y233) at (4.75*\edgeunit, .25*\edgeunit) {$Y_{23}^3$};
+
+  \draw[arrow] (Z11) to (Z12);  \draw[arrow] (Z12) to (Z13);
+  \draw[arrow] (Z21) to (Z22);  \draw[arrow] (Z22) to (Z23);
+  \draw[arrow] (Z31) to (Z32);  \draw[arrow] (Z32) to (Z33);
+  
+  \draw[arrow] (Z11) to (Y121);  \draw[arrow] (Z21) to (Y121);
+  \draw[arrow] (Z11) to (Y131);  \draw[arrow] (Z31) to (Y131);
+  \draw[arrow] (Z21) to (Y231);  \draw[arrow] (Z31) to (Y231);
+  
+  \draw[arrow] (Z12) to (Y122);  \draw[arrow] (Z22) to (Y122);
+  \draw[arrow] (Z12) to (Y132);  \draw[arrow] (Z32) to (Y132);
+  \draw[arrow] (Z22) to (Y232);  \draw[arrow] (Z32) to (Y232);
+  
+  \draw[arrow] (Z13) to (Y123);  \draw[arrow] (Z23) to (Y123);
+  \draw[arrow] (Z13) to (Y133);  \draw[arrow] (Z33) to (Y133);
+  \draw[arrow] (Z23) to (Y233);  \draw[arrow] (Z33) to (Y233);
+  
+  \end{tikzpicture}
+  $$
+  \ra $(Z^t, Y^t)_t \sim HMM$ with $K^n$ states.
+%   $$
+%   \begin{tikzpicture}
+%   \node[hidden] (Z1) at (0, .75*\edgeunit) {$Z^1$};
+%   \node[hidden] (Z2) at (2*\edgeunit, .75*\edgeunit) {$Z^2$};
+%   \node[hidden] (Z3) at (4*\edgeunit, .75*\edgeunit) {$Z^3$};
+% 
+%   \node[observed] (Y1) at (0*\edgeunit, 0*\edgeunit) {$Y_{12}^1$};
+%   \node[observed] (Y2) at (2*\edgeunit, 0*\edgeunit) {$Y_{12}^2$};
+%   \node[observed] (Y3) at (4*\edgeunit, 0*\edgeunit) {$Y_{12}^3$};
+% 
+%   \draw[arrow] (Z1) to (Z2);  \draw[arrow] (Z2) to (Z3);
+%   
+%   \draw[arrow] (Z1) to (Y1);  \draw[arrow] (Z2) to (Y2);  \draw[arrow] (Z3) to (Y3);
+%   
+%   \end{tikzpicture}
+%   $$  
+  \onslide<4>
+  \paragraph{Graph moralization.} ~ \\
+  $$
+  \begin{tikzpicture}
+  \node[hidden] (Z11) at (0, 2*\edgeunit) {$Z_1^1$};
+  \node[hidden] (Z21) at (-.5*\edgeunit, \edgeunit) {$Z_2^1$};
+  \node[hidden] (Z31) at (0, 0) {$Z_3^1$};
+
+  \node[hidden] (Z12) at (2*\edgeunit, 2*\edgeunit) {$Z_1^2$};
+  \node[hidden] (Z22) at (1.5*\edgeunit, \edgeunit) {$Z_2^2$};
+  \node[hidden] (Z32) at (2*\edgeunit, 0) {$Z_3^2$};
+
+  \node[hidden] (Z13) at (4*\edgeunit, 2*\edgeunit) {$Z_1^3$};
+  \node[hidden] (Z23) at (3.5*\edgeunit, \edgeunit) {$Z_2^3$};
+  \node[hidden] (Z33) at (4*\edgeunit, 0) {$Z_3^3$};
+
+  \node[observed] (Y121) at (.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^1$};
+  \node[observed] (Y131) at (.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^1$};
+  \node[observed] (Y231) at (.75*\edgeunit, .25*\edgeunit) {$Y_{23}^1$};
+  
+  \node[observed] (Y122) at (2.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^2$};
+  \node[observed] (Y132) at (2.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^2$};
+  \node[observed] (Y232) at (2.75*\edgeunit, .25*\edgeunit) {$Y_{23}^2$};
+  
+  \node[observed] (Y123) at (4.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^3$};
+  \node[observed] (Y133) at (4.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^3$};
+  \node[observed] (Y233) at (4.75*\edgeunit, .25*\edgeunit) {$Y_{23}^3$};
+
+  \draw[edge] (Z11) to (Z12);  \draw[edge] (Z12) to (Z13);
+  \draw[edge] (Z21) to (Z22);  \draw[edge] (Z22) to (Z23);
+  \draw[edge] (Z31) to (Z32);  \draw[edge] (Z32) to (Z33);
+  
+  \draw[edge] (Z11) to (Z21); \draw[edge] (Z11) to (Z31); \draw[edge] (Z21) to (Z31);
+  \draw[edge] (Z12) to (Z22); \draw[edge] (Z12) to (Z32); \draw[edge] (Z22) to (Z32);
+  \draw[edge] (Z13) to (Z23); \draw[edge] (Z13) to (Z33); \draw[edge] (Z23) to (Z33);
+  
+  \draw[edge] (Z11) to (Y121);  \draw[edge] (Z21) to (Y121);
+  \draw[edge] (Z11) to (Y131);  \draw[edge] (Z31) to (Y131);
+  \draw[edge] (Z21) to (Y231);  \draw[edge] (Z31) to (Y231);
+  
+  \draw[edge] (Z12) to (Y122);  \draw[edge] (Z22) to (Y122);
+  \draw[edge] (Z12) to (Y132);  \draw[edge] (Z32) to (Y132);
+  \draw[edge] (Z22) to (Y232);  \draw[edge] (Z32) to (Y232);
+  
+  \draw[edge] (Z13) to (Y123);  \draw[edge] (Z23) to (Y123);
+  \draw[edge] (Z13) to (Y133);  \draw[edge] (Z33) to (Y133);
+  \draw[edge] (Z23) to (Y233);  \draw[edge] (Z33) to (Y233);
+  
+  \end{tikzpicture}
+  $$
+  \onslide<5>
+  \paragraph{Graphical model of $p(Z \mid Y)$.} ~ \\
+  $$
+  \begin{tikzpicture}
+  \node[hidden] (Z11) at (0, 2*\edgeunit) {$Z_1^1$};
+  \node[hidden] (Z21) at (-.5*\edgeunit, \edgeunit) {$Z_2^1$};
+  \node[hidden] (Z31) at (0, 0) {$Z_3^1$};
+
+  \node[hidden] (Z12) at (2*\edgeunit, 2*\edgeunit) {$Z_1^2$};
+  \node[hidden] (Z22) at (1.5*\edgeunit, \edgeunit) {$Z_2^2$};
+  \node[hidden] (Z32) at (2*\edgeunit, 0) {$Z_3^2$};
+
+  \node[hidden] (Z13) at (4*\edgeunit, 2*\edgeunit) {$Z_1^3$};
+  \node[hidden] (Z23) at (3.5*\edgeunit, \edgeunit) {$Z_2^3$};
+  \node[hidden] (Z33) at (4*\edgeunit, 0) {$Z_3^3$};
+
+  \node[blank] (Y121) at (.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^1$};
+  \node[blank] (Y131) at (.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^1$};
+  \node[blank] (Y231) at (.75*\edgeunit, .25*\edgeunit) {$Y_{23}^1$};
+  
+  \node[blank] (Y122) at (2.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^2$};
+  \node[blank] (Y132) at (2.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^2$};
+  \node[blank] (Y232) at (2.75*\edgeunit, .25*\edgeunit) {$Y_{23}^2$};
+  
+  \node[blank] (Y123) at (4.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^3$};
+  \node[blank] (Y133) at (4.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^3$};
+  \node[blank] (Y233) at (4.75*\edgeunit, .25*\edgeunit) {$Y_{23}^3$};
+
+  \draw[edge] (Z11) to (Z12);  \draw[edge] (Z12) to (Z13);
+  \draw[edge] (Z21) to (Z22);  \draw[edge] (Z22) to (Z23);
+  \draw[edge] (Z31) to (Z32);  \draw[edge] (Z32) to (Z33);
+  
+  \draw[edge] (Z11) to (Z21); \draw[edge] (Z11) to (Z31); \draw[edge] (Z21) to (Z31);
+  \draw[edge] (Z12) to (Z22); \draw[edge] (Z12) to (Z32); \draw[edge] (Z22) to (Z32);
+  \draw[edge] (Z13) to (Z23); \draw[edge] (Z13) to (Z33); \draw[edge] (Z23) to (Z33);
+  
+  \end{tikzpicture}
+  $$
+  \ra (Heterogeneous) Markov chain with $K^n$ states
+  \onslide<6>
+  \paragraph{Variational approximation:} $p(Z \mid Y) \simeq \prod_i q_i(Z_i) \neq \prod_{i, t} q_{it}(Z_i^t)$  ~ \\
+  $$
+  \begin{tikzpicture}
+  \node[hidden] (Z11) at (0, 2*\edgeunit) {$Z_1^1$};
+  \node[hidden] (Z21) at (-.5*\edgeunit, \edgeunit) {$Z_2^1$};
+  \node[hidden] (Z31) at (0, 0) {$Z_3^1$};
+
+  \node[hidden] (Z12) at (2*\edgeunit, 2*\edgeunit) {$Z_1^2$};
+  \node[hidden] (Z22) at (1.5*\edgeunit, \edgeunit) {$Z_2^2$};
+  \node[hidden] (Z32) at (2*\edgeunit, 0) {$Z_3^2$};
+
+  \node[hidden] (Z13) at (4*\edgeunit, 2*\edgeunit) {$Z_1^3$};
+  \node[hidden] (Z23) at (3.5*\edgeunit, \edgeunit) {$Z_2^3$};
+  \node[hidden] (Z33) at (4*\edgeunit, 0) {$Z_3^3$};
+
+  \node[blank] (Y121) at (.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^1$};
+  \node[blank] (Y131) at (.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^1$};
+  \node[blank] (Y231) at (.75*\edgeunit, .25*\edgeunit) {$Y_{23}^1$};
+  
+  \node[blank] (Y122) at (2.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^2$};
+  \node[blank] (Y132) at (2.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^2$};
+  \node[blank] (Y232) at (2.75*\edgeunit, .25*\edgeunit) {$Y_{23}^2$};
+  
+  \node[blank] (Y123) at (4.75*\edgeunit, 1.75*\edgeunit) {$Y_{12}^3$};
+  \node[blank] (Y133) at (4.5*\edgeunit, 1.25*\edgeunit) {$Y_{13}^3$};
+  \node[blank] (Y233) at (4.75*\edgeunit, .25*\edgeunit) {$Y_{23}^3$};
+
+  \draw[edge] (Z11) to (Z12);  \draw[edge] (Z12) to (Z13);
+  \draw[edge] (Z21) to (Z22);  \draw[edge] (Z22) to (Z23);
+  \draw[edge] (Z31) to (Z32);  \draw[edge] (Z32) to (Z33);
+  
+  \draw[dashed] (Z11) to (Z21); \draw[dashed] (Z11) to (Z31); \draw[dashed] (Z21) to (Z31);
+  \draw[dashed] (Z12) to (Z22); \draw[dashed] (Z12) to (Z32); \draw[dashed] (Z22) to (Z32);
+  \draw[dashed] (Z13) to (Z23); \draw[dashed] (Z13) to (Z33); \draw[dashed] (Z23) to (Z33);
+  
+  \end{tikzpicture}
+  $$
+  \ra Partial mean-field approximation
+  \end{overprint}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Tree interaction network}
+
+  $n =$ 51 tree species, $Y_{ij} =$ number of shares parasites, Poisson emission, 3 covariates
+
+  $$
+  \begin{tabular}{ccc}
+  taxonomy & geography & genetics \\
+  \includegraphics[width=.3\textwidth]{\figtree/Tree-all-V10-M5000-beta1} & 
+  \includegraphics[width=.3\textwidth]{\figtree/Tree-all-V10-M5000-beta2} & 
+  \includegraphics[width=.3\textwidth]{\figtree/Tree-all-V10-M5000-beta3} \\
+  \multicolumn{3}{c}{\textcolor{green}{$p(\beta$)}, \quad \textcolor{blue}{$\pt(\beta \mid \widehat{K})$}, \quad  \textcolor{red}{$\widehat{p}(\beta \mid Y, \widehat{K})$}, \quad $\widehat{p}(\beta \mid Y) = \sum_K \widehat{p}(K \mid Y) \widehat{p}(\beta \mid Y, K)$}
+  \end{tabular}
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{Composite likelihood for dynamic SBM}
+
+  $$
+  \begin{tikzpicture}
+  \node[hidden] (Z11a) at (0*\edgeunit, 4*\edgeunit) {$Z_1^1$};
+  \node[hidden] (Z12a) at (2*\edgeunit, 4*\edgeunit) {$Z_1^2$};
+  \node[hidden] (Z13a) at (4*\edgeunit, 4*\edgeunit) {$Z_1^3$};
+  
+  \node[hidden] (Z21a) at (0*\edgeunit, 3.2*\edgeunit) {$Z_2^1$};
+  \node[hidden] (Z22a) at (2*\edgeunit, 3.2*\edgeunit) {$Z_2^2$};
+  \node[hidden] (Z23a) at (4*\edgeunit, 3.2*\edgeunit) {$Z_2^3$};
+  
+  \node[observed] (Y121) at (0.5*\edgeunit, 3.6*\edgeunit) {$Y_{12}^1$};
+  \node[observed] (Y122) at (2.5*\edgeunit, 3.6*\edgeunit) {$Y_{12}^2$};
+  \node[observed] (Y123) at (4.5*\edgeunit, 3.6*\edgeunit) {$Y_{12}^3$};
+
+  \draw[arrow] (Z11a) to (Z12a);  \draw[arrow] (Z12a) to (Z13a);
+  \draw[arrow] (Z21a) to (Z22a);  \draw[arrow] (Z22a) to (Z23a);
+  \draw[arrow] (Z11a) to (Y121);  \draw[arrow] (Z21a) to (Y121);
+  \draw[arrow] (Z12a) to (Y122);  \draw[arrow] (Z22a) to (Y122);
+  \draw[arrow] (Z13a) to (Y123);  \draw[arrow] (Z23a) to (Y123);
+
+  \node[hidden] (Z11b) at (0*\edgeunit, 2.4*\edgeunit) {$Z_1^1$};
+  \node[hidden] (Z12b) at (2*\edgeunit, 2.4*\edgeunit) {$Z_1^2$};
+  \node[hidden] (Z13b) at (4*\edgeunit, 2.4*\edgeunit) {$Z_1^3$};
+
+  \node[hidden] (Z31b) at (0*\edgeunit, 1.6*\edgeunit) {$Z_3^1$};
+  \node[hidden] (Z32b) at (2*\edgeunit, 1.6*\edgeunit) {$Z_3^2$};
+  \node[hidden] (Z33b) at (4*\edgeunit, 1.6*\edgeunit) {$Z_3^3$};
+  
+  \node[observed] (Y131) at (0.5*\edgeunit, 2*\edgeunit) {$Y_{13}^1$};
+  \node[observed] (Y132) at (2.5*\edgeunit, 2*\edgeunit) {$Y_{13}^2$};
+  \node[observed] (Y133) at (4.5*\edgeunit, 2*\edgeunit) {$Y_{13}^3$};
+  
+  \draw[arrow] (Z11b) to (Z12b);  \draw[arrow] (Z12b) to (Z13b);
+  \draw[arrow] (Z31b) to (Z32b);  \draw[arrow] (Z32b) to (Z33b);
+  \draw[arrow] (Z11b) to (Y131);  \draw[arrow] (Z31b) to (Y131);
+  \draw[arrow] (Z12b) to (Y132);  \draw[arrow] (Z32b) to (Y132);
+  \draw[arrow] (Z13b) to (Y133);  \draw[arrow] (Z33b) to (Y133);
+
+  \node[hidden] (Z21c) at (0*\edgeunit, 0.8*\edgeunit) {$Z_2^1$};
+  \node[hidden] (Z22c) at (2*\edgeunit, 0.8*\edgeunit) {$Z_2^2$};
+  \node[hidden] (Z23c) at (4*\edgeunit, 0.8*\edgeunit) {$Z_2^3$};
+  
+  \node[hidden] (Z31c) at (0*\edgeunit, 0*\edgeunit) {$Z_3^1$};
+  \node[hidden] (Z32c) at (2*\edgeunit, 0*\edgeunit) {$Z_3^2$};
+  \node[hidden] (Z33c) at (4*\edgeunit, 0*\edgeunit) {$Z_3^3$};
+
+  \node[observed] (Y231) at (0.5*\edgeunit, .4*\edgeunit) {$Y_{23}^1$};
+  \node[observed] (Y232) at (2.5*\edgeunit, .4*\edgeunit) {$Y_{23}^2$};  
+  \node[observed] (Y233) at (4.5*\edgeunit, .4*\edgeunit) {$Y_{23}^3$};
+
+  \draw[arrow] (Z21c) to (Z22c);  \draw[arrow] (Z22c) to (Z23c);
+  \draw[arrow] (Z31c) to (Z32c);  \draw[arrow] (Z32c) to (Z33c);
+  \draw[arrow] (Z21c) to (Y231);  \draw[arrow] (Z31c) to (Y231);
+  \draw[arrow] (Z22c) to (Y232);  \draw[arrow] (Z32c) to (Y232);
+  \draw[arrow] (Z23c) to (Y233);  \draw[arrow] (Z33c) to (Y233);
+
+  \end{tikzpicture}
+  $$
+
+  \ra $n(n-1)/2$ HMMs with $K^2$ states.
+
+}
+
+%====================================================================
+\frame[allowframebreaks]{\frametitle{References} 
+
+  \tiny{ \input{IHP-1901-notes.bbl}}
+}
+
+
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

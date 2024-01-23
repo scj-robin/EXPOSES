@@ -1,0 +1,484 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+% \usepackage[dvipsnames]{xcolor}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd, mathabx}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\dN}{\Delta N}
+\newcommand{\dtau}{\Delta \tau}
+
+% Directory
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figlux}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/2012-Luxembourg/Slides/Figures}
+\newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title{Network inference and Graphical models}
+
+\author[S. Robin]{S. Robin}
+
+\institute[Sorbonne université]{\normalsize{Sorbonne université}}
+
+\date{ANR Trident, Dec. 2022}
+
+%====================================================================
+%====================================================================
+\maketitle
+
+%====================================================================
+%====================================================================
+\section{Network inference}
+%====================================================================
+\frame{\frametitle{Species interaction network} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.6\textwidth}}
+      \begin{itemize}
+      \item \bigskip Aim: Understand how species from a same community interact
+      \item \bigskip Network representation = draw an edge between interacting pairs of species
+      \item \pause \bigskip Main issue: Distinguish 
+      \emphase{direct interactions} (predator-prey) from
+      simple \emphase{associations} (two preys of a same predator) 
+      \end{itemize}
+    \end{tabular}
+    &
+    \hspace{-.05\textwidth}
+    \begin{tabular}{ccc}
+      \input{\figlux/Pred-Prey} &
+      & 
+      \input{\figlux/Pred-TwoPreys}
+    \end{tabular}
+  \end{tabular}
+  
+  \pause 
+  \ra Co-occurences or correlations cannot distinguish between the two \refer{PWT19}
+
+  \pause \bigskip \bigskip 
+  \paragraph{Probabilistic translation.}
+  \begin{align*}
+    \text{'network'} & = \text{graph} \\
+    \text{'association'} & = \text{marginal dependance} \\
+    \text{'direct interaction'} & = \text{conditional dependance} 
+  \end{align*}
+}
+
+%====================================================================
+\frame{\frametitle{Network inference}
+
+  \bigskip 
+  \paragraph{Typical dataset at hand.} $n$ sites, $p$ species, 
+  \begin{itemize}
+    \item $x_i =$ environmental description of site $i$, \textcolor{gray}{$t_j =$ traits of species $j$}
+    \item $Y_{ij} =$ abundance (or presence) of species $j$ in site $i$
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Assumption.} 
+  \begin{itemize}
+    \item Species 'direct' interactions are encoded in a network (= a graph) $G$.
+    \item $G$ is the same in all sites.
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Aim.} Retrieve the graph $G$ from the species abundances $Y$ : 
+  $$  
+  \begin{tabular}{c|c|c}
+    {Abundances} $Y$ & 
+    {Covariates} $X$ & 
+    {Inferred network} $G$ \\ 
+    \begin{tabular}{p{.25\textwidth}}
+      {\small \begin{tabular}{rrr}
+        {\sl Hi.pl} & {\sl An.lu} & {\sl Me.ae} \\ \hline
+        31  &   0  & 108 \\
+         4  &   0  & 110 \\
+        27  &   0  & 788 \\
+        13  &   0  & 295 \\
+        23  &   0  &  13 \\
+        20  &   0  &  97 \\
+        $\vdots$ & $\vdots$ & $\vdots$ 
+      \end{tabular}}
+    \end{tabular}
+    & 
+    \begin{tabular}{p{.25\textwidth}}
+      {\small \begin{tabular}{rrr}
+        Lat. & Long. & Depth \\ \hline
+        71.10 & 22.43 & 349 \\
+        71.32 & 23.68 & 382 \\
+        71.60 & 24.90 & 294 \\
+        71.27 & 25.88 & 304 \\
+        71.52 & 28.12 & 384 \\
+        71.48 & 29.10 & 344 \\
+        $\vdots$ & $\vdots$ & $\vdots$ 
+      \end{tabular} }
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth} 
+    \begin{tabular}{p{.3\textwidth}}
+      \hspace{-.1\textwidth} 
+      \begin{tabular}{c}
+        \includegraphics[width=.35\textwidth, trim=0 95 0 60, clip=]{\fignet/network_BarentsFish_Gfull_full60edges}
+      \end{tabular}
+    \end{tabular}
+  \end{tabular}
+  $$
+
+}
+  
+%====================================================================
+%====================================================================
+\section{Graphical models}
+%====================================================================
+\frame{\frametitle{Probabilistic framework: Graphical models}
+
+  \paragraph{Definition \refer{Lau96}.} The joint distribution $p$ is faithful to the graph $G$ 
+  $$
+  p(Z_1, \dots, Z_p) \propto \prod_{C \in \Ccal_G} \psi_C(Z_C)
+  $$
+  where $\Ccal_G =$ set of cliques of $G$. % \refer{HaC71}
+  
+  \bigskip \pause
+  \paragraph{Example.} $p(Z_1, Z_2, Z_3, Z_4) \; \propto \; \psi_1(Z_1 ,Z_2, Z_3) \times \psi_2(Z_3, Z_4)$ \\
+%   \vspace{-.2\textheight}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.4\textwidth}}
+%     \hspace{-.1\textwidth}
+    \includegraphics[width=.35\textwidth]{\fignet/FigGGM-4nodes-red}
+    \end{tabular}
+    & 
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.6\textwidth}}
+      \begin{itemize}
+       \item Connected graph: all variables are dependent \\ ~
+       \item $Z_3$ 'separates' $Z_4$ from $Z_1$ and $Z_2$: 
+       $$
+       Z_4 \perp (Z_1, Z_2) | Z_3
+       $$
+      \end{itemize}
+    \end{tabular}
+  \end{tabular} 
+
+  \hspace{-.7\textheight} ~ \pause
+  \paragraph{Interpretation.} ~
+  \begin{itemize}
+  \item The vertices of $G$ only reveal {\sl conditional dependencies}.
+  \item Directed graphical models also exist (but raise identifiability/interpretability issues)
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Gaussian graphical models (GGM)}
+
+  \paragraph{Gaussian distribution.}
+  $$
+  Z \sim \Ncal_p(\mu, \Sigma)
+  $$
+  $\mu =$ vector of means, $\Sigma =$ covariance matrix, $\Omega = \Sigma^{-1} =$ precision matrix.
+  
+  \bigskip \bigskip \pause
+  \paragraph{A nice property.} ~ \\
+%   \vspace{-.2\textheight}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+%     \hspace{-.15\textwidth}
+    \includegraphics[width=.35\textwidth]{\fignet/FigGGM-4nodes-red}
+    \end{tabular}
+    & 
+    \hspace{-.15\textwidth}
+    \begin{overprint}
+    \onslide<2>
+    \begin{tabular}{p{.5\textwidth}}
+	 Covariance matrix
+	 $$
+	 \Sigma \propto \left[ \begin{array}{rrrr}
+	   1 & -.25 & -.41 &  \emphase{.25} \\
+	   -.25 &  1 & -.41 &  \emphase{.25} \\
+	   -.41 & -.41 &  1 & -.61 \\
+	   \emphase{.25} &  \emphase{.25} & -.61 &  1
+	   \end{array} \right] 
+	 $$
+    \end{tabular} 
+    \onslide<3>
+    \begin{tabular}{p{.5\textwidth}}
+	 Inverse covariance matrix
+	 $$
+	 \Omega \; \propto \; \left[ \begin{array}{rrrr}
+	   1 & .5 & .5 & \emphase{0} \\
+	   .5 & 1 & .5 & \emphase{0} \\
+	   .5 & .5 & 1 & .5 \\
+	   \emphase{0} & \emphase{0} & .5 & 1
+	   \end{array} \right] 
+	 $$
+    \end{tabular} 
+    \onslide<4>
+    \begin{tabular}{p{.5\textwidth}}
+	 Adjacency matrix
+	 $$
+	 A = \left[ \begin{array}{rrrr}
+	 0 & 1 & 1 & \emphase{0} \\
+	 1 & 0 & 1 & \emphase{0} \\
+	 1 & 1 & 0 & 1 \\
+	 \emphase{0} & \emphase{0} & 1 & 0 
+	 \end{array} \right]
+	 $$
+    \end{tabular} 
+    \onslide<5->
+    \begin{tabular}{p{.5\textwidth}}
+	 Estimated inverse covariance matrix
+	 $$
+	 \widehat{\Omega} \; \propto \; \left[ \begin{array}{rrrr}
+	   1 & .48 & .61 & \emphase{.09} \\
+	   .48 & 1 & .67 & \emphase{.06} \\
+	   .61 & .67 & 1 & .46 \\
+	   \emphase{.09} & \emphase{.06} & .46 & 1
+	   \end{array} \right] 
+	 $$
+	 ($n = 100$)
+    \end{tabular} 
+    \end{overprint}
+  \end{tabular}
+  
+}
+
+%====================================================================
+\frame{\frametitle{A popular approach}
+
+  \paragraph{Sparsity assumption.} Assume that
+  $$
+  \Omega = \Sigma^{-1} \text{ is sparse}
+  $$
+  = most entries of $\Omega$ are zeros.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Sparsity inducing penality.} 
+  \begin{itemize}
+    \item Maximum-likelihood estimation: 
+    $$
+    \widehat{\Omega} \text{ maximizes } \log p(Z; \Omega)
+    $$
+    \item Penalized maximum-likelihood estimation: 
+    $$
+    \widehat{\Omega} \text{ maximizes } \log p(Z; \Omega) - \emphase{\lambda \|\Omega\|_{0, 1}}
+    $$
+    where
+    $$
+    \|\Omega\|_{0, 1} = \sum_{j \neq k} |w_{jk}|
+    $$
+    forces a fraction of entries of $\Omega$ to be zero ('graphical lasso': \refer{FHT08}).
+  \end{itemize}
+
+}
+
+%====================================================================
+%====================================================================
+\section{Joint species distribution models}
+%====================================================================
+\frame{\frametitle{Latent variable models}
+
+  \paragraph{'Abundance' data.}
+  \begin{itemize}
+    \setlength\itemsep{1em}    
+    \item The Gaussian distribution does not make sens for abundance (species counts) or presence (0/1) data
+    \item Many (most ?) joint species distribution models (JSDM) resort to a latent Gaussian structure \refer{WBO15,OTN17,PWT19}
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.65\textwidth}}
+      \paragraph{Latent variable model.} 'Latent' = unobserved \\~
+      \begin{itemize}
+        \setlength\itemsep{1em}    
+        \item $Z_i =$ latent Gaussian vector in site $i$
+        \item $x_i =$ descriptors of site $i$
+        \item $Y_i =$ abundance vector in site $i$, distributed conditionally on $Z_i$:
+        $$
+        Y_{ij} \sim p(\cdot \mid Z_{ij}; x_i)
+        $$
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.4\textwidth}}
+      \includegraphics[width=.25\textwidth, trim=0 0 150 0, clip=]{\fignet/CMR18b-ArXiv-Fig1b}
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Poisson log-normal model}
+
+  \paragraph{PLN = Poisson log-normal model \refer{AiH89}.} A (multivariate mixed) generalized linear model :
+  $$
+  Z_i \sim \Ncal(0, \Sigma), \qquad \qquad
+  Y_{ij} \sim \Pcal(\exp(x_i^\top \beta_j + Z_{ij})).
+  $$
+  \begin{itemize}
+    \setlength\itemsep{1em}    
+    \item $\Sigma =$ covariance structure (of the latent layer): \emphase{biotic interactions}
+    \item $\beta_j =$ regression coefficients: \emphase{abiotic effects} of the environment on species $j$
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Inference.}
+  \begin{itemize}
+    \setlength\itemsep{1em}    
+    \item Not straightforward (because of the latent layer), often classical EM \refer{DLR77} not enough
+    \item Two main strategies: MCMC ({\tt HSMC} package) or EM + variational approximation
+    \item PLN model: {\tt PLNmodels} package \refer{CMR21} uses a variational approximation
+  \end{itemize}
+  
+
+}
+
+%====================================================================
+\frame{\frametitle{PLN: Barents'fish data}
+
+  \bigskip
+  \paragraph{Data \refer{FNA06}:} $n =89$ stations, $p = 30$ fish species, $d = 4$ descriptors (lat., long., depth, temp.)
+
+  \bigskip
+  $$
+  \begin{tabular}{cc|c}
+    \multicolumn{2}{l|}{\emphase{Full model}} &
+    \multicolumn{1}{l}{\emphase{Null model}} \\
+    & & \\
+    \multicolumn{2}{c|}{{$Y_{ij} \sim \Pcal(\exp(\emphase{x_i^\intercal \beta_j} + Z_{ij}))$}} &
+    \multicolumn{1}{c}{{$Y_{ij} \sim \Pcal(\exp(\emphase{\mu_j} + Z_{ij}))$}} \\
+    & & \\
+    \multicolumn{2}{l|}{{$x_i =$ all covariates}} &
+    \multicolumn{1}{l}{{no covariate}} \\ 
+    & & \\
+    & correlations between & \\
+    inferred  correlations $\widehat{\Sigma}_{\text{full}}$ & 
+    predictions: $x_i^\intercal \widehat{\beta}_j$ & 
+    inferred correlations $\widehat{\Sigma}_{\text{null}}$ \\ 
+    \includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrAll} 
+    &
+    \includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrPred} &
+    \includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrNull}
+  \end{tabular}
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{PLN: Network inference }
+ 
+  $$
+  \includegraphics[height=.8\textheight]{\fignet/CMR18b-ArXiv-Fig5}
+  $$
+  \refer{CMR18b}
+
+}
+
+%====================================================================
+%====================================================================
+\section{Conclusion}
+%====================================================================
+\frame{\frametitle{To summarize}
+
+  \begin{itemize}
+    \setlength\itemsep{2em}    
+    \item Network inference aims at distinguishing between direct and undirect 'interactions' between species.
+    \item Most network inference methods use the graphical model framework
+    \item Most JSDM's involve a Gaussian latent layer \\
+    (to take advantage of the properties of Gaussian graphical models)
+    \item {\tt PLNmodels} package: JSDM inference, network inference \\
+    + dimension reduction (PCA), site clustering, \dots \\
+    \textcolor{gray}{+ accounting for species traits ... soon}
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Some comments}
+
+  \begin{itemize}
+    \setlength\itemsep{2em}    
+    \item Network inference is not an easy task: there are
+    $$
+    2^{p(p-1)/2}
+    \qquad 
+    (p = 10 \to 3 \; 10^{13} \text{ graphs})
+    $$
+    possible graphs connecting $p$ nodes (10 nodes $\to 10^{13}$ graphs, 30 nodes $\to 10^{131}$ graphs).
+    \item \pause Understanding the functioning of a community may not require to deciphere the connexion/non-connexion of each pair of species (think of analyses based on species traits)
+    \item \pause JSDMs provide a broader framework.
+    \item \pause Advertising: {\sl Statistical Approaches for Hidden Variables in Ecology} \refer{PeG22b}
+  \end{itemize}
+
+}
+
+%====================================================================
+%====================================================================
+\backupbegin
+%====================================================================
+\section*{References}
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References}
+  {
+   \footnotesize
+   \bibliography{/home/robin/Biblio/BibGene}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+\frame{\frametitle{PLN for network inference: choosing $\lambda$}
+
+  $$
+  \includegraphics[height=.8\textheight]{\fignet/BarentsFish_Gfull_criteria}
+  $$
+}
+
+%====================================================================
+\backupend
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+  
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

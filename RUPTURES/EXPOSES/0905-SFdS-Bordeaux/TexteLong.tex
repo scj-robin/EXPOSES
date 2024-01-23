@@ -1,0 +1,196 @@
+\documentclass[12pt]{article}
+%
+%
+% Retirez le caractere "%" au debut de la ligne ci--dessous si votre
+% editeur de texte utilise des caracteres accentues
+\usepackage[latin1]{inputenc}
+%
+% Retirez le caractere "%" au debut des lignes ci--dessous si vous
+% utiisez les symboles et macros de l'AMS
+\usepackage{amsmath}
+\usepackage{amsfonts}
+%\usepackage{/Latex/astats}
+
+%
+%
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{21cm}
+\setlength{\hoffset}{-1.4cm}
+%
+%
+\begin{document}
+%
+\begin{center}
+{\Large
+        {\sc Segmentation de signal et détection d'aberrations
+        chromosomiques
+        }
+}
+\bigskip
+
+ Stéphane Robin
+
+\medskip
+{\it
+  
+  AgroParisTech/INRA, UMR 518 Math. \& Info. Appli. \\
+  16 rue C. Bernard \\
+  75005 Paris, France
+
+}
+\end{center}
+\bigskip
+\noindent
+
+
+% TexteLong  de quatre \`a six pages qui sera mis en ligne sur le site
+% du congr\`es et reproduit sur le CD ROM distribu\'e aux
+% participants. Ce TexteLong devra mentionner le titre, le ou les
+% auteurs, leurs affiliations et leurs adresses. Il comprendra un
+% r\'esum\'e en fran\c cais, un r\'esum\'e en anglais, une liste de
+% mots cl\'es et une bibliographie.
+% \medskip
+
+\section{Segmentation}
+
+Les problèmes de segmentation se rencontrent dans l'analyse de
+nombreux signaux biologiques, climatologiques, industriels,
+économiques. Ces analyses combinent souvent des problèmes
+algorithmiques dus à la taille de l'espace des segmentations possibles
+et des problèmes statistiques comme le choix du nombre de segments.
+
+De façon général, on s'intéresse à un signal $\{Y_t\}_{1 \leq t \leq
+  n}$, dont les mesures $Y_t$ sont indépendantes et dont la loi change
+aux dates (dites de ruptures) $\tau_k$. En notant $I_k =
+]\tau_{k-1}+1; \tau_k]$~:
+$$
+Y_t \sim F(\theta_k) \qquad \text{pour } t \in I_k.
+$$
+L'inférence porte sur le nombre de segments $K$, les paramètres des
+distributions au sein de chaque segment $\{\theta_k\}_{1 \leq k \leq
+  K}$ et les positions des ruptures $\{\tau_k\}_{1 \leq k \leq K}$.
+
+\section{Sélection de modèle}
+
+L'estimation du nombre de segments $K$ constitue un problème de
+sélection de modèle pour lequel les critères usuels comme AIC ou BIC
+ne peuvent généralement pas s'appliquer naïvement à cause de la forme
+de l'espace des segmentations (union d'espaces vectoriels, Zhang \&
+Siegmund, 07) et du cadre asymptotique particulier (le nombre de
+segmentations possibles croit exponentiellement avec le nombre de
+mesures, Lebarbier, 05).  Ces problèmes peuvent être contournés en
+considérant chaque segmentation possible. On peut alors dériver des
+critères de type BIC et ICL dont le calcul requièrent une exploration
+exhaustive de cet espace, ce qui est algorithmiquement possible.
+
+\section{Segmentation multiple}
+
+Dans le domaine bio-médical, il est souvent pertinent d'analyser
+simultanément des signaux mesurés sur plusieurs patients pour
+distinguer les ruptures d'éventuels artéfacts. Les patients présentant
+chacuns des aberrations propres, la segmentation simultanée (i.e. en
+supposant les ruptures communes à tous) n'a pas de sens biologique. On
+présentera un modèle mixte permettant la segmentation conjointe de
+plusieurs profils chromosomiques, dans lequel l'effet aléatoire est
+sensé rendre compte d'artéfacts technologiques. On présentera
+également un algorithme de type E-M pour l'inférence (Picard \& al.,
+07).
+
+\section{Recherche d'aberrations récurrentes}
+
+L'analyse conjointe de plusieurs profils permet enfin de rechercher
+des événements (aberrations) récurrents parmi les patients atteints
+d'un même type de cancer. Un profil chromosomique discret se présente
+comme une suite de $-1$ (perte), 0 (normal) et $+1$ (gain) dans lequel
+une aberration est définie comme une suite de ($-1$) ou de ($+1$).
+
+La recherche d'aberrations récurrentes s'apparente alors à l'étude des
+occurrences simultanées d'un motif dans plusieurs séquences. On
+présentera des bornes pour les probabilités critiques associés à des
+événements exceptionnels. Le calcul de ces bornes est fondé sur des
+technique de chaîne de Markov ``embarquées'' ({\sl Embedded Markov
+  chain}, Robin \& Stefanov, 08).
+
+
+%Quelques rappels :
+%%
+%\begin{center}
+%%
+%\begin{tabular}{lr} \hline
+%%
+%Accent aigu :              &  \'e; \\
+%Accent grave :             &  \`a;\\
+%Accent circonflexe :       &  \^o mais \^{\i};\\
+%Tr\'emas :                 &  \"o mais \"{\i};\\
+%C\'edille :                &  \c{c}. \\ \hline
+%\end{tabular}
+%%
+%\end{center}
+
+% Les r\'ef\'erences bibliographiques seront donn\'ees dans le texte
+% sous la forme pr\'esent\'ee dans l'exemple suivant.
+% \bigskip
+
+% \noindent{EXEMPLE}
+
+% La n\'ecessit\'e de produire des r\'esum\'es clairs et bien
+% r\'ef\'erenc\'es a \'et\'e d\'emontr\'ee par Achin et Quidont~(2000). Le
+% r\'ecent article de Noteur~(2003) met en \'evidence \dots
+
+
+\bigskip
+
+\noindent {\large{\bf Bibliographie}}
+\medskip
+%\bibliography{/Biblio/AST}
+%\bibliographystyle{/Latex/astats}
+
+
+\noindent [1] 
+{\sc Lebarbier, E.}
+\newblock (2005).
+\newblock Detecting multiple change-points in the mean of gaussian process by
+  model selection.
+\newblock {\em Signal Processing}.
+\newblock {\bf 85} 717--736.
+
+\medskip
+\noindent [2] 
+{\sc Picard, F.}, {\sc Lebarbier, E.}, {\sc Budinska, E.} and {\sc Robin, S.}
+\newblock (2007), Joint segmentation of multivariate gaussian processes using
+  mixed linear models.
+\newblock Research Report~5, INRA-Statistics for System Biology
+group. \\
+\newblock {\tt genome.jouy.inra.fr/ssb/preprint/SSB-RR-5.mod\_mixed\_seg.pdf}.
+
+\medskip
+\noindent [3] 
+{\sc Robin, S.} and {\sc Stefanov, V.}
+\newblock (2008).
+\newblock Simultaneous occurrences of runs in independent {M}arkov chains.
+\newblock {\em Method. Comput. Appl. Prob.}
+\newblock ~?
+\newblock DOI: 10.1007/s11009-008-9093-3, Tech. Report at {\tt
+  genome.jouy.inra.fr/ssb/preprint/SSB-RR-11-sim-occ-run.pdf}.
+
+\medskip
+\noindent [4] 
+{\sc Zhang, N.~R.} and {\sc Siegmund, D.~O.}
+\newblock (2007).
+\newblock A modified Bayes information criterion with applications to the
+  analysis of comparative genomic hybridization data.
+\newblock {\bf 63}~{\bf (1)} 22--32.
+
+%
+
+% \noindent [1] Auteurs (ann\'ee) Titre, revue, localisation.
+
+% \noindent [2] Achin, M. et Quidont, C. (2000) {\it Th\'eorie des
+% Catalogues}, Editions du Soleil, Montpellier.
+
+% \noindent [3] Noteur, U. N. (2003) Sur l'int\'er\^et des
+% r\'esum\'es. {\it Revue des Organisateurs de Congr\`es}, 34, 67--89.
+
+
+\end{document}
+

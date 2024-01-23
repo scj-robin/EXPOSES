@@ -1,0 +1,548 @@
+\documentclass[dvips, 12pt]{slides}
+\usepackage{lscape}
+\textwidth 18cm
+\textheight 23cm 
+\topmargin 0 cm 
+\oddsidemargin  0cm 
+\evensidemargin  0cm
+\renewcommand{\baselinestretch}{1.1}     
+
+%\documentclass[dvips, 12pt]{d:/Latex/foiltex/foils}
+%\LogoOff
+%\usepackage{geometry}
+%\geometry{landscape,a4paper,tmargin=1cm,bmargin=1cm,lmargin=2.5cm,rmargin=2.5cm}
+
+
+                                % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                                % Graphics Gallery :                     %
+                                % http://www.accessexcellence.com/AB/GG/ %
+                                % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Maths
+\usepackage{amsfonts}
+\usepackage{d:/Latex/astats} 
+\usepackage{multirow}
+\newcommand{\Ccal}{\mathcal{C}}
+\renewcommand{\a}{\tt a}
+\newcommand{\cc}{\tt c}
+\newcommand{\g}{\tt g}
+\renewcommand{\t}{\tt t}
+\newcommand{\Esp}{\mathbb E}
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+% Texte
+\usepackage{d:/LATEX/fancyheadings}
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.4}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{\bf #1}}
+\newcommand{\textred}[1]{\textcolor{red}{\bf #1}}
+\newcommand{\textgreen}[1]{\textcolor{darkgreen}{\bf #1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{\bf #1}}
+%\newcommand{\textblue}{\textcolor{blue}}
+%\newcommand{\textgreen}{\textcolor{green}}
+%\newcommand{\arrow}{\psline[linestyle=dotted, linewidth=.05]{->}}
+
+% Sections
+\newcommand{\section}[1]{\newpage\centerline{\LARGE \bf \textred{#1}}}
+\newcommand{\subsection}[1]{\noindent{\Large \bf \textblue{#1}}}
+\newcommand{\paragraph}[1]{{\large \sl \textgreen{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%\rfoot[S. Robin]{S. Robin}
+\landscape
+{\large 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+%  \vspace{1cm} 
+  \centerline{\textred{\Large PUCES À ADN}}
+%  ~\\
+  \centerline{\textred{\Large ET ANALYSE DU TRANSCRIPTOME}}
+
+%  \vspace{1cm} 
+  \textblue{Stéphane ROBIN} \\
+  robin@inapg.inra.fr
+
+%  \vspace{1cm}
+  \textgreen{INA-PG / INRA\\ Biométrie \& Intelligence Artificielle}
+
+%  \vspace{1cm}
+  {SFdS, Bruxelles, mai 02}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{PLAN}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{enumerate}
+\item Contexte biologique
+\item Puces à ADN
+\item Questions biologiques
+\item Problèmes statistiques
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{1 -- CONTEXTE BIOLOGIQUE}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{1.1 -- Grands programmes de séquençages}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Nombres de gènes \textgreen{prédits} (en milliers)~:
+$$
+\begin{tabular}{lc}
+  Bactérie ({\sl E. coli}) & 4 \\
+  Levure & 6 \\
+  Nématode ({\sl C. elegans}) & 19 \\
+  Drosophile ({\sl D. melanogaster}) & 13 \\
+  Arabette ({\sl A. thaliana}) & 25--30 \\
+  Homme & 30--50 \\
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{1.2 -- Génomique fonctionnelle}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Chez les ``organismes évolués''~:  \\
+$$
+\begin{tabular}{ll}
+  \textred{5 \%} & des gènes ont une \textgreen{fonction connue} \\
+  & (phénotype, biochimie)\\
+  \\
+  \textred{65 \%} & ont une \textgreen{fonction prédite} \\
+  \\
+  \textred{30 \%} & ont une \textgreen{fonction inconnue} \\
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{1.3 -- Étude du transcriptome}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Idée~:}
+Pour connaître la fonction des gène il faut savoir \textred{dans
+  quelles conditions ou dans quels tissus} \textred{ils s'expriment}
+
+\paragraph{Principe~:}
+On mesure les niveaux d'expression de \textred{tous les gènes} au
+travers le transcriptome (= \textgreen{ensemble des transcrits})
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+%\subsection{1.4 -- Dogme de la biologie moléculaire}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\hspace{-1cm}\epsfig{figure=../Exposes/CentralDogma.ps, height=25cm, width=16cm,
+  angle=270, bbllx=60, bblly=120, bburx=530, bbury=680, clip=}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\centerline{ \epsfig{figure=../Exposes/mRNA-Gal.ps, height=16cm,
+    width=16cm, clip=}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{2 -- PUCES À ADN}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{2.1 -- Réaction d'hybridation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Les segments d'ADN complémentaires \textgreen{s'apparient
+  spontanément}~:
+$$
+\begin{array}{rcccccccccl}
+  \mbox{\textgreen{target} (solution)}
+  & \a & \t & \g  & \g  & \t & \a & \textred{\t}  & \cc & \a \\
+  & |  & |  & |   & |   & |  & |  & \textred{|}   & |   & |  \\ 
+  & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & & \vdots & \vdots \\
+  & |  & |  & |   & |   & |  & |  & \textred{|}   & |   & |  &  \\ 
+  & \t & \a & \cc & \cc & \a & \t & \textred{\cc} & \g  & \t &  
+  \mbox{\textgreen{probe} (spot)}
+\end{array}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{2.2 -- Les différentes techniques}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Lames de verre~:} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\hspace{-1cm}\epsfig{figure=../Exposes/FabPuces.ps, height=25cm,
+  width=18cm, angle=90}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{tabular}{l}
+  \paragraph{Membranes~:} \\
+  ~\\
+  support \\
+  nylon \\
+  ~\\
+  marquage \\
+  radioactif
+\end{tabular}
+\begin{tabular}{l}
+  \epsfig{figure=../Exposes/Membranes.ps, height=15cm, width=15cm}
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{tabular}{l}
+  \paragraph{Affymetrix~:} \\
+  ~\\
+  oligo- \\
+  nucléotides \\
+  ~\\
+  20 couples \\
+  perfect match \\
+  / mismatch \\
+  par gène \\
+\end{tabular}
+\begin{tabular}{l}
+  \epsfig{figure=../Exposes/Affymetrix.ps, height=15cm, width=15cm}
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{2.3 -- Applications}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Analyse du transcriptome~:}
+Mesures simultanées des niveaux d'expression de \textred{``tous'' les
+  gènes}
+
+\paragraph{Mais aussi~:}\\
+$\bullet$ séquençage par hybridation \\
+$\bullet$ puces chromosomiques \\
+$\bullet$ etc.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{3 -- QUESTION BIOLOGIQUES}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Profils d'expression~:}
+Déterminer des groupes de gènes ayant des \textred{profils
+  similaires} dans un ensemble de conditions
+
+\paragraph{Gènes réagissant à un changement de condition~:}
+Détecter des gènes ``\textred{différentiellement} exprimés''
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Caractérisation de tumeurs~:}\\
+$\bullet$ \textred{Reconnaître} une tumeur à partir des niveaux d'expression \\
+$\bullet$ Fabriquer des \textred{mini-puces} pour des analyses en routine
+
+\paragraph{Réseaux de régulation~:}
+Déterminer les actions de régulation (activation ou inhibition) des
+gènes \textred{les uns sur les autres}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{4 -- PROBLÈMES STATISTIQUES}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{enumerate}
+\item Ils sont nombreux
+\item Beaucoup plus nombreux que ne le pensaient la plupart des
+  biologistes
+\item On en découvre de nouveaux chaque jour 
+\end{enumerate}
+
+\begin{itemize}
+\item[$+$] Certains peuvent se résoudre avec des outils usuels
+\item[$-$]  Mais pas tous
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.1 -- Analyse d'image}
+
+\textred{Quantifier} le signal associé à chaque ``spot''
+
+$\bullet$ Régler l'intensité des lasers (pour la fluorescence) \\
+$\bullet$ Déterminer le contour des spots \\
+$\bullet$ Estimer le bruit de fond 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.2 -- Classification de gènes}
+
+\begin{tabular}{l}
+  \epsfig{figure=../Exposes/ESB98-Fig1.ps, height=24cm, width=10cm,
+    angle=270, bbllx=22, bblly=15, bburx=300, bbury=825, clip=} \\
+  ~\\
+  {\small Eisen \& al. (98): {\sl Cluster analysis and display of
+      genome-wide expression patterns}}
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+On caractérise les groupes par leur profils d'expression 
+$$
+\epsfig{figure=SLA01-Fig3.ps,height=24cm,width=12cm,angle=270, clip=}
+$$
+{\small Schaffer \& al. (01)~: {\sl Diurnal and Circadian-Regulated
+    Genes in Arabidopsis }}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Premières méthodes~:}\\
+$\bullet$ Classifications hiérarchiques \\
+$\bullet$ $K$-means \\
+$\bullet$ Self-organized maps (réseaux de Kohonen) \\
+$\rightarrow$ aucune prise en compte de la \textred{variabilité expérimentale}
+
+\paragraph{Autres approches~:}\\
+$\bullet$ Bootstrap sur les arbres \\
+$\bullet$ Modèles de mélange
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.3 -- Échantillonnage des sondes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textgreen{Que déposent-on sur les lames ?}
+
+\begin{tabular}{ll}
+  $\bullet$ & Des ADN issus de ``banques'' \\
+  \\
+  & $\rightarrow$ seulement des gènes \textred{déjà rencontrés} ailleurs \\
+  \\
+  \\
+  $\bullet$ & Des ADN synthétisés à partir de prédictions \\
+  \\
+  & $\rightarrow$ aussi des gènes qui \textred{n'existent pas}
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.4 -- Normalisation des mesures}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%La variabilité expérimentale est extrêmement importante
+$$
+{\small
+  \begin{tabular}{l|ccc}
+    Facteur & ddl 
+    & \begin{tabular}{c}Variance\\dûe au facteur\end{tabular} 
+    & Fisher 
+%    & \begin{tabular}{c}Probabilité\\critique\end{tabular}
+    \\
+    \hline
+    Quantité               &     1  &  614.279  &  624~373.11  \\ %&            0
+    Date                   &     1  &   63.126  &   64~163.02  \\ %&            0
+    Date*Quantité          &     1  &   51.885  &   52~737.69  \\ %&            0
+%    Culture*Date*Quantité  &     1  &    5.846  &    5~942.51  \\ %&            0
+    Culture*Quantité       &     1  &    2.527  &    2~568.92  \\ %&            0
+    Culture*Date           &     1  &    2.122  &    2~156.76  \\ %&            0
+    Gène                   &  4106  &    1.119  &    1~137.52  \\ %&            0
+    Culture                &     1  &    0.687  &      697.93  \\ %&   10^2.206E-152
+    Gène*Quantité          &  4106  &    0.026  &       26.63  \\ %&            0
+    Gène*Date              &  4106  &    0.012  &       12.69  \\ %&            0
+    Gène*Date*Quantité     &  4106  &    0.008  &        7.69  \\ %&            0
+    \dots & \dots & \dots & \dots \\
+%\hline
+{\bf Culture*Gène}         &  4106  &    0.004  &  {\bf 4.23}  \\ %&            0
+%\hline
+%    Culture*Gène*Date      &  4106  &    0.003  &        3.25  \\ %&            0
+%    Culture*Gène*Quantité  &  4106  &    0.003  &        2.79  \\ %&            0
+  \end{tabular}
+  }
+$$ 
+{\small Sekowska \& al. (01)~: {\sl Extracting biological information
+    from DNA arrays: \dots}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Biais de marquage fluorescent~:}
+$$
+\begin{tabular}{l}
+  $R = $ signal rouge \\
+  \qquad (cond. 1) \\ 
+  \\
+  $V = $ signal vert \\
+  \qquad (cond. 2) \\
+  \\
+  $M = R - V$ \\
+  $A = R + V$ \\
+  \\
+  correction \\
+  lowess \\
+  par aiguille \\
+\end{tabular}
+\begin{tabular}{c}
+  \epsfig{figure=../Exposes/DYCS00-Fig4, height=12cm, width=15cm,
+    bbllx=80, bblly=290, bburx=520, bbury=560, clip=} \\
+\end{tabular}
+$$
+{\small Dudoit \& al. (00): {\sl Statistical for identifying
+    differentially expressed genes ...}}
+                                
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.5 -- Planification expérimentale}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{``Swap''~:} inversion des couleurs entre deux lames
+$$
+\mbox{\textred{carré latin}~:} \qquad
+\begin{tabular}{c|cc}
+  & Lame 1 & Lame 2 \\
+  \hline
+  Rouge & Cond. 1 & Cond. 2 \\
+  Vert & Cond. 2 & Cond. 1 \\
+\end{tabular}
+$$
+
+\paragraph{Utilisation d'un contrôle~:} 
+$$
+\begin{tabular}{cl}
+  $\bullet$ & comparaison de toutes les conditions au contrôle \\
+  & C1/T \quad C2/T \quad C3/T \\
+  \\
+  $\bullet$ & plan ``\textred{en boucle}'' \\
+  & T/C1 \quad C1/C2 \quad C2/C3 \quad C3/T
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.6 -- Analyse différentielle} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+${\bf H}_0$ = ``le gène n'est pas différentiellement exprimé''
+
+\paragraph{Test usuels~:} Student, Wilcoxon, etc
+
+\paragraph{Loi sous ${\bf H}_0$~:} on ne connaît pas les gènes ``sous ${\bf H}_0$'' \\
+$\rightarrow$ utilisation de gènes témoins \\
+$\rightarrow$ bootstrap
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Modèle de mélange / affectation bayesienne~:} \\
+\centerline{$f(x) = \pi_0 f_0(x) + \pi_1 f_1(x)$}
+\centerline{\epsfig{figure=ETG00-Fig1-red.ps, height=12cm,
+    width=22cm,clip=}} \\
+                                %, bbllx=500, bblly=330, bburx=90,
+                                %bbury=580}} 
+{\small Efron \& al. (00)~: {\sl Microarrays and their Use in a
+    Comparative Experiment}}
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Comparaisons multiples~:} 
+Liste des gènes dif\-férentiel\-lement exprimés en contrôlant le
+\textred{niveau global}, sachant que les gènes ne sont \textred{pas
+  indépendants}
+
+\paragraph{Statistical Analysis of Microarray (SAM)~:} 
+Méthode de \textred{permutations simultanées} sur l'ensemble des gènes \\
+Exige une nombre suffisant de \textred{répétitions} \\
+{\small Tusher et al. (01) SAM applied to ionization data}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{4.7 -- Caractérisation de tissus}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$$
+\begin{tabular}{l}
+  {\small van't Veer et al} \\
+  {\small Nature (2002)}
+\end{tabular}
+\begin{tabular}{l}
+    \epsfig{figure=../Exposes/Nature415-Fig.ps, height=15cm, width=15cm,
+      bbllx=30, bblly=10, bburx=560, bbury=500, clip=} \\
+\end{tabular}
+$$
+                                
+\paragraph{Affectation~:} 
+Classer un tissus sain ou malade à partir des expressions des gènes
+
+Bonnes performances des Support Vector Machines (\textred{SVM}), mais
+vraiment nécessaire ?
+
+\paragraph{Sélection de gènes~:}
+Définir une liste de gènes suffisants pour obtenir une bonne
+affectation (\textred{$\neq$} analyse différentielle)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{UMR INA-PG / INRA Biométrie}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Collaborations} \\
+\paragraph{Labo. de biologie~:} Pasteur, ENS Ulm, INRA Jouy \\
+\paragraph{Plates-formes biopuces~:} CEA Évry, INRA Évry \\
+\subsection{Thèmes} \\
+\paragraph{Analyse différentielle~:} Analyse de la variance, Modèle de
+mélange, Choix de modèle (S. Huet, INRA Jouy) \\
+\paragraph{Discrimination~:} Analyse discriminante, sélection de
+variables, SVM
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\centerline{\LARGE \bf \textred{Informatique, Mathématique et Physique}}
+\centerline{\LARGE \bf \textred{ pour la Génomique}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\centerline{\textgreen{\tt www.impg.prd.fr}}
+
+Action du ministère de la recherche \\
+Groupes thématiques dont
+
+\centerline{\textblue{Analyse Statistique du Transcriptome}}
+
+Rencontres biologistes / statisticiens
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+}
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

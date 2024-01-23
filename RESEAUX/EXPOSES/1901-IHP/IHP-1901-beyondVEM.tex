@@ -1,0 +1,105 @@
+%----------------------------------------------------------------------
+\subsection{Bayesian inference}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\jump \paragraph{Bayesian setting.}
+\begin{itemize}
+\item $p(\theta):$ prior on $\theta$
+\item $p(Y, Z \mid \theta):$ complete likelihood
+\item $p(Y \mid \theta) = \int p(Y, Z \mid \theta) \d Z$ marginal likelihood
+\item Aim: compute or sample from the {\sl joint} conditional
+$$
+p(\theta, Z \mid Y)
+$$
+\end{itemize}
+
+%----------------------------------------------------------------------
+\jump \paragraph{Regular MCMC sampling.} A regular MCMC scheme can be designed, which may take advantage of 
+\begin{itemize}
+ \item a Gibbs sampler to sample the $Z_i$'s
+ \item conjugacy to avoid the sampling of $\theta$ \citep{MMF13}
+\end{itemize}
+
+\ra Usual issues with convergence control toward $p(\theta, Z \mid Y)$  and computational time
+
+%----------------------------------------------------------------------
+\blank 
+\subsection{Variational Bayesian inference}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\jump \paragraph{Variational Bayes principle.} For some divergence $D$, find
+$$
+q^*(\theta, Z) = \arg\min_{q \in \Qcal} D\left(q(\theta, Z); p(\theta, Z \mid Y)\right)
+$$
+
+%----------------------------------------------------------------------
+\jump \paragraph{Variational Bayes EM (VBEM).} Take 
+$$
+D = KL 
+\qquad \text{and} \qquad
+\Qcal = \{q: q(\theta, Z) = q_\theta(\theta) q_Z(Z)\}.
+$$
+\begin{itemize}
+\item VB 'E' step:
+$$
+q_\theta^{h+1}(\theta) 
+= \arg\min_{q_\theta} KL\left(q_\theta(\theta) q_Z^h(Z); p(\theta, Z \mid Y)\right) 
+\propto \exp\left(\Esp_{q^h_Z} \left( \log p(Y, Z, \theta) \right) \right)
+$$
+\item VB 'M' step:
+$$
+q_Z^{h+1}(Z) 
+= \arg\min_{q_Z} KL\left(q_{\theta^{h+1}}(\theta) q_Z(Z); p(\theta, Z \mid Y)\right) 
+\propto \exp\left(\Esp_{q^{h+1}_\theta} \left( \log p(Y, Z, \theta) \right) \right)
+$$
+\end{itemize}
+
+\ra Close form update for both VBE and VBM steps when using conjugate priors \cite{BeG03}
+
+\ra Applies to (weighted) SBM \citep{LBA12,LaR16,LRO18}
+
+\ra Avoids Laplace approximation when computing pseudo-BIC or ICL \citep{LBA12,LaR16,KBC15}
+
+%----------------------------------------------------------------------
+\blank
+\subsection{'Regular' inference using VEM}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\jump \paragraph{SMC for Bayesian inference.} \citep{DoR17}
+\begin{itemize}
+\item Derive an approximation of $p(\theta, Z \mid Y)$ from VEM or VBEM, e.g. $\widetilde{p}(\theta, Z \mid Y) = \widehat{q}_\theta(\theta) \widehat{q}_Z(Z)$;
+\item Use sequential Monte Carlo (SMC) to sample iteratively from
+$$
+p_\rho(\theta, Z) \propto \left(\widetilde{p}(\theta, Z \mid Y)\right)^\rho \left(p(\theta, Z \mid Y)\right)^{1-\rho}.
+$$
+\end{itemize}
+
+\ra The sequence $0 = \rho_0 < \rho_2 < \dots < \rho_H = 1$ can be chosen adaptively.
+
+\example{Tree network: $p(\beta \mid Y)$}
+
+%----------------------------------------------------------------------
+\jump \paragraph{Composite likelihood.} EM fails because $p_\theta(Z \mid Y)$ is intractable. Composite likelihood provides a generic framework to obtain consistent, asymptotically normal estimators \citep{VRF11}.
+\begin{itemize}
+\item Composite-likelihood for \SBMo \citep{AmM12}:
+$$
+\cl_\theta(Y) = \sum_{i < j < k} \log p_\theta(\Yij, Y_{ik}, Y_{jk})
+$$
+because of identifiability issues in \SBMo
+\item Composite-likelihood for non-binary SBM:
+$$
+\cl_\theta(Y) = \sum_{i < j} \log p_\theta(\Yij)
+$$
+where $\log p_\theta(\Yij)$ only requires the calculation of $p_\theta(Z_i, Z_j \mid \Yij)$.
+\end{itemize}
+
+\ra Asymptotic variance: requires to prove that sums over all edges provide consistent estimates of Fisher information matrices.
+
+\ra Extends to dynamic SBM: each $\log p_\theta(\Yij)$ gives raise to a $K^2$ state HMM.
+
+\ra VEM provides a starting point for genuine EM algorithm
+
+\example{Dynamic SBM: 'graphical model' for CL inference}

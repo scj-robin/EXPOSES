@@ -1,0 +1,490 @@
+\documentclass[9pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+\usepackage{xspace}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\CTSBM}{{\sl ct}-SBM\xspace}
+\newcommand{\DTSBM}{{\sl dt}-SBM\xspace}
+
+% Directory
+\newcommand{\fignet}{/home/robin/Bureau/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figchp}{/home/robin/Bureau/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+% \newcommand{\figfig}{../figs}
+\newcommand{\figCMR}{/home/robin/Bureau/RECHERCHE/ECOLOGIE/CountPCA/sparsepca/Article/Network_JCGS/trunk/figs}
+\newcommand{\figDoR}{/home/robin/Bureau/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Data/Tree/Fig}
+
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title[Network reconstruction from abundance data]{Ecological network reconstruction from abundance data}
+
+\author[S. Robin]{S. Robin \\ ~ \\
+  {\sl joint work with J. Chiquet and M. Mariadassou}}
+
+\institute[]{INRA / AgroParisTech /univ. Paris-Saclay}
+
+\date[EcoStat'18, Grenoble]{Journées du GdR EcoStat, Grenoble, Oct. 2018}
+
+%====================================================================
+%====================================================================
+\maketitle
+%====================================================================
+
+%====================================================================
+\section*{Ecological network inference}
+%====================================================================
+\frame{\frametitle{Infering ecological networks}
+
+  \paragraph{Ecological network:} set of interactions between species living in a common area
+  
+  \bigskip \bigskip
+  \paragraph{Aim:} based on abundance data, try to infer the ecological network
+  
+  \bigskip \bigskip
+  \paragraph{Abundance data:} counts of individuals from each species, read counts mapped on each species genome, ...
+  
+  
+  \bigskip \bigskip \pause
+  \paragraph{Needs:}
+  \begin{itemize}
+   \item Account for the specificities of abundance data (counts, overdispersion, ...), \\~
+   \item Account for the potential effects of environmental covariates, \\~
+   \item Provide (statistical) definition of a network
+  \end{itemize}
+
+}
+  
+%====================================================================
+\frame{\frametitle{Typical dataset}
+
+\paragraph{Barents fish \refer{FNA06}:} $n = 89$ sites, $m = 30$ species, $d = 4$ covariates
+
+\bigskip \pause
+\begin{tabular}{c|c|c}
+  \onslide+<2->{\paragraph{Abundances $Y$:} $n \times m$}
+  & 
+  \onslide+<3->{\paragraph{Covariates $X$:} $n \times d$}
+  & 
+  \onslide+<4>{\paragraph{Network $G$:} $m \times m$ }
+  \\
+  \hspace{-.02\textwidth} 
+  \begin{tabular}{p{.3\textwidth}}
+    \onslide+<2->{\begin{tabular}{rrr}
+      {\sl Hi.pl} & {\sl An.lu} & {\sl Me.ae} 
+      \footnote{{\sl Hi.pl}: Long rough dab, {\sl An.lu}: Atlantic wolffish, {\sl Me.ae}: Haddock} \\ 
+%       Dab & Wolffish & Haddock \\ 
+      \hline
+      31  &   0  & 108 \\
+       4  &   0  & 110 \\
+      27  &   0  & 788 \\
+      13  &   0  & 295 \\
+      23  &   0  &  13 \\
+      20  &   0  &  97 \\
+      \vdots & \vdots & \vdots 
+    \end{tabular}} 
+  \end{tabular}
+  & 
+  \begin{tabular}{p{.3\textwidth}}
+    \onslide+<3->{\begin{tabular}{rrr}
+      Lat. & Long. & Depth \\ \hline
+      71.10 & 22.43 & 349 \\
+      71.32 & 23.68 & 382 \\
+      71.60 & 24.90 & 294 \\
+      71.27 & 25.88 & 304 \\
+      71.52 & 28.12 & 384 \\
+      71.48 & 29.10 & 344 \\
+      \vdots & \vdots & \vdots 
+    \end{tabular}} 
+  \end{tabular}
+  & 
+  \hspace{-.02\textwidth} \pause
+  \begin{tabular}{p{.3\textwidth}}
+    \onslide+<4>{\hspace{-.1\textwidth} 
+      \begin{tabular}{c}
+        \includegraphics[width=.35\textwidth]{\figCMR/network_BarentsFish_Gfull_full60edges}
+      \end{tabular}}
+  \end{tabular}
+\end{tabular}
+
+\bigskip \bigskip 
+\onslide+<4>{\paragraph{Goal:} infer $G$ based on $X$ and $Y$.}
+}
+  
+%====================================================================
+\section{Graphical models}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Network inference: a framework} 
+
+  \bigskip
+  \paragraph{'Interaction':} vague concept 
+  \ra need for a probabilistic / statistical definition
+  
+  \pause\bigskip\bigskip
+  \paragraph{Graphical models \refer{Lau96}:} The distribution $p(U) = p(U_{1}, \dots, U_m)$ is faithful to $G$ iff
+  $$
+  p(U) \propto \prod_{C \in \Ccal(G)} \psi_C(U_{C}),
+  $$
+  where $U_{C} = \{U_{j}: j \in C\}$ and $\Ccal(G) =$ set of maximal cliques of $G$.
+
+  \pause\vspace{.1\textheight}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.35\textwidth}}
+	 \input{\fignet/SimpleGraphModel}
+    \end{tabular}
+    & 
+%     \hspace{-.15\textwidth}
+    \begin{tabular}{p{.55\textwidth}}
+    $p(U) \propto \psi_1(U_1, U_2, U_3) \; \psi_2(U_3, U_4)$ \\~
+	 \begin{itemize}
+	 \item Connected graph: %\\
+	 all variables are dependent \\~
+	 \item $U_3 =$ separator: $U_4 \perp (U_1, U_2) \gv U_3$ \\~ \\~
+	 \end{itemize}
+    \end{tabular}
+  \end{tabular} 
+  }
+
+%====================================================================
+\frame{\frametitle{Gaussian graphical model (GGM)} 
+
+  \paragraph{Gaussian setting:} 
+  $$
+  U \sim \Ncal_m(0, \Sigma)
+  $$
+  
+  \bigskip
+  \paragraph{Property:} the edges of $G$ correspond to the \emphase{non-zero terms of the precision matrix}
+  $$
+  \Sigma^{-1} = \Omega = [\omega_{jk}]_{j, k}
+  \qquad \Rightarrow \qquad
+  p(U) 
+  \propto \exp\left(-\frac12 \sum_{j, k} \omega_{jk} U_jU_k\right)
+  = \prod_{j, k} e^{-\omega_{jk} U_jU_k/2}
+  $$
+  
+  \pause 
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.35\textwidth}}
+	 \input{\fignet/SimpleGraphModel}
+    \end{tabular}
+    & 
+%     \hspace{-.15\textwidth}
+    \begin{tabular}{p{.55\textwidth}}
+      $$
+      \Sigma = \left( \begin{array}{cccc}
+                      * & * & * & * \\
+                      * & * & * & * \\
+                      * & * & * & * \\ 
+                      * & * & * & * 
+                      \end{array} \right)
+      $$
+      $$
+      \Omega = \left( \begin{array}{cccc}
+                        * & * & * & \emphase{0} \\
+                        * & * & * & \emphase{0} \\
+                        * & * & * & * \\ 
+                        \emphase{0} & \emphase{0} & * & * 
+                        \end{array} \right)
+      $$
+    \end{tabular} \\~ % \\~
+  \end{tabular} 
+  
+  \pause %\bigskip
+  \paragraph{Glasso \refer{FHT08}:} penalized likelihood, forcing $\Omega$ to have many zeros
+  }
+  
+%====================================================================
+\section{Poisson log-normal (PLN) model}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{A generic model for multivariate count data}
+
+  Need for a model accounting for correlations between count data
+  
+  \pause \bigskip 
+  \paragraph{Observed data} for site $i$
+  \begin{itemize}
+   \item $Y_{ij}$: abundance of species $j$ ($j = 1 \dots m$)
+   \item $o_{ij}$: sampling effort for species $j$ (offset)
+   \item $x_i$: vector of covariates
+  \end{itemize}
+  
+  \pause \bigskip 
+  \paragraph{Poisson log-normal (PLN) model:} for each site $i$
+  \begin{align*}
+    \text{latent:} & & Z_i & \sim \Ncal_m(0, \Sigma) \\
+    \text{observed:} & & Y_{ij} \gv Z_{ij} & \sim \Pcal\left(\exp\left(\underset{\text{offset}}{\underbrace{o_{ij}}} + \underset{\text{covariates}}{\underbrace{x_i^\intercal \beta_j}} +  \underset{\text{random effect}}{\underbrace{Z_{ij}}}\right)\right)
+  \end{align*}
+  \pause
+  \begin{itemize}
+   \item $\Sigma$: dependency structure
+   \item $\beta_j$: effects of the covariates on species $j$
+  \end{itemize}
+
+}
+  
+%====================================================================
+\frame{\frametitle{PLN-network model}
+
+  \paragraph{Constraint on $\Omega$:} 
+  \begin{align*}
+    Z_i & \sim \Ncal_m(0, \Omega^{-1}), \qquad \qquad \text{\emphase{$\Omega$ being sparse}}\\
+    Y_{ij} \gv Z_{ij} & \sim \Pcal(e^{o_{ij} + x_i^\intercal \beta_j + Z_{ij}})
+  \end{align*}
+  
+  \pause\bigskip\bigskip
+  \paragraph{Remark.} Actually models the dependecy structure in the \emphase{latent} layer:
+  \begin{overprint}
+    \onslide<3>
+    $$
+    \begin{array}{ccc}
+    \input{\fignet/CMR18b-Fig1c}
+    & \qquad \qquad &
+    \input{\fignet/CMR18b-Fig1d}
+    \end{array}
+    $$
+    \onslide<4>
+    $$
+    \begin{array}{ccc}
+    \input{\fignet/CMR18b-Fig1a}
+    & \qquad \qquad &
+    \input{\fignet/CMR18b-Fig1b}
+    \end{array}
+    $$
+  \end{overprint}
+}
+  
+%====================================================================
+\frame{\frametitle{PLN-network inference}
+
+  \bigskip
+  \paragraph{Inference \refer{CMR18b}.} Combines a variational approximation \refer{WaJ08} with the graphical lasso:
+  $$
+  \max_{\theta, q} J_\lambda(\theta, q) 
+   = \underset{\text{max. likelihood}}{\underbrace{\log p_\theta(Y)}} 
+   - \underset{\text{variational approximation}}{\underbrace{KL\left(q(Z) \;||\; p_\theta(Z \gv Y)\right)}} 
+   - \underset{\text{sparsity}}{\underbrace{\emphase{\lambda \|\Omega\|_1}}}
+  $$
+  \begin{itemize}
+   \item Variational approximation: $Z_i \gv Y_i \approx \Ncal(\mt_i, \St_i)$
+   \item $J_\lambda(\theta, q)$ bi-convex $\rightarrow$ efficient gradient ascent algorithm
+  \end{itemize}
+
+  \pause \bigskip \bigskip 
+  \paragraph{R package {\tt PLNmodels}\footnote{\onslide+<2->{many thanks to Charlie Pauvert for beta-testing}}:} 
+  \begin{itemize}
+   \item available at \textcolor{blue}{\url{https://github.com/jchiquet/PLNmodels}}
+   \item syntax: 
+   $$
+   \text{\tt PLNnetwork(Y \url{~} X + offset(O))}
+   $$
+  \end{itemize}
+}
+  
+%====================================================================
+\frame{\frametitle{How many edges?}
+
+  \bigskip
+  \paragraph{EBIC \refer{ChC08,FoD10}.} Network density controlled by $\lambda$ \ra need for a model selection criterion 
+  $$
+  EBIC_\gamma(\lambda) 
+  = -2 J_\lambda(\widehat{\theta}, \widehat{q}) 
+  + \log n \underset{\text{\# parameters}}{\underbrace{\left(|\Ecal_\lambda| + pd\right)}} 
+  + \gamma \log \underset{\text{\# models}}{\underbrace{\binom{p(p-1)/2}{|\Ecal_\lambda|}}}
+  $$
+  
+  \bigskip \pause
+  \paragraph{Stability selection \refer{LRW10}.} Resampling-based approach to select consistently selected edges.
+
+
+}
+%====================================================================
+\section{Illustrations}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Barents fish} 
+
+  \begin{center}
+  \begin{tabular}{lccc}
+    & no covariate & \textcolor{blue}{temp. \& depth} & \textcolor{red}{all covariates} \\
+    \hline
+    \rotatebox{90}{$\qquad\quad\lambda=.20$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_full60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_full60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_full60edges} 
+    \vspace{-0.05\textheight} \\ \hline
+    %
+    \rotatebox{90}{$\qquad\quad\lambda=.28$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_sel60edges} & \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_sel60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_sel60edges} 
+    \vspace{-0.05\textheight} \\ \hline
+    %
+    \rotatebox{90}{$\qquad\quad\lambda=.84$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_null60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_null60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_density} 
+%     \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_null60edges}  
+  \end{tabular}
+  \end{center}
+
+}
+
+%====================================================================
+\frame{\frametitle{Oak mildew}
+
+  \paragraph{Aim:}
+  \begin{itemize}
+   \item Understanding microbial interactions within communities living on oak leaves
+   \item Focus on {\sl E. alphitoides}: fungal pathogene responsible for oak mildew
+  \end{itemize}
+
+  \bigskip \pause
+  \paragraph{Data:}
+  \begin{itemize}
+   \item Metabarcoding data (sequencing)
+   \item Different sampling effort for bacteria ('{\tt b}') and fungi ('{\tt f}')
+   \item $n_1 = 39$ samples resistant to mildew, $n_2 = 39$ susceptible samples
+  \end{itemize}
+
+}
+    
+%====================================================================
+\frame{\frametitle{Oak mildew}
+
+  $$
+  \begin{tabular}{cc}
+    {\small resistant samples} & {\small susceptible samples} \\ 
+    \includegraphics[width=.28\textwidth]{\figCMR/{network_oaks_resistant_stability_0.995}.pdf}
+  & \includegraphics[width=.28\textwidth]{\figCMR/{network_oaks_susceptible_stability_0.995}.pdf} \\
+   {\small samples from both origins} & {\small regression coef. for orientation} \\
+    \includegraphics[width=.28\textwidth]{\figCMR/{network_oaks_both_stability_0.995}.pdf}
+  &   \includegraphics[width=.28\textwidth]{\figCMR/mildew_stat_desc} \\     
+  \end{tabular}
+  $$
+}
+
+%====================================================================
+\section{Conclusion}
+%====================================================================
+\frame{\frametitle{Conclusion \& Future works} 
+
+  \paragraph{Summary:}
+  \begin{itemize}
+   \item Graphical models: a probabilistic framework for network inference
+   \item PLN: a flexible model for multivariate count data analysis
+   \item PLN-network: builds on developments for network inference in GGM
+   \item R package available at \textcolor{blue}{\url{https://github.com/jchiquet/PLNmodels}}  
+  \end{itemize}
+  
+  \pause \bigskip \bigskip
+  \paragraph{On-going work:}
+  \begin{itemize}
+   \item Model selection: still delicate
+   \item Alternative graphical models (tree-shaped)
+   \item Looking for missing actors \refer{RAR18}
+   \item ...
+  \end{itemize}
+
+
+
+}
+
+%====================================================================
+\backupbegin
+%====================================================================
+
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References}
+  {%\footnotesize
+   \tiny
+   \bibliography{/home/robin/Biblio/BibGene}
+%    \bibliographystyle{/home/robin/LATEX/Biblio/astats}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+\appendix 
+\section*{Appendix}
+
+%====================================================================
+\frame{\frametitle{Network inference: some strategies} 
+
+  \bigskip
+  \paragraph{Typical setting.} 
+  $$
+  \{Y_i\}_i \text{ iid}, \quad Y_i \sim p_G 
+  \qquad \text{e.g. } p_G = \Ncal_m\left(0, \Omega^{-1}_G\right)
+  $$
+  
+  \paragraph{First idea.}
+  $$
+  \widehat{G} = \arg\max_{G \in \Gcal} \; \log p_G(Y)
+  $$
+  \ra combinatorial issue: $|\Gcal| = 2^{m(m-1)/2}$.
+  
+  \bigskip\bigskip
+  \paragraph{Some strategies.}
+  \begin{enumerate}
+   \item Exhaustive / stochastic \refer{NPK11} / heuristic search over $\Gcal$ \\ ~
+   \item Regularization based on a sparsity assumption for $G$ (\refer{MeB06,FHT08}: Gaussian)
+   $$
+  \widehat{G} = \arg\max_G \; \log p_G(Y) - \lambda \|\Omega_G\|_1
+   $$ \\~
+   \item Averaging over a subset $\Tcal$ of graphs (e.g. spanning trees \refer{Cha82,MeJ06,Kir07})
+   $$
+   p(Y) = \sum_{T \in \Tcal} \pi_T p_T(Y)
+   $$
+  \end{enumerate}
+  }
+
+%====================================================================
+\backupend
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

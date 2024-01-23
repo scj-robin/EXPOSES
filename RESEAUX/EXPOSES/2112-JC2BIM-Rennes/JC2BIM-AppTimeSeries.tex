@@ -1,0 +1,131 @@
+%==================================================================
+\subsection*{Temporal data}
+%==================================================================
+
+%==================================================================
+\frame{\frametitle{Temporal data} 
+
+  \paragraph{Data.} $Y_{tj} =$ expression of gene $j$ at time $t$
+  $$
+  Y_t = (Y_{t1}, \dots, Y_{tp}) = \text{ abundance vector at time $t$}
+  $$
+  \ra \emphase{Same population} observed along time
+  
+  \bigskip \bigskip \pause
+  \paragraph{A general model.} Markov assumption:
+  $$
+  p(Y) = p(Y_1) p(Y_2 \mid Y_1) \dots p(Y_n \mid Y_{n-1}) 
+  $$
+  that is
+  $$
+  \renewcommand{\nodesize}{2em}
+  \input{\figeco/MarkovChain}
+  \renewcommand{\nodesize}{\commonnodesize}
+  $$
+  \ra Obviously oriented \\
+  \ra Does not say much about gene interactions
+  
+}
+
+%==================================================================
+\frame{\frametitle{A nice case: Dynamic 'Bayesian' networks (DBN)}
+
+  \paragraph{Temporal data:} $A_t =$ expression of gene $A$ at time $t$
+  
+  \bigskip
+  \begin{tabular}{p{.48\textwidth}p{.48\textwidth}}
+  \paragraph{Usual representation:} not a DAG &
+  \paragraph{Genuine graphical model:} a DAG: \\
+  $$
+  \renewcommand{\nodesize}{2em}
+  \input{\figeco/DBN4nodes-collapsed}
+  \renewcommand{\nodesize}{\commonnodesize}
+  $$
+  &
+  $$
+  \renewcommand{\nodesize}{2em}
+  \input{\figeco/DBN4nodes}
+  \renewcommand{\nodesize}{\commonnodesize}
+  $$
+  \end{tabular}
+
+}
+
+%==================================================================
+\frame{\frametitle{Inference}
+
+  \begin{tabular}{p{.48\textwidth}p{.48\textwidth}}
+  \paragraph{Multivariate Markov model.} &
+  \paragraph{Network to be inferred.}  \\ 
+%   $$
+%   \renewcommand{\nodesize}{2em}
+%   \input{\figeco/DBN4nodes}
+%   \renewcommand{\nodesize}{\commonnodesize}
+%   $$
+%   &
+%   $$
+%   \renewcommand{\nodesize}{2em}
+%   \input{\figeco/DBN4nodes-collapsed}
+%   \renewcommand{\nodesize}{\commonnodesize}
+%   $$
+  \begin{tabular}{c} \includegraphics[trim={175 10 5 5}, scale=.9, clip]{\figeco/SWA17-Nature-Fig1} \end{tabular}
+  &
+  \begin{tabular}{c} \includegraphics[trim={8 60 180 3}, scale=.9, clip]{\figeco/SWA17-Nature-Fig1} \end{tabular} \\
+  Homogeneous along time &  (from \refer{SWA17})
+  \end{tabular}
+  
+  \bigskip \bigskip \pause
+  \begin{itemize}
+  \item Simpler reconstruction problem: Find the parents of each gene $A$, $B$, ... \emphase{independently}
+  \item \emphase{\sl Sparsity} assumption: Each gene has only few parents
+  \end{itemize}
+
+}
+
+%==================================================================
+\frame{\frametitle{A regression problem}
+
+  \paragraph{A variable selection problem.} To find the parents of gene $k$, write for each time $t$:
+  $$
+  Y_{t, k} = \sum_j \beta_{jk} Y_{t-1, j} + E_{t, k}
+  $$
+  and select few $\beta_{jk} \neq 0$ (see e.g. \refer{LBD10})
+  
+  \bigskip \bigskip \pause
+  \paragraph{Extensions.} 
+  \begin{itemize}
+   \item Presence-absence: logistic regression
+   \item Count data: Poisson regression
+   \item Other types: generalized linear model (glm)
+   \item \pause Most importantly: include covariates
+   $$
+   Y_{t, k} = \sum_j \beta_{jk} Y_{t-1, j} \; \emphase{+ \sum_h \gamma_{hk} x_{t, h}}  + E_{t, k}
+   $$
+   where $(x_{t, h}) =$ set of covariates at time $t$.
+  \end{itemize}
+ 
+}
+
+%==================================================================
+\frame{\frametitle{Variable selection}
+
+  \paragraph{Variable selection:} an old problem, many (many) strategies.
+
+  \bigskip \bigskip \pause
+  \paragraph{Inducing sparsity with a penalty.} To get sparse vectors of regression coefficients $\beta_k = (\beta_{jk})_j$, mimimize
+  \begin{align*}
+    \sum_t \left(Y_{t,k} - \sum_j \beta_{jk} Y_{t-1,j}\right)^2 & + \emphase{\lambda} \sum_{j \neq k} |\beta_{jk}| 
+    & & (\text{one gene}) \\
+    \text{or} \quad 
+    \sum_k \sum_t \left(Y_{t,k} - \sum_j \beta_{jk} Y_{t-1,j}\right)^2 & + \emphase{\lambda} \sum_k \sum_{j \neq k} |\beta_{jk}|
+     & & (\text{all genes}) 
+  \end{align*}
+  
+  \bigskip
+  'lasso' regression \refer{Tib96,BJM12} = convex problem \\
+  \ra Fast solution ({\tt glmnet} R package)
+  
+  \bigskip \bigskip 
+  See \refer{SWA17} for an example with presence-absence data
+}
+

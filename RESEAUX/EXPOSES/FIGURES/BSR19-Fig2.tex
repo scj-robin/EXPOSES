@@ -1,0 +1,92 @@
+\begin{tikzpicture}[-,>=latex,thick,auto,scale=0.6,
+main node/.style={circle,draw=white,inner sep=0.1pt,minimum size=6pt,fill=black},
+var nodes/.style={circle,white,fill=black!50,inner sep=0.1pt,minimum size=10pt},
+R nodes/.style={circle,black!50,draw=black!50,fill=white,inner sep=0.1pt,minimum size=12pt}]
+
+
+
+%\filldraw[fill=white,draw=black!20] (-0.05,0.05) rectangle (10.05,-10.05);
+
+\draw[black!40] (-0.05,0.05)--(-0.05,-10.05);
+\draw[black!40,dashed] (-0.05,-10.05)--(-0.05,-10.65);
+
+\draw[black!40] (-0.05,0.05)--(10.05,0.05);
+\draw[black!40,dashed] (10.05,0.05)--(10.65,0.05);
+
+\node[R nodes] at (0.5,0.5) {\raisebox{1.5pt}{\small $\Delta$}};
+
+\node[var nodes] at (1.5,0.5) {\small $1$};
+\node[black!50] at (2.6,0.5) {$\dots$};
+\node[var nodes] at (3.5,0.5) {\small $n$};
+\node[black!50] at (2.5,1) {\rotatebox{90}{$\left.\vphantom{\rule{2pt}{26pt}}\right]$}};
+\node[black!50] at (2.5,1.5) {$t=1$};
+
+\node[var nodes] at (4.5,0.5) {\small $1$};
+\node[black!50] at (5.6,0.5) {$\dots$};
+\node[var nodes] at (6.5,0.5) {\small $n$};
+\node[black!50] at (5.5,1) {\rotatebox{90}{$\left.\vphantom{\rule{2pt}{26pt}}\right]$}};
+\node[black!50] at (5.5,1.5) {$t=2$};
+
+\node[var nodes] at (7.5,0.5) {\small $1$};
+\node[black!50] at (8.6,0.5) {$\dots$};
+\node[var nodes] at (9.5,0.5) {\small $n$};
+\node[black!50] at (8.5,1) {\rotatebox{90}{$\left.\vphantom{\rule{2pt}{26pt}}\right]$}};
+\node[black!50] at (8.5,1.5) {$t=3$};
+
+
+\node[R nodes] at (-0.5,-0.5) {\rotatebox{90}{\raisebox{1.5pt}{\small $\Delta$}}};
+
+\node[var nodes] at (-0.5,-1.5) {\rotatebox{90}{\small $1$}};
+\node[black!50] at (-0.5,-2.5) {\rotatebox{90}{$\dots$}};
+\node[var nodes] at (-0.5,-3.5) {\rotatebox{90}{\small $n$}};
+\node[black!50] at (-1.1,-2.5) {$\left.\vphantom{\rule{2pt}{26pt}}\right[$};
+\node[black!50] at (-1.6,-2.5) {\rotatebox{90}{$t=1$}};
+
+\node[var nodes] at (-0.5,-4.5) {\rotatebox{90}{\small $1$}};
+\node[black!50] at (-0.5,-5.5) {\rotatebox{90}{$\dots$}};
+\node[var nodes] at (-0.5,-6.5) {\rotatebox{90}{\small $n$}};
+\node[black!50] at (-1.1,-5.5) {$\left.\vphantom{\rule{2pt}{26pt}}\right[$};
+\node[black!50] at (-1.6,-5.5) {\rotatebox{90}{$t=2$}};
+
+\node[var nodes] at (-0.5,-7.5) {\rotatebox{90}{\small $1$}};
+\node[black!50] at (-0.5,-8.5) {\rotatebox{90}{$\dots$}};
+\node[var nodes] at (-0.5,-9.5) {\rotatebox{90}{\small $n$}};
+\node[black!50] at (-1.1,-8.5) {$\left.\vphantom{\rule{2pt}{26pt}}\right[$};
+\node[black!50] at (-1.6,-8.5) {\rotatebox{90}{$t=3$}};
+
+\node[black!20] at (0.5,-0.5) {$0$};
+\node[black!20] at (5.5,-0.5) {$0$};
+\node[black!20] at (8.5,-0.5) {$0$};
+\node[black!20] at (0.5,-2.5) {$0$};
+\node[black!20] at (2.5,-2.5) {$0$};
+\node[black!20] at (8.5,-2.5) {$0$};
+\node[black!20] at (0.5,-5.5) {$0$};
+\node[black!20] at (2.5,-5.5) {$0$};
+\node[black!20] at (5.5,-5.5) {$0$};
+\node[black!20] at (0.5,-8.5) {$0$};
+\node[black!20] at (2.5,-8.5) {$0$};
+\node[black!20] at (5.5,-8.5) {$0$};
+\node[black!20] at (8.5,-8.5) {$0$};
+
+
+\draw[black!20,dashed] (1,0)--(1,-10.65);
+\draw[black!20,dashed] (4,0)--(4,-10.65);
+\draw[black!20,dashed] (7,0)--(7,-10.65);
+\draw[black!20,dashed] (10,0)--(10,-10.65);
+
+\draw[black!20,dashed] (0,-1)--(10.65,-1);
+\draw[black!20,dashed] (0,-4)--(10.65,-4);
+\draw[black!20,dashed] (0,-7)--(10.65,-7);
+\draw[black!20,dashed] (0,-10)--(10.65,-10);
+
+%\filldraw[fill=black!60,draw=white] (0,0) rectangle (1,-1);
+\fill[fill=black!60,draw=white] (1,0) rectangle (4,-1);
+\filldraw[fill=nice_red!60, draw=white] (4,-1) rectangle (7,-4);
+\filldraw[fill=nice_red!60, draw=white] (7,-4) rectangle (10,-7);
+
+%\node[white] at (0.5,-0.5) {$1$};
+\node[white] at (2.5,-0.5) {$W^0$};
+\node[white] at (5.5,-2.5) {$W^1$};
+\node[white] at (8.5,-5.5) {$W^2$};
+
+\end{tikzpicture}

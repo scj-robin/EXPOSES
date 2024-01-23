@@ -1,0 +1,78 @@
+%====================================================================
+\frame{\frametitle{Network topology} 
+
+  \paragraph{Fact:} homogeneous models (e.g. Erd\"os-Rényi) do not fit observed networks
+  \begin{itemize}
+  \item imbalanced degree distribution
+  \item high clustering (many triangles)
+  \item ...
+  \end{itemize}
+  
+  \pause\bigskip\bigskip
+  \paragraph{Exponential random graph models (ERGM):} \refer{RPK07}
+  $$
+  p(Y) \propto \exp\left(\sum_k \theta_k S_k(Y) \right)
+  $$
+  $S_1 =$ nb edges, $S_2=$ nb of V, $S_3=$ nb of triangles, ...
+  
+  \bigskip
+  \begin{itemize}
+   \item Widely spread in social sciences (and ecology)
+   \item Available tools: {\tt statnet}, {\tt ergm} R packages, (see \url{www.statnet.org})
+   \item Many practical and theoretical issues
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{\frametitle{Network topology: latent space models} 
+
+  \paragraph{General setting.} Encode heterogeneity in a latent layer
+  \begin{align*}
+    \{Z_i\}_i & \text{ iid}: & Z_i & \sim \pi \quad \text{over } \Zcal \\
+    \{Y_{ij}\}_{i, j} & \text{ independent} \gv Z: & Y_{ij} \gv Z_i, Z_j & \sim f(\cdot; \gamma_{Z_i, Z_j})
+  \end{align*}
+  
+  \pause\bigskip
+  \paragraph{Many avatars \refer{MaR14}.} 
+  \begin{itemize}
+   \item Continuous state space \refer{HRH02}: $\Zcal = \Rbb^d$
+   $$
+   \gamma_{Z_i, Z_j} = \text{ decreasing function of } d(Z_i, Z_j)
+   $$ 
+   \item Stochastic block-model (SBM) \refer{HoL79,NoS01}: $\Zcal =  \llbracket 1, K\rrbracket$
+   $$
+   \gamma = K \times K \text{ matrix}
+   $$
+   \item $W$-graph (graphon) \refer{LoS06,DiJ08}: $\Zcal = [0, 1]$
+   $$
+   \pi = \Ucal_\Zcal, \qquad \qquad \gamma: [0, 1]^2 \mapsto [0, 1]
+   $$
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Network topology: intractable likelihood} 
+
+  \paragraph{Incomplete data model.}
+  $$
+  p(Y) = \int_{\Zcal^m} p(Y, z) \d z
+  \qquad \text{or} \qquad
+  p(Y) = \sum_{z \in \Zcal^m} p(Y, z) \d z
+  $$
+  \ra intractable for $m$ larger than few tens
+  
+  \pause\bigskip\bigskip
+  \paragraph{EM-like algorithms} require to compute
+  $$
+  p(Z \gv Y)
+  $$
+  but each pair $(Z_i, Z_j)$ is dependent conditionally on $Y_{ij}$ (moralization).
+  
+  \bigskip
+  \begin{itemize}
+   \item Monte Carlo (Gibbs) sampling: times consuming
+   \item Composite likelihood \refer{AmM12}
+   \item Variational approximations
+  \end{itemize}
+  }
+  

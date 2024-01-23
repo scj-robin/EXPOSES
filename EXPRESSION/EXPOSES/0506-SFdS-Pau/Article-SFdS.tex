@@ -1,0 +1,192 @@
+\documentclass[12pt]{article}
+%
+%
+% Retirez le caractere "%" au debut de la ligne ci--dessous si votre
+% editeur de texte utilise des caracteres accentues 
+\usepackage[latin1]{inputenc}
+\usepackage{../../../../../Latex/astats-fr}
+%
+% Retirez le caractere "%" au debut des lignes ci--dessous si vous
+% utiisez les symboles et macros de l'AMS
+% \usepackage{amsmath}
+% \usepackage{amsfonts}
+%
+%
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{21cm}
+\setlength{\hoffset}{-1.4cm}
+%
+%
+\begin{document}
+%
+\begin{center}
+  {\Large 
+    {\sc
+      Une approche semi-paramétrique pour les modèles de mélange avec une 
+      composante connue : Application au FDR local
+      }
+    }
+  
+  \bigskip
+  Stéphane Robin$^1$ \& Avner Bar-Hen$^2$ \& Jean-Jacques Daudin$^2$ \&
+  Laurent Pierre$^3$  
+  
+  \medskip
+  {\it
+    
+    ($^1$) INA-PG / INRA ({\tt [robin][daudin]@inapg.inra.fr})\\
+    ($^2$) Univ. Marseille III, Saint-Jérôme ({\tt avner@bar-hen.net})\\
+    ($^3$) Univ. Paris X ({\tt Laurent.PIERRE@u-paris10.fr}) \\
+    
+    }
+\end{center}
+
+\bigskip
+\noindent
+Un problème récurrent dans l'analyse des données issues des
+technologies de biologie moléculaire à ``haut débit'' (transcriptome,
+protéome, {\it etc.}) est le problème des tests multiples (\cite
+{DSB03}).  Ainsi la recherche de gènes dont le niveau d'expression
+varie entre différentes conditions ou traitements conduit à effectuer
+simultanément un grand nombre de tests, typiquement $n=10\;000$. Il
+est alors essentiel de contrôler le nombre de faux positifs afin
+d'éviter de mener par la suite des expériences coûteuses et inutiles.
+
+\medskip
+\noindent{MODÈLE DE MÉLANGE} \\
+On peut considérer ce problème dans le cadre d'un modèle de mélange en
+profitant du fait que la distribution de la statistique de test (et de
+la probabilité critique) est connue sous $H_0$. Nous aboutissons ainsi
+à un modèle de la forme
+$$
+g(x) = af(x) + (1 - a)\phi(x)
+$$
+où $a$ est la proportion inconnue d'hypothèses $H_1$, $f$
+est une densité quelconque et $\phi$ est une densité parfaitement
+spécifiée. On retrouve ici un problème de contamination d'une
+distribution $\phi$ par une loi inconnue $f$.
+
+\medskip
+\noindent{ESTIMATION DE $f$} \\
+Nous proposons d'estimer la densité $f$ par un estimateur à noyaux
+pondérés, les poids étant estimés de façon adaptative.  En notant
+$z_i$ la variable valant 1 pour les observations $x_i$ issues de $f$
+et 0 pour les autres, l'estimateur à noyau usuel de $f$ s'écrit
+\begin{equation}\label{Noyau}
+\widehat{f}(y) = \sum_i z_i k_i(y) \left/ \sum_i z_i \right.
+\end{equation}
+où $k_i(y) = k[(y-x_i)/h]/h$ est la fonction noyau $k$ centrée en
+l'observation $x_i$ et de largeur de fenêtre $h$. Les $z_i$ n'étant
+pas observés, nous proposons de les remplacer par leur espérance
+conditionnellement à l'observation $x_i$. Cette espérance est la
+probabilité {\it a posteriori} d'appartenance à $H_1$ $ \tau_i = a
+f(x_i) \left/ g(x_i) \right.$ Nous montrons que les $\tau_i$ doivent
+alors vérifier une relation de la forme
+$$
+\tau_j = \psi_j(\tau_1, \dots, \tau_n) = \frac{\sum_i \tau_i
+  b_{ij}}{\sum_i \tau_i b_{ij} + 1}
+$$
+où les $b_{ij}$ sont des coefficients positifs.  Nous montrons
+ensuite que la fonction $\psi$ admet un unique point fixe et proposons
+un algorithme convergent vers ce point, pour une valeur de $a$ fixée.
+
+La proportion $a$ (et la largeur de la fenêtre du noyau $k$) est
+estimée par une procédure de validation croisée.
+
+\medskip
+\noindent{ESTIMATION DU $FDR$ ET DU $FDR$ LOCAL} \\
+Le $FDR$ a été défini par \cite{BeH95} comme l'espérance de la
+proportion de faux positifs quand $i$ hypothèses parmi $n$ sont
+rejetées. Les probabilités {\it a posteriori} $\tau_i$ fournissent un
+estimateur naturel du $FDR$ local (\cite{ETS01}, \cite{ABD04}) qui
+rend compte du risque de faux positif pour chaque hypothèse testée.
+Elles permettent également de défnir un estimateur du $FDR$.
+
+Nous présentons des applications de cette procédure à des données
+simulées ainsi qu'à des données issues d'expériences de transcriptome.
+Nous observons que la transformation probit sur les probabilités
+critiques proposée par \cite{Efr04} est particulièrement efficace pour
+distinguer les densités $f$ et $\phi$.
+
+\bibliographystyle{../../../../../Latex/astats-fr}
+\bibliography{../../../../AST}
+
+
+\newpage
+\begin{center}
+  {\Large 
+    {\sc A semi-parametric approach for mixture models with one known
+      component: Application to local FDR}
+    }
+\end{center}
+ 
+\bigskip
+\noindent
+Multiple testing problems arise in many statistical analyses of data
+provided by high-throughput molecular biology technologies such as
+transcriptome, proteome, {\it etc.} (\cite {DSB03}). For example, the
+detection of genes having different expression levels across several
+conditions or treatments implies a large number of simultaneous tests,
+$n=10\;000$ typically.  The control of the number of false positives
+is then crucial to avoid expensive and useless further experiments.
+
+\medskip
+\noindent{MIXTURE MODEL} \\
+This problem can restated in a mixture model context, using the fact
+that the distribution of the test statistic (and of the $p$-value) is
+known under $H_0$. We obtain the following model
+$$
+g(x) = af(x) + (1 - a)\phi(x)
+$$
+where $a$ is the unknown proportion of $H_1$ hypotheses, $f$ is any
+density and $\phi$ a completely specified density. A connection can be
+made with the contamination of the distribution $\phi$ by some unknown
+distribution $f$.
+
+\medskip
+\noindent{ESTIMATION OF $f$} \\
+We propose to use a kernel-based estimate of $f$ with adaptively
+estimated weights. Denoting $z_i$ the binary variable which equals
+when the observation $x_i$ comes from $f$, and 0 otherwise, the
+standard estimate of $f$ is
+\begin{equation}\label{Noyau}
+  \widehat{f}(y) = \sum_i z_i k_i(y) \left/ \sum_i z_i \right.
+\end{equation}
+where $k_i(y) = k[(y-x_i)/h]/h$ is the kernel density $k$ centered at
+the observed value $x_i$ with window width $h$.  Since the $z_i$'s are
+not observed, we propose to replace them by their expectations
+conditional to the $x_i$'s. This expectation is the posterior
+probability of $H_1$ $\tau_i = a f(x_i) \left/ g(x_i) \right.$. We
+prove that the $\tau_i$ must satisfy a relation of the following form:
+$$
+\tau_j = \psi_j(\tau_1, \dots, \tau_n) = \frac{\sum_i \tau_i
+  b_{ij}}{\sum_i \tau_i b_{ij} + 1}
+$$
+where the $b_{ij}$'s are positive coefficients. We prove that the
+function $\psi$ admits a unique fix point and propose an algorithm that
+converges toward it, for a given value of $a$.
+
+The proportion $a$ (and the window width of the kernel $k$) are
+estimated using a cross-validation procedure.
+
+\medskip
+\noindent{$FDR$ AND LOCAL $FDR$ ESTIMATION} \\
+$FDR$ has been defined by \cite{BeH95} as the expectation of the
+proportion of false positive when $i$ hypotheses are rejected, among
+$n$.  The posterior probabilities $\tau_i$ are natural estimates of
+the local $FDR$ (\cite{ETS01}, \cite{ABD04}) which reveals the false
+positivity risk fir each hypothesis tested. An estimate of the $FDR$
+can also be derived from them.
+
+We present several applications of this procedure to both simulated
+and transcriptome data. We observe that the probit transform proposed
+by \cite{Efr04} is very efficient to distinguish between the
+distributions $f$ and $\phi$.
+
+\bibliographystyle{../../../../../Latex/astats}
+\bibliography{../../../../AST}
+
+
+\end{document}
+
+

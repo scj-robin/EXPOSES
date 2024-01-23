@@ -1,0 +1,197 @@
+%==================================================================
+\subsection*{Latent GGM}
+\frame{\frametitle{Back to ecology}
+
+}
+
+%==================================================================
+\frame{\frametitle{Poisson log-normal model}
+
+  \paragraph{Data:} $n$ independent sites (no spatial structure), $p$ species, 
+  $$
+  Y_{ij} = \text{ abundance of species $j$ in site $i$}
+  $$
+  
+  \bigskip \pause
+  \paragraph{Poisson log-normal (PLN) model \refer{AiH89}:} 
+  \begin{itemize}
+   \item For each site, draw independently
+   $$
+   Z_i \sim \Ncal_p(0, \Omega^{-1})
+   $$
+   \item \pause For each species in each site, draw independently (given $Z$)
+   $$
+   Y_{ij} \sim \Pcal(\exp(\mu_j + Z_{ij}))
+   $$
+  \end{itemize} \pause
+  summarized as
+  $$
+  \{Y_i\} \text{ iid} \sim PLN(\mu, \Omega^{-1})
+  $$
+
+  \bigskip \pause
+  \paragraph{Interpretation.}
+  \begin{itemize}
+%   \item PLN is a mixed model
+  \item $\mu_j =$ mean (log-)abundance of species $j$
+  \item $\Omega = $ dependency structure (encoded in the latent layer)
+  \end{itemize}
+}
+
+%==================================================================
+\frame{\frametitle{PLNnetworks}
+
+  \paragraph{PLN network model.} Same model as PLN + sparsity assumption:
+  $$
+  \{Y_i\} \text{ iid} \sim PLN(\mu, \Omega)
+  \qquad \qquad + \emphase{\Omega \text{ sparse}}
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Inference algorithm.} Variational EM + sparsity inducing norm \refer{CMR18,CMR19}:
+  $$
+  \max_{\mu, \Omega} \widetilde{\log p}(Y; \mu, \Omega) - \lambda \sum_{j < k} |\omega_{jk}|
+  $$
+  \ra Alternate convex problems \\
+  \ra Fast solution ({\tt PLNmodels} R package)
+  
+  \bigskip
+  \begin{itemize}
+   \item Resampling (StARS \refer{LRW10}) is highly recommended for robustness
+  \end{itemize}
+}
+
+%==================================================================
+\frame{\frametitle{Modeling limitation}
+
+  \paragraph{All latent (GGM) models} infer the dependency struture of the latent $Z$, not of the observed abundances $Y$
+  
+  \bigskip \bigskip 
+  \renewcommand{\nodesize}{2em}
+  \begin{overprint}
+    \onslide<2>
+    $$
+    \begin{array}{ccc}
+    p(Z, Y) & & p(Y) \\ ~\\
+    \input{\fignet/CMR18b-Fig1c}
+    & \qquad \qquad &
+    \input{\fignet/CMR18b-Fig1d}
+    \end{array}
+    $$
+    \onslide<3>
+    $$
+    \begin{array}{ccc}
+    p(Z, Y) & & p(Y) \\ ~\\
+    \input{\fignet/CMR18b-Fig1a}
+    & \qquad \qquad &
+    \input{\fignet/CMR18b-Fig1b}
+    \end{array}
+    $$
+  \end{overprint}
+  \renewcommand{\nodesize}{\commonnodesize}
+}
+
+%==================================================================
+\frame{\frametitle{Illustration}
+
+  \paragraph{Barents fish dataset:} $n = 89$ sites, $p = 30$ species
+  
+  \bigskip
+  \begin{tabular}{p{.45\textwidth}p{.45\textwidth}}
+    \begin{tabular}{c}
+      \vspace{.04\textheight}
+      Regularization path ($\lambda$) \\
+      \includegraphics[width=.45\textwidth, height=.45\textheight]{\figbarents/BarentsFish_Gnull_criteria}
+    \end{tabular}
+    &
+%     \hspace{-.1\textwidth}
+    \begin{overprint}
+      \onslide<2>
+        \begin{tabular}{c}
+          Covariance ($\widehat{\Sigma}$) \\ 
+          \includegraphics[width=.4\textwidth]{\figbarents/BarentsFish_Gnull_sigma}
+        \end{tabular}
+      \onslide<3>
+        \begin{tabular}{c}
+          Precision ($\widehat{\Omega}$) \\ 
+          \includegraphics[width=.4\textwidth]{\figbarents/BarentsFish_Gnull_omega}
+        \end{tabular}
+      \onslide<4>
+        \begin{tabular}{c}
+          Network ($\widehat{G}$) \\ 
+          \includegraphics[width=.4\textwidth]{\figbarents/BarentsFish_Gnull_network}
+        \end{tabular}
+    \end{overprint}
+  \end{tabular}
+
+  {\tt PLNnetwork} R package  \refer{CMR19}: \qquad
+  {\tt PLNnetwork(Y $\sim$  1)}
+}
+
+%==================================================================
+\subsection*{Accounting for covariates}
+\frame{\frametitle{Accounting for covariates}
+
+  \paragraph{Aim of network inference:} determine which species are 'in direct interaction' \\
+  \ra Avoid 'spurious edges'
+  
+  \hspace{-.05\textwidth}
+  \begin{tabular}{p{.45\textwidth}p{.45\textwidth}}
+    \begin{tabular}{p{.4\textwidth}}
+      \onslide+<2->{
+        \paragraph{Environmental variations} may jointly affect species, which do not actually interact \\
+        }
+      \onslide+<4->{
+        \bigskip \bigskip 
+        \paragraph{Introducing covariates.} ~ \\
+        $x_i =$ vector of covariates for site $i$ \\
+        e.g. $x_i = (\text{temperature}, \text{altitude}, ...)$
+        }
+    \end{tabular}
+    &
+%     \hspace{-.1\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<3->{
+        \includegraphics[width=.4\textwidth]{\figbarents/BarentsFish_Sigmanull_Sigmafull}
+        }
+    \end{tabular}
+  \end{tabular}
+  
+  \onslide+<4->{
+    Add a regression term in the PLN model:
+    $$
+    Y_{ij} \mid Z_{ij} \sim \Pcal(\exp(\emphase{x_i^\intercal \beta_j} + Z_{ij}))
+    $$
+    $\beta_j =$ vector of environmental effects on species $j$
+    }
+
+}
+
+%====================================================================
+\frame{\frametitle{Barents fish} 
+
+  \begin{center}
+  \begin{tabular}{lccc}
+    & no covariate & \textcolor{blue}{temp. \& depth} & \textcolor{red}{all covariates} \\
+    \hline
+    \rotatebox{90}{$\qquad\quad\lambda=.20$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_full60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_full60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_full60edges} 
+    \vspace{-0.05\textheight} \\ \hline
+    %
+    \rotatebox{90}{$\qquad\quad\lambda=.28$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_sel60edges} & \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_sel60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_sel60edges} 
+    \vspace{-0.05\textheight} \\ \hline
+    %
+    \rotatebox{90}{$\qquad\quad\lambda=.84$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_null60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_null60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_density} 
+%     \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_null60edges}  
+  \end{tabular}
+  \end{center}
+
+}
+

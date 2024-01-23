@@ -1,0 +1,360 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage{amsfonts,amsmath,amssymb,epsfig,epsf,psfrag}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+\usepackage[latin1]{inputenc}
+%\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{xspace}
+\usepackage{color}
+\usepackage{url}
+\RequirePackage{natbib}
+
+% Margins
+\textwidth  18cm 
+\textheight 24cm
+\topmargin -2 cm
+\oddsidemargin -1 cm
+\evensidemargin -10 cm
+
+% Commands
+\newtheorem{theorem}{Theorem}
+\newcommand{\proofbegin}{\noindent{\sl Proof.}~}
+\newcommand{\proofend}{$\blacksquare$\bigskip}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+
+% Symboles
+\newcommand{\dd}{\text{d}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Espt}{\widetilde{\Esp}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Mcal}{\mathcal{M}}
+\renewcommand{\Pr}{{\mathbb{P}}}
+\newcommand{\Prt}{\widetilde{\Pr}}
+\newcommand{\pt}{\widetilde{p}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\ra}{$\rightarrow$\xspace}
+
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------
+\begin{document}
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------
+
+\title{Two examples of Bayesian inference : exact and approximate}
+
+\author{}
+
+\date{29/01/2015}
+
+\maketitle
+
+\abstract{\small 
+Statistical models are getting more and complex and involve ever more intricate dependency structures. As a consequence, the derivation of the statistical properties of the estimates is getting more and more difficult. Bayesian inference can be a way to circumvent this difficulty as it aims at providing the posterior distribution of the parameters, that is their conditional distribution given the data. In some cases, this distribution can be computed in an exact manner but, in more complex cases, either sampling (Monte-Carlo) techniques or approximations must be considered.
+
+We will first present a segmentation problem. In this problem, the Bayesian inference requires to sum up over the set of all possible segmentations, which grows exponentially with the size of the data. We will prove that some nice algebraic properties allow to determine the posterior distribution of the change points in an exact manner.
+
+We will then introduce a popular model for social network named the stochastic block model (SBM), which consists in a mixture model for random graph. We will show that the conditional distribution of the hidden variables cannot be determined in an exact manner and describe the variational Bayes approach that is often used to perform approximate Bayesian inference.}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+%----------------------------------------------------------------------
+\newpage
+\section{A reminder on Bayesian inference}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\subsection{Bayesian / frequentist}
+
+\paragraph{Frequentist setting.}
+\begin{itemize}
+ \item A fixed parameter $\theta$
+ \item A model for the observed data $Y$: $p_\theta(Y)$ \ra 'likelihood'
+ \item Aim: estimate $\theta$ with $\widehat{\theta} = f(Y)$ \\
+ + provide some insight about the distribution of $\widehat{\theta}$.
+\end{itemize}
+
+\paragraph{Bayesian setting.}
+\begin{itemize}
+ \item A random parameter $\theta \sim p(\theta)$ \ra 'prior distribution'
+ \item A conditional model for the observed data $Y|\theta \sim p(Y|\theta)$ \ra 'likelihood'
+ \item Aim: compute the conditional distribution of $\theta$ given $Y$:
+ $$
+ p(\theta|Y) = \frac{p(\theta) p(Y|\theta)}{p(Y)} = \frac{p(\theta) p(Y|\theta)}{\int p(Y|\theta) p(\theta) \dd \theta}
+ $$
+ \ra 'posterior distribution'.
+\end{itemize}
+
+%----------------------------------------------------------------------
+\subsection{Some issues in Bayesian inference}
+
+\paragraph{A simple case: Beta/binomial.}
+\begin{itemize}
+ \item $\theta = \pi$: success probability: 
+ $$
+ \pi \sim \text{B}(a, b) 
+ \qquad \Rightarrow \qquad
+ p(\pi) = \pi^{a-1} (1-\pi)^{b-1} / \text{B}(a, b).
+ $$
+ \item $Y =$ number of successes among $n$ trials:
+ $$
+ Y | \pi \sim \mathcal{B}(n, \pi)
+ \qquad \Rightarrow \qquad
+ p(Y|\pi) = \binom{Y}{n} \pi^Y (1-\pi)^{n-Y}.
+ $$
+ \item Posterior distribution pf $\pi$:
+ $$
+ p(\pi|Y) \sim \text{B}(a+Y, b+n-Y).
+ $$
+\end{itemize}
+
+\subsubsection{Mixed case}
+Suppose $\theta = (\tau, \gamma)$ where $\tau$ stands for the discrete part and $\gamma$ for the continuous part, we get
+$$
+p(\theta|Y) = \frac{p(\theta) p(Y|\theta)}{\int \sum_t p(Y|\gamma, \tau) p(\tau) p(\gamma) \dd \gamma}
+$$
+where the combination of the sum and the integral may be (or seem) intractable: see Section \ref{sec:segment}.
+
+\paragraph{Segmentation model.} 
+Consider $n$ time-points, where $\{1, \dots n\}$ is shattered into $K$ segments delimited by $\tau = (\tau_1, \tau_{K-1})$:
+$$
+I_k = [\tau_{k-1}+1; \tau_k]
+\qquad \text{where} \qquad
+0 =: \tau_0 < \tau_1 < \dots \tau_K := n.
+$$
+The data $Y = (Y_1, \dots, Y_n)$ are independent with distribution depending on the segment:
+$$
+t \in I_k \Rightarrow Y_t \sim p(Y_t| \gamma_k).
+$$
+The model (with fixed $K$) writes
+\begin{eqnarray*}
+  \tau & \sim &  \mathcal{U}_{\Mcal(n, K)} \\
+  (\gamma_1, \dots, \gamma_K) \text{ iid}, \quad \theta_k & \sim & p(\gamma_k) \\
+ (Y_t) \text{ independent } | \theta: \qquad t \in I_k \Rightarrow Y_t & \sim & p(Y_t| \gamma_k).
+\end{eqnarray*}
+where $\Mcal(n, K)$ for the set of all possible segmentation of $n$ points into $K$ segments. 
+
+\subsubsection{Model with latent (unobserved) variables.}
+Hierarchical models (e.g. unsupervised classification) often involve a latent variable $Z$ so the model typically writes
+\begin{eqnarray*}
+ \theta & \sim & p(\theta) \\
+ Z | \theta & \sim & p(Z|\theta) \\
+ Y | Z, \theta & \sim & p(Y|Z, \theta).
+\end{eqnarray*}
+We are typically interested in making inference on both $\theta$ and $Z$:
+$$
+p(\theta, Z|Y) = \frac{p(\theta) p(Z|\theta) p(Y|Z, \theta)}{\int \int p(\theta) p(Z|\theta) p(Y|Z, \theta) \dd Z \dd \theta}
+$$
+where the integral at the denominator is (even more) intractable.
+
+\paragraph{Stochastic block-model (SBM).} 
+Consider $n$ nodes with random edges $Y_{ij}$. Nodes are supposed to belong to $K$ unobserved classes and the model writes
+\begin{eqnarray*}
+  \theta & = & (\pi, \gamma) \\
+  \pi & \sim & \mathcal{D}(a) \\
+  (Z_i) \text{ iid} | \pi: \quad Z_i|\pi & \sim & \Mcal(1; \pi) \\
+  (\gamma_{k\ell}) \text { iid}, \gamma_{k\ell} & \sim & \text{B}(b, c) \\
+  (Y_{ij}) \text{ independent } | (Z_i): \quad Y_{ij}|Z_i, Z_j, \gamma & \sim & \mathcal{B}(\gamma_{Z_i, Z_j})
+\end{eqnarray*}
+
+
+%----------------------------------------------------------------------
+\subsection{3 main strategies}
+
+\begin{enumerate}
+ \item Exact (hard-headed): still compute the posterior exactly using any possible trick; \\
+ \ra Section \ref{sec:segment}
+ \item Stochastic: sample from the posterior to evaluate quantity of interest \\
+ \ra Monte-Carlo Markov chain, Gibbs sampling, particle filtering, sequential Monte-Carlo
+ \item Approximate: try to get a 'good' approximation of the true posterior distribution within a restricted class of manageable distributions \\
+ \ra Section \ref{sec:graph}
+\end{enumerate}
+
+
+%----------------------------------------------------------------------
+\newpage
+\section{Exact Bayesian inference for change-point detection  \label{sec:segment}}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\subsection{Summing over all segmentations: \cite{RLR11}}
+
+Our main issue will be to deal with the sum all possible $\tau$ from $\Mcal(n, K)$ as
+$$
+\text{Card}(\Mcal(n, K)) = \binom{K-1}{n-1}.
+$$
+
+\paragraph{Joint distribution within a segment.}
+Consider a given segment $I$ and denote $Y^I = \{Y_t: t\in I_k\}$. Because of independence, we have
+$$
+p(Y^I|I \in \tau) = \int p(Y^I | I \in \tau, \gamma) p(\gamma) \dd \gamma
+= \int p(\gamma) \prod_{t \in I} p(Y_t | \gamma) \dd \gamma_k := a(Y, I).
+$$
+In the following, we assume that this integral can be computed efficiently for any interval $I$, e.g. thanks to nice algebraic properties (e.g. conjugacy).
+
+%----------------------------------------------------------------------
+\subsubsection{Joint distribution of the whole signal $Y$.}
+We have
+\begin{eqnarray*}
+ p(Y) & = & \sum_\tau p(\tau) p(Y|\tau) \quad = \quad \sum_\tau p(\tau) \prod_k p(Y^{I_k}|I_k \in \tau) \\
+ & = & \binom{K-1}{n-1}^{-1} \sum_\tau \prod_k p(Y^{I_k}|I_k \in \tau) \\
+ & = & \binom{K-1}{n-1}^{-1} \sum_\tau \prod_k a(Y, I_k(\tau))
+\end{eqnarray*}
+
+\paragraph{An algebraic trick.} Consider the $(n+1) \times (n+1)$ matrix $A$ defined as:
+$$
+A(Y) = A = [A_{i, j}]: \qquad
+A_{i, j} = \left\{
+  \begin{array}{rl}
+    a(]i; j], Y) & \text{if } 0 \leq i < j \leq n  \\
+    0 & \text{otherwise}.
+  \end{array}
+  \right.
+$$
+Then
+$$
+ \sum_\tau \prod_k a(Y, I_k(\tau)) = (A^K)_{0, n}.
+$$
+
+%----------------------------------------------------------------------
+\subsubsection{Inference on change points}
+
+A series of quantity of interest can then be computed, such as
+$$
+\Pr\{\tau_k = t^* | Y\} = \left. \sum_{\tau: \tau_k = t^*} p(\tau) p(Y|\tau) \right/ p(Y)
+$$
+where
+\begin{eqnarray*}
+\sum_{\tau: \tau_k = t^*} p(\tau) p(Y|\tau) & = & 
+\binom{K-1}{n-1}^{-1} 
+([A(Y_1^{t^*})]^k)_{0, t^*} 
+\times
+([A(Y_{t^*+1}^{n})]^{K-k})_{0, n-t^*} .
+\end{eqnarray*}
+
+
+%----------------------------------------------------------------------
+\subsection{Illustration: Cleynen \& R. (2014)\nocite{ClR14}}
+
+Exact Bayesian Segmentation: EBS = R package
+
+%----------------------------------------------------------------------
+\newpage
+\section{Approximate Bayesian inference for the stochastic block-model  \label{sec:graph}}
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+\subsection{Graphical model and conditional dependencies.} \cite{Lau96,WaJ08}
+\begin{itemize}
+ \item Oriented graphical models: 
+ $$
+ p(X) = \prod_i p(X_i | X_{pa(i)})
+ $$
+ \item Non-oriented graphical models
+ $$
+ p(X) \propto \prod_{C \in \mathcal{C}} \psi(X_C)
+ $$
+ where $\mathcal{C} =$ set of maximal cliques
+\end{itemize}
+
+\paragraph{Graphical model for SBM (conditional on $\theta$).}
+\begin{itemize}
+ \item Graphical model for $p_\theta(Y, Z) = p_\theta(Z) p_\theta(Y|Z)$
+ \item Graphical model for $p_\theta(Z | Y)$ : moralization.
+\end{itemize}
+
+%----------------------------------------------------------------------
+\subsubsection{Variational inference}
+
+\paragraph{Variational approximation.} For a given  intractable distribution $p$, we look for the best approximation $\pt$ according to some divergence $D$ within a distribution class $\Qcal$ (\cite{Min05}, \cite{Jaa00}):
+$$
+\pt = \arg\min_{q \in \Qcal} D(q||p).
+$$
+Classical case~: 
+\begin{eqnarray*}
+  D(q||p) & = & KL(q||p) \; = \; \Esp_q[\log(q/p)] \\
+  \Qcal & = & \{\text{factorisable distribution}\}
+\end{eqnarray*}
+
+\paragraph{Bayesian setting with latent variables.} We look for the joint conditional 
+$$
+p(\theta, Z|Y),
+$$
+which is intractable, so we look for 
+$$
+\pt(\theta, Z) = \arg\min_{q \in \Qcal} KL[q(\theta, Z)||p(\theta, Z|Y)].
+$$
+
+\paragraph{Variational Bayes EM (VBEM).} \cite{BeG03}
+$$
+\Qcal = \{q: q(\theta, Z) = q(\theta)q(Z)\}
+$$
+\begin{itemize}
+ \item 'E' step (deals with $Z$):
+ $$ 
+ \pt^{h+1}(Z) = \arg\min_{q(Z)} KL[q^{h}(\theta)q(Z)||p(\theta, Z|Y)] \propto \exp\left[\Esp_{q^{h}(\theta)} \log p(\theta, Z, Y) \right];
+ $$ 
+ \item 'M' step (deals with $\theta$): 
+ $$ 
+ \pt^{h+1}(\theta) = \arg\min_{q(\theta)} KL[q(\theta)q^{h+1}(Z)||p(\theta, Z|Y)] \propto \exp\left[\Esp_{q^{h+1}(Z)} \log p(\theta, Z, Y) \right];
+ $$ 
+\end{itemize}
+aims at minimizing wrt $q \in \Qcal$ 
+$$
+J(q) := \log p(Y) - KL[q(\theta, Z) || p(\theta, Z|Y)].
+$$
+
+\paragraph{Conjugate prior for SBM.}
+Close-form solutions when $p(\theta)$ is conjugate with $p(Z, Y|\theta)$. Sor SBM, 
+$$
+\theta = (\pi, \gamma) \sim \mathcal{D}(p) \bigotimes_{k = 1}^K \text{B}(a_k, b_k)
+$$
+takes advantage of the conjugacy properties between Dirichlet and multinomial and Beta and Bernoulli.
+
+%----------------------------------------------------------------------
+\subsection{Accuracy of the variational approximation}
+
+In general, few results, mostly negative.
+
+\paragraph{Theoretical results for SBM.} Frequentist case: $p(\theta(Z|y) \rightarrow$ Dirac (\cite{CDP12})
+$$
+P\left(\sum_{z_{[n]} \neq z^*_{[n]}} \frac{P(Z_{[n]}=z_{[n]}|Y_{[n]})}{P(Z_{[n]}=z^*_{[n]}|Y_{[n]})} > t\right) = \mathcal{O}(n e^{-\kappa_t n})
+$$
+and Dirac is factorisable. See also \cite{MaM14}.
+
+\paragraph{Simulation study.} For $K = 2$ groups, as soon as $n \geq 20, 30$, the actual level of the credibility interval reaches the nominal one:
+\begin{eqnarray*}
+ \widetilde{I} = \widetilde{IC}_{1-\alpha} & : & \int_{\theta \in I} \pt(\theta) \dd \theta = 1-\alpha \\
+ \frac{\#\{b: \theta^b \in \widetilde{I}_b\}}{B} & \simeq & 1-\alpha
+\end{eqnarray*}
+
+
+\paragraph{Intuition.} According to SBM, the conditional distribution of the degree $D_i = \sum_{j \neq i} Y_{ij}$ is binomial~:
+$$
+D_i | Z_i \sim \mathcal{B}(n-1, \overline{\gamma}_{Z_i})
+\qquad \text{where} \qquad
+\overline{\gamma}_K = \sum_\ell \pi_\ell \gamma_{k \ell},
+$$
+which rapidely concentrates around its mean~:
+$$
+\Pr\left\{\left|T_i - \overline{\gamma}_{Z_i}\right| > t | Z_i\right\} \leq 2e^{2(n-1)t^2}
+$$
+$\longrightarrow$ A linear algorithm based on the normalized degrees $T_i = D_i/(n-1)$ provides consistent estimates (\cite{CDR12}).
+
+
+
+%----------------------------------------------------------------------
+\newpage
+\bibliographystyle{/home/robin/LATEX/Biblio/astats}
+\bibliography{/home/robin/Biblio/AST,/home/robin/Biblio/ARC}
+
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------
+\end{document}
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------

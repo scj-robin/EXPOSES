@@ -1,0 +1,299 @@
+% !TEX root = Topology-MIA518.tex
+\section{Introduction } 
+\frame{\frametitle{Introduction}
+ \cite{Kolaczyk:2009}
+\begin{itemize}
+\item Object of interest : \emphase{network data}
+\item General definition from  the Oxford English Dictionary :  \emphase{A network  is a collection of interconnected things}
+\item Network data come from $4$ large domains
+\end{itemize}
+
+\begin{columns}[t]
+  \begin{column}{5cm}
+\begin{itemize}
+\item Technology
+\item Information
+
+
+\end{itemize}
+  \end{column}
+    \begin{column}{5cm}
+\begin{itemize}
+\item Sociology
+\item Biology
+
+\end{itemize}
+  \end{column}
+  \end{columns}
+\vspace{1em}
+\begin{itemize}
+\item Each domain leads to datasets with specific properties and characteristics
+\end{itemize}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Examples}
+
+
+\frame{\frametitle{Examples of technological networks}
+
+\begin{itemize}
+
+\item Communication networks (telephone, INTERNET)
+\item Transportation networks (roads, tails, airlines routes)
+\item Energy networks (delivery of gas or electricity) 
+
+\item \textbf{Common interest in this case} :
+
+ \begin{itemize}
+\item Topology of a large (giant?) network 
+  \item  Flow a  certain object in the network (Internet traffic packets, units of electrical energy...)
+  \item Representation? 
+  \item Sampling? 
+\end{itemize}
+\end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{\frametitle{Example of sociological network}
+
+\begin{itemize}
+\item Dating back to at least the 1930's
+\item Networks representing the interactions among a collection of social entities or ``actors''
+\begin{itemize}
+\item Friendships among people
+\item Contacts (sexual contacts, meetings between members of terrorist cells... )
+\item Exchange of resources (emails, advices,...) 
+\item Corporate alliances among businesses
+\item Trade agreement among nations
+\end{itemize}
+
+
+\item \emphase{Questions}
+\begin{itemize}
+\item Who interacts with whom and which factors influence the presence/ absence of relation
+\item Are interactions mutual (reciprocity)?
+\item Are my friends' friends my friends?  
+\item Can I find social groups? 
+\item Who is central / who is peripherical? 
+\item Can I find actors with similar roles in the network? 
+\item Study of small networks (school, club) or large networks (Facebook / Linked in / Twitter...)
+\end{itemize}
+\end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Examples of biological networks}
+
+\begin{itemize}
+\item Networks are convenient ways to represent the internal networking of biological systems, at different scales
+\item Ecology : prey-predators networks
+\item Neurology : networks of neurones
+\item Genetics   \footnote{possibly non directly observed}
+\item Epidemics : epidemiological networks characterizing the spread of disease in a population
+\end{itemize}
+
+
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{\frametitle{Examples of communication networks}
+\begin{itemize}
+\item
+Networks of citations between academic journals of papers, 
+\item Networks of co-autorship, 
+\item Networks indicating semantic relationships
+ \item Links between web pages (political blogs for instance
+ \item Contributions to Wikipedia pages
+\end{itemize}
+
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{From network data to graph}
+ In general, the word ``network'' is used inter-changeably with the word ``graph'', which is formally the mathematical representation of a network. 
+
+%For one type of relation which is the object of interest
+\begin{columns}[t]
+  \begin{column}{5cm}
+  \begin{block}{Network data}
+ \begin{itemize}
+ \item A type of relation
+ \item  $n$ actors and   the list of the existing relations between  any pair of actors
+\end{itemize}
+ \end{block} 
+ \begin{block}{Visual representation}
+\includegraphics[width=\linewidth]{plots/network_ex1.png}
+
+  \end{block}  
+  \end{column}
+  
+  \begin{column}{5cm}
+  \begin{block}{Graph}
+    \begin{itemize}
+\item A set of $n$ vertices or nodes $V=\{1,\dots,n\}$
+\item A collection of pairs $E = \{ (1,2), (1,3),\dots...\}$ 
+\end{itemize}
+\begin{center}or \end{center}  
+\begin{itemize}
+\item An adjacency matrix $(Y_{ij})_{(i,j)\in  \{1,\dots,n\}}$ 
+
+\item Such  that $Y_{ij}=0$ for any $(i,j) \notin E$
+\end{itemize}
+  \end{block}   
+  \end{column}
+ \end{columns}  
+\footnotesize{http://www.thenetworkthinkers.com}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{\frametitle{Notations}
+
+Let $\{1,\dots,n\}$ be a set of actors  and $E$ a set of pairs.  For any $(i,j) \in \{1,\dots \}$,  $Y_{ij}$ represents the relation between $i$ and $j$. 
+
+\begin{block}{Oriented - Non oriented}
+\begin{itemize}
+\item If for any edge  $(i,j)=(j,i)$ then \emphase{non-oriented} graph
+
+
+\begin{center}
+$\left(Y_{ij}\right)_{i,j \in \{1,\dots,n\}}$ is a symetric matrix 
+\end{center}
+\item If not, \emphase{oriented graph}, the edges are  called \emphase{arcs}
+\end{itemize}
+
+\end{block}
+
+\begin{block}{$Y_{ij} \in $ ???}
+\begin{itemize}
+\item If $(i,j) \notin E$ $$Y_{ij} = 0 $$
+\item If $(i,j) \in E$ : 
+\begin{itemize}
+\item \emphase{In general}\;:  \hspace{4em} $Y_{ij} = 1$  \hspace{4em}  \emphase{Binary graph}
+\item \emphase{Sometimes}:  \hspace{4em}  $Y_{ij} \in \mathbb{R}$  \hspace{4em}  \emphase{Weighted graph}
+\end{itemize}
+\end{itemize}
+\end{block}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Graph theory in a few slides (1)}
+
+We want to describe the graph as an object. 
+
+\begin{block}{Adjacency and degree}
+\begin{itemize}
+\item Degree of a node $i$ : number of edges containing $i$  (outdegree and indegree for oriented graphes) 
+\item Distribution of degrees on the whole graph
+\end{itemize}
+\end{block}
+
+
+
+\begin{block}{Study of the subgraphes / motifs}
+\begin{itemize}
+\item Presence of clique (subset of vertices who are all connected)
+\item Strongly connected component : a subgraph where all nodes in the subgraph are reachable by all other nodes in the subgraph. 
+\end{itemize}
+\end{block}
+
+
+
+%\footnotesize{source  : wikipedia}
+
+}
+
+%\section{Algorithmic point of view}
+%\frame{\frametitle{Algorithmic point of view}
+%
+%Connectivity, edge-betweenness, clustering coefficient, diameter, degree distribution
+%
+%-> descriptive statistics
+%}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{\frametitle{Graph theory in a few slides (2)}
+
+\begin{block}{Paths}
+\begin{itemize}
+\item Study of the path from one node to an other
+\item \emphase{Distance}  : shortest path between $i$ and $j$
+\item \emphase{Eccentricity} of a vertex = maximum of the distances with any other vertex
+
+\item \emphase{Diameter of a graph} (maximum distance from v to any other vertex)  : maximum eccentricity over all vertices in a graph
+
+\end{itemize} 
+
+
+\end{block}
+
+
+
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frame{\frametitle{Graph theory in a few slides (3)}
+
+
+
+\begin{block}{Connectivity}
+\begin{itemize}
+\item Existence of path between any two vertices? If yes $\rightarrow$ connected graph 
+\item Existence of an important edge such that removing it lead to a disconnected graph? 
+\item \emphase{Betweenness centrality}: an indicator of a node's centrality in a network. It is equal to the number of shortest paths from all vertices to all others that pass through that node
+\end{itemize}
+\end{block}
+
+\begin{block}{Spectral theory}
+Study of the relations between the properties of the graph and the properties of the adjacency matrix
+\end{block}
+
+
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Random graphs}
+\frame{\frametitle{Random graphs}
+
+\begin{itemize}
+\item Let $\{1,\dots,n\}$ be the set of nodes and $Y$ an adjacency matrix
+\item $Y$ is a realization of a  random variable whose distribution as to be specified
+$$ P(Y=y; \theta)$$ 
+\end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{A first example : Exponential Random Graphical Models (ERGM)} 
+$$ P(Y=y; \theta )  = \frac{e^{\theta^T S(y)}}{c(\theta)}$$
+where $S(y)$ is a vector a statistics computed on the graph
+\begin{itemize}
+\item \emphase{Difficulty 1} : How to chose $S$? 
+\begin{itemize}
+\item Frequency of interaction important? \emphase{$\Rightarrow$}  $S$ should include the number of ties
+\item Reciprocity  important (if directed)?  \emphase{$\Rightarrow$} $S$ should include the count of the number of mutual ties
+\item ... 
+\end{itemize}
+\item \emphase{Difficulty 2} : $C(\theta)$  is impossible to compute explicitly
+\item \emphase{Difficulty 3} : It is not a generating model  \emphase{$\Rightarrow$} difficult to interpret
+\end{itemize}
+
+\begin{block}{An other point of view} \centering Starting from independent edges and complexifying the model
+\end{block}
+}
+
+
+
+
+

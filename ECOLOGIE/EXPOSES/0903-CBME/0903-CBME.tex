@@ -1,0 +1,656 @@
+\documentclass[dvips, lscape]{foils}
+%\documentclass[dvips, french]{slides}
+\textwidth 18cm
+\textheight 25cm 
+\topmargin -1cm 
+\oddsidemargin  -1cm 
+\evensidemargin  -1cm
+
+% Maths
+\usepackage{amsfonts, amsmath, amssymb}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\C}{C}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\ellt}{\tilde{\ell}}
+\newcommand{\lambdat}{\tilde{\lambda}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\mut}{\tilde{\mu}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Pibf}{\mbox{\mathversion{bold}{$\Pi$}}}
+\newcommand{\Sbf}{{\bf S}}
+\newcommand{\wbf}{{\bf w}}
+\newcommand{\w}{{\bf w}}
+
+\newcommand{\binomcoef}[2]{\left(\begin{array}{c}#1\\#2\end{array}\right)}
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+% Texte
+\usepackage{lscape}
+\usepackage{../../../../Latex/fancyheadings, rotating, enumerate}
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.5}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\definecolor{jaune}{cmyk}{0, 0.5, 0.5, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\textred}[1]{\textcolor{red}{#1}}
+\newcommand{\textgreen}[1]{\textcolor{green}{ #1}}
+\newcommand{\textlightgreen}[1]{\textcolor{green}{#1}}
+%\newcommand{\textgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{#1}}
+\newcommand{\textyellow}[1]{\textcolor{yellow}{#1}}
+
+% Sections
+\newcommand{\chapter}[1]{\centerline{\LARGE \textblue{#1}}}
+\newcommand{\section}[1]{\centerline{\Large \textblue{#1}}}
+\newcommand{\subsection}[1]{\noindent{\large \textblue{#1}}}
+\newcommand{\emphase}[1]{{\textblue{\sl #1}}}
+\newcommand{\paragraph}[1]{\noindent {\textblue{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\landscape
+\headrulewidth 0pt 
+\pagestyle{empty} 
+\cfoot{}
+\rfoot{}
+\rhead{\begin{rotate}{90}{
+      \hspace{-.5cm} \tiny \thepage
+      }\end{rotate}}
+\setcounter{page}{0}
+
+\begin{center}
+  \chapter{Statistical tests to compare}
+  \medskip
+  \chapter{motif count exceptionalities} 
+
+  \bigskip
+
+  {\sl \large S. Schbath S. Robin and V. Vandewalle}
+
+  \bigskip
+
+  {CBME meeting: 10 March 2009, Jouy}
+\end{center}
+
+\vspace{3cm}
+\paragraph{Reference:}\\
+Schbath, S. Robin and Vandewalle (2207). \\ 
+{\sl Statistical tests to compare motif count exceptionalities}. \\
+BMC Bioinformatics, 8(84):1--12, 2007. doi:10.1186/1471-2105-8-84.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Motif counts in DNA sequences}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{8-letter palindrome.}
+{\tt cagcgctg}, respectively on the loops (sequence 1) and the
+backbone (sequence 2) of the \textit{E.  coli} K12 leading strands.
+
+The have respective length $\ell_1 = 758\,434$ and $\ell_2 =
+3\,882\,513$ and respective counts $N_1 = 30$ and $N_2 = 113$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip\bigskip
+\subsection{Extension to CBME}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Differential analysis} of NGS data also
+leads to compare counts $N_i$ in runs (e.g. conditions or sample)
+$i=1$ and $i=2$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Poisson model and hypothesis testing}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Poisson model} \label{Sec:PoissonModel}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In sequence (\emphase{or sample}) $i$, the count $N_i$ is supposed to
+have a Poisson distribution with mean (and variance) $\lambda_i$:
+$$
+N_i \sim \Pcal(\lambda_i)
+$$
+\paragraph{For motif count in sequences}, the mean $\lambda_i$ in
+sequence $i$ must account for three parameters: 
+\begin{enumerate}[($i$)]
+\item the length $\ell_i$ of the sequence, 
+\item the composition of the sequence (Markov model), 
+\item the possible exceptionality of the motif in the sequence.
+\end{enumerate}
+
+\bigskip
+\paragraph{For NGS counts} it should account for (???) 
+\begin{enumerate}[($i$)]
+\item the total number of reads in run $i$ (simular to $\ell_i$)
+\item some expected transcriptional level ($\mu_i$ ?)
+\item some expected abundance of a species ($\mu'_i$ ?)
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Expected intensity.}
+$$
+\begin{array}{ll}
+\text{model  M0:} & 
+\displaystyle{\mu_i=\frac{\prod_{j=1}^{h}N_i(w_j)}{\ell_i^{h}}},\\
+\text{model  M1:} & 
+\displaystyle{\mu_i=\frac{\prod_{j=1}^{h-1}N_i(w_j w_{j+1})}
+                        {\ell_i \prod_{j=2}^{h-1}N_i(w_j)}},\\
+\text{model } M(h-2)\text{:} & 
+\displaystyle{\mu_i=\frac{N_i(w_1 w_2 \cdots w_{h-1})\,N_i(w_2 \cdots w_h)}
+                        {(\ell_i -m+1) N_i(w_2 \cdots w_{h-1})}},
+\end{array}
+$$
+where $N_i(\cdot)$ denotes the count in the sequence $i$.
+
+\bigskip
+\begin{table}[h]
+  \begin{center}
+    \begin{tabular}{lcccc}
+      Model          & M00 & M0 & M1 & M6  \\
+      \hline
+      $\ell_1 \mu_1$ & 11.6 & 9.4 & 13.9 & 24.8 \\
+      $\ell_2 \mu_2$ & 59.2 & 66.0 & 106.2 & 126.1
+    \end{tabular}
+    \caption{Expected count for {\tt cagcgctg} in the loops (1) and in the
+      bakbone (2) of the genome of {\it E. coli} under different
+      models.}
+    \label{Tab:EN-cagcgctg}
+%     \begin{tabular}{lcccc}
+%       Model          & M00 & M0 & M1 & M6  \\
+%       \hline
+%       $\ell_1 \mu_1$ & 59.2 & 75.4 & 73.6 & 556.3 \\
+%       $\ell_2 \mu_2$ & 11.2 & 10.7 & 11.3 & 48.7
+%     \end{tabular}
+%     \caption{Expected count for the Chi motif in the backbone (1) and in the
+%       loops (2) of the genome of {\it E. coli} under different
+%       models.}
+%     \label{Tab:EN-Chi}
+  \end{center}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Exceptionality coefficient.}
+We introduce an exceptionality coefficient $k_i$ which
+allows $\lambda_i$ to be greater (or smaller) than the expected value:
+$$
+\lambda_i := k_i \ell_i \mu_i.
+$$
+In the following, parameters $\ell_i$ and $\mu_i$ will be supposed
+to be known a priori: they can be considered as two correction terms.
+The inference will only be made on $k_i$.
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\subsection{Hypothesis testing \label{Subsec:TestP}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Model.} 
+$$
+N_1 \perp N_2, \qquad N_i \sim \Pcal(k_1 \ell_1\mu_1), \quad  i=1, 2. 
+$$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\paragraph{Null hypothesis.} 
+$$
+\Hbf_0 = \{k_1 = k_2\}.
+$$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Tests} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Exact binomial test} \label{Subsec:BinomTest}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+If $N_1$ and $N_2$ are two Poisson counts with respective means
+$\lambda_1$ and $\lambda_2$, the distribution of $N_1$ given their sum
+$N_+ := N_1+N_2$ is binomial : 
+$$
+N_1 \sim \Bcal(N_+, \pi) \qquad \text{with} \pi = \lambda_1 /
+(\lambda_1 +\lambda_2). 
+$$  
+Under $\Hbf_0$, we have
+\begin{equation} \label{Eq:PiBinom}
+\pi_0 
+%= \frac{k_1 \ell_1 \mu_1}{k_1 \ell_1 \mu_1 + k_2 \ell_2 \mu_2}
+= \frac{\ell_1 \mu_1}{\ell_1 \mu_1 + \ell_2 \mu_2}
+\end{equation}
+because $k_1 = k_2$.  In absence of correction (M00 model) , we have
+$\pi_0 = \ell_1 / (\ell_1 +\ell_2)$. 
+
+\begin{table}[h]
+  \begin{center}
+    \begin{tabular}{lcccc}
+      Model          & M00 & M0 & M1 & M6  \\
+      \hline
+      $\pi_0$ (\%) & 16.3 & 12.4 & 11.6 & 16.4 \\
+      $p_B$ & $8.6\;10^{-2}$ & $2.7\;10^{-3}$ & $9.1\;10^{-4}$ & $9.1\;10^{-2}$\\
+    \end{tabular}
+    \caption{Probability $\pi_0$ and $p$-value for {\tt cagcgctg}
+      under different models.}
+    \label{Tab:EN-cagcgctg}
+%     \begin{tabular}{lcccc}
+%       Model          & M00 & M0 & M1 & M6  \\
+%       \hline
+%       $\pi_0$ (\%) & 83.7 & 87.6 & 86.7 & 92.0 \\
+%       $p_B$ & $6.8\;10^{-10}$ & $7.1\;10^{-4}$ & $5.1\;10^{-5}$ &
+%       $7.7\;10^{-1}$
+%     \end{tabular}
+%     \caption{Probability $\pi_0$ and $p$-value for the Chi motif
+%       under different models.}
+%     \label{Tab:EN-Chi}
+  \end{center}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We first propose an exact test based on a general property of the
+Poisson distribution. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Likelihood ratio test (LRT)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$\Hbf_0$ versus $\Hbf'_1 = \{k_1 \neq k_2\}$ can be derived. 
+\begin{eqnarray*}
+LRT 
+% & = & 2\left\{ N_1 \ln\left[ \frac{N_1 / \mu_1 \ell_1}{N_+ / (\mu_2
+%       \ell_2 + \mu_1 \ell_1)} \right] + N_2 \ln\left[ \frac{N_2 /
+%       \mu_2 \ell_2}{N_+ / (\mu_1 \ell_1 + \mu_2 \ell_2)} \right] \right\} \\
+& = & 2\left[ N_1 \ln\left( \frac{N_1 / N_+}{\pi_0} \right) + N_2
+  \ln\left( \frac{N_2 / N_+ }{1 - \pi_0} \right) \right] \\
+& \underset{\Hbf_0}{\approx} & \chi^2_1
+\end{eqnarray*}
+
+\bigskip
+\begin{table}[h]
+  \begin{center}
+    \begin{tabular}{ccccc}
+      Model          & M00 & M0 & M1 & M6  \\
+      \hline
+      $LRT$ &  2.1 & 8.2 & 10.2 & 2.0 \\
+      $p_L$ & $1.5\;10^{-1}$ & $4.2\;10^{-3}$ & $1.4\;10^{-3}$ &
+      $1.6\;10^{-1}$ \\
+    \end{tabular}
+    \caption{$LRT$ statistic and associated $p$-value for {\tt cagcgctg}.}
+    \label{Tab:EN-cagcgctg}
+%     \begin{tabular}{ccccc}
+%       Model          & M00 & M0 & M1 & M6  \\
+%       \hline
+%       $LRT$ & 37.6 & 10.6 & 15.7 & 0.4 \\
+%       $p_L$ & $8.7\;10^{-10}$ & $1.1\;10^{-3}$ & $7.5\;10^{-5}$ &
+%       $5.1\;10^{-1}$
+%     \end{tabular}
+%     \caption{$LRT$ statistic and associated $p$-value for the Chi motif
+%       under different models.}
+%     \label{Tab:EN-Chi}
+  \end{center}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Usage conditions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{LRT Distribution}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Figure \ref{Fig:FitLRTChi2} compares both levels (actual and nominal).
+We see that the nominal level is only reached with $N_+ \simeq 1000$
+for $\pi_0 = 0.5$ and even later for $\pi_0 = 0.95$.  Since the counts are
+discrete, the actual level can never be exactly $\alpha$ leading to
+oscillations in the plot.
+
+\begin{figure}[h]
+  \begin{center}
+    \epsfig{file = ../Figures/FitLRTChi2.eps, clip=, width=16cm,
+      height=6cm}
+    \caption{Actual level (log scale) of the LRT test as a function of $N_+$
+      (log scale) for a nominal level $\alpha = $ 0.1, 1, 5 or 10\%
+      and probability $\pi_0 =$ 0.5 (left) and 0.95 (right). (Since the
+      LRT test is two-sided, the right plot also holds for $\pi_0$ = 0.05)}
+    \label{Fig:FitLRTChi2} 
+  \end{center}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Decidability limits for the binomial test}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This figure gives this critical value of $N_+$ ($y$-axis) for various
+values of $\pi_0$ ($x$-axis) and $\alpha$ ($0.1\%, 1\%, 5\%, 10\%$).
+$$
+  \epsfig{file = ../Figures/Decidability-pi.eps, clip=, width=10cm,
+    height=10cm}
+$$
+We see that for $\pi_0 = 0.7$ and $N_+ = 10$, one may get significant
+results at a level greater than 5\% but not at a level smaller than
+1\%.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{figure}[h]
+  % VERSION MATLAB
+  \begin{center}
+    \begin{tabular}{lc}
+      \begin{tabular}{p{8cm}}
+        \subsection{Power} \\ \\ 
+        Power of the exact binomial test with level $\alpha = 5\%$ as
+        a function of $k_1/k_2$ ($x$-axis) for different value of
+        $\pi_0$.  \\ 
+        \\
+        $N_+ =$ 5 (dashed black), 10 (dashed red), 20 (dashed blue),
+        50 (dashed green), 100 (solid black), 500 (solid red) and 1000
+        (solid blue). 
+      \end{tabular}
+      &
+      \begin{tabular}{cc}
+        $\pi_0$ & Power curves  \\
+        \hline
+        \vspace{-0.5cm}
+        \\
+        \begin{tabular}{c} 0.1 \end{tabular} 
+        & \begin{tabular}{c} \epsfig{file = ../Figures/PowerBin.eps, clip=, width=10cm,
+            height=2.5cm, bbllx=70, bblly=634, bburx=550, bbury=770} \end{tabular} \\
+        \begin{tabular}{c} 0.2 \end{tabular} 
+        & \begin{tabular}{c} \epsfig{file = ../Figures/PowerBin.eps, clip=, width=10cm,
+            height=2.5cm, bbllx=70, bblly=498, bburx=550, bbury=634} \end{tabular} \\
+        \begin{tabular}{c} 0.5 \end{tabular} 
+        & \begin{tabular}{c} \epsfig{file = ../Figures/PowerBin.eps, clip=, width=10cm,
+            height=2.5cm, bbllx=70, bblly=362, bburx=550, bbury=498} \end{tabular} \\
+        \begin{tabular}{c} 0.8 \end{tabular} 
+        & \begin{tabular}{c} \epsfig{file = ../Figures/PowerBin.eps, clip=, width=10cm,
+            height=2.5cm, bbllx=70, bblly=226, bburx=550, bbury=362} \end{tabular} \\
+        \begin{tabular}{c} 0.9 \end{tabular} 
+        & \begin{tabular}{c} \epsfig{file = ../Figures/PowerBin.eps, clip=, width=10cm,
+            height=2.5cm, bbllx=70, bblly=90, bburx=550, bbury=226} \end{tabular} \\
+      \end{tabular}
+    \end{tabular}
+  \end{center}
+\end{figure}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage
+% \section{Case of overlapping-word}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Compound Poisson model}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The distribution of overlapping word occurrences can be modeled with a
+% compound Poisson process (see \cite{Rob02}) in the following way:
+% \begin{itemize}
+% \item The word occurs in clumps distributed according to a Poisson
+%   process.  
+% \item The size $V_{ic}$ of the $c$th clump (in sequence $i$) is random
+%   with geometric distribution.  Parameter $a_i$ is the {\it
+%     overlapping probability} of the motif.
+% \end{itemize}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \bigskip
+% \subsection{Tests} \label{Subsec:Tests}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \paragraph{Comparison of the number of clumps.}
+% The comparison of the counts $C_1$ and $C_2$
+% is then exactly equivalent to the comparison of the counts $N_1$ and
+% $N_2$ studied in Section \ref{Subsec:TestP}, replacing $\lambda_i$
+% with $\lambdat_i$ and $\mu_i$ with $\mut_i = (1-a_i)\mu_i$.
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \bigskip
+% \paragraph{Exact test for the overlapping probability under M00.}
+% $\Hbf_0 = \{a_1 = a_2\}$. 
+% \begin{equation} \label{Eq:CondDistCi}
+% C_i - 1 \sim \Bcal(N_i-1, 1 - a_i)
+% \end{equation}
+% which means that the expected number of clumps decreases when the
+% overlapping probability increases.
+
+% $$
+% \Pr\{C_1 = c_1 \;|\; N_1, N_2, C_+\} =
+% \frac{\binomcoef{N_1-1}{c_1-1}
+%   \binomcoef{N_2-1}{C_+-c_1-1}}{\binomcoef{N_+ - 2}{C_+-2} }.
+% $$
+% The overlapping probability $a_1$ is then significantly greater than
+% $a_2$ if the probability $\Pr\{C_1 \leq c_1 \;|\; N_1, N_2, C_+\}$ is
+% smaller than a given level $\alpha$.
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \paragraph{Exact test in the general case.}
+% In this case, the true overlapping probability in sequence $i$ is $b_i
+% = h_i a_i$, where $h_i$ is an exceptionality coefficient (analogous to
+% $k_i$ defined in Section \ref{Sec:PoissonModel}). The problem is then
+% to test $ \Hbf_0 = \{h_1 = h_2\}$. 
+% % Such a test is proposed in Appendix
+% % \ref{Subsec:DefHyp}: it involves the generalized negative
+% % hyper-geometric distribution.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Application: Comparison of backbone and loops  of {\it E. coli}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Comparison of exceptionalities} \label{Subsec:CompExcep}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+  \begin{tabular}{cc}
+    \epsfig{file = ../Figures//C1C2_pB_8_B0.eps, clip=, angle=90,
+    width=8cm, height=8cm} 
+    &
+    \epsfig{file = ../Figures/C1C2_pB_8_M1.eps, clip=, angle=90,
+      width=8cm, height=8cm} 
+  \end{tabular}
+\end{center}
+\begin{center}
+  \begin{tabular}{rclcccc}
+    \multicolumn{3}{r}{Model:}                &  M00  &   M0  &   M1
+    &   M6   \\
+    \hline
+    & $p_B$ & $< 10^{-4}$ & 277   & 126   & 83
+    & 37 \\
+    $10^{-4} \leq$ & $p_B$ & $< 10^{-3}$ & 519   & 303   & 247
+    & 4 \\
+    $10^{-3} \leq$ & $p_B$ & $< 10^{-2}$ & 1758  & 1330  & 1143
+    & 104 \\
+    $10^{-2} \leq$ & $p_B$ &             & 62982 & 63777 & 64063
+    & 65391 \\
+  \end{tabular}
+\end{center}
+
+\newpage
+\begin{table}[h]
+  \begin{center}
+    {\footnotesize
+      \begin{tabular}{llllllll}
+       \multicolumn{2}{c}{M00} & \multicolumn{2}{c}{M0} &
+       \multicolumn{2}{c}{M1} & \multicolumn{2}{c}{M6} \\
+%      \begin{tabular}{cccc}
+%      \multicolumn{2}{c}{M00} & \multicolumn{2}{c}{M1}\\
+      \hline
+ {\tt ggcgctgg*} & $< 10^{-20}   $  &  {\tt ctggaaga~} & $6.8\;10^{-10}$  &  {\tt ctggaaga~} & $1.2\;10^{-10}$  &  {\tt tcggttac~} & $4.9\;10^{-4}$ \\
+ {\tt gcgctgga~} & $2.5\;10^{-14}$  &  {\tt cgatgaag~} & $2.9\;10^{-9}$  &  {\tt atctggtg~} & $3.3\;10^{-8}$  &  {\tt ggttgatg*} & $5.4\;10^{-4}$ \\
+ {\tt cggcgctg~} & $3.0\;10^{-13}$  &  {\tt gaagtgct~} & $7.2\;10^{-9}$  &  {\tt gaagtgct~} & $4.6\;10^{-8}$  &  {\tt gcgcatcc~} & $6.8\;10^{-4}$ \\
+ {\tt tggcgctg*} & $5.8\;10^{-12}$  &  {\tt tgaaactg*} & $4.0\;10^{-8}$  &  {\tt ggcgctgg*} & $5.2\;10^{-8}$  &  {\tt taggccgc~} & $8.5\;10^{-4}$ \\
+ {\tt gcgctggt~} & $7.2\;10^{-12}$  &  {\tt atctggtg~} & $4.9\;10^{-8}$  &  {\tt cgatgaag~} & $6.6\;10^{-8}$  &  {\tt aagcttcg~} & $1.1\;10^{-3}$ \\
+ {\tt cgctggtg~} & $8.9\;10^{-12}$  &  {\tt gcgctgga~} & $8.0\;10^{-8}$  &  {\tt tatctggt*} & $1.1\;10^{-7}$  &  {\tt cgatgaag~} & $1.1\;10^{-3}$ \\
+ {\tt cgcgctgg~} & $1.0\;10^{-10}$  &  {\tt cggtaaag~} & $1.1\;10^{-7}$  &  {\tt cggtaaag~} & $1.4\;10^{-7}$  &  {\tt cggataaa~} & $1.2\;10^{-3}$ \\
+ {\tt gctggcga~} & $1.3\;10^{-10}$  &  {\tt ggttgatg*} & $1.4\;10^{-7}$  &  {\tt ggttgatg*} & $2.0\;10^{-7}$  &  {\tt ggggggac~} & $1.4\;10^{-3}$ \\
+ {\tt tggcgcag~} & $1.7\;10^{-10}$  &  {\tt gtgctgga~} & $1.6\;10^{-7}$  &  {\tt gtgctgga~} & $2.5\;10^{-7}$  &  {\tt caggcgtt~} & $1.6\;10^{-3}$ \\
+ {\tt ctggaaga~} & $3.1\;10^{-10}$  &  {\tt aattgtcg~} & $2.1\;10^{-7}$  &  {\tt tgggcttc~} & $5.6\;10^{-7}$  &  {\tt acgccttc~} & $1.8\;10^{-3}$ \\
+\hline
+\hline
+ {\tt cggataag~} & $1.2\;10^{-19}$  &  {\tt cggataag~} & $3.9\;10^{-20}$  &  {\tt cggataag~} & $2.7\;10^{-18}$  &  {\tt gggataaa~} & $2.4\;10^{-4}$ \\
+ {\tt ggataagg*} & $8.6\;10^{-16}$  &  {\tt ccgcatcc*} & $2.0\;10^{-16}$  &  {\tt taaggcgt*} & $9.1\;10^{-15}$  &  {\tt tcgaccaa~} & $3.0\;10^{-4}$ \\
+ {\tt taaggcgt*} & $4.6\;10^{-15}$  &  {\tt ggataagg*} & $3.0\;10^{-16}$  &  {\tt ccgcatcc*} & $4.0\;10^{-14}$  &  {\tt agttttta*} & $4.5\;10^{-4}$ \\
+ {\tt gataaggc~} & $1.2\;10^{-14}$  &  {\tt tgtaggcc~} & $1.1\;10^{-15}$  &  {\tt acgccgca*} & $4.0\;10^{-14}$  &  {\tt aagtgata*} & $5.3\;10^{-4}$ \\
+ {\tt taataaaa~} & $1.9\;10^{-14}$  &  {\tt tcaggcct*} & $2.9\;10^{-15}$  &  {\tt ataaggcg~} & $3.2\;10^{-13}$  &  {\tt gatagcgc~} & $8.1\;10^{-4}$ \\
+ {\tt ataaggcg~} & $5.6\;10^{-14}$  &  {\tt taaggcgt*} & $2.9\;10^{-15}$  &  {\tt gccgcatc~} & $1.0\;10^{-12}$  &  {\tt gggtcagg*} & $1.5\;10^{-3}$ \\
+ {\tt ctgataag~} & $1.2\;10^{-13}$  &  {\tt gataaggc~} & $4.9\;10^{-15}$  &  {\tt gataaggc~} & $2.2\;10^{-12}$  &  {\tt agccgaga*} & $1.7\;10^{-3}$ \\
+ {\tt tgtaggcc~} & $4.0\;10^{-13}$  &  {\tt ggcctaca~} & $1.1\;10^{-14}$  &  {\tt gttccccg*} & $4.0\;10^{-12}$  &  {\tt gaggttac~} & $1.7\;10^{-3}$ \\
+ {\tt cttatccg~} & $5.5\;10^{-13}$  &  {\tt ccggccta~} & $1.2\;10^{-14}$  &  {\tt cgcatccg*} & $4.4\;10^{-12}$  &  {\tt cagagtcc*} & $1.8\;10^{-3}$ \\
+ {\tt ccttatcc*} & $6.0\;10^{-13}$  &  {\tt aggcctac~} & $1.4\;10^{-14}$  &  {\tt tgtaggcc~} & $4.7\;10^{-12}$  &  {\tt ccctggcc*} & $2.0\;10^{-3}$ \\
+      \end{tabular}
+      }
+    \caption{10 most significant motifs (and corresponding value of
+      $p_B$) for model M00, M0, M1 and M6. $*$ indicates overlapping
+      words. Top: over-represented in the backbone, bottom:
+      over-represented in the loops.} 
+    \label{Tab:Top20-pB}
+    \end{center}
+\end{table}
+
+\paragraph{LRT versus binomial.} 
+To make the graph more readable, we transform the $p$-value $p_B$ into
+a Gaussian score $S_B$:
+$
+S_B = \Phi^{-1}(1-p_B).
+$
+
+\begin{center}
+  \epsfig{file =
+    /RECHERCHE/OCCURRENCES/CompExcep/ColiBackLoop8recouv/CompLRT_Bin_8_M1.eps,
+    clip=, angle=90, width=10cm}
+\end{center}
+
+\begin{table}[h]
+  \begin{center}
+    \begin{tabular}{lcccc}
+      Model          & M00 & M0 & M1 & M6  \\
+      \hline
+      Spearman (\%) & 99.7 & 99.7 & 99.7 & 99.3 \\
+      Kendall (\%) & 96.0 & 95.6 & 95.5 & 93.3
+    \end{tabular}
+    \caption{Spermann and Kendall correlation coefficients between $LRT^s$
+      and $p_B$ for different models.}
+    \label{Tab:CorrCoef}
+  \end{center}
+\end{table}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage
+% \subsection{Test for overlaps}
+
+% Very few motifs have significant differences in their clumps sizes.
+% Tables \ref{Tab:SignifOverlaps} presents the results for the 4 words
+% having a $p$-value smaller than 10\%. For all of them, no overlap is
+% observed in the backbone ($C_1 = N_1 \Rightarrow$ all clumps are of size 1) while
+% few are observed in the loops ($C_2 < N_2$). The probability $a$ is
+% the overlapping probability under model M00.
+
+% \begin{table}[h]
+%   \begin{center}
+%     \begin{tabular}{lcccccc}
+%       Word & \multicolumn{2}{c}{backbone} & \multicolumn{2}{c}{loops} & $p$ & $a$ \\
+%        & $C$ & $N$ & $C$ & $N$ & (\%) & (\%) \\
+%       \hline
+%       {\tt accactac} &    44 &    44 &    7 &    9 &   2.20 & 0.02 \\ %    1     0.021961
+%       {\tt tattatta} &    69 &    69 &   38 &   41 &   4.83 & 1.56 \\ %    1     0.048394
+%       {\tt tcggggtc} &    24 &    24 &    2 &    3 &   8.00 & 0.02 \\ %    1     0.080000
+%       {\tt cgcgccgc} &   246 &   246 &   27 &   28 &   9.93 & 0.10 \\ %    1     0.099265
+%     \end{tabular}
+%     \caption{Words with significant differences in terms of overlaps
+%       in the backbone / loops comparison.}
+%     \label{Tab:SignifOverlaps}
+%   \end{center}
+% \end{table}
+
+% \paragraph{RAG motifs.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Discussion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \paragraph{Aggregation test.} The intermediate results
+% \eqref{Eq:CondDistCi} and \eqref{Eq:CondDistNi} allow to compare the
+% number of clumps with the number of occurrences in one single
+% sequence. We can hence derive a test to check whether the occurrences
+% of the motif are more aggregated than expected. Such a behavior would
+% be characterized by an observed number of clumps smaller than
+% expected.
+
+% \paragraph{Motif family.}
+
+%\appendix
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\subsection{What we Past}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The proposed test allows to compare \emphase{motifs counts in DNA
+  sequences} as well as \emphase{NGS counts}.
+
+Its power of is known for a given total count $N_+$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip\bigskip
+\subsection{Future}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Is it useful for NGS data (yes?).
+
+Which effects should be accounted for?
+
+In the experimental setting for the power computation similar?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

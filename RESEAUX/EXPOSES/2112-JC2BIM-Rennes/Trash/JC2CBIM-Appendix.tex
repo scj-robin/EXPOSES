@@ -1,0 +1,71 @@
+%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
+\section*{Appendix}
+%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
+\subsection{Network inference: introduction}
+%-------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\frame{ \frametitle{Dependence vs conditional dependence}
+
+  \paragraph{Reminder.}
+  \begin{itemize}
+   \item Independence: $X$ and $Y$ are independent iff
+   $$
+   p(X, Y) = p(X) p(Y).
+   $$
+   \item Conditional independence: $X$ and $Y$ are independent conditionally on $Z$ iff
+   $$
+   p(X, Y \mid Z) = p(X \mid Z) p(Y \mid Z).
+   $$
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Back to gene expression.} Intuitively,
+  \begin{itemize}
+   \item a lot of gene pairs are dependent (same pathway, general state of the cell, \dots), but
+   \item \pause but few gene pairs are dependent conditionally on the rest of the genes (few pairs 'directly interact'),
+  \end{itemize}
+  that is
+  $$
+  p(X_1, X_2) \neq p(X_1) p(X_2)
+  \qquad \text{but} \qquad 
+  p(X_1, X_2) \neq p(X_1) p(X_2).
+  $$
+}
+
+%====================================================================
+
+\frame{\frametitle{Undirected graphical model} 
+
+  \paragraph{Undirected graphical models \refer{Lau96}:} The distribution $p(U) = p(U_{1}, \dots, U_m)$ is faithful to $G$ iff
+  $$
+  p(U) \propto \prod_{C \in \Ccal(G)} \psi_C(U_{C}),
+  $$
+  where $U_{C} = \{U_{j}: j \in C\}$ and $\Ccal(G) =$ set of maximal cliques of $G$.
+
+  \pause\vspace{.1\textheight}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.35\textwidth}}
+	 \input{../FIGURES/SimpleGraphModel}
+    \end{tabular}
+    & 
+    \begin{tabular}{p{.55\textwidth}}
+    $p(U) \propto \psi_1(U_1, U_2, U_3) \; \psi_2(U_3, U_4)$ \\~
+	 \begin{itemize}
+	 \item Connected graph: %\\
+	 all variables are dependent \\~
+	 \item $U_3 =$ separator: $U_4 \perp (U_1, U_2) \gv U_3$ \\~ \\~
+	 \end{itemize}
+    \end{tabular}
+  \end{tabular} 
+  
+  }
+
+
+
+

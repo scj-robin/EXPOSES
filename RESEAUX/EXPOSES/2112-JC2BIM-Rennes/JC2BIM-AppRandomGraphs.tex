@@ -1,0 +1,176 @@
+%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
+\subsection{Random graph models}
+%-------------------------------------------------------------------------------
+
+%==================================================================
+\frame{ \frametitle{Degree-based models}
+
+  \bigskip 
+  \paragraph{Aim:} account for heterogeneous number of neighbors $D_i = \sum_{j \neq i} Y_{ij}$
+  
+  \bigskip \bigskip \pause
+  \hspace{-.04\textwidth}
+  \begin{tabular}{p{.45\textwidth}p{.45\textwidth}}  
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Expected degree distribution (EDD) \refer{ChL02}:} \\
+      $$
+      p_{ij} := \Pr\{i \sim j\} = d_i d_j / \lambda 
+      $$
+      $d_i =$ observed degree of node $i$, \\ ~ \\
+      $\lambda = \sum_i d_i 
+      \quad \Rightarrow \quad 
+      \emphase{\Esp D_i = d_i}$ \\ ~ \\
+      ($p_{ij}$ may exceed 1...) \\ ~ \\ 
+      ~ \\ 
+      \onslide+<3>{
+      \paragraph{Configuration model} (looks similar but actually different): requires
+      $$
+      D_i = d_i
+      $$
+      }
+    \end{tabular}
+    &
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[width=.5\textwidth]{\figeco/florida-EDD-simul.pdf}
+    \end{tabular} 
+  \end{tabular}
+
+}
+
+%==================================================================
+\frame{ \frametitle{EDD for oriented graphs}
+
+  \bigskip
+  \paragraph{Degrees:} out-degree $D^+_i = \sum_j Y_{ij}$, in-degree  $D^-_i = \sum_j Y_{ji}$
+
+  \bigskip \bigskip \pause
+  \hspace{-.04\textwidth}
+  \begin{tabular}{p{.45\textwidth}p{.45\textwidth}}  
+    \begin{tabular}{p{.4\textwidth}}
+      Connexion probability
+      $$
+      p_{ij} := \Pr\{i \rightarrow j\} = d^+_i d^-_j / \lambda 
+      $$
+      \bigskip
+      Expected degrees:
+      $$
+      \Esp D^+_i = d^+_i, 
+      \quad 
+      \Esp D^-_i = d^-_i
+      $$ 
+      
+      \bigskip
+      Only accounts for 'generalists' vs 'specialists' (see top left node) \\
+      \bigskip
+      \onslide+<3>{
+      \paragraph{Again:} similar but different from 'edge rewiring', which imposes
+      $$
+      D^+_i = d^+_i, \quad D^-_i = d^-_i
+      $$}
+    \end{tabular}
+    &
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[width=.5\textwidth]{\figeco/foodweb-baydry-EDD-simul.pdf}
+    \end{tabular} 
+  \end{tabular}
+
+}
+
+%==================================================================
+\frame{ \frametitle{Latent-space models}
+
+  \paragraph{Fact:} observed networks are far from 'random' or 'uniform' (i.e. Erd\"os )
+  
+  \bigskip \bigskip 
+  \paragraph{Rational:} the observed heterogeneity is due to (unobserved) node specificities
+
+  \bigskip \bigskip \pause
+  \paragraph{General framework:} latent space models \refer{BJR07,MaR14}
+  \begin{itemize}
+   \item A latent (= hidden = unobserved) variable $Z_i$ is associated with each node
+   \item The connections are independent conditionally on $Z = \{Z_i\}$:
+   $$
+   \{Y_{ij}\} \text{ indep. } \mid Z:
+   \qquad 
+   P(Y_{ij} = 1) = \gamma(Z_i, Z_j)
+   $$
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Exchangeable graphs:} provided that the $Z_i$'s are iid, for any permutation $\sigma$,
+  $$
+  p(\{Y_{ij}\}) = p(\{Y_{\emphase{\sigma}(i)\emphase{\sigma}(j)}\})
+  $$
+
+}
+
+%==================================================================
+\frame{ \frametitle{Latent positions}
+
+  \paragraph{Latent position model \refer{HRH02}.} $Z_i \in \Rbb^d$,
+  $$
+  \log \frac{p_{ij}}{1 - p_{ij}} = \alpha - \|Z_i-Z_j\|
+  $$
+
+  \bigskip \pause
+  \begin{tabular}{p{.45\textwidth}p{.45\textwidth}}
+%     \hspace{-.1\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      Latent positions: \\
+      \includegraphics[width=.4\textwidth]{\fignet/LatentPositionModel-Network}
+    \end{tabular} 
+    &
+%     \hspace{-.1\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      Observed data: \\
+      \includegraphics[width=.4\textwidth]{\fignet/LatentPositionModel-Adjacency}
+    \end{tabular} 
+  \end{tabular}
+  
+  \pause
+  \paragraph{Clustering version:} \refer{HRT07}
+
+}
+
+%==================================================================
+\frame{ \frametitle{Statistical inference for stochastic blockmodels}
+
+  \paragraph{Exercise:} draw the graphical model of latent variable model for graph
+  
+  \bigskip
+  \begin{tabular}{p{.6\textwidth}p{.4\textwidth}}
+    \hspace{-0.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<2->{\paragraph{Solution} for $p(Y, Z)$ ~\\}
+      \bigskip
+      \onslide+<3->{
+        \paragraph{Incomplete data model:} $Z$ is not observed \\ ~\\
+        \ra Standard statistical inference (e.g. EM algorithm) requires to compute \emphase{$p(Z \mid Y)$} ~\\
+        }
+      \bigskip
+      \onslide+<4->{
+        \paragraph{Graph moralization:} the dependency structure of $p(Z \mid Y)$ is (very) intricate \\ ~\\
+        \ra Need to resort to Monte-Carlo sampling \refer{NoS01,MSP05} or variational approximations \refer{GoN05,DPR08}
+        }
+    \end{tabular}
+    &
+    \begin{tabular}{p{.4\textwidth}}
+      \begin{overprint}
+        \onslide<2-3>
+%           \begin{centering}
+            \renewcommand{\nodesize}{1.5em}
+            \input{\figbordeaux/SBM-GraphModel-pZY} 
+%           \end{centering}       
+        \onslide<4>
+%           \begin{centering}
+            \renewcommand{\nodesize}{1.5em}
+            \input{\figbordeaux/SBM-GraphModel-pZmY} 
+%           \end{centering}       
+      \end{overprint}
+    \end{tabular} 
+  \end{tabular}
+
+}

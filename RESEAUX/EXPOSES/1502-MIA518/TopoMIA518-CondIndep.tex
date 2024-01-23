@@ -1,0 +1,189 @@
+\section{Model with conditionally independent edges} 
+\frame{\frametitle{Model with conditionally independent edges}
+
+  \paragraph{General framework:} \cite{BJR07,MaR14}. 
+  \begin{eqnarray*}
+  n \text{ nodes} \quad i & = & 1, \dots n \\
+  (Z_i) \text{ i.i.d.} & \sim & \pi \\
+  (Y_{ij}) \text{ independent } | (Z_i) & \sim & \mathcal{B}(\gamma_{Z_i, Z_j})
+  \end{eqnarray*}
+  \begin{itemize}
+  \item $Y =$ observed graph;
+  \item $Z =$ latent variable;
+  \item $\theta = (\pi, \gamma)$ parameter.
+  \end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{State space models \& SBM}
+
+\paragraph{Stochastic block-model (SBM):} \cite{NoS01}
+$$
+\pi = \mathcal{M}
+$$
+\ra Latent Block model for bipartite graphs \cite{GoN05}.
+
+\bigskip
+\paragraph{Latent position model :} \cite{HRH02}
+$$\pi = \mathcal{N}, \qquad \text{logit}(\gamma_{Z_i, Z_j}) = a - b|Z_i-Z_j|$$
+
+\paragraph{Model-based clustering :} \cite{HRT07}
+$$
+\pi = \sum_k w_k \mathcal{N}(\mu_k, \Sigma)
+$$
+
+\paragraph{$W$-graph :} \cite{LoS06,DiJ08}
+$$\pi = \mathcal{U}[0, 1], \qquad \gamma_{Z_i, Z_j} = W(Z_i, Z_j),$$ 
+$W: [0, 1]^2 \mapsto [0, 1]$ = graphon function.
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Inference issue}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Inference issue: Frequentist setting}
+
+\paragraph{Maximum likelihood \& EM.}
+\begin{eqnarray*}
+ \log p_\theta(Y) & = & \log p_\theta(Y, Z) - \log p_\theta(Z|Y) \\
+ & = & \Esp[\log p_\theta(Y, Z) |Y] - \Esp[\log p_\theta(Z|Y) | Y] \\
+ & = & \Esp[\log p_\theta(Y, Z) |Y] + \Hcal[p_\theta(Z|Y)]
+\end{eqnarray*}
+\begin{itemize}
+ \item E step: calculate the expectation according to $p_{\theta^h}(Z|Y)$
+ \item M step: maximization $\theta^{h+1} = \arg\max_\theta \Esp_{\theta^h}[\log p_\theta(Y, Z) |Y]$.
+\end{itemize}
+
+\bigskip
+\paragraph{Property.}
+$$
+\log p_{\theta^{h+1}}(Y) \geq \log p_{\theta^h}(Y)
+$$
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Dependencies: the graphical model point-of-view}
+
+\paragraph{Graphical models and conditional dependencies.} \cite{Lau96,WaJ08}
+\begin{itemize}
+ \item Oriented graphical models: 
+ $$
+ p(X) = \prod_i p(X_i | X_{pa(i)})
+ $$
+ \item Un-oriented graphical models: 
+ $$
+ p(X) \propto \prod_{C \in \mathcal{C}} \psi(X_C)
+ $$
+\end{itemize}
+
+\paragraph{Example: latent variables for graphs.}
+\begin{itemize}
+ \item Graphical model for $p(Y, Z) = p(Z) p(Y|Z)$ \\~ 
+ \item Graphical model for $p(Z | Y)$ : moralization.
+\end{itemize}
+
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Variational inference}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Variational inference}
+
+\paragraph{General principle.} For an intractable distribution $p$, look for the best approximation $\pt$ according to some divergence $D$ with a class $\Qcal$ (\cite{Min05}, \cite{Jaa00}):
+$$
+\pt = \arg\min_{q \in \Qcal} D(q||p).
+$$
+Exemple classique~: 
+\begin{eqnarray*}
+  D(q||p) & = & KL(q||p) \; = \; \Esp_q[\log(q/p)] \\
+  \Qcal & = & \{\text{factorized distributions}\}
+\end{eqnarray*}
+
+\bigskip
+\paragraph{Alternative way: composite likelihood.} see \cite{VRF11} in general, \cite{AmM09} for SBM and \cite{Lyu11} for a possible link between composite likelihood and variational approximations.
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Variational EM}
+
+For any distribution $\pt(Z)$:
+\begin{eqnarray*}
+ \log p_\theta(Y) & \geq & \log p_\theta(Y) - KL[\pt(Z)||p_\theta(Z|Y)] \qquad =: \; J(\theta, \pt)\\
+ & = & \textcolor{gray}{\log p_\theta(Y) - \Espt[\log \pt(Z)] + \Espt[\log p_\theta(Y, Z)] - \Espt[\log p_\theta(Y)]} \\
+ & = & \textcolor{gray}{\Espt[\log p_\theta(Y, Z)] - \Espt[\log \pt(Z)]} \\
+ & = & \Espt[\log p_\theta(Y, Z)] + \Hcal[\pt(Z)] 
+\end{eqnarray*}
+
+\begin{itemize}
+ \item VE-step: compute the approximate distribution $\pt$ \\
+ \ra minimizes $KL[\pt(Z)||p_\theta(Z|Y)] \Rightarrow$ increases $J(\theta, \pt)$ \\~
+ \item M-step: maximization $\theta^{h+1} = \arg\max_\theta \Espt[\log p_\theta(Y, Z)]$ \\
+ \ra increases $J(\theta, \pt)$.
+\end{itemize}
+
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Case of SBM}
+
+Denote $Z_{ik} = \mathbb{I}\{Z_i = k\}$:
+$$
+\Qcal = \left\{q: q(Z) = \prod_i q(Z_i) = \prod_i \prod_k \tau_{ik}^{Z_{ik}}\right\}.
+$$
+
+We get a mean-field approximation:
+$$
+\tau_{ik} \propto \pi_k \prod_{j \neq i} \prod_{\ell} p(Y_{ij}|Z_i=k, Z_j=\ell)^{\tau_{j\ell}}
+$$
+which is a fix-point relation.
+
+\bigskip\bigskip
+Similarity with the conditional distribution used in Gibbs sampling:
+$$
+\Pr\{Z_i=k |Y, Z_{\setminus i}\} \propto \pi_k \prod_{j \neq i} \prod_{\ell} p(Y_{ij}|Z_i=k, Z_j=\ell)^{\emphase{Z_{j\ell}}}
+$$
+
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Inference issue: Bayesian setting}
+
+\paragraph{General setting:}
+\begin{itemize}
+ \item prior: $\theta \sim p(\theta)$;
+ \item likelihood: $Y | \theta \sim p(Y|\theta)$;
+ \item posteriori: $\theta|Y \sim p(\theta|Y)$.
+\end{itemize}
+
+\bigskip
+\paragraph{With latent variables:}
+\begin{itemize}
+ \item prior: $(\pi, \gamma) = \theta \sim p(\theta)$;
+ \item complete likelihood: $(Y, Z) | \theta \sim p(Y, Z|\theta)$;
+ \item conditional joint distribution: $p(\theta, Z|Y)$.
+\end{itemize}
+$\longrightarrow$ graphical model.
+
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Extension of SBM}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Overlapping SBM}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Covariates}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Model selection or averaging}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Model selection or averaging}
+  \cite{HMR99}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Goodness of fit}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Goodness of fit}
+}

@@ -1,0 +1,160 @@
+%====================================================================
+%====================================================================
+\section{Variational EM}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{General aim} 
+
+  \paragraph{Problem.} $p_\theta(Z \mid Y)$ being intractable, we look for a 'good' approximation of it:
+  $$
+  q(Z) \approx p_\theta(Z \mid Y)
+  $$
+
+  \bigskip \bigskip 
+  More specifically, given
+  \begin{itemize}
+  \item \pause \bigskip a \emphase{set of approximating distributions $\Qcal$} and
+  \item \pause \bigskip a \emphase{divergence measure $D[q \| p]$},
+  \end{itemize}
+  \pause \bigskip we look for
+  $$
+  q^* = \argmin_{q \in \emphase{\Qcal}} \; \emphase{D}\left[q(Z) \| p_\theta(Z \mid Y)\right]
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Variational approximations} 
+
+  \paragraph{References.} Huge literature; see \refer{WaJ08} for a general introduction or \refer{BKM17} for a more recent and concise review
+  
+  \pause \bigskip \bigskip 
+  \paragraph{Not all methods} enter the framework described above
+  \begin{itemize}
+  \item loopy belief propagation \refer{MWJ99}
+  \item minimization of Bethe's free energy \refer{YFW01b}
+  \end{itemize}
+
+  \pause \bigskip \bigskip 
+  \paragraph{Choice of the divergence measure.} 
+  \begin{itemize}
+  \item Most popular choice = K\"ullback--Leibler: 
+  $$
+  D[q \| p] = KL[q \| p] = \Esp_q \log \left({q}/{p}\right)
+  $$
+  \ra the error $\log(q/p)$ is averaged wrt the approximation $q$ itself \\ ~
+  \item \pause Expectation propagation (EP, \refer{Min01}): $D[q \| p] = KL[p \| q]$ \\
+  \ra more sensible, but requires integration wrt $p$ \\ ~
+  \item \pause Many others (see e.g. \refer{Min05})
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Variational EM algorithm} 
+
+  \paragraph{In a nutshell:} replace the E step with an approximation ('VE') step
+  
+  \pause \bigskip \bigskip
+  \paragraph{'Evidence\footnotetext[1]{Actually log-evidence, as the evidence is $p(Y)$} lower bound' (ELBO) =} lower bound of the log-likelihood:
+  \begin{align*}
+  J_{\theta, q}(Y) = \log p_\theta(Y) - KL\left[q(Z) \| p_\theta(Z \mid Y)\right]
+  \end{align*}
+  
+  \pause \bigskip \bigskip 
+  \paragraph{VEM algorithm.}
+  \begin{description}
+  \item[VE step:] \bigskip maximize $J_{\theta, q}(Y)$ wrt $q$
+  \item[M step:] \bigskip maximize $J_{\theta, q}(Y)$ wrt $\theta$
+  \end{description}
+
+  \pause \bigskip \bigskip 
+  \paragraph{Property:}
+  $J_{\theta, q}(Y)$ increases at each step.
+
+}
+
+%====================================================================
+\frame{\frametitle{Variational EM algorithm} 
+
+  The ELBO can written in two ways:
+  \begin{align*}
+  J_{\theta, q}(Y) 
+  & = \log p_\theta(Y) - \emphase{KL\left[q(Z) \| p_\theta(Z \mid Y)\right]} \\ 
+  ~ \\
+  & = \emphase{\Esp_q \log p_\theta(Y, Z)} - \Esp_q \log q(Z)
+  \end{align*}
+  \bigskip
+  \ra See \#\ref{goto:ELBO} \label{back:ELBO}
+
+  \pause \bigskip \bigskip 
+  \paragraph{VEM algorithm.} 
+  \begin{itemize}
+  \item \emphase{VE step} (approximation):
+  $$
+  q^{h+1} = \argmin_{q \in \Qcal} \; KL\left[q(Z) \| p_{\theta^h}(Z \mid Y)\right]
+  $$
+  \item \emphase{M step} (parameter update):
+  $$
+  \theta^{h+1} = \argmax_\theta \; \Esp_{q^{h+1}} \log p_\theta(Y, Z)
+  $$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{EM as a VEM algorithm} 
+
+  We have that
+  \begin{align*}
+  \log p_\theta(Y) 
+  & = \Esp[\log p_\theta(Y, Z) \mid Y] - \Esp[\log p_\theta(Z \mid Y) \mid Y]
+  & & (\text{EM}) \\ ~ \\
+  J_{\theta, q}(Y) 
+  & = \Esp_q [\log p_\theta(Y, Z)] - \Esp_q [\log q(Z)]
+  & & (\text{VEM})
+  \end{align*}
+  
+  \bigskip \bigskip 
+  \begin{itemize}
+  \item \pause Both are the same iff $q(Z) = p_\theta(Z \mid Y)$ \qquad \qquad (as $KL\left[q^{h+1}(Z) \| p_{\theta^h}(Z \mid Y)\right] = 0$)
+  \item \pause \bigskip This happens when $\Qcal$ is \emphase{unrestricted}, that is
+  $$
+  q^{h+1}(Z) 
+  = \argmin_{q} \; KL\left[q(Z) \| p_{\theta^h}(Z \mid Y)\right]
+  = p_{\theta^h}(Z \mid Y)
+  $$
+  \item \pause \bigskip This provides us with a second proof of EM's main property
+  \end{itemize}
+
+
+}
+
+%====================================================================
+\frame{\frametitle{'Mean-field' approximations} 
+
+  \pause 
+  \paragraph{Choice of the approximation class.} A popular choice is
+  \begin{align*}
+    \Qcal_{\text{fact}} 
+    = \{\text{\emphase{factorable} distributions}\} 
+    = \{q: q(Z) = \prod_i q_i(Z_i)\}
+  \end{align*}
+  
+  \pause \bigskip \bigskip 
+  \paragraph{Property.} For a given distribution $p(Z)$, 
+  $$
+  q^* = \argmin_{q \in \Qcal_{\text{fact}}} \; KL[q \| p] 
+  $$
+  satisfies
+  $$
+  q^*_i(Z_i) \propto \exp\left(\Esp_{\bigotimes_{j \neq i} q^*_j} \log p(Z) \right)
+  $$
+  \ra Proof in \refer{Bea03} (sketch in \#\ref{goto:meanfield}) \label{back:meanfield}
+
+  \pause \bigskip \bigskip 
+  \begin{itemize}
+  \item $\log q^*_i(Z_i)$ is obtained by setting the $\{Z_j\}_{j \neq i}$ 'to their respective mean' (each wrt to $q^*_j$).
+  \end{itemize}
+
+}

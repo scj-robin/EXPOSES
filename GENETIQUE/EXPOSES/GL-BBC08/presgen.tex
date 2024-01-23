@@ -1,0 +1,407 @@
+\documentclass{beamer}
+\usepackage[latin1]{inputenc}
+\usepackage[french]{babel}
+\usetheme{Warsaw}
+\usecolortheme{seahorse}
+\usepackage{color}
+\newcommand\soustitre[1]{\textcolor{red}{\Large#1}}
+
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\dd}{\text{d}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Var}{\mathbb{V}}
+
+
+\title{Inference under the coalescent}
+\author{M. Stephens}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Introduction}
+\begin{frame}
+\frametitle{Questions d'intérêts}
+\begin{itemize}
+\item Quelles sont les forces génétiques telles que les mutations et les recombinaisons, qui ont affecté l'évolution d'un segment de chromosome ou d'un locus particulier?
+\item Quelles relations historiques partagent différentes sous populations? Dans le cas des humains, cela inclut les relations entre les différents groupes continentaux, les dates et routes des principales migrations.
+\item Quel est l'âge du plus récent ancêtre commun d'un échantillon de chromosomes? Par exemple, quelle est l'age d'une mutation portée par certains chromosomes?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Inférence basée sur la vraisemblance}
+\textbf{Données}
+Elles dépendent de la question posée et sont notées $\mathcal{D}$. C'est un échantillon d' alleles d'un gène, ou un échantillon de séquences d'un segment ou d'un locus de chromosome, d'une population haploïde (gamètes) ou diploïde.
+
+\textbf{Modélisation}
+Selon la question posée, les données sont modélisées suivant un modèle plus ou moins complexe dont les paramètres $\theta$ inconnus sont reliés à l'\textbf{histoire démographique} de la population, et \textbf{aux mécanismes génétiques}.
+
+% \textbf{Inférence}
+% On recherche
+% \[
+% L(\theta)=P(\mathcal{D}|\theta)
+% \]
+\end{frame}
+
+\begin{frame}
+\frametitle{Modèle à 'infinité de sites': Taux de mutation}
+Hypothèses:
+\begin{itemize}
+\item Modèle générationnel de Wright-Fisher pour une population
+  haploïde à temps continu
+\item Processus de mutation à taux constant
+\[
+\textrm{Temps d'attente avant une mutation} \sim \mathcal{E}(\theta)
+\]
+\item Nombre de sites de ségrégation infini $\rightarrow$ toute
+  mutation entraîne un allèle nouveau
+% \item  Nombre fini de site
+\end{itemize}
+% Données: 5 individus d'allèles 3,6,6,6,7
+\end{frame}
+% \begin{frame}
+% \frametitle{Nombre infini de site}
+% Chaque nouvelle mutation a lieu sur un nouveau site de ségrégation.
+
+% La proximité entre les numéros rend compte de la proximité entre les allèles:
+
+% \begin{center}
+% \includegraphics[width=3cm,height=4cm]{mutations.png}
+% \end{center}
+
+% \end{frame}
+
+\begin{frame}
+\frametitle{Calcul de la vraisemblance et connaissance de l'arbre}
+
+\begin{itemize}
+\item Le calcul de $P(\Dcal|\theta)$ est difficile.  
+\item Celui de $P(\Dcal|\theta, \Tcal)$ est plus facile.  
+\end{itemize}
+
+\begin{tabular}{ll}
+  \begin{tabular}{p{.4\textwidth}}
+    On suppose qu'on
+    connaît l'arbre $\mathcal{T}$, c'est à dire
+    \begin{itemize}
+    \item la topologie
+    \item la taille des branches
+    \item les noeuds internes ou pas
+    \end{itemize}
+  \end{tabular}
+  &
+  \begin{tabular}{p{.5\textwidth}}
+    \includegraphics[width=.5\textwidth]{arbresansmutations.png}
+  \end{tabular}
+\end{tabular}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Infinité de sites: Noeuds internes connus} Dans ce cas
+  l'hypothèse d'une infinité de sites, nous permet de connaître les
+  périodes de mutations:
+
+\begin{center}
+\includegraphics[width=5cm, height=4cm]{arbreavecmutations.png}
+\end{center}
+
+\[
+P(\mathcal{D}|\theta,\mathcal{T})=(1-e^{-\theta {T}})(1-e^{-\theta (T-t_3)})(1-e^{-\theta t_3})e^{\theta (t_1+t_2+t_3)}
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Infinité de sites: Noeuds internes inconnus}
+On identifie toutes les périodes de mutations possibles
+
+\begin{center}
+\includegraphics[width=5cm, height=4cm]{arbresansnoeuds.png}
+\end{center}
+
+$P(\mathcal{D}|\theta,\mathcal{T}) = e^{-\theta(2t_2+t_1)}
+\sum_{\text{allèles possibles en $t_3$ et $T$}}(...)$
+
+\end{frame}
+
+\input{NbSiteFini}
+
+%\begin{frame}
+%Si on sacrifie une partie de l'information
+%Données: $S_n$ Nb de sites de ségrégation dans 1 échantillon de taille $n$
+%Vraisemblance:
+%\[
+%P(S_n=k|theta)=\int P(S_n=k|taille(\mathcal{T}),\theta)P(\mathcal{T}|\theta)d\mathcal{T}
+%\]
+%\end{frame}
+
+%\begin{frame}
+%\frametitle{Vraisemblance et Coalescence}
+%$P(\mathcal{D}|\theta)$ n'est pas accessible facilement mais on connaît $P(\mathcal{D}|\theta,\mathcal{T})$ dans %l'exemple: $P(S_n=k|taille(\mathcal{T}),\theta)\sim P(\theta taille(\mathcal{T})$
+%On moyenne sur tous les arbres possibles:
+%\[
+%L(\theta)= \int P(\mathcal{D}|\mathcal{T},\theta)P(\mathcal{T}|\theta)d\mathcal{T}
+%\]
+%\end{frame}
+
+\begin{frame}
+\frametitle{Méthodes de Monte Carlo pour approcher la vraisemblance}
+
+Pour l'inférence, on a besoin de calculer la vraisemblance
+$$
+L(\theta) = P(\Dcal|\theta)
+$$
+ou la loi a posteriori (e.g. $T_{MRCA$}
+$$
+P(\theta|\Dcal) \propto P(\Dcal|\theta)
+$$
+
+Dans tous les cas, on aurait besoin de calculer l'intégrale
+$$
+P(\Dcal|\theta) = \int P(\Dcal|\theta, \Tcal) P(\Tcal|\theta) \dd \Tcal
+$$
+... qu'on ne sait pas calculer.
+  
+Si on sait calculer ou simuler $P(\mathcal{T}|\theta)$ (e.g. grâce aux
+méthodes de coalescence), on peut approcher $L(\theta)$ par
+\[
+L(\theta) \approx \frac{1}{M}\sum_{i=1}^M P(\mathcal{D}|\mathcal{T}^{(i)},\theta)
+\]
+avec $\mathcal{T}^{(1)},\mathcal{T}^{(2)},\ldots,\mathcal{T}^{(M)} \sim P(\mathcal{T}|\theta)$
+
+2 approches de type Monte Carlo
+\begin{itemize}
+\item Echantillonnage préférentiel ('importance sampling')
+\item MCMC
+\end{itemize}
+
+\end{frame}
+
+\input{ImpSamp.tex}
+
+\section{Markov Chain Monte Carlo}
+\begin{frame}
+\frametitle{Introduction}
+\begin{itemize}
+\item On cherche à tirer $\mathcal{T}^{(1)},\mathcal{T}^{(2)},\ldots,\mathcal{T}^{(M)}$ dans la distribution $P(\mathcal{T}|\mathcal{D})$.
+
+Or il n'est pas facile de simuler la distribution $P(\mathcal{T}|\mathcal{D})$.
+
+\item On va utiliser les méthodes de Monte Carlo par Chaine de Markov.
+
+\item On définit $\mathcal{T}^{(1)},\mathcal{T}^{(2)},\ldots$ comme une chaine de Markov dans $(\Omega,\varepsilon)$ de loi $\mathbb{P}$ avec la transition
+\[
+\begin{array}{l l l l}
+P:&(\Omega, \varepsilon) & \rightarrow & [0,1]\\
+  &(t,A)& \rightarrow & \mathbb{P}(\mathcal{T}^{(i+1)} \in A|\mathcal{T}^{(i)}=t)
+\end{array}
+\]
+On note $P^k(t,A)=\mathbb{P}(\mathcal{T}^{(i+k)} \in A|\mathcal{T}^{(i)}=t)$
+
+On cherche une transition $P$ qui assure la convergence de la chaîne vers la loi cible $\pi(\mathcal{T})=P(\mathcal{T}|\mathcal{D})$.
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Convergence d'une chaine de Markov}
+\begin{theorem}
+Soit $P$ une transition apériodique, $\pi$ irréductible et $\pi$ invariante alors $\pi$ p.s. en $t\in\Omega$, $\|P^k(t,.)-\pi \|_{VT} \rightarrow 0 $ quand $k \rightarrow \infty$
+\end{theorem}
+
+Pour trouver une transition apériodique, $\pi$ irréductible et $\pi$ invariante, il suffit de trouver $P$ telle que
+\begin{enumerate}
+\item $\forall t, t' \in \Omega \qquad P(t,t')>0$
+\item $\forall t, t' \in \Omega \qquad \pi(t)P(t,t')=\pi(t')P(t',t)$
+\item l'évènement $T^{(i)}= T^{(i+1)}$ est possible
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme de Metropolis Hastings}
+A partir d'un état initial $\mathcal{T}^{(0)}$ quelconque itérer les étapes suivantes:
+\begin{enumerate}
+\item Etant donné le $i^{ieme}$ arbre $\mathcal{T}^{(i)}$, proposer un arbre $\mathcal{T}'$ tiré selon la loi $Q(\mathcal{T}^{(i)} \rightarrow \mathcal{T}')$
+\item Avec la probabilité
+\[
+a(\mathcal{T}, \mathcal{T}')=min(1,\frac{\pi(\mathcal{T}')Q(\mathcal{T}^{(i)} \rightarrow \mathcal{T}')}{\pi(\mathcal{T}^{(i)})Q(\mathcal{T}' \rightarrow \mathcal{T}^{(i)})})
+\]
+\begin{itemize}
+\item accepter l'arbre proposé, $\mathcal{T}^{(i+1)}=\mathcal{T}'$
+\item sinon rejeter la proposition, $\mathcal{T}^{(i+1)}=\mathcal{T}^{(i)}$
+\end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Convergence de l'algorithme}
+La transition définie par l'algorithme MH est
+\[
+P(t,t')=a(t,t')Q(t\rightarrow t') + 1_{\{t=t'\}}[1-\int_{\Omega}a(t,u)Q(t\rightarrow u)du]
+\]
+Avec la condition (2) on a
+\begin{equation}
+\begin{array}{c}
+\pi(t)a(t,t')Q(t\rightarrow t')=\pi(t')a(t',t)Q(t'\rightarrow t)\\
+\\
+\Leftrightarrow \frac{a(t,t')}{a(t',t)}=\frac{\pi(t')Q(t'\rightarrow t)}{\pi(t)Q(t\rightarrow t')}=r(t,t')\\
+\label{db}
+\end{array}
+\end{equation}
+
+\end{frame}
+
+\begin{frame}
+On cherche $a(t,t')$ de la forme $F(r(t,t'))$ avec $F [0, +\infty[ \rightarrow [0,1]$. On remarque que $a(t',t)=F(r(t,t')^{-1})$
+\begin{eqnarray*}
+(1) & \Leftrightarrow & \frac{F(r(t,t'))}{F(r(t',t)^{-1})}=r(t,t')\\
+\\
+    &                 & F(r(t,t'))=r(t,t')F(r(t,t')^{-1})\\
+\end{eqnarray*}
+On cherche $F$ qui vérifie $F(x)=xF(x^{-1})$, la fonction $min(1,x)$ est admissible.
+\end{frame}
+
+\begin{frame}
+\frametitle{Application}
+BUT: Tirer $\mathcal{T}^{(1)},\mathcal{T}^{(2)},\ldots,\mathcal{T}^{(M)}$ dans la distribution $P(\mathcal{T}|\mathcal{D},\theta)$.
+
+\[
+\frac{\pi(\mathcal{T}')}{\pi(\mathcal{T})}=\frac{P(\mathcal{T}'|\mathcal{D},\theta)}{P(\mathcal{T}|\mathcal{D},\theta)}
+=\frac{P(\mathcal{T}'|\theta)P(\mathcal{D}|\mathcal{T}',\theta)}{P(\mathcal{T}|\theta)P(\mathcal{D}|\mathcal{T},\theta)}
+\]
+
+Plusieurs définition de l'arbre possible, par exemple:
+\begin{itemize}
+\item BKYF Les noeuds de l'arbre n'ont pas de type
+\item WB Les noeuds de l'arbre ont un type
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{The Beerli-Kuhner-Felsenstein (BKYF)'Conditional Coalescent' Proposal}
+\begin{columns}
+\begin{column}[l]{5cm}
+\begin{itemize}
+\item Choisir un noeud $x$ uniformément parmi tous les noeuds sauf la racine
+\item Enlever le parent $x'$ de noeud $x$, et le lien entre $x$ et $x'$
+\item Simuler le lignage vers la racine. A taux constant, le lignage coalesce avec une branche existant au temps donné.
+\item Finalement un nouveau noeud apparaît.
+\end{itemize}
+\end{column}
+\begin{column}[r]{5cm}
+\includegraphics[width=6cm, height=7cm]{transition1.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{The Wilson and Balding (WB) 'Branch-swapping' proposal}
+\begin{columns}
+\begin{column}[l]{5cm}
+\begin{itemize}
+\item Choisir un noeud $x$ uniformément parmi tous les noeuds sauf la racine
+\item Enlever le parent $x'$ de noeud $x$, et le lien entre $x$ et $x'$
+\item Choisir un noeud $y$, au dessus duquel raccroché $x$. Pondérer le choix de $y$ selon le type de $x$.
+\item Attacher $x$ quelque part au dessus de $y$. Un nouveau noeud est créé
+\item Définir le type de noeud.
+\end{itemize}
+\end{column}
+\begin{column}[r]{5cm}
+\includegraphics[width=6cm, height=7cm]{transition2.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Choix entre BKYF et WB}
+\begin{itemize}
+\item WB Choix 'intelligent' des arbres. Proposition des arbres les plus probables. Avec BKYF, on proposera souvent des arbres improbables.
+\item WB a un coût, l'espace des arbres est beaucoup plus grand, et le calcul de $Q(t\rightarrow t')$ peut être plus compliqué.
+% \item Exemple dans le cas des mutations
+% \begin{itemize}
+% \item BKYF
+% \[
+% \begin{array}{c}
+% P(T|\theta)=P(T)\\
+% P(D|T,\theta)=\sum_{Mutations} P(Mutations|\mathcal{T},\theta)P(\mathcal{D}|Mutations,\mathcal{T},\theta)\\
+% \end{array}
+% \]
+% \item WB
+% \[
+% \begin{array}{c}
+% P(T|\theta)=(1-e^{\theta(T-t_3)}e^{-(t_1+t_2)\theta}\\
+% P(D|T,\theta)=(1-e^{-\theta T})(1-e^{-\theta t_3})e^{-\theta (t_2+2t_1)}\\
+% \end{array}
+% \]
+% \end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Obtenir la surface de vraisemblance, $\theta$ fixe}
+On a $\mathcal{T}^{(1)},\mathcal{T}^{(2)},\ldots,\mathcal{T}^{(M)}$ tirés dans la distribution $P(\mathcal{T}|\mathcal{D},\theta_0)$.
+\begin{tiny}
+\begin{eqnarray*}
+L(\theta) &= & \int P(\mathcal{D}|\theta,\mathrm{T})P(\mathrm{T}|\theta)d\mathrm{T}\\
+          &   & \int \frac{P(\mathcal{D}|\theta,\mathcal{T})P(\mathcal{T}|\theta)}{P(\mathcal{T}|\mathcal{D},\theta_0)}P(\mathcal{T}|\mathcal{D},\theta_0)d\mathcal{T}\\
+         & \approx & \frac{1}{M} \sum_{i=1}^M \frac{P(\mathcal{D}|\theta,\mathcal{T}^{(i)}P(\mathcal{T}^{(i)}|\theta)}{P(\mathcal{T}^{(i)}|\mathcal{D},\theta_0)}\\
+\end{eqnarray*}
+\end{tiny}
+On ne connaît pas: $P(\mathcal{T}^{(i)}|\mathcal{D},\theta_0)$,il est plus facile d'obtenir une surface de vraisemblance relative $\tilde{L}(\theta)=\alpha L(\theta)$:
+\[
+\frac{L(\theta)}{L(\theta_0)}\approx\frac{1}{M}\sum_{i=1}^M \frac{P(D,\mathcal{T}^{(i)}|\theta)}{P(D,\mathcal{T}^{(i)}|\theta_0)}
+\]
+
+Juste autour de $\theta_0$, cause des problèmes quand on s'éloigne de $\theta_0$.
+
+Solution: Répéter le calcul pour plusieurs valeurs de $\theta$ prises sur une grille et raccorder les surfaces.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Obtenir la surface de vraisemblance, $\theta$ varie}
+On utilise les méthodes MCMC pour tirer  $(\theta^{(1)},\mathcal{T}^{(1)}),(\theta^{(2)},\mathcal{T}^{(2)}),\ldots,(\theta^{(M)},\mathcal{T}^{(M)})$ dans la distribution a posteriori $P(\theta,\mathcal{T}|\mathcal{D})$.
+
+Utile dans le cadre bayésien, mais pas seulement:
+\[
+P(\theta|D)= \int P(\theta,\mathcal{ T}|D) d\mathcal{T} \propto L(\theta)P(\theta)
+\]
+
+Limité au cas de 1 ou 2 paramètres.
+\end{frame}
+
+\begin{frame}
+\frametitle{Obtenir l'age du plus récent ancêtre commun: $T_{MRCA}$}
+\begin{itemize}
+\item A $\theta$ fixé:
+
+On tire $\mathcal{T}^{(1)},\mathcal{T}^{(2)},\ldots,\mathcal{T}^{(M)}$ dans $P(\mathcal{T}|\mathcal{D},\theta)$.
+\begin{eqnarray*}
+E(T_{MRCA}|\mathcal{D},\theta) & = & \int T_{MRCA}(\mathcal{T})P(\mathcal{T}|\mathcal{D},\theta)d\mathcal{T}\\                   &\approx & \frac{1}{M}\sum_{i=1}^M T_{MRCA}(\mathcal{T}^{(i)})\\
+\end{eqnarray*}
+Quel $\theta$ utilisé? Dans le contexte du maximum de vraisemblance, estimateur du maximum de vraisemblance. Mais
+en réalité, on ne connaît pas cette valeur.
+
+\item $\theta$ variant:
+
+On tire
+$(\theta^{(1)},\mathcal{T}^{(1)}),(\theta^{(2)},\mathcal{T}^{(2)}),\ldots,(\theta^{(M)},\mathcal{T}^{(M)})$ dans $P(\theta,\mathcal{T}|\mathcal{D})$.
+\begin{eqnarray*}
+E(T_{MRCA}|\mathcal{D}) & = & \int T_{MRCA}(\mathcal{T})P(\mathcal{T}|\mathcal{D})d\mathcal{T}\\
+                     &\approx & \frac{1}{M}sum_{i=1}^M T_{MRCA}(\mathcal{T}^{(i)})\\
+\end{eqnarray*}
+On prend en compte l'incertitude sur $\theta$
+
+
+\end{itemize}
+\end{frame}
+
+
+\end{document} 

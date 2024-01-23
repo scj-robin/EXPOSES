@@ -1,0 +1,260 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+% \usepackage[dvipsnames]{xcolor}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd, mathabx}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\bEDD}{BEDD\xspace}
+\newcommand{\Fbar}{\overline{F}}
+\newcommand{\phibar}{\overline{\phi}}
+
+% Directory
+\newcommand{\figcp}{/home/robin/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title[Change-point in Poisson process]{Change-point detection in a Poisson process}
+
+\author[S. Robin]{S. Robin \\ \medskip
+joint work with E. Lebarbier, C. Dion-Blanc}
+
+\institute[]{Sorbonne université}
+
+\date[Rochebrune'22]{Stats au sommet, Rochebrune, Mar. 2022}
+
+%====================================================================
+%====================================================================
+\maketitle
+%====================================================================
+\frame{\frametitle{Outline} \tableofcontents}
+%====================================================================
+
+%====================================================================
+%====================================================================
+\section*{Introduction}
+%\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Heterogeneous Poisson process} 
+
+  \paragraph{Poisson point process.} Intensity function $\lambda: [0, 1] \mapsto \Rbb^+$
+  $$
+  \{N(t)\}_{0 \leq t \leq 1} \sim PPP(\lambda).
+  $$
+  
+  \bigskip 
+  \paragraph{Meaning that} for any $0 \leq t \leq s \leq 1$, 
+  $$
+  N(s) - N(t) \sim \Pcal\left(\int_t^s \lambda(u) \d u\right)
+  $$
+  and $\{N(t)\}_{t \in I}$ independent from $\{N(t)\}_{t \in J}$ as soon as $I \cap J = \varnothing$.
+
+}
+
+%====================================================================
+\frame{\frametitle{Special case} 
+
+  \hspace{-.025\textwidth}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Piecewise constant intensity.} 
+      Change-points
+      $$
+      0 = \tau_0 < \tau_1 < \dots < \tau_k < \dots < \tau_K = 1
+      $$
+      such that
+      $$
+      \forall t \in I_k := ]\tau_{k-1}, \tau_k], \quad \lambda(t) = \lambda_k.
+      $$
+      
+      \bigskip
+      \paragraph{Parameters:} 
+      $$
+      \theta = ((\tau_k)_{1 \leq k \leq K-1}, (\lambda_k)_{1 \leq k \leq K})
+      $$
+      $+ K$
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \includegraphics[width=.45\textwidth]{\figcp/FigSegPPP-PathParms}
+        \onslide<2>
+        \includegraphics[width=.45\textwidth]{\figcp/FigSegPPP-Path}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+}
+
+%====================================================================
+%====================================================================
+\section{Additive contrast}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{A first property of PPPs} 
+
+  \paragraph{Independance of disjoint time intervals.}
+  $$
+  p_\theta(N) = \prod_{k=1}^K e^{-\lambda_k \Delta\tau_k} \lambda_k^{\Delta N_k} 
+  \quad \Rightarrow \quad 
+  \log p_\theta(N)  = \sum_{k=1}^K -\lambda_k \Delta\tau_k + \Delta N_k \log(\lambda_k)
+  $$
+  where
+  \begin{align*}
+    \Delta\tau_k & = \tau_k - \tau_{k-1} = \text{length of the $k$th interval $I_k$}, \\
+    \Delta N_k & = N(\tau_k) - N(\tau_{k-1}) = \text{number of events observed within $I_k$}.
+  \end{align*}
+  
+  \ra The log-likelihood is additive with respect to the segments
+
+}
+
+%====================================================================
+\frame{\frametitle{Additive contrast} 
+
+  \bigskip \bigskip
+  \paragraph{Additive contrast.} Consider a slightly larger setting where $\theta_k$ stands for the parameters associated with segment $k$ and define the contrast function
+  $$
+  \gamma(\tau, N, \theta) = \sum_{k=1}^K C(\Delta\tau_k, \Delta N_k, \theta_ k).
+  $$
+  The aim is to find
+  $$
+  (\widehat{\tau}, \widehat{\theta}) = \arg\min_{\tau, \theta} \gamma(\tau, N, \theta) 
+  $$
+
+  \bigskip \bigskip
+  \paragraph{Problem.} 
+  $$
+  \tau \in \Tcal = \left\{u \in [0, 1]^{K-1}: 0 < u_1 < \dots u_{K-1} < 1\right\}, 
+  $$
+  and $\gamma(\tau, N, \theta)$ is not continuous wrt $\tau$ (neither is $\gamma(\tau, N, \widehat{\theta})$). 
+  
+  \bigskip 
+  \ra No routine optimization method.
+
+}
+
+%====================================================================
+\frame{\frametitle{Shape of the contrast function} 
+
+  \hspace{-.025\textwidth}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics{\figcp/simul-n10-K1-seed1-logL}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+
+
+}
+
+%====================================================================
+\frame{\frametitle{Partitioning $\Tcal$} 
+}
+
+%====================================================================
+\frame{\frametitle{Convexity assumption} 
+}
+
+%====================================================================
+\frame{\frametitle{From continuous space to discrete space} 
+}
+
+%====================================================================
+\frame{\frametitle{Choosing the contrast} 
+
+  \paragraph{Some (un)desirable properties.}
+}
+
+%====================================================================
+%====================================================================
+\section{Model selection}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{A second property of PPPs} 
+}
+
+%====================================================================
+\frame{\frametitle{Cross-validation} 
+}
+
+%====================================================================
+%====================================================================
+\section{Extensions}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Change-point in point processes} 
+
+  \paragraph{Marked PPP.}
+  
+  \paragraph{Segmentation-clustering.}
+
+}
+
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References}
+  {
+   \tiny
+   \bibliography{/home/robin/Biblio/BibGene}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+\backupbegin
+%====================================================================
+
+
+%====================================================================
+\backupend
+%====================================================================
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+  
+  \hspace{-.025\textwidth}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

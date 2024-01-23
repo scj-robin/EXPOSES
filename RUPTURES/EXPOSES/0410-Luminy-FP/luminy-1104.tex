@@ -1,0 +1,607 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%                               Expose LUMINY
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{lscape}
+\usepackage{color}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+%\usepackage{astats}
+\usepackage{apalike}
+\usepackage{array}
+\usepackage{shadow}
+\usepackage{verbatim}
+%\usepackage{floatfig}
+\usepackage{times}
+\usepackage{ulem} % possibilite de souligner de differentes facons
+\usepackage[dvips]{epsfig}
+
+\def\1{1\!{\rm l}}
+\def\argmin{\mathop{\mathrm{argmin}}}
+\newcommand{\defi}[1]{\textcolor{green}{#1}}
+
+\newcommand{\impo}[1]{\textcolor{red}{#1}}
+%\renewcommand{\baselinestretch}{0.8}
+
+\def\1{1\!{\rm l}}
+\newcommand{\sumk}{\sum_k}
+\newcommand{\sumt}{\sum_{t \in I_k}}
+\newcommand{\sumth}{\sum_{t=t_{k-1}^{(h)}+1}^{t_k^{(h)}}}
+\newcommand{\sump}{\sum_{p=1}^{P}}
+\newcommand{\suml}{\sum_{\ell=1}^{P}}
+\newcommand{\sumtau}{\sum_k \hat{\tau}_{kp}}
+
+
+
+
+%---------------------------------1--------------------
+\vspace{5cm}
+\title{\begin{center} \Huge
+A segmentation-clustering problem for the analysis of array CGH data
+\vspace{1cm}
+\end{center}\vspace{3cm}}
+\author{\huge  F. Picard, S. Robin, E. Lebarbier, J-J. Daudin \\ \\ \\ \\
+\huge UMR INA P-G / ENGREF / INRA MIA 518\\ \\ \\ \\
+\huge Luminy November 2004}
+
+\date{}
+\textwidth=17.0cm
+\textheight 23.5cm
+\oddsidemargin -.25in
+\evensidemargin -.25in
+
+\begin{document}
+
+
+
+\pagestyle{empty}
+\renewcommand{\baselinestretch}{0.5}
+\begin{landscape}
+\vspace{5cm}
+\maketitle
+\thispagestyle{empty}
+
+
+
+\newpage
+
+
+
+%\begin{comment}
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------------Introduction aux CGH
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge{\bf \textcolor{red} {Microarray CGH technology }\rm}}
+\end{center}
+\vspace{1cm}
+\huge
+\begin{itemize}
+\item[-] Known effects of big size chromosomal aberrations  (ex: trisomy).\\
+\subitem {\bf{$\rightarrow$}}experimental tool: \textbf{Karyotype} (Resolution $\sim$ chromosome).\\
+\vspace{0.5cm}
+\item[-] Change of scale: what are the effects of small size DNA sequences deletions/amplifications?\\
+\subitem {\bf{$\rightarrow$}} experimental tool: \textbf{"conventional" CGH} (resolution $\sim$ 10Mb).
+\vspace{0.5cm}
+\item[-] CGH= Comparative Genomic Hybridization : method for the comparative measurement of relative DNA copy numbers between two samples (normal/disease, test/reference).\\
+\subitem  {\bf{$\rightarrow$}} Application of the \textbf{microarray} technology to CGH : 1997.
+\subitem  {\bf{$\rightarrow$}}last generation of chips: resolution $\sim$ 100kb.
+\end{itemize}
+\newpage
+
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------------Introduction aux CGH
+%----------------------------------------------------------------------------------------------------------------------------------
+
+\begin{center}
+\shabox{\huge{\bf \textcolor{red} {Microarray technology in its principle }\rm}}
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.7]{/mnt/dos/user/Franck/presentation_melange_segments/principe_CGH.eps}
+\end{center}
+
+\newpage
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------------interpreter un profil
+%----------------------------------------------------------------------------------------------------------------------------------
+
+\begin{center}
+\shabox{\huge{\bf \textcolor{red} {Interpretation of a CGH profile }\rm}}
+\end{center}
+\vspace{1cm}
+\begin{center}
+\includegraphics[scale= 0.8]{/mnt/dos/user/Franck/presentation_melange_segments/interpreter_profil_2.eps}
+\end{center}
+\vspace{0.5cm}
+\LARGE
+\begin{center} A dot on the graph represents \end{center}
+\[\log_2 \left\{ \frac{\text{ $\sharp$ copies of BAC(t) in the test genome }}{\text{$\sharp$ copies of BAC(t) in the reference genome}}\right\}\]
+\newpage
+
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%---------------------------------------Problematique-1
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge{\bf \textcolor{red} {First step of the statistical analysis }\rm}}
+\end{center}
+\vspace{0.5cm}
+\huge
+\noindent {\bf Break-points detection in a gaussian signal\rm}
+\vspace{0.5cm}
+\begin{itemize}
+\item[-]$Y=(Y_1, ..., Y_n)$ a random process such that $Y_t \sim \mathcal{N}(\mu_t,\sigma_t^2)$.
+\\
+\item[-] Suppose that the parameters of the distribution of the  $Ys$ are affected by K-1 abrupt-changes at unknown coordinates 
+$T=(t_1, ..., t_{K-1})$.
+\\
+\item[-] Those break-points define a partition of the data into $K$ segments of size $n_k$:
+\[I_k=\{t, t \in ]t_{k-1},t_k]\},\]
+\[Y^k=\{Y_t, t \in I_k\}.\]
+\item[-] Suppose that those parameters are constant between two changes:
+\[\forall t \in I_k, \hspace{0.2cm} Y_t \sim \mathcal{N}(\mu_k,\sigma_k^2).\]
+\\
+\item[-]The parameters of this model are :
+\begin{eqnarray}
+T&=&(t_1, ..., t_{K-1}), \nonumber \\
+\Theta&=&(\theta_1,\hdots,\theta_K), \theta_k=(\mu_k,\sigma_k^2).\nonumber
+\end{eqnarray}
+\item[-]Break-points detection aims at studying the \textbf{spatial structure of the signal}.
+\end{itemize}
+\newpage
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%---------------------------------------Estimation 
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge{\bf \textcolor{red} {Estimating the parameters in a model of abrupt-changes detection}\rm}}
+\end{center}
+\vspace{1cm}
+\noindent {\bf Log-Likelihood\rm} \[ \mathcal{L}_K(T, \Theta)= \sum_{k=1}^K \log f(y^k; \theta_k)=\sum_{k=1}^K \sum_{t \in I_k}\log f(y_t; \theta_k)\]
+\vspace{0.5cm}
+\noindent {\bf Estimating the parameters with $K$ fixed by maximum likelihood\rm}
+\vspace{0.25cm}
+\begin{itemize}
+\item[-] Joint estimation of $T$ and $\Theta$ with dynamic programming.
+\item[-] Necessary property of the likelihood : additivity in $K$ (sum of local likelihoods calculated on each segment).
+\end{itemize}
+\vspace{0.5cm}
+\noindent {\bf Model Selection : choice of $K$\rm}
+\vspace{0.25cm}
+\begin{itemize}
+\item[-] Penalized Likelihood : $\hat{K} = \underset{K}{Argmax}\left( \hat{\mathcal{L}}_K-\beta \times pen(K) \right)$.
+\item[-] With $pen(K)=2K$.
+\item[-] $\beta$ is adaptively estimated to the data (Lavielle(2003)).
+\end{itemize}
+
+\newpage
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------- Exemple de segmentation sur données CGH
+%----------------------------------------------------------------------------------------------------------------------------------
+
+\begin{center}
+\shabox{\huge{\bf \textcolor{red} {Example of segmentation on array CGH data}\rm}}
+\end{center}
+
+\vspace{1cm}
+\begin{figure}[ht]
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[scale=0.7]{/mnt/dos/user/Franck/presentation_melange_segments/resultats_BT474_ch1/segmentation_ssmelange_k5.eps} &
+\includegraphics[scale=0.7]{/mnt/dos/user/Franck/presentation_melange_segments/resultats_BT474_ch9/segmentation_ssmelange_k4.eps} \\
+\LARGE{BT474 chromosome 1, $\hat{K}=5$} & \LARGE{BT474 chromosome 9, $\hat{K}=4$} \\
+\end{tabular}
+\end{center}
+\end{figure}
+
+\newpage
+
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------- Nouvelle interprétation des paramètres
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge{\bf \textcolor{red} {Considering biologists objective and the need for a new model }\rm}}
+\end{center}
+\vspace{1cm}
+
+\begin{center}
+\input{/mnt/dos/user/Franck/presentation_melange_segments/nouveau_modele.pstex_t}
+\end{center}
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%---------------------------------------Problematique-2
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge{\bf \textcolor{red} {A new model for segmentation-clustering purposes }\rm}}
+\end{center}
+
+\vspace{1cm}
+\huge
+
+\begin{itemize}
+\item[-]We suppose there exists a \textbf{secondary underlying structure} of the segments into $P$ populations with weights 
+$\pi_1,...,\pi_P( \sum_p \pi_p=1)$.
+\\
+\item[-]We introduce hidden variables, $Z_{kp}$ indicators of the population of origin of {\bf segment $k$ \rm }. 
+\\
+\item[-]Those variables are supposed independent, with multinomial distribution:
+\[(Z_{k1},\hdots,Z_{kP}) \sim \mathcal{M}(1;\pi_1,\hdots,\pi_P).\]
+\item[-]Conditionnally to the hidden variables, we know the distribution of $Y$ :\[Y^k|Z_{kp}=1 \sim \mathcal{N}(\1_{n_k} m_p, s_p^2 I_{n_k}).\] 
+
+\item[-]It is a model of \textbf{segmentation/clustering}.
+\item[-]The parameters of this model are 
+\begin{eqnarray}
+T&=&(t_1, ..., t_{K-1}),\nonumber \\
+\Theta&=&(\pi_1,\hdots,\pi_P;\theta_1,\hdots,\theta_P), \hspace{0.2cm} \text{avec} \hspace{0.2cm} \theta_p=(m_p,s_p^2).\nonumber
+\end{eqnarray}
+\end{itemize}
+\newpage
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%---------------------------------------estimation des paramètres du modèle
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge{\bf \textcolor{red} {Likelihood and statistical units of the model \rm}}}
+\end{center}
+\huge
+\vspace{0.5cm}
+
+\begin{itemize}
+\item[-] {\bf Mixture Model of segments \rm} : 
+\subitem $\star$ the statistical units are segments :$Y^k$,
+\subitem $\star$ the density of $Y^k$ is a mixture density:
+\[\log \mathcal{L}_{KP}(T, \Theta)= \sum_{k=1}^K \log f(y^k;\Theta)=\sum_{k=1}^K \log \left\{ \sum_{p=1}^P \pi_p f(y^k;\theta_p) \right\}\]
+\subitem $\star$ If the $Y_ts$ are independent, we have:
+\[\log \mathcal{L}_{KP}(T,\Theta) =\textcolor{red}{\sum_{k=1}^K} \log \left\{ \textcolor{blue}{\sum_{p=1}^P} \pi_p \textcolor{red}{\prod_{ t \in I_k }}f(y_t; \theta_p) \right\}. \]
+\item[-] {\bf Classical mixture model\rm} :
+\subitem $\star$ the statistical units are the $Y_t$s,
+\[\log \mathcal{L}_{P}(\Theta)  =  \textcolor{red}{\sum_{k=1}^K} \log \left\{ \textcolor{red}{\prod_{ t \in I_k }} \textcolor{blue}{\sum_{p=1}^P} \pi_p f(y_t; \theta_p)\right \}\]
+\end{itemize}
+
+\newpage
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------- Algorithme d'optimisation
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {An hybrid algorithm for the optimization of the likelihood }\rm}}\\
+\end{center}
+\vspace{0.5cm}
+\huge
+{\bf Alternate parameters estimation with $K$ and $P$ known \rm}
+\\
+\begin{enumerate}
+\item[1] When $T$ is fixed, the \textbf{EM} algorithm estimates $\Theta$:  
+\\
+\[ \hat{\Theta}^{(\ell+1)}=\underset{\Theta}{Argmax} \left\{\log \mathcal{L}_{KP}\left(\Theta,T^{(\ell)}\right) \right\}. \] \\
+\[\log \mathcal{L}_{KP}( \hat{\Theta}^{(\ell+1)}; \hat{T}^{(\ell)}) \geq \log \mathcal{L}_{KP}(\hat{\Theta}^{(\ell)}; \hat{T}^{(\ell)})\]
+
+\item[2] When $\Theta$ is fixed, \textbf{dynamic programming} estimates $T$:
+\\
+\[\hat{T}^{(\ell+1)}=\underset{T}{Argmax} \left\{\log \mathcal{L}_{KP}\left(\hat{\Theta}^{(\ell+1)},T\right) \right\}. \] \\
+\[\log \mathcal{L}_{KP}(\hat{\Theta}^{(\ell+1)}; \hat{T}^{(\ell+1)}) \geq \log \mathcal{L}_{KP}(\hat{\Theta}^{(\ell+1)}; \hat{T}^{(\ell)})\]
+\end{enumerate} 
+\vspace{1cm}
+\noindent {\bf An increasing sequence  of likelihoods: \rm}
+\[\log \mathcal{L}_{KP}(\hat{\Theta}^{(\ell+1)}; \hat{T}^{(\ell+1)}) \geq \log \mathcal{L}_{KP}(\hat{\Theta}^{(\ell)}; \hat{T}^{(\ell)})\]
+
+\newpage
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%----------------------------------melange a segmentation connue
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {Mixture Model when the segmentation is knwon}}}\\
+\end{center}
+\huge
+\vspace{1 cm}
+{\bf Mixture model parameters estimators \rm}
+\vspace{0.5cm}
+\begin{eqnarray}
+\hat{\tau}_{kp} & = & \frac{\hat{\pi}_p f(y^k; \hat{\theta}_p)}{\suml \hat{\pi}_{\ell} f(y^k; \hat{\theta}_{\ell})}. \nonumber
+\end{eqnarray}
+\begin{itemize}
+\item[-] the estimator the the mixing proportions is: $\hat{\pi}_p = \frac{\sumtau}{K}$.
+\item[-] In the gaussian case, $\theta_p=(m_p,s_p^2)$ : 
+\begin{eqnarray}
+\hat{m}_p   &=&  \frac{\sumtau \sumt y_t}{\sumtau n_k}, \nonumber \\
+\hat{s}_p^2 &=&  \frac{\sumtau \sumt (y_t- \hat{m}_p)^2}{\sumtau n_k}. \nonumber 
+\end{eqnarray}
+\item[-] Big size vectors will have a bigger impact in the estimation of the parameters, via the term $\sumtau n_k$ \\
+\end{itemize}
+\newpage
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%---------------------------------------taille des segments
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {Influence of the vectors size on the affectation (MAP)}\rm}}\\
+\end{center}
+\vspace{1cm}
+\huge
+
+\begin{itemize}
+\item[-]The density of $Y^k$ can be written as follows:
+\vspace{0.5cm}
+\[f(y^k;\theta_p) = \exp \left\{ -\frac{n_k}{2} \left( \log(2 \pi s_p^2) + \frac{1}{s_p^2} \left[ (\bar{y_k^2}- \bar{y}_k^2) + (\bar{y}_k-m_p)^2 \right]\right)\right\}\] \\
+\subitem $\star$ $(\bar{y}_k-m_p)^2$ : distance of the mean of vector $k$ to population $p$
+\subitem $\star$ $(\bar{y_k^2}- \bar{y}_k^2)$ : intra-vector $k$ variability \\
+\\
+\item[-]Big size Individuals will be affected with certitude to the closest population
+\vspace{1cm}
+\[
+\begin{array}{ccc|ccc}
+\underset{n_k \to \infty}{\lim} \tau_{kp_0}  &=& 1   &  \underset{n_k \to \infty}{\lim} \tau_{kp} &=&  0  \\
+\underset{n_k \to 0}{\lim} \tau_{kp_0} & = &\pi_{p_0} & \underset{n_k \to 0}{\lim} \tau_{kp} &= & \pi_p 
+\end{array}
+\]
+\end{itemize}
+\newpage
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------------segmentation a melange fixe
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {Segmentation with a fixed mixture}\rm}}\\
+\end{center}
+\vspace{1cm}
+\huge
+{\bf Back to dynamic programming \rm}
+\vspace{0.5cm}
+\begin{itemize}
+\item[-] the incomplete mixture log-likelihood can be written as a sum of local log-likelihoods:
+\\
+$$
+\begin{array}{ccccc}
+\mathcal{L}_{KP}(T,\Theta) & = & \sumk \ell_{kP}(y^k;\Theta) 
+\end{array}
+$$
+\\
+\\
+\item[-]the local log-likelihood of segment $k$ corresponds to the mixture log-density of vector $Y^k$
+\[\ell_{kP}(y^k;\Theta)=\log \left\{\sum_{p=1}^P \pi_p \prod_{t \in I_k} f(y_t;\theta_p)\right\}.\]
+\item[-] $\log \mathcal{L}_{KP}(T,\Theta)$ can be optimized in $T$ with $\Theta$ fixed, by dynamix programming. \\
+\end{itemize}
+
+\newpage
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%---------------------------------------vraisemblance qui diminue?
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {A decreasing log-Likelihood?\rm}}}\\
+\end{center}
+\vspace{0.5cm}
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.8]{/mnt/dos/user/Franck/presentation_melange_segments/simulations_seg_melange_fixe/simulation_2.eps} 
+\end{center}
+\end{figure} 
+\huge
+\begin{center} Evolution of the incomplete log-likelihood with respect to the number of segments.\end{center}
+\begin{eqnarray}
+f(y^k;\Theta)&=&0.5 \mathcal{N}(0,1)+ 0.5 \mathcal{N}(5,1) \nonumber 
+%\mathcal{L}_{KP}(T;\Theta)  &=&  \sumk \log \left\{ \sump \pi_p \prod_{t \in I_k}  f(y_t; \theta_p)\right \} \nonumber
+\end{eqnarray}
+\newpage
+
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------------------------------------explications
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {What is going on?}\rm}}\\
+\end{center}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.9]{/mnt/dos/user/Franck/presentation_melange_segments/simulations_seg_melange_fixe/segmentation_melange_simulation_2.eps} 
+\end{center}
+\end{figure}
+\huge
+\begin{center}When the true number of segments is reached (6), segments are cut on the edges.\end{center}
+
+\newpage
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------------decomposition de la vraisemblance incomplete
+%----------------------------------------------------------------------------------------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------------Comportement de la vraisemblance
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {Explaining the behavior of the likelihood\rm}}}\\
+\end{center}
+\vspace{0.5cm}
+\huge
+\noindent {\bf Optimization of the incomplete likelihood with dynamic programming\rm}:
+\vspace{0.5cm}
+\begin{eqnarray}
+\log \mathcal{L}_{KP}(T;\Theta)&=& Q_{KP}(T;\Theta)-H_{KP}(T;\Theta) \nonumber \\
+Q_{KP}(T;\Theta) &=& \sum_k \sum_p \tau_{kp} \log (\pi_p) + \sum_k \sum_p \tau_{kp} \log f(y^k; \theta_p) \nonumber \\
+H_{KP}(T;\Theta) &=& \sum_k \sum_p \tau_{kp} \log \tau_{kp} \nonumber
+\end{eqnarray}
+
+\noindent {\bf Hypothesis\rm}:
+\begin{itemize}
+\item[1]We suppose that the true number of segments is $K^*$ and that the partitions are nested for $K \geq K^*$.
+\subitem $\star$ Segment $Y^K$ is cut into $(Y_1^K,Y_2^K)$: \[f(Y^{K};\theta_p)=f(Y_1^{K};\theta_p) \times f(Y_2^{K};\theta_p).\]
+\item[2] We suppose that if $Y^{K} \in p$ then $(Y_1^{K},Y_2^{K}) \in p$ : \[\tau_{p}(Y^K) \simeq \tau_{p}(Y_1^K) \simeq \tau_{p}(Y_2^K) \simeq \tau_p.\]
+\end{itemize}
+%and $\hat{\pi}_p=\sum_k \hat{\tau}_{kp}/K$.
+
+\newpage
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------------Une penalite intrinseque au modèle
+%----------------------------------------------------------------------------------------------------------------------------------
+
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {An intrinsic penality\rm}}}\\
+\end{center}
+\vspace{0.5cm}
+\huge
+\noindent {\bf Under hypothesis 1-2\rm}:
+\[\forall K\geq K^*, \log \hat{\mathcal{L}}_{(K+1),P}-\log \hat{\mathcal{L}}_{(K),P}\simeq \sum_p \hat{\pi}_p \log (\hat{\pi}_p) - \sum_p \hat{\tau}_p \log (\hat{\tau}_p)\leq 0\]
+
+\noindent {\bf The log-likelihood is decomposed into two terms\rm }
+\vspace{0.5cm}
+\begin{itemize}
+\item[-] A term of \textbf{fit} that increases with $K$, and is constant from a certain $K^*$ (nested partitions) \[\sum_k \sum_p \hat{\tau}_{kp} \log f(y^k; \hat{\theta}_p).\] \\
+\item[-] A term of \textbf{differences of entropies} that decreases with $K$: plays the role of penalty for the choice of $K$
+\[K\sum_p \hat{\pi}_p \log (\hat{\pi}_p) - \sum_k \sum_p \hat{\tau}_{kp} \log \hat{\tau}_{kp}.\]
+\end{itemize}
+
+\begin{center}  {\bf Choosing the number of segments $K$ when $P$ is fixed can be done with a penalized likelihood \rm} \end{center}
+\newpage
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------------vrais_inc Bt474 ch1
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {Incomplete Likelihood behavior with respect to the number of segments }\rm}}\\
+\end{center}
+\huge
+\vspace{1cm}
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.7]{/mnt/dos/user/Franck/presentation_melange_segments/resultats_BT474_ch1/vrais_Pfixe.eps}
+\end{center}
+\end{figure}
+%\begin{LARGE}
+\begin{center}
+The incomplete log-likelihood is decreasing from de $K=8$ $\hat{\mathcal{L}}_{KP}(\hat{T};\hat{\Theta})=\sum_k \log \left\{ \sum_p \hat{\pi}_p f(y^k;\hat{\theta}_p)\right\}$.%
+\end{center}
+%\end{LARGE}
+\newpage
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------------ajustement
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {Decomposition of the log-likelihood }\rm}}\\
+\end{center}
+\huge
+\vspace{1cm}
+\begin{figure}[ht]
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[scale=0.7]{/mnt/dos/user/Franck/presentation_melange_segments/resultats_BT474_ch1/vrais_class_Pfixe.eps}
+& \includegraphics[scale=0.7]{/mnt/dos/user/Franck/presentation_melange_segments/resultats_BT474_ch1/diff_entropie.eps}\\
+\huge term of fit & \huge differences of entropies \\
+\huge $\sum_k \sum_p \hat{\tau}_{kp} \log f(y^k;\hat{\theta}_p)$ & \huge $K\sum_p \hat{\pi}_p \log (\hat{\pi}_p) - \sum_k \sum_p \hat{\tau}_{kp} \log \hat{\tau}_{kp}$
+\end{tabular}
+\end{center}
+\end{figure}
+%\begin{LARGE}
+\begin{center}
+%The term of fit is "constant" from $K=8$ $Q_{KP}(T;\Theta)=K \sum_p \pi_p \log{\pi_p}+ \sum_k \sum_p \tau_{kp} \log f(y^k;\theta_p)$.
+\end{center}
+%\end{LARGE}
+\newpage
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------------resultat
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {Resulting clusters}\rm}}\\
+\end{center}
+\huge
+\vspace{1cm}
+\begin{figure}[ht]
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[scale=0.7]{/mnt/dos/user/Franck/presentation_melange_segments/resultats_BT474_ch1/resultat_P3K8.eps} &
+\includegraphics[scale=0.7]{/mnt/dos/user/Franck/presentation_melange_segments/resultats_BT474_ch1/segmentation_ssmelange_k5.eps} \\
+\LARGE Segmentation/Clustering  $P=3$, $K=8$ & \LARGE Segmentation $K=5$
+\end{tabular}
+\end{center}
+\end{figure}
+\newpage
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------------resultat
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {Resulting clusters}\rm}}\\
+\end{center}
+\huge
+\vspace{1cm}
+\begin{figure}[ht]
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[scale=0.7]{/mnt/dos/user/Franck/presentation_melange_segments/resultats_BT474_ch1/resultat_P4K8.eps} &
+\includegraphics[scale=0.7]{/mnt/dos/user/Franck/presentation_melange_segments/resultats_BT474_ch1/segmentation_ssmelange_k5.eps} \\
+\LARGE Segmentation/Clustering  $P=4$, $K=8$ & \LARGE Segmentation $K=5$
+\end{tabular}
+\end{center}
+\end{figure}
+\newpage
+
+
+%----------------------------------------------------------------------------------------------------------------------------------
+%--------------------------------------choix de K et P
+%----------------------------------------------------------------------------------------------------------------------------------
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {Perspective : simultaneous choice for $K$ and $P$}\rm}}\\
+\end{center}
+\huge
+\vspace{1cm}
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.9]{/mnt/dos/user/Franck/presentation_melange_segments/resultats_BT474_ch1/mesh_vrais_inc.eps}  \\
+\huge Incomplete Log-likelihood with respect to $K$ and $P$.
+\end{center}
+\end{figure}
+\newpage
+
+
+%---------------------------------------------------------
+\begin{center}
+\shabox{\huge {\bf \textcolor{red} {This is the end}\rm}}\\
+\end{center}
+\huge
+\vspace{1cm}
+\noindent {\bf Conclusions\rm}:
+\begin{itemize}
+\item[-] Definition of a new model that considers the \textit{a priori} knowledge we have about the biological phenomena under study.
+\item[-] Development of an hybrid algorithm (EM/dynamic programming) for the parameters estimation (problems linked to EM : initializtion, local maxima, degeneracy).
+\item[-]Still waiting for an other data set to assess the performance of the clustering.
+ \end{itemize}
+\vspace{1cm}
+\noindent {\bf Perspectives\rm}:
+\begin{itemize}
+\item[-] Modeling :
+	\subitem $\star$ Comparison with Hidden Markov Models 
+\item[-] Model choice:
+	\subitem $\star$ Develop an adaptive procedure for two components.
+\item[-] Other application field
+	\subitem $\star$ DNA sequences (in progress)
+\end{itemize}
+
+
+
+
+\end{landscape}
+
+\end{document}
+

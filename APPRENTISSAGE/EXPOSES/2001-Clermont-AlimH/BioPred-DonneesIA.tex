@@ -1,0 +1,285 @@
+%====================================================================
+%====================================================================
+\subsection{Données massives}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%====================================================================
+\frame{\frametitle{Avalanche de données}
+
+  \paragraph{Historique:}
+  $$
+  \text{
+  \begin{tabular}{llll}
+  & jadis, & puis, & et puis \\ \hline
+  collecte : & homme & homme   & machine \\
+  analyse :  & homme & machine & machine 
+  \end{tabular}
+  }
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Masse de données}
+  \begin{itemize}
+   \item de toutes natures (génomique, phénotypique, climatique, etc), 
+   \item à différentes échelles (gène, cellule, individu, milieu, planète), 
+   \item avec différentes structures (nombres, images, sons, textes, ...)
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Gradient de stratégie} pour leur collecte
+  $$
+  \text{opportuniste } \rightarrow
+  \text{ participative (``protocolée'' ou non) } \rightarrow
+  \text{ systématique / planifiée} 
+  $$
+  ~}
+
+%====================================================================
+\frame{\frametitle{Plannifié vs opportuniste}
+
+  \paragraph{Planification expérimentale.}
+  \begin{itemize}
+   \item Recueil optimisé du point de vue de la modélisation
+   \item Garanties sur la valeur de généralité des résultats obtenus
+  \end{itemize}
+%   \ra Réponse à une question précisémment formulée \\
+  \ra Pertinence conditionnelle au modèle
+
+
+  \bigskip \bigskip \pause
+  \paragraph{Science de l'observation.}
+  \begin{itemize}
+   \item Approche naturaliste, exploration
+  \end{itemize}
+  \ra Besoin d'outils automatiques pour l'``observation'' de données massives 
+
+}
+
+%====================================================================
+%====================================================================
+\subsection{Apports de l'IA}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%====================================================================
+\frame{\frametitle{Essor de l'intelligence artificielle}
+
+  \paragraph{Promesse de l'IA =} Apprentissage automatique \\
+  {\sl ``des algorithmes plus autonomes pour extraire et synthétiser de la connaissance''}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Progrès récents~:} 
+  \begin{itemize}
+   \item masse croissante de données disponibles
+   \item accroissement des moyens de calcul
+   \item progrès théoriques en apprentissage ({\sl algorithmes})
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Masses des données:} 
+  \begin{itemize}
+   \item Parfois sans commune mesure avec les données biologiques
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Puissance de calcul:} 
+  \begin{itemize}
+   \item Nerf de la guerre
+   \item Des problèmes (ex.: combinatoires) insolvable par une approche frontale
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{{\sl Algorithme}}
+
+  \paragraph{Définition~:}
+  \textsl{suite finie et non ambiguë d'opérations ou d'instructions permettant de \textbf{résoudre une classe de problèmes}}
+
+  \bigskip \bigskip \pause
+  \paragraph{Usage~:} ``Algorithme'' désigne, selon les cas,
+  \begin{enumerate}
+   \item le problème à résoudre
+   \item la suite d'opérations
+   \item le résultat
+  \end{enumerate} \pause
+  Confusion encore plus fréquente: processus d'apprentissage / formule de prédiction
+
+  \bigskip \bigskip \pause
+  \paragraph{Biologie prédictive~: } typiquement des problèmes 
+  \begin{enumerate}[($a$)]
+   \item de calcul numérique, algorithmique, combinatoire
+   \item supervisés~: prédiction, classification (optimisation)
+   \item non-supervisés~: réduction de dimension, {\sl clustering}
+  \end{enumerate}
+
+}
+
+%====================================================================
+\frame{\frametitle{Problèmes supervisés}
+
+  \paragraph{Parti pris~:} modèle empirique
+  $$
+  \hat{f}(x, \hat{p}) = \hat{y} \simeq y
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Large panoplie d'algorithmes~:} réseaux de neurones (profonds), machines à vecteurs supports, forêts aléatoires, .... 
+  \begin{itemize}
+   \item efficaces pour gérer les données de grande dimension
+   \item performances empiriques au niveau de l'état de l'art
+   \item assortis de certaines garanties théoriques (erreur de généralisation)
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Ingrédients du succès.} 
+  \begin{itemize}
+   \item Représentation des données ('{\sl with good features, learning is easy}')
+   \item Choix de l'algorithme 
+   \item Critère de qualité de la prédiction
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Choix des algorithmes (en supervisé)}
+
+  \paragraph{Prédiction génomique:} $y =$ phénotype, $x = $ marqueurs, $\widehat{y} = \widehat{f}(x; \widehat{p})$
+  
+  \bigskip \pause
+  \hspace{-0.05\textwidth}
+  \begin{tabular}{ll}
+   \begin{tabular}{p{.45\textwidth}}
+   \paragraph{Réseau de neurones :} \\ ~\\
+   \includegraphics[trim={0 0 0 1700}, width=.45\textwidth, clip]{Figs/neuralnetworks} \\ ~
+   \end{tabular}
+   & \pause
+   \begin{tabular}{p{.5\textwidth}}
+   \end{tabular}
+   \begin{tabular}{p{.45\textwidth}}
+   \paragraph{Pénalisation / régularisation:} \\ ~\\
+   \includegraphics[trim={0 0 0 0}, width=.45\textwidth, clip]{Figs/Regularization} \\ ~\\
+   $[$group, fused, Bayesian, sparse-group$]$-lasso, ridge, elastic-net, ... \\ ~\\ ~
+   \end{tabular}
+   \end{tabular}
+
+  \pause
+  \begin{itemize}
+   \item Grande dimension~: régularisation / réduction de dimension
+   \item Interprétabilité / sur-interprétation des résultats ($\hat{f}$, $\hat{p}$)
+   \item Pénalité à façon~: prise en compte du déséquilibre de liaison
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Problèmes non supervisés}
+
+  \paragraph{Parti pris~:} question non formelle, voire pas de question 
+
+  \bigskip \bigskip \pause
+  \paragraph{Large panoplie d'algorithmes~:} ...
+  \begin{itemize}
+   \item efficaces ... 
+   \item performances ... 
+   \item garanties théoriques {\sl (conditionnelles à la formalisation du problème)}
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Ingrédients du succès.} 
+  \begin{itemize}
+   \item Représentation des données
+   \item Choix de l'algorithme
+   \item Mesure de qualité de la solution {\sl (conditionnelle à la formalisation du problème)}
+  \end{itemize}
+
+}
+
+% %====================================================================
+% \frame{\frametitle{Représentation des données}
+% 
+%   \bigskip \bigskip 
+%   \paragraph{Représentation.}
+%   \begin{itemize}
+%    \item Son (bases de fonctions), image (structure spatiale), texte ('sacs de mots'), ...
+%   \end{itemize}
+% 
+% 
+%   \bigskip 
+%   \begin{itemize}
+%    \item Prise en compte de la connaissance préalable (covariables, structure de population)
+%   \end{itemize}
+% 
+% 
+% 
+% }
+% 
+%====================================================================
+\frame{\frametitle{Critère d'évaluation (en non-supervisé)}
+
+  \paragraph{{\sl Clustering}.}
+  $$
+  \hspace{-0.05\textwidth}
+  \begin{tabular}{c|c|c|c}
+   Données & Algorithme 1 & Algorithme 2 & Algorithme 1' \\
+   \includegraphics[width=.23\textwidth]{Figs/Classif0} & \pause
+   \includegraphics[width=.23\textwidth]{Figs/Classif1} &
+   \includegraphics[width=.23\textwidth]{Figs/Classif2} & \pause
+   \includegraphics[width=.23\textwidth]{Figs/Classif3} 
+  \end{tabular}
+  $$
+  
+  \bigskip % \pause
+  \begin{itemize}
+   \item Choix du 'meilleur' algorithme 
+   \item Représentation des données
+  \end{itemize}
+  ({\sl Avoid blind use of metrics, learn formulas instead})
+  
+}
+
+%====================================================================
+\frame{\frametitle{Extensions naturelles}
+
+  \paragraph{Intégration de données.}
+  \begin{itemize}
+   \item Représentation formelle de données
+   \item Combinaision des représentations (ex. : produit scalaire)
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Combinaison de prédicteurs.}
+  \begin{itemize}
+   \item Différents prédicteurs disponibles pour une même tâche
+   \item Combinaison de prédicteur = (meta-)problème d'apprentissage
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Apprentissage par renforcement.}
+  \begin{itemize}
+   \item Mesure locale de la qualité de la prédiction \\
+   \ra Détection des zones uncertaines et requête de nouvelles mesures
+   \item Automatisation de la confrontation avec l'expérience \\
+   \ra Biologie synthétique
+  \end{itemize}
+  
+}
+
+%===================================================================
+\frame{\frametitle{Enjeux}
+
+  \paragraph{Risque~:} l'algorithme remplace la question
+
+  \bigskip \bigskip \pause
+  \paragraph{Garde-fou~:} confrontation avec l'observation
+  \begin{itemize}
+   \item Apprentissage supervisé
+   \item Automatisation des expériences
+  \end{itemize}
+  \ra A condition que la réponse soit évaluable
+
+  \bigskip \bigskip \pause
+  \paragraph{Sinon ...}
+  \begin{itemize}
+   \item S'assurer que l'algorithme répond bien à la question posée
+   \item A défaut: connaître la question à laquelle il répond
+  \end{itemize}
+
+}
+

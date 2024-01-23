@@ -1,0 +1,210 @@
+%====================================================================
+%====================================================================
+\subsection{Modèles}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%====================================================================
+\frame{\frametitle{Modèle}
+
+  $$
+  y = f(x; p)
+  $$
+  \begin{itemize}
+   \item $y = $ réponse du système
+   \item $x = $ conditions (expérimentales, environnementales, état antérieur du système)
+   \item $f = $ 'modèle' (système d'équations, règles d'évolution, ...)
+   \item $p = $ paramètres (coefficients, seuils, ...)
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Modélisation :} Choisir la forme de $f$
+
+  \bigskip \bigskip  \pause
+  \paragraph{+} mesure / recueil / détermination / estimation / ``calage'' de $p$ \\ ~\\
+
+}
+
+%====================================================================
+\frame{\frametitle{Quels modèles / quels objectifs ?}
+
+  \paragraph{Deux archétypes :}
+  \begin{description}
+  \item[Empirique :] Capable de générer des données $(x, y)$ similaires aux observations
+  \item[Mécaniste :] Décrivant effectivement les mécanismes sous-jacents
+  \end{description}
+
+  \bigskip \bigskip \pause
+  \paragraph{Objectifs.} 
+  \begin{enumerate}
+   \item \pause Comprendre : établir un $f$ (et déterminer un $p$) ``réaliste'' \\ ~
+   \item \pause Prédire : $\hat{y}_ 0 = f(x_0; p)$, $x_0 =$ scénario, génome, ... \\ ~\\
+%    \ra Ex. : réponse d'un écosystème à une perturbation environnementale \\ ~
+   \item \pause Gérer / contrôler : déterminer $u^*$ tel que $f(x_0, u^*; p) =$ valeur cible $y^*$ \\ ~\\
+%    \ra Ex. :  médecine personnalisée
+  \end{enumerate}
+
+}
+
+%====================================================================
+%====================================================================
+\subsection{Systèmes complexes}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%====================================================================
+\frame{\frametitle{Systèmes biologiques $\rightarrow$ Systèmes complexes $\rightarrow$ Modèles complexes}
+
+  \paragraph{Système complexe :}
+  \begin{itemize}
+   \item 'Système' = ensemble organisé d'éléments
+   \item 'Complexe' = constitué de plusieurs éléments / {\sl difficile de ce fait}
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Recours à une modélisation (représentation) formelle}
+  \begin{itemize}
+   \item des entités biologiques
+   \item de leurs interactions
+   \item de leur évolution dans les temps et dans l'espace
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Conséquences :}
+  \begin{itemize}
+   \item Définition / abstraction des objets et des connaissances
+   \item Formalisation de leurs relations
+   \item Traduction des questions de recherche en un langage formel
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Abstraction / Formalisation}
+
+  \paragraph{Définition des entités.}
+  \begin{itemize}
+   \item Écologie microbienne : espèces, OTU ({\sl operational taxonomic unit}) ou gènes
+   \item Réseaux de régulation : transcrits, protéines, métabolites
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Formalisation des relations.}
+  \begin{itemize}
+   \item Relations déterministes : $y = f(x)$, probabilistes : $p(y \mid x)$, logiques : $y = (x_1 \land x_2) \lor (¬x_3)$
+%    \item Description quantitative : $y = a x_1 + b x_2^2$, logique : $y = (x_1 \land x_2) \lor (¬x_3)$
+   \item Hiérarchies
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Formalisation de l'expertise.}
+  \begin{itemize}
+   \item 'Elicitation de prior' : représentation probabiliste d'un savoir individuel
+   \item Définition d'ontologies
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Exemple : Modèles de réseau écologique}
+
+  \begin{minipage}[t]{.48\linewidth}
+   \paragraph{Modèle dynamique :}
+   $\dot{x}_j(t) = \sum_i a_{ij} \, x_i(t)$
+   $$
+   \includegraphics[trim={360 0 160 200}, width=.6\textwidth, clip]{Figs/StaticDynamicNetwork}
+   $$ 
+   \begin{itemize}
+   \item Données temporelles
+   \item Description 'mécaniste'
+   \item Limite d'échelle
+   \item Résilience, robustesse
+   \end{itemize}
+  \end{minipage} \hfill \pause
+  \begin{minipage}[t]{.48\linewidth}
+   \paragraph{Modèle probabiliste :} $p(x) \propto \prod_C p(x_C)$    
+   $$
+   \includegraphics[trim={360 205 160 0}, width=.6\textwidth, clip]{Figs/StaticDynamicNetwork}
+   $$
+   \begin{itemize}
+   \item Données statiques
+   \item Interaction directe / indirecte
+   \item Mutualisme, compétition
+   \item Centralité, agrégation
+   \end{itemize}
+  \end{minipage} 
+}
+
+%====================================================================
+\frame{\frametitle{Traduction mathématique / Conlusions mathématiques}
+
+  \paragraph{Modèle graphique :} 
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.2\textwidth}}
+    \includegraphics[trim={0 15 180 0}, width=.2\textwidth, clip]{Figs/Pea09-Fig2-3}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+    les variations d'une entité sont conditionnelles à celles de ses parents :
+    $$
+    p(a, b, c, d, e) = 
+    p(a) \; p(b \mid a) \; p(c \mid a) \; p(d \mid b, c) \; p(e \mid d)
+    $$ 
+    \end{tabular}   
+  \end{tabular}
+
+  \bigskip \bigskip \pause
+  \begin{tabular}{lll}
+    \begin{tabular}{p{.6\textwidth}}
+    \paragraph{Identifiabilité} à partir de données observationnelles : ~\\ 
+    \includegraphics[trim={0 15 0 0}, height=.25\textheight, clip]{Figs/Pea09-Fig2-4}
+    \end{tabular}
+    &
+    \qquad
+    &  \pause
+    \begin{tabular}{p{.2\textwidth}}
+    \paragraph{Causalité :} ~\\ ~\\
+    \includegraphics[trim={190 15 0 10.5}, height=.22\textheight, clip]{Figs/Pea09-Fig2-3}
+    \end{tabular}   
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Modèles complexes}
+
+  \begin{tabular}{ll}
+    Modèle environmental & Réseau de régulation \\
+    \begin{tabular}{p{.45\textwidth}}
+    \includegraphics[trim={20 20 15 80}, width=.45\textwidth, clip]{Figs/aquatox-large}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.4\textwidth}}
+    \includegraphics[width=.45\textwidth]{Figs/KeggActin}
+    \end{tabular}
+  \end{tabular}
+
+  \bigskip \bigskip 
+  \begin{itemize}
+   \item Compréhension / description (carte à l'échelle 1)
+   \item Hubris modélisatrice : $y = f_3\left(\underset{\widehat{x}_1}{\underbrace{f_1(u_1; p_1)}}, \underset{\widehat{x}_2}{\underbrace{f_2(u_2; p_2)}}, x_3; p_3\right)$
+  \end{itemize}
+}
+
+%===================================================================
+\frame{\frametitle{Enjeux}
+
+  \paragraph{Risque :} le modèle remplace l'objet
+
+  \bigskip \bigskip \pause
+  \paragraph{Garde-fou :} confrontation avec l'observation \\
+  \begin{itemize}
+  \item Pouvoir de prédiction du modèle
+%    \item Modèles météorologiques
+%    \item Expériences de {\sl knock-out}
+  \end{itemize}
+  \ra A condition que la prédiction soit testable (ex. : interaction, causalité)
+
+  \bigskip \bigskip \pause
+  \paragraph{Sinon ...}
+  \begin{itemize}
+   \item S'assurer que les concepts mathématiques reflètent les concepts biologiques
+  \end{itemize}
+
+}
+

@@ -1,0 +1,178 @@
+%====================================================================
+%====================================================================
+\section{Joint species distribution models}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Species abundance data} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Fish species in Barents sea \refer{FNA06}:} 
+      \begin{itemize}
+       \item $89$ sites (stations)
+       \item $30$ fish species
+       \item $4$ covariates 
+      \end{itemize}
+
+      \onslide+<2->{\bigskip \bigskip 
+      \paragraph{Data:} 
+      \begin{itemize}
+       \item $Y_{ij} =$ abundance of species $j$ in site $i$
+       \item $x_i =$ vector of covariates for site $i$
+      \end{itemize}}
+
+      \onslide+<3->{\bigskip \bigskip 
+      \paragraph{Questions:} 
+      \begin{itemize}
+       \item Do environmental conditions affect species abundances? (\emphase{abiotic}) \\~ 
+       \item Do species abundances vary independently? (\emphase{biotic})
+      \end{itemize} 
+    \end{tabular}}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<2->{\paragraph{Abundance table:} ~ \\
+        {\footnotesize \begin{tabular}{rrrr}
+        {\sl Hi.pl} & {\sl An.lu} & {\sl Me.ae} & \dots \\
+        \hline
+        31  &   0  & 108 & \\
+         4  &   0  & 110 & \\
+        27  &   0  & 788 & \\
+        13  &   0  & 295 & \\
+        23  &   0  &  13 & \\
+        20  &   0  &  97 & \\
+        . & . & . & 
+      \end{tabular}}} 
+      \\
+      \bigskip \bigskip 
+      \onslide+<2->{\paragraph{Environmental covariates:} ~ \\
+        {\footnotesize \begin{tabular}{rrrr}
+        Lat. & Long. & Depth & Temp. \\
+        \hline
+        71.10 & 22.43 & 349 & 3.95 \\
+        71.32 & 23.68 & 382 & 3.75 \\
+        71.60 & 24.90 & 294 & 3.45 \\
+        71.27 & 25.88 & 304 & 3.65 \\
+        71.52 & 28.12 & 384 & 3.35 \\
+        71.48 & 29.10 & 344 & 3.65 \\
+        . & . & . & .
+      \end{tabular}}} 
+    \end{tabular}
+  \end{tabular} 
+}
+
+%====================================================================
+\frame{\frametitle{Modelling species abundance}
+
+  \paragraph{Multivariate count distributions:} 
+  \begin{itemize}
+  \item Gaussian models do not fit
+  \item Not that many models for count data without restriction on the dependency \refer{IYA17}
+  \item Many joint species distribution models (\emphase{JSDM}) resort to a latent layer \refer{WBO15,OTD17,PHW18}
+
+  \end{itemize}
+
+  \bigskip \pause
+  \paragraph{Poisson log-normal (PLN) model:} \refer{AiH89}
+  \begin{itemize}
+  \item \pause \bigskip $Z_i =$ latent vector associated with site $i$: $\{Z_i\}_{1 \leq i \leq n}$
+ iid
+  $$
+  Z_i \sim \Ncal_p(0, \Sigma)
+  $$
+  \item \pause \bigskip $Y_{ij} = $ observed abundance for species $j$ in site $i$
+: $\{Y_{ij}\}_{1 \leq i \leq n, 1 \leq j \leq p} \text{ independent} \mid \{Z_i\}$
+  $$
+  Y_{ij} \sim \Pcal(\exp(x_i^\intercal {\beta_j} + Z_{ij}))
+  $$
+  \item \pause \bigskip Unknown parameters 
+  $$
+  {\theta} = (\beta, \Sigma)
+  $$
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{(Directed) Graphical model} 
+
+  \paragraph{Definition:} $p(U_1, \dots U_k)$ factorizes according to the directed acyclic graph $G = ([k], E)$ iff
+  $$
+  p(U_1 ,\dots U_k) = \prod_{h=1}^k p(U_h \mid U_{\text{parent}_G(h)})
+  $$
+  \refer{Lau96} (not necessarily unique factorisation)
+
+  \bigskip \bigskip \pause
+  \paragraph{Graphical model for PLN:} Independent sites + conditionally independent abundances\footnote{Only random variables appears as nodes, covariates in $X$ are considered as fixed}
+  $$
+  p_\theta\left(\{Z_i\}, \{Y_{ij}\}\right) = \prod_i p_\Sigma(Z_i) \times \prod_j p_\beta(Y_{ij} \mid Z_i\textcolor{gray}{; x_i})
+  $$
+  \pause
+  $$
+  \input{\figlux/GG-PLN}
+  $$
+  
+}
+   
+%====================================================================
+\frame{\frametitle{Barents' fishes}
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Data:} 
+      \begin{itemize}
+       \item $n=89$ sites, $p=30$ species, $d=4$ covariates 
+       \item \bigskip Abundance table: ${Y} = [Y_{ij}] \quad (n \times p)$
+       \item \bigskip Covariate table: ${X} = [x_{ik}] \quad (n \times d)$
+     \end{itemize}
+ 
+      \onslide+<2->{\bigskip \bigskip 
+      \paragraph{Interpretation:} 
+      \begin{itemize}
+       \item \onslide+<2->{$\beta = $ regression coefficients \\
+       \ra abiotic effects}
+       \item \bigskip \onslide+<3->{$\Sigma =$ variance of the latent layer \\
+       \ra biotic associations}
+      \end{itemize}}
+    \end{tabular}
+    & \pause
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<2->{\paragraph{Regression coefficients $\widehat{\beta}$:} 
+      abiotic \\ 
+      \includegraphics[width=.3\textwidth]{\figeco/BarentsFish-coeffAll} \\}
+      % ~\\
+      \onslide+<3->{\paragraph{Covariance matrix $\widehat{\Sigma}$:} biotic \\ 
+      \includegraphics[width=.3\textwidth]{\figeco/BarentsFish-corrAll}} \\
+    \end{tabular}    
+  \end{tabular}
+}
+
+%====================================================================
+\frame{\frametitle{Some properties of the Poisson log-normal distribution} 
+
+  Denoting $\Sigma = [\sigma_{jk}]$,
+  \begin{itemize}
+  \item \bigskip Expectation (prediction):
+  $$
+  \Esp(Y_{ij}) = \exp(x_i^\intercal \beta_j + \sigma_{jj}/2) =: \mu_{ij}
+  $$ 
+  \item \pause \bigskip \bigskip Variance ('over-dispersion'):
+  $$
+  \Var(Y_{ij}) 
+  = \mu_{ij} + \mu_{ij}^2 (e^{\sigma_{jj}} - 1)
+  \quad > \quad \mu_{ij}
+  $$
+  \item \pause \bigskip \bigskip Covariance:
+  $$
+  \Cov(Y_{ij}, Y_{ik}) 
+  = \mu_{ij} \mu_{ik} (e^{\sigma_{jk}} - 1)
+  $$ 
+  ~ \\
+  \ra signs are preserved: 
+  $$
+  \sign(\sigma_{jk}) = \sign(\Cov(Y_{ij}, Y_{ik}))
+  $$
+ \end{itemize}
+  
+}
+

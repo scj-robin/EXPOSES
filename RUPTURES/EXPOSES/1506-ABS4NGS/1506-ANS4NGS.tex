@@ -1,0 +1,747 @@
+\documentclass[10pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+\usetheme{CambridgeUS}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+%\usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{stmaryrd}
+\usepackage{epsfig}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+% Commands
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\definecolor{darkgreen}{rgb}{0,0.4,0}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+%\newcommand{\emphase}[1]{\textcolor{black}{#1}}
+\newcommand{\paragraph}[1]{\textcolor{darkred}{#1}}
+\newcommand{\refer}[1]{\textcolor{gray}{{\small [\cite{#1}]}}}
+\newcommand{\Refer}[1]{\textcolor{gray}{{\small [#1]}}}
+% \newcommand{\newblock}{}
+
+% Symbols
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\dd}{\text{d}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Kbf}{{\bf K}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Gam}{\mathcal{G}\text{am}}
+\newcommand{\Ibb}{\mathbb{I}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Nbf}{{\bf N}}
+\newcommand{\Nm}{N(\mbf)}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\Obf}{{\bf 0}}
+\newcommand{\Omegas}{\underset{s}{\Omega}}
+\newcommand{\Ybf}{{\bf Y}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\sbf}{{\bf s}}
+\newcommand{\Sbf}{{\bf S}}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\cst}{\text{cst}}
+\newcommand{\ra}{\emphase{$\rightarrow$~}}
+
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES/}
+
+%====================================================================
+\title[Exact Bayesian change-point inference]{Comparing change-point location in RNAseq data: \\ Exact Bayesian inference}
+
+\author[S. Robin]{S. Robin \\  }
+
+\institute[AgroParisTech / INRA]{{\normalsize joint work with A. Cleynen, E. Lebarbier \& G. Rigaill } \\
+
+  \bigskip
+  \includegraphics[width=.8\textwidth]{../FIGURES/Logo-3} \\
+  \bigskip 
+  }
+
+  \date[Amsterdam, 2014]{\footnotesize{ABS4NGS Workshop / Institut Curie, Paris, 23-Jun-2015}}
+
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\frame{\titlepage
+  }
+
+%====================================================================
+\frame{\frametitle{Outline} 
+  \tableofcontents
+  }
+
+%====================================================================
+%====================================================================
+\section[Change point problems in genomics]{Change point problems in genomics: Main issues}
+%====================================================================
+\frame{\frametitle{Change point problems in genomics: Main issues} 
+
+  \paragraph{Genomic data:} often collected 'along the genome', similarly to time series
+  
+  \bigskip \bigskip
+  \paragraph{Genomic experiments:} often aim at finding regions in which some specific event occurs:
+  \begin{itemize}
+   \item copy number variations (gain or loss of genomic regions)
+   \item gene detection (detection of transcribed region)
+   \item protein-DNA interactions (e.g. detection of protein biding sites)
+   \item ...
+  \end{itemize}
+
+  \bigskip \medskip
+  \paragraph{Genomic technologies} now provide information at the nucleotide resolution
+  }
+
+%====================================================================
+\frame{\frametitle{Different experiments and technologies} 
+
+  \begin{tabular}{l}
+    \vspace{-.05\textheight}
+    \paragraph{Comparative genomic hypridization:} microarrays / copy number variation \\
+    \begin{tabular}{c}
+	 \begin{overprint}
+	   \onslide<1>
+	   \includegraphics[height=.45\textheight, width=.9\textwidth]{../FIGURES/FigSeg-Cambridge-CGH}
+	   \onslide<2>
+	   \includegraphics[height=.45\textheight, width=.9\textwidth]{../FIGURES/FigSeg-Cambridge-CGH-seg}
+	 \end{overprint}
+    \end{tabular}
+    \\
+    \vspace{-.05\textheight}
+    \paragraph{RNA-sequencing:} massive sequencing / gene expression \\
+    \begin{tabular}{c}
+	 \begin{overprint}
+	   \onslide<1>
+	   \includegraphics[height=.45\textheight, width=.9\textwidth]{../FIGURES/FigSeg-Cambridge-RNAseq}
+	   \onslide<2>
+	   \includegraphics[height=.45\textheight, width=.9\textwidth]{../FIGURES/FigSeg-Cambridge-RNAseq-seg}
+    \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%====================================================================
+\frame{\frametitle{Three main issues} 
+
+  \paragraph{Modelling}
+  \begin{itemize}
+   \item Which distribution: Gaussian, Poisson, negative binomial, non-parametric?
+   \item Independence?
+  \end{itemize}
+  
+  \bigskip 
+  \paragraph{Algorithmics:} $\binom{n-1}{K-1} \approx \left(\frac{n}{k}\right)^k$ possible segmentations of $n$ points into $K$ segments
+  \begin{description}
+  \item[\ra] Dynamic programming retrieves the optimal segmentation in $O(Kn^2)$ for additive loss functions
+  \end{description}
+  
+  
+  \bigskip 
+  \paragraph{Model selection:} How many segments: $K = $ ?
+  \begin{description}
+   \item[\ra] Because of discontinuity, standard model selection criteria (AIC, BIC) do not apply
+  \end{description}
+
+  }
+
+%====================================================================
+\frame{\frametitle{Two scales} 
+
+  \paragraph{Global scale: $n \approx 10^6 - 10^8$} (whole genome) \\
+  Aim = find the 'best' segmentation, not much more.
+  \begin{itemize}
+   \item \pause Need for efficient algorithms (not quadratic!) \\
+   \ra Pruned Exact Linear Time (PELT) \refer{KFE12}, Pruned Dynamic Programing Algorithm (PDPA) \refer{Rig10,CKL14}
+   \item \pause Need for a statistically grounded criterion to choose $K$: \\
+   \ra modified BIC \refer{ZhS07}, penalized likelihood \refer{ClL13} \end{itemize}
+
+  \bigskip \pause
+  \paragraph{Local scale: $n \approx 10^3$} (genomic region) \\
+  Aim = answer to more precise questions
+  \begin{itemize}
+   \item Reliability of the 'best' segmentation
+   \item Confidence intervals for the change-points
+   \item Change point comparison
+  \end{itemize}
+  }
+
+% %====================================================================
+% \frame{\frametitle{Global scale}
+% 
+% %   \vspace{-.1\textheight}
+%   \paragraph{RNA-seq:} looking for transcribed regions \\
+%   \vspace{-.05\textheight}
+% %   $$	   
+%   \includegraphics[height=.45\textheight, width=.9\textwidth]{../FIGURES/FigSeg-Cambridge-RNAseq-seg}
+% %   $$
+% 
+% 
+%   Need for:
+%   \begin{itemize}
+%    \item an exact and efficient segmentation algorithm \\
+%    \ra \refer{Rig10,CKL14}, Segmentor3IsBack R package
+%    \item a statistically grounded criterion to choose the number of change-points \\
+%    \ra \refer{ClL14}
+%   \end{itemize}
+% } 
+
+% %====================================================================
+% \frame{\frametitle{Global scale: comparative study for SNP arrays}
+% 
+%   \paragraph{Benchmark of manually annotated profiles:} ROC curves \refer{Hoc12}
+%   $$
+%   \includegraphics[width=\textwidth]{../FIGURES/Hoc12-Fig3-3}     
+%   $$
+% %   \begin{itemize}
+% %    \item 'Exact' methods (PDPA \refer{Rig10} and PELT \refer{KFE12}) perform best 
+% %    \item Model selection remains an issue.
+% %   \end{itemize}
+% 
+%  }
+
+%====================================================================
+%====================================================================
+\section{Exact posterior distributions in change-point models}
+%====================================================================
+\frame{\frametitle{Exact posterior distribution in change-point models \refer{RLR11}} 
+
+  \paragraph{Data:} $Y_t =$ number of reads mapped onto the genome and starting at nucleotide $t$
+
+  $$
+  \includegraphics[width=.8\textwidth, height=.4\textheight]{../FIGURES/gb-2008-9-9-234-1}
+  $$
+
+  \Refer{genomebiology.com}
+
+
+  }
+
+% %====================================================================
+% \frame{\frametitle{Bayesian framework for one series} 
+% 
+%   \paragraph{Number of segments:}
+%   $$
+%   K \sim p(K)
+%   $$ 
+% 
+%   \medskip
+%   \paragraph{Segmentation:}
+%   $$
+%   m = (\tau_k)_k \sim p(m|K)
+%   $$
+%   \ra Change points: $1 = \tau_0 < \dots < \tau_{K-1} < \tau_K = n +1$ \\
+%   \ra Segment:  $r \in m: r = \llbracket \tau_{k-1}, \tau_k \llbracket$
+% 
+%   \bigskip
+%   \paragraph{Parameters:}
+%   $$
+%   \theta = (\theta_r)_{r \in m} \sim p(\theta |m)
+%   $$
+% 
+%   \medskip
+%   \paragraph{Data:}
+%   $$
+%   Y = (Y_t)_{1 \leq t \leq n} \sim p(Y | \theta, m)
+%   $$
+% 
+% 
+% %   \begin{tabular}{lll}
+% %     Number of segments: & $K$ & $p(K)$ \\
+% %     ~ \\
+% %     Segmentation: & $m = (\tau_k)_k$ & $p(m|K)$ \\
+% %     (change-points: & $0 < \tau_1 < \dots < \tau_{K-1} < n$) & \\
+% %     ~ \\
+% %     Segmentation space: & $\Mcal_K = \Mcal_K(\llbracket 1, n+1 \llbracket)$ & \\
+% %     ~ \\
+% %     Segment: & $r = \llbracket \tau_{k-1}, \tau_k \llbracket$ & \\
+% %     ~ \\
+% %     Parameters: & $\theta = (\theta_r)_{r \in m}$ & $p(\theta |m)$ \\
+% %     (segments: & $r = \llbracket \tau_{k-1}, \tau_k \llbracket$) & \\
+% % 
+% %     ~ \\
+% %     Data: & $Y = (Y_t)_{1 \leq t \leq n}$ & $p(Y | \theta, m)$ \\
+% %   \end{tabular}
+% 
+%   }
+
+%====================================================================
+\frame{\frametitle{Bayesian hierarchical model for one series} 
+
+  \begin{tabular}{cc}
+    \hspace{-0.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<1->{\paragraph{} }
+%       \onslide+<1->{\paragraph{Hierarchical model.} 
+        \begin{itemize}
+        \item \onslide+<2->{Number of segments: $$K \sim p(K)$$}
+        \item \onslide+<3->{\vspace{-0.05\textheight}Break-point locations: $$m = (\tau_k)_k \sim p(m|K)$$}
+        \item \onslide+<4->{\vspace{-0.05\textheight}Distribution parameters (in each segment)$$\theta = (\theta_r)_{r \in m} \sim p(\theta |m)$$}
+        \item \onslide+<5->{\vspace{-0.05\textheight}Observed data: $$Y = (Y_t)_{1 \leq t \leq n} \sim p(Y | \theta, m)$$}
+        \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-0.1\textwidth}
+    \begin{tabular}{c}
+%       \onslide+<2->{
+%         \hspace{-6cm}
+%         \onslide+<3->{if $t \in \textcolor{blue}{r_k}$,} \quad $Y_t$
+%         \onslide+<5->{$\sim
+%           \Fcal($}\onslide+<4->{$\textcolor{red}{\theta_k}$}\onslide+<5->{$)$}
+%         \\}
+      \begin{overprint}
+        \onslide<2>
+        \includegraphics[width=.5\textwidth]{../FIGURES/FigSeg-Budapest-1} 
+        \onslide<3>
+        \includegraphics[width=.5\textwidth]{../FIGURES/FigSeg-Budapest-2} 
+        \onslide<4>
+        \includegraphics[width=.5\textwidth]{../FIGURES/FigSeg-Budapest-3} 
+        \onslide<5>
+        \includegraphics[width=.5\textwidth]{../FIGURES/FigSeg-Budapest-4} 
+        \onslide<6->
+        \includegraphics[width=.5\textwidth]{../FIGURES/FigSeg-Budapest-0} 
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+% 
+%   \onslide+<6->{
+%   $$
+%   \text{\emphase{Aim:} \qquad } p(K, m, \theta | Y)
+%   $$
+%   } 
+  }
+
+%====================================================================
+\frame{\frametitle{Quantities of interest \& Assumptions } 
+
+  \paragraph{Some (typical) quantities of interest:}
+  \begin{itemize}
+   \item Number of change-points: 
+   $$
+   p(K | Y)
+   $$
+   \item Change point location: 
+   $$
+   P\{\tau_k = t | Y\} \quad \text{or} \quad P\{\tau_k = t | Y, K\}
+   $$
+   \item Reliability of the 'best' segmentation:
+   $$
+   p(m|Y) \qquad \text{or} \qquad p( m|Y , K )
+   $$
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Some assumption on the prior distributions.}
+  \begin{itemize}
+   \item The segmentation prior $p(m|K)$ factorizes along segments \\
+   \ra holds for uniform prior or for $p(m|K) \propto \prod_{r \in m} n_r$ \\~
+  \item Parameters $\theta_r$ are independent from one segment to another \\~
+  \item Data are $Y^r$ independent from one segment to another 
+   \end{itemize}
+
+}  
+  
+%====================================================================
+\frame{\frametitle{Need for integrals and sums} 
+
+  \paragraph{Ex. 1: Model selection.} $p(K | Y) \propto p(Y | K) p(K)$, \qquad \onslide+<2->{$r =$ one region $[t, t']$}
+  $$
+  p(Y|K) =  
+  \onslide+<5->{\emphase{\sum_{m \in \Mcal_K}} }
+  \onslide+<4->{\prod_{r\in m} }
+  \onslide+<3->{\emphase{\int}} 
+  \onslide+<2->{p(Y^r|\theta_r)} 
+  \onslide+<3->{p(\theta_r) \emphase{\dd \theta_r} }
+  \onslide+<6->{= \emphase{\sum_{m \in \Mcal_K}} \prod_{r\in m} p(Y^r)}
+  $$
+  \onslide+<6->{$p(Y^r)$ has a close-form when using conjugate priors (\emphase{$\int$} vanishes).}
+
+  \onslide+<7->{\bigskip \bigskip 
+  \paragraph{Ex. 2: Localisation of the $k$-th breakpoint.}
+  \begin{eqnarray*}
+    P\{\tau_k = t | K, Y\} & \propto & 
+    \underset{\text{$k$ segments before $t$}}{\underbrace{\left(\sum_{m \in \Mcal_k(1, t)} \prod_{r \in m} p(Y^r)\right)}} 
+    \underset{\text{$K-k$ segments after $t$}}{\underbrace{\left(\sum_{m \in \Mcal_{K-k}(t+1, n)} \prod_{r
+    \in m} p(Y^r)\right)}}
+  \end{eqnarray*}}
+  
+  \onslide+<7->{\bigskip 
+  \ra Need to sum up over the whole segmentation space $\Mcal_K$.}
+  }
+
+%====================================================================
+\frame{ \frametitle{Computing sums of products}
+
+To compute
+  $$
+  \sum_{m \in \Mcal_K(1, t)} \prod_{r \in m} p(Y^r),
+  $$ 
+  
+  \bigskip \pause
+  define the upper triangular $(n+1) \times (n+1)$ matrix $A$:
+%   $$
+%   A_{ij} = f(\llbracket i, j \llbracket ), \qquad 1 \leq i < j \leq n+1
+%   $$
+  $$
+  A = \left[ 
+    {\small \begin{array}{cccccc}         
+	 0 & p(Y_1) & p(Y_1, Y_2) & p(Y_1, Y_2, Y_3) & \dots & p(Y_1, \dots Y_n) \\
+	 & 0 & p(Y_2) & p(Y_2, Y_3) & \dots & p(Y_2, \dots Y_n) \\
+	 &  & 0 & p(Y_3) & \dots & p(Y_3, \dots Y_n) \\
+	 &  &  &  \ddots &  & \vdots \\
+	 &  &  &  & 0 & p(Y_n) \\
+	 &  &  &  &  & 0 \\
+    \end{array}}
+  \right]
+  $$ 
+  
+  \pause then
+  $$
+  \sum_{m \in \Mcal_K(1,t)} \prod_{r \in m} p(Y^r) = \left[A^K\right]_{1,t+1}
+  $$
+  \ra all terms ($1 \leq k \leq K$, $1 \leq t \leq n+1$) are computed in {$O(K n^2)$}.  
+  
+%   \bigskip \pause
+%   \paragraph{NB:} Similar to the shortest path dynamic programing algorithm, replacing {'max'} with {'sum'} and {'sum'} with {'product'}
+  }
+
+% %====================================================================
+% \frame{ \frametitle{A CGH profile: $K = 3, 4$}
+%  
+%  \vspace{-.25cm}
+%   \begin{tabular}{lll}
+%     \hspace{-0.5cm}
+%     \begin{tabular}{p{0.25\textwidth}} 
+%     %Optimal segmentation
+%     $\widehat{m}_K =$ \\
+%     $\arg\max_m p(m | Y ,K)$ 
+%     \end{tabular}
+%     &
+%     \hspace{-0.5cm}
+%     \begin{tabular}{c}
+%       \includegraphics[width=0.3\textwidth, height=0.3\textheight,
+%       clip=]{../FIGURES/CopyNumberChr10_BIC}   
+%     \end{tabular}
+%     &
+%     \hspace{-0.5cm}
+%     \begin{tabular}{c}
+%       \includegraphics[width=0.3\textwidth, height=0.3\textheight,
+%       clip=]{../FIGURES/CopyNumberChr10_ICL}  
+%     \end{tabular}\\ 
+%     \hspace{-0.5cm}
+%     \begin{tabular}{p{0.25\textwidth}} 
+%     %Breakpoint position 
+%     $P\{\tau_K = t | Y, K\}$
+%     \end{tabular}
+%     &
+%     \hspace{-0.5cm}
+%     \begin{tabular}{c}
+%       \includegraphics[width=0.3\textwidth, height=0.3\textheight,
+%       clip=]{../FIGURES/CopyNumberChr10_ProbaBIC}   
+%     \end{tabular}
+%     &
+%     \hspace{-0.5cm}
+%     \begin{tabular}{c}
+%       \includegraphics[width=0.3\textwidth, height=0.3\textheight,
+%       clip=]{../FIGURES/CopyNumberChr10_ProbaICL}  
+%     \end{tabular}\\ 
+%     \hspace{-0.5cm}
+%     \begin{tabular}{p{0.25\textwidth}} 
+%     %Segment probability 
+%     $P\{r \in m | Y, K\}$
+%     \end{tabular}
+%     &
+%     \hspace{-0.5cm}
+%     \begin{tabular}{c}
+% %      \vspace{-0cm}
+%       \includegraphics[width=0.32\textwidth, height=0.27\textheight,
+%       clip=]{../FIGURES/ProbSeg-BIC}     
+%     \end{tabular}
+%     &
+% %    \vspace{-.5cm}
+%     \begin{tabular}{c}
+%       \includegraphics[width=0.32\textwidth, height=0.27\textheight,
+%       clip=]{../FIGURES/ProbSeg-ICL}   
+%     \end{tabular} 
+%   \end{tabular}
+%   }
+% 
+% %====================================================================
+% %====================================================================
+% \frame{ \frametitle{Model selection}
+% 
+%   \vspace{-.05\textwidth}
+%   \paragraph{Simulation:} Poisson signal alternating $\theta_0=1$ and $\theta_1$, $n = 100$. \\~
+% 
+%   \paragraph{Criterion} = \% of recovery of the true number of segments ($K = 5$). \\ 
+% 
+%   \begin{tabular}{p{.5\textwidth}p{.5\textwidth}}
+%     \hspace{-0.5cm}
+%     \begin{tabular}{p{.5\textwidth}}
+% 	 \paragraph{Exact criteria} can be computed: \\ ~
+% 
+% 	 $\textcolor{green}{BIC(K)} = \log p(Y, K)$ \\ ~
+% 
+%       $\textcolor{red}{BIC(m)} = \log p(Y, m)$ \\ ~
+%       
+%       $\textcolor{blue}{ICL(K)} = BIC(K) - H(K)$ \refer{BCG00} \\ ~\\
+%       $H(K) = $ entropy of $p(m | Y, K)$ 
+%     \end{tabular}
+%     &
+%     \hspace{-.05\textwidth}
+%     \begin{tabular}{c}
+% % 	 \textcolor{green}{$BIC(K)$} \quad \textcolor{red}{$BIC(m)$} \quad
+% % 	 \textcolor{blue}{$ICL(K)$} \\
+% 	 \includegraphics[width=.5\textwidth, height=.6\textheight]{../FIGURES/ICLvsBIC} \\ 
+% 	 $\theta_1 - \theta_0, \quad \theta_0 = 1$
+%     \end{tabular}
+%   \end{tabular}
+%  }
+
+%====================================================================
+%====================================================================
+\section{Comparing change-point locations}
+%====================================================================
+\frame{\frametitle{Comparing change-point locations  \refer{ClR13}} 
+  }
+
+% %====================================================================
+% \frame{\frametitle{RNA-seq data} 
+% 
+%   \paragraph{Data:} $Y_t =$ number of reads mapped onto the genome and starting at nucleotide $t$
+% 
+%   $$
+%   \includegraphics[width=.8\textwidth, height=.4\textheight]{../FIGURES/gb-2008-9-9-234-1}
+%   $$
+% 
+%   \Refer{genomebiology.com}
+% 
+% }
+
+%====================================================================
+\frame{\frametitle{Transcript boundaries in yeast}
+
+  \vspace{-.05\textheight}
+  \begin{tabular}{p{.2\textwidth}p{.7\textwidth}}
+    \begin{tabular}{p{.3\textwidth}}
+	 One gene \\
+	 \\
+	 $\times$ \\
+	 \\
+	 Three growth \\
+	 conditions: 
+	 $A$, $B$, $C$
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+    \includegraphics[width=.7\textwidth]{../FIGURES/compyeastresult.pdf}
+    \end{tabular}
+  \end{tabular}
+}
+
+%====================================================================
+\frame{\frametitle{Comparing 2 profiles}
+
+  \paragraph{Model:} Two independent series $Y^1$ and $Y^2$
+
+  \bigskip \bigskip
+  \paragraph{Question:} Is there a shift between the two transcription starts?
+  $$
+  \Delta := \tau_1^1 - \tau_1^2 \overset{?}{=} 0
+  $$
+  
+  \bigskip \pause
+  \paragraph{Posterior distribution of the shift:} Simple convolution
+  $$
+  P\{\Delta=d|Y^1, Y^2, K^1, K^2\} 
+  = \sum_t P\{\tau_ 1^1=t | Y^1, K^1\} P\{\tau_ 1^2 = t-d | Y^2, K^2\}
+  $$
+%   \begin{eqnarray*}
+%   & & P\{\Delta=d|Y^1, Y^2, K^1, K^2\} \\
+%   & & \qquad = \sum_t P\{\tau_ 1^1=t | Y^1, K^1\} P\{\tau_ 1^2 = t-d | Y^2, K^2\}   
+%   \end{eqnarray*}
+  
+  \bigskip\pause
+  \paragraph{Application to RNAseq:}
+  \begin{itemize}
+  \item Consensus distribution: negative binomial $\Ncal{\mathcal B}(\theta_r, \phi)$ 
+  \item $\phi$ is first estimated using a robust moment-based estimator \refer{JKK92} (no common parameter allowed...)
+  \item Exact posterior 95\% credibility intervals can then be derived
+  \end{itemize}
+ 
+}
+
+%====================================================================
+\frame{\frametitle{Back to the example}
+
+  3 comparisons ($A/B$, $A/C$, $B/C$) $\times$ 4 change-points:
+  
+\centerline{\includegraphics[width=.8\textwidth, height=.8\textheight]{../FIGURES/cred-yeast.pdf}}
+
+}
+
+%====================================================================
+\frame{\frametitle{Comparing more than $2$ profiles}
+
+  \vspace{-0.5cm}
+  \begin{tabular}{cc}
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.6\textwidth}}
+      \paragraph{Event of interest:} consider $I$ profiles
+      $$
+      E_0 = \{\tau_{k_1}^1 = \dots = \tau_{k_I}^I\}
+      $$
+      with prior probability $p_0 = p(E_0|{\bf K})$.
+
+      \bigskip\bigskip
+      \paragraph{Aim: } evaluate the posterior
+      $$
+      P(E_0 | {\bf Y}, {\bf K})
+      $$
+%       can be computed exactly in ${\mathcal O}(In^2)$.
+      
+	 ~\\ ~\\
+	 ${\bf Y} = (Y^1, \dots Y^I)$, 
+	 ${\bf K} = (K^1, \dots K^I)$, ... 
+    \end{tabular}
+    &
+    %\hspace{-.5cm}
+    \begin{tabular}{c}
+       \paragraph{Graphical model:} \\ ~\\
+      \includegraphics[width=.2\textwidth]{../FIGURES/GraphModel}
+    \end{tabular}
+  \end{tabular}
+
+  }
+
+%====================================================================
+\frame{\frametitle{Boundary shifts} 
+
+  \paragraph{Efficient summation rules} only apply for independent series or given $E_0$ \\ 
+  
+  \begin{enumerate}
+   \item Consider the surrogate model $Q$ where series are fully independent with uniform prior:
+  \begin{eqnarray*} 
+   Q(\Ybf, E_0 | \Kbf) & = & \sum_t \prod_\ell  \left[(A_\ell)^{k_\ell}\right]_{1, t} \left[(A_\ell)^{K_\ell-k_\ell}\right]_{t+1, n+1}\\
+   Q(\Ybf | \Kbf) & = & \prod_\ell \left[(A_\ell)^{K_\ell}\right]_{1, n+1}, 
+  \end{eqnarray*}
+  \pause %\\~
+  \item Then, via probability change,
+  \begin{eqnarray*} 
+  & & P(E_0 | \Ybf, \Kbf) \\
+  & = & \frac{p_0}{q_0} Q(\Ybf, E_0 | \Kbf) \left/
+  \left[ \frac{p_0}{q_0} Q(\Ybf, E_0 | \Kbf) +  \frac{1 - p_0}{1 - q_0} Q(\Ybf, \overline{E}_0 | \Kbf) \right] \right.
+  \end{eqnarray*}
+  where $p_0 = P(E_0 | \Kbf)$, $q_0 = Q(E_0 | \Kbf)$%, $Q(\Ybf, E_1 | \Kbf) = Q(\Ybf | \Kbf) - Q(\Ybf, E_0 | \Kbf)$
+%   and $A_\ell$ stands for the matrix $A$ as defined in (\ref{eq:matrixA}), corresponding to series $\ell$.
+  \end{enumerate}
+
+  }
+
+%====================================================================
+\frame{\frametitle{Back to the example}
+
+\begin{tabular}{cc}
+  \hspace{-.05\textwidth}
+  \begin{tabular}{p{.4\textwidth}} 
+    \includegraphics[width=.45\textwidth]{../FIGURES/compyeastresult.pdf}
+  \end{tabular}
+  &
+  \begin{tabular}{p{.6\textwidth}} 
+  $
+  \begin{array}{cccccc}
+  p_0 = 1/2 & \multicolumn{4}{c}{P(E_0| \Ybf, \Kbf\footnote{$\Kbf = (5, 5, 5)$})} \\
+  E_0 & \tau_1 & \tau_2 & \tau_3 & \tau_4 \\ 
+  \hline \\
+  A=B & 0.32 & 0.30 &0.99 & 10^{-5} \\ \\
+  A=C & 4 \; 10^{-4} & 0.99 &0.99 & 6 \; 10^{-3} \\
+  \\
+  B=C & 5 \; 10^{-2} & 0.60 & 0.99 & 0.99 \\ \\
+  A=B=C & 10^{-3} & 0.99  & 0.99 & 6 \; 10^{-3} \\ 
+  ~ \\
+  \end{array}
+  $
+  \end{tabular}
+\end{tabular}
+
+
+\bigskip
+\ra Differences at the UTR's end but not at internal exon boundaries.
+}
+
+%====================================================================
+\frame{\frametitle{Various isoforms in yeast?} 
+
+  \paragraph{$P(E_0|\Ybf, \Kbf\footnote{$\Kbf = (5, 5, 5)$})$} for yeast genes with 2 expressed exons
+  $$
+  \begin{tabular}{cc}
+  \includegraphics[width=.4\textwidth]{../FIGURES/statall-all} 
+  & 
+  \includegraphics[width=.4\textwidth]{../FIGURES/statall2} 
+  \\
+   $p_0 = (.5, \;.5, \;.5, \;.5)$
+   &
+   $p_0 = (.9, \;.99, \;.99, \;.9)$
+  \end{tabular}
+  $$
+}
+
+%====================================================================
+%====================================================================
+\section*{Advertisement}
+%====================================================================
+\frame{\frametitle{Advertisement}
+
+  Some R packages available at {\tt cran.r-project.org}: \\~
+  \begin{description}
+%    \item[CGHseg:] analysis of CGH and SNP  arrays for copy number variation analysis using segmentation models: one or several profiles, with/without covariates, with/without calling (Gaussian) \refer{PLH11} \\ ~
+   \item[Segmentor3IsBack:] fast exact segmentation for various cost functions (Gaussian, Poisson, negative binomial) \refer{CKL14} \\ ~
+   \item[EBS:] exact Bayesian segmentation, posterior probabilities of breakpoints, BIC and ICL criteria, comparison of change-point location, (Gaussian, Poisson, negative binomial) \refer{ClR13}
+  \end{description}
+
+  }
+
+%====================================================================
+%====================================================================
+\section*{Appendix}
+%====================================================================
+
+{\tiny
+  \bibliography{/home/robin/Biblio/ARC,/home/robin/Biblio/AST,/home/robin/Biblio/SSB}
+  %\bibliographystyle{/home/robin/LATEX/astats}
+  \bibliographystyle{plain}
+  }
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+
+\frame{\frametitle{}
+  }
+

@@ -1,0 +1,125 @@
+%====================================================================
+%====================================================================
+\section{Variational Bayes EM}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Bayesian inference} 
+
+  \paragraph{Bayesian setting:} The parameters in $\theta$ are random 
+  \qquad \qquad (no latent variable yet)
+  
+  \bigskip 
+  \begin{itemize}
+  \item \pause '\emphase{Prior}' = marginal distribution of the parameter
+  $$
+  p(\theta)
+  $$
+  \item \pause \bigskip '\emphase{Likelihood}' = conditional distribution of the observations 
+  $$
+  p(Y \mid \theta)
+  $$
+  \item \pause \bigskip '\emphase{Posterior}' = conditional distribution of the parameters given the data
+  $$
+  p(\theta \mid Y) = \frac{p(\theta) p(Y \mid \theta)}{\int p(\theta) p(Y \mid \theta) \d \theta}
+  $$
+  \end{itemize}
+
+}
+  
+%====================================================================
+\frame{\frametitle{Variational Bayes} 
+
+  \paragraph{Ideal case:} Explicit posterior 
+  \ra Conjugate priors 
+  
+  \pause \bigskip \bigskip 
+  \paragraph{Most of the time:} No explicit form for $p(\theta \mid Y)$
+  \begin{itemize}
+  \item \pause \bigskip Sample from it, i.e. try to get
+  $$
+  \{\theta^b\}_{1 \leq b \leq B} \overset{\text{iid}}{\approx} p(\theta \mid Y)
+  $$
+  \ra Monte-Carlo (MC), MCMC, SMC, HMC, ...
+  \item \pause \bigskip Approximate it, i.e. look for
+  $$
+  q(\theta) \simeq p(\theta \mid Y)
+  $$
+  \ra Variational Bayes (VB) \refer{Att00} \\
+  \end{itemize}
+  
+  \pause \bigskip \bigskip 
+  \paragraph{Example.} Consider $\Ncal = \{\text{Gaussian distributions}\}$
+  $$
+  q^*(\theta) 
+  = \argmin_{q \in \Ncal} \; KL[q(\theta) \mid p(\theta \mid Y)]
+  $$
+  (or $KL[p(\theta \mid Y) \mid q(\theta)]$)
+
+}
+
+
+%====================================================================
+\frame{\frametitle{Including latent variables} 
+
+  \paragraph{Bayesian model with latent variables.} 
+  \begin{align*}
+    \theta & \sim p(\theta) & & \text{prior distribution} \\ ~
+    Z & \sim p(Z \mid \theta) & & \text{latent variables} \\ ~
+    Y & \sim p(Y \mid \theta, Z) & & \text{observed variables} \\ ~
+  \end{align*}
+
+  \pause \bigskip \bigskip 
+  \paragraph{Aim of Bayesian inference.} Determine the joint conditional distribution
+  $$
+  p(\theta, Z \mid Y) = \frac{p(\theta) \; p(Z \mid \theta) \; p(Y \mid \theta, Z)}{p(Y)}
+  $$
+  where
+  $$
+  p(Y) = \int \int p(\theta) \; p(Z \mid \theta) \; p(Y \mid \theta, Z) \d \theta \d Z
+  $$
+  is most often intractable
+  
+  }
+
+%====================================================================
+\frame{\frametitle{Variational Bayes EM} 
+
+  \paragraph{Variational approximation} of the joint conditional $p(\theta, Z \mid Y)$
+  $$
+  q(\theta, Z) = \argmin_{q \in \Qcal} \; KL[q(\theta, Z) \| p(\theta, Z \mid Y)]
+  $$
+  taking $\Qcal = \Qcal_{\text{fact}} = \{q: q(\theta, Z) = q_\theta(\theta) q_Z(Z)\}$ \refer{Bea03,BeG03}
+  
+  \pause \bigskip \bigskip 
+  \paragraph{Variational Bayes EM (VBEM) algorithm.} Makes use of the mean-field approximation 
+  \begin{itemize}
+  \item \pause \bigskip \emphase{VBE step =} update of the latent variable distribution
+  $$
+  q_Z^{h+1}(Z) \propto \exp\left(\Esp_{q_\theta^{h}} \log p(Y, Z, \theta)\right)
+  $$
+  \item \pause \bigskip \emphase{VBM step =} update of the parameter distribution
+  $$
+  q_\theta^{h+1}(\theta) \propto \exp\left(\Esp_{q_Z^{h+1}} \log p(Y, Z, \theta)\right)
+  $$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{VBEM in practice} 
+
+  \paragraph{Exponential family / conjugate prior.} If
+  \begin{align*}
+  p(Y, Z \mid \theta) & \text{ belongs to the exponential family} \\ ~ \\
+  \text{and } p(\theta) & \text{ is the corresponding conjugate prior}
+  \end{align*}
+  then both the VBE and VBM steps are completely explicit \refer{BeG03}
+  
+  \pause \bigskip \bigskip 
+  \paragraph{Many VBEM's.} 
+  \begin{itemize}
+  \item \bigskip Force further factorization among the $Z$ (see e.g. \refer{LBA12,GDR12,KBC15} for block-models)
+  \item \bigskip Use further approximations when conjugacy does not hold \refer{JaJ00}
+  \end{itemize}
+
+}

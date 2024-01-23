@@ -1,0 +1,789 @@
+\documentclass[runningheads]{d:/Latex/gfkl2002}
+%\documentclass[12pt]{article}
+
+%\textwidth 18cm
+%\textheight 23cm 
+%\topmargin 0 cm 
+%\oddsidemargin  -1cm 
+%\evensidemargin  -1cm
+%\renewcommand{\baselinestretch}{1.1}     
+
+                                % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                                % Graphics Gallery :                     %
+                                % http://www.accessexcellence.com/AB/GG/ %
+                                % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Maths
+\usepackage{amsmath} 
+\usepackage{amsfonts} 
+\usepackage{amssymb} 
+\usepackage{psfig} 
+\usepackage{graphicx} 
+
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Var}{\mathbb V}
+\renewcommand{\a}{{\tt a}}
+\newcommand{\cc}{{\tt c}}
+\newcommand{\g}{{\tt g}}
+\renewcommand{\t}{{\tt t}}
+
+\renewcommand{\subsubsection}[1]{\medskip \noindent {\bf #1.}}
+\renewcommand{\paragraph}[1]{\noindent {\it #1:}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title*{Some Statistical Issues in Microarray Data Analysis}
+
+\toctitle{Statistical Analysis of Microarray Data }
+
+\titlerunning{Statistical Analysis of Microarray Data}
+
+\author{St\'ephane Robin} 
+
+\institute{INA-PG / INRA, Biom\'etrie \& Intelligence Artificielle, 16
+  rue Claude Bernard, F-75005, Paris, {\sc France}}
+
+\authorrunning{Robin}
+
+\maketitle
+
+\abstract{DNA chips give a direct access to the expression levels of
+  thousands of genes at the same time. This promising technology is a
+  key point of functional genomics. However, the abundance and
+  variability of the data it provides require proper statistical
+  analysis.\\
+  We first introduce the DNA chip technology and present what
+  biologists hope to learn thanks to it. Some statistical problems
+  raised by these data are then discussed with references to recent
+  bibliography.  }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Among the recent advances in molecular biology, the microarray
+technology seems to be one of the most promising.  This `high
+throughput' technology allows to measure the expression level of
+several thousands of genes in one single experiment. This information
+is crucial in view of understanding the function of the genes and is,
+therefore, a key point of functional genomics.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Large scaled sequencing programs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+An major biological work has been made in the last fifteen years by
+sequencing the genomes of numerous organisms. Sequencing means reading
+a very long text written with the alphabet of famous four letters
+(bases) $\{\a, \cc, \g, \t\}$. Genome lengths vary between
+millions of bases for bacteria to billions for superior organisms.\\
+The problem of finding genes in these sequences raised immediately
+after their publication. Both biological and bioinformatic tools to
+detect genes now exist; it is therefore possible to evaluate the
+number of genes of a given species. Table \ref{Tab:NbGenes} shows how
+this number can vary.
+
+\begin{table}
+  \centerline{
+    \begin{tabular}{lc}
+      Organism &  Number of genes \\
+      \hline
+      {\sl Escherichia coli} (Bacteria) & 4\;000 \\
+      {\sl Saccharomyces cerevisiae} (Yeast) & 6\;000 \\
+      {\sl Caenorhabditis elegans} (Nematode) & 19\;000 \\
+      {\sl Drosophila melanogaster} (Fly) & 13\;000 \\
+      {\sl Arabidopsis thaliana} (Plant) & 25--30\;000 \\
+      Human & 30--50\;000 \\
+    \end{tabular}
+    }
+  \caption{Approximate number of genes in several species}
+  \label{Tab:NbGenes}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Functional genomics}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+One of the main issue for molecular biologists is now to understand
+the functions of all these genes. Although a gene is mainly
+characterized by its sequence (i.e. the portion of the genome sequence
+that corresponds to it), its function can not be directly deduced from
+this sequence. At the present time, in `superior' organisms, only 5 \%
+of the genes have a `known' function that has been biologically
+confirmed by some experimental or phenotypic evidence; 65 \% of the
+genes have a predicted function (most of the time, the prediction is
+based on an homology between the sequence of the gene and the sequence
+of few genes the functions of which are known); the functions of the
+remaining 30 \% are still unknown.  Biologists hope to be able to
+understand gene functions thanks to an intensive use of the DNA chip
+technology.
+
+\medskip
+
+Section \ref{Sec:DNAChips} recalls some basic biological principles
+and presents DNA chips. Typical biological questions are addressed in
+Section \ref{Sec:BioQuestions}. Section \ref{Sec:StatIssues} proposes
+a overview of some statistical problems raised by microarray data,
+emphasizing differential analysis.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{DNA chips}\label{Sec:DNAChips}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We briefly describe here the aim and principle of the DNA chip
+technology.  A large presentation is proposed by {Brown and Botstein (1999)}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Central dogma of molecular biology}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Figure \ref{Fig:CentralDogma} presents the two steps that leads
+from the gene to the protein, i.e. to the molecule that has an
+effective biological function. The gene DNA sequence is first copied
+({\it transcripted}) and then translated (according to the genetic
+code) into a protein. Depending on the condition or tissue, zero, one
+or several copies of a given gene can be made. The expression level of
+a gene is related to this number, i.e. to the concentration of
+corresponding messenger RNA (mRNA) in the cell. The transcriptome of a
+cell is define as the set of all the mRNA (transcripts) present in the
+cell.
+\begin{figure}[hbt]
+  \centerline{
+    \begin{tabular}{ccccc}
+      \framebox{\begin{tabular}{c} {DNA} \\{molecule} \\ {(gene)}
+        \end{tabular}}
+      &
+      {$\underrightarrow{~transcription~}$}
+      &
+      \framebox{\begin{tabular}{c} {messenger} \\ {RNA} \\ {(transcript)}
+        \end{tabular}}
+      &
+      {$\underrightarrow{~translation~}$}
+      &
+      \framebox{\begin{tabular}{c} {Protein} \\ {(biological } \\ {function)} \end{tabular}}
+    \end{tabular}
+    }
+  \caption{Two steps from gene to protein}
+  \label{Fig:CentralDogma}
+\end{figure} \\
+Transcriptome analysis measures the abundance of the transcripts
+corresponding to each genes and provides therefore an estimation of
+their expression levels. DNA chips are designed to capture separately
+transcripts corresponding to each of the genes.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{DNA Chips}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The separation of the transcripts is based on the hybridization
+reaction that leads two complementary RNA (or DNA) fragments to match
+spontaneously.  The fragments match according to the Watson-Crick rule
+that associates {\a} with {\t} and {\cc} with {\g} (see Figure
+\ref{Fig:Hybrid}).
+\begin{figure}[hbt]
+  \centerline{
+    $
+    \begin{array}{rcccccccccccccccccccl}
+      \mbox{{target} (solution)}
+      & ~ & \a & ~ & \t & ~ & \g  & ~ & \g  & ~ & \t & ~ & \a & ~ & \g  & ~ & \cc & ~ & \a \\
+      & ~ & |  & ~ & |  & ~ & |   & ~ & |   & ~ & |  & ~ & |  & ~ & |   & ~ & |   & ~ & |  \\ 
+      & ~ & \t & ~ & \a & ~ & \cc & ~ & \cc & ~ & \a & ~ & \t & ~ & \cc & ~ & \g  & ~ & \t & ~ &  
+      \mbox{{probe} (chip)}
+    \end{array}
+    $
+    }
+  \caption{Hybridization of a single strain of DNA to its
+    complementary}
+  \label{Fig:Hybrid}
+\end{figure}
+Complementary fragments corresponding to each gene are spotted on a
+chip; all this spots constitute an array. The solution (target)
+containing transcripts is spread on the chip (probe). The quantity of
+transcripts hybridized on each spot of the array measures the
+expression level of the corresponding gene.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Quantification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Before being spread on the chip, transcripts are labeled in order to
+be quantified. The two most popular labeling techniques are
+fluorescence and radioactivity. Most of the time, chips used with
+fluorescence are glass slides (`microarray') while chips used with
+radioactivity are nylon membranes (`macroarray', see Figure
+\ref{Fig:Chip}). A microarray can contain about 10\;000 spots; a
+macroarray contains a bit less.\\
+\begin{figure}[hbt]
+  \centerline{
+    \begin{tabular}{ccc}
+      \includegraphics[height=5cm,width=5cm]{Rob02-GfKl-Fig3a.ps}
+      & \hspace{1cm}
+      & \includegraphics[height=5cm,width=5cm]{Rob02-GfKl-Fig3b.ps}  \\
+      Glass slide (fluorescence) & & Nylon membrane (radioactivity)
+    \end{tabular}
+    }
+  \caption{Partial pictures of a Microarray (left) and a macroarray
+    (right). The left picture results from the superimposition of
+    two pictures : one green and one red. Equal green and red
+    signals result in yellow spots; absence of both green and red
+    signals give black spots.}
+  \label{Fig:Chip}
+\end{figure} 
+The fluorescence technique can use two different dyes at the same time
+(green and red). In a typical experiment, transcripts extracted from
+tumors are labeled with the red dye while normal transcripts are
+labeled with the green dye; the two solutions are then spread on a
+same chip.  The abundance of the transcripts of each type of cell is
+quantified by exciting the chip with two different lasers, one green
+and one red.  Unfortunately, there are many bias in the labeling
+technique and normalization of the data is strongly required.  Most of
+the time, the log-transform is applied to the signal in order to
+stabilized its variance. In the following, all numeric values will
+refer to log-signals.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Biological questions}\label{Sec:BioQuestions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+A basic idea of functional genomics is that, to understand the
+function of a gene, one need to know in which conditions or in which
+tissues it is highly (or lowly) expressed.  The `high throughput'
+technology of DNA chips allows to explore in a reasonable time (and
+with a reasonable cost) many conditions or tissues. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Expression profiles} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Historically, one of the first question raised by microarray data has
+been to define groups (clusters) of genes having similar expression
+profiles in a given set of conditions. Gene belonging to a same
+cluster probably participate to the same physiologic mechanism or are
+involved in the same regulation network (see below). The pioneer paper
+of {Eisen {\em et~al.} (1998)}, that presents several studies of this kind, has
+revealed clustering techniques to the molecular biology
+community.\\
+The dual clustering question is also interesting when `conditions' are
+patients. In their very famous paper, {Alizadeh {\em et~al.} (2000)} compare different
+types of lymphoma. Within patients of one type, they detect two
+subtypes of patients on the base of their expression profiles. Those
+two subtypes of patients turn out to have very different responses to
+the standard therapy.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Genes affected by a condition change} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A natural way to discover gene involved in a given mechanism is to
+detect `differentially expressed' genes. For example, {Tusher {\em et~al.} (2001)}
+study human genes affected by ionizing radiations: this study is lead
+by comparing the transcriptomes of exposed and non-exposed human
+cells. This kind of study is sometimes called `differential analysis'.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Tissues or patients classification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The DNA chip technology can also be used for diagnosis since patients
+can be characterized by their expression profiles. {Golub {\em et~al.} (1999)} have
+made the most famous study of that type: their aim was to classify
+patients into one of two types of acute leukemia. Many supervised
+classification techniques have been tested on their data. \\
+The problem of selecting a small subset of genes sufficient to make a
+good classification is also important in view of designing reduced
+chips for routine analysis.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Regulation networks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The most exciting but also ambitious question for biologist is to
+determine regulation activities (activation or inhibition) between
+genes. On the base of many expression profiles, biologist hope to be
+able to draw huge graphs (networks) showing, for example, that gene
+$A$ induces gene $B$ that itself inhibits gene $C$, etc.  Such a
+network would be a key to understand metabolic pathways.  However,
+this project will probably require tremendous datasets and, at the
+present time, only reduced networks can be analyzed.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Statistical issues}\label{Sec:StatIssues}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Each biological question presented in Section \ref{Sec:BioQuestions}
+can be reformulated in terms of statistical analysis that has to be
+lead very carefully because of the high variability of microarray
+data.  Although many of these analysis can be made with standard
+statistical methods, the dimension of microarray data imply a new way
+to look at standard statistical notions. For example, the distinction
+between `individuals' and `variables' is not clear about genes: genes
+will be considered as individuals in many clustering analysis and as
+variables in supervised classification. \\
+Furthermore, classical statistical problems as multiple comparison or
+variable selection are restated by microarray data because we have to
+deal here with several thousands of levels (for multiple comparison)
+or variables (for variable selection) at the same time. This section
+presents a non exhaustive list of problems. Crucial steps such as
+probe sampling, design of experiments and image analysis are not
+discussed here.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Clustering}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The definition of genes (or tissues) having similar profiles has been
+one of the first problem to be treated with statistical methods. The
+need of automatic clustering techniques appeared very early because of
+the size of the datasets. The great popularity of the paper of
+{Eisen {\em et~al.} (1998)} is partly due the free `{\it Cluster}' software that was
+associated to it (see web-sites given at the end of this paper).  This
+software performs many analysis such as hierarchical clustering (based
+on correlation coefficients), $K$-means, self-organized maps
+(Kohonen's networks), etc.  Many biological paper present analysis
+looking like Figure \ref{Fig:ESB98} (reproduced
+from {Eisen {\em et~al.} (1998)}) that are sometimes called `Eisenifications'!\\
+\begin{figure}[hbt]
+  \centerline{
+    \includegraphics[height=12cm, width=5cm, angle=270, bbllx=22,
+    bblly=15, bburx=300, bbury=825, clip=]{Rob02-GfKl-Fig4.ps}
+    }
+  \caption{Example of clustering of microarray data (reproduction of
+    Fig. 1 of {Eisen {\em et~al.} (1998)}). The red and green matrix represents the
+    dataset: each column corresponds to a gene and each row to a
+    condition (a time in this case); negative values are colored in
+    green, positive are colored in red. A biological interpretation of
+    clusters A to E is given in the original paper.}
+  \label{Fig:ESB98}
+\end{figure}
+The limitations of theses approaches is that they do not take into
+account the great experimental variability of these data, and because
+the result is very method-dependent and need biological assessment.
+Other approaches such as bootstrap on trees or mixture models are
+proposed by statistical papers but they still have few applications in
+the biological literature.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Data normalization}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+All practitioners are now convinced that the variability of the data
+can not be neglected. Many papers have shown that experimental
+artifacts induce huge variations of the signal. For example,
+{Sekowska {\em et~al.} (2001)} aim to detect genes affected be a change in the sulfur
+source in {\sl B. subtilis}.  The analysis of variance table of this
+experiment (not shown here) shows that the mean square of the
+interaction of interest (Sulfur source$\times$Gene) is 10~000 times
+smaller than the variability due to the date of the experiment. \\
+This analysis (and many others) proves that the data have to be
+normalized in some way. The analysis of variance model is now commonly
+used to analyze such designs (see {Kerr and Churchill (2001)}). However, the status
+of the different effects can be discussed between fixed and random.
+More recently, mixed models have been introduced to deal with repeated
+data ({Wolfinger {\em et~al.} (2001)}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Bias in DNA labeling}
+The analysis of variance model is often used to eliminate artifacts.
+A typical experimental bias is observed in experiments using two dyes
+(red and green) because the two dyes have not the same efficiency, and
+because the difference depends on the gene. The correction of the mean
+red/green difference can be made simply and with a good precision
+thanks to the size of the dataset. However, the correction of this
+bias for each gene can not be made so simply because of the small
+number of (or even sometimes {`absence of')
+  replicates.\\
+  Figure \ref{Fig:Swap} shows that this bias seems to be related to
+  the mean signal of the gene. Let us denote $R_g$ the signal obtained
+  for gene $g$ in the condition labeled in red and $G_g$ the signal
+  obtained for the same gene in the conditioned labeled in green.  The
+  mean signal is $M_g = (R_g + G_g)/2$ and the (half) difference is
+  $D_g = (R_g - G_g)/2$. {Dudoit {\em et~al.} (2002)} suggest to use the `loess'
+  ({Cleveland (1979)}) robust regression $D_g = f(M_g)$ to correct the
+  Gene$\times$Dye interaction. Such a correction reduces significantly
+  the Gene$\times$Dye interaction and is proposed by many commercial
+  softwares.
+\begin{figure}[hbt]
+  \centerline{
+    \includegraphics[height=6cm, width=12cm]{Rob02-GfKl-Fig5.eps}
+    }
+  \caption{Plot of the half difference $D$ between the red and green signals
+    versus their mean $M$ for a microarray of {\sl A. thaliana}
+    (10~000 spots).  Solid line = loess regression curve.}
+  \label{Fig:Swap}
+\end{figure} 
+                                
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Differential analysis}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+As said in Section \ref{Sec:BioQuestions}, the discovery of genes
+having different expression levels under two conditions is one of the
+typical question in microarray data analysis. Examples of typical
+analysis including description of the experimental design, data
+normalization and differential analysis can be found in {Dudoit {\em et~al.} (2002)}
+or {Rudemo {\em et~al.} (2002)}.The question can be formulated in following way: let
+$A$ and $B$ denote the two conditions and $A_{gi}$ denote the
+expression level of gene $g$ in the $i$-th replicate in condition $A$
+(resp. $B_{gi}$). The statistical problem is then to test the
+hypothesis ${\bf H}_0$ = ``$A_{gi}$'s and $B_{gi}$'s have the same
+distribution''. Let $\Delta_g$ denote the test statistic for gene $g$:
+typically $\Delta_g = \bar{A}_g - \bar{B}_g$ where $\bar{A}_g$ is the
+mean expression level of $g$ in condition $A$ (resp. $\bar{B}_g$).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Distribution of $\Delta_g$ under ${\bf H}_0$} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A non parametric approach requires a set of non differentially
+expressed genes to estimate distribution of $\Delta_g$ under ${\bf
+  H}_0$. Generally, one assumes that only few genes are differentially
+expressed, so that the distribution of $\Delta_g$ under ${\bf H}_0$ is
+estimated using all the genes. {Dudoit {\em et~al.} (2002)}, {Tusher {\em et~al.} (2001)} or, more
+recently, {Storey and Tibshirani (2001)} propose several approaches to limit the
+influence of differentially expressed genes in this estimation.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Variance estimate} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In a parametric framework, the parameters characterizing this
+distribution have to be estimated. The normal distribution of the data
+is frequently assumed; in this framework, the question is then to
+estimate the variance $\sigma_g^2$ of $\Delta_g$ that appears in the
+statistic $T_g= \Delta_g / \sqrt{\hat{\sigma}_g}$. We present here
+several possible approaches.
+\begin{description}
+\item[{\it Homoscedasticity:}] The simplest approach is based on the
+  homoscedasticity hypothesis ``$\sigma_g \equiv \sigma$''. In this
+  case, the common estimate $\hat{\sigma}$ has a high precision thanks
+  to the large number of genes and the associated t-test is highly
+  powerful.  In the data of {Sekowska {\em et~al.} (2001)}, a careful analysis leads to
+  set apart about 50 genes with high variance $\sigma_g^2$ among
+  4~600. For the to the remaining 4~550 the homoscedasticity
+  hypothesis is quite reasonable. However, a strong heteroscedasticity
+  is observed in many experiments and standard transforms (log,
+  Box-Cox, etc) are unable to correct it.
+\item[{\it Gene specific estimate:}] In case of heteroscedasticity, a
+  specific estimate $\hat{\sigma}_g$ can be calculated for each gene.
+  When the number of replicates is small (less than 5), this
+  estimation is very bad and the power of the test is dramatically
+  low. In the data of {Sekowska {\em et~al.} (2001)} again, this approach detects only 1
+  differentially expressed gene instead of 50 under the
+  homoscedasticity hypothesis.  This great loss of power suggests to
+  look for an intermediate way between the two preceeding approaches
+  (see {Rudemo {\em et~al.} (2002)} for a discussion).
+\item[{\it Combined estimate:}] In order to stabilize the gene
+  specific variance estimate $\hat{\sigma}_g$, {Tusher {\em et~al.} (2001)} propose to
+  add some constant to it and to use $s^2_g = \sigma^2_0 +
+  \hat{\sigma}^2_g$.  $\sigma^2_0$ is chosen sufficiently high to
+  avoid false positive due to too small estimate $\hat{\sigma}_g$.
+\item[{\it Variance modeling:}] Figure \ref{Fig:Swap} suggests that
+  the variance $\sigma^2_g$ is related to the mean expression level
+  $M_g$. This relation is frequently observed and {Rudemo {\em et~al.} (2002)} propose
+  a exponential modeling of the relation $\sigma^2_g = f(M_g)$ while
+  {Huber {\em et~al.} (2002)} suggest a quadratic form.
+\item[{\it Mixture model:}] The modeling of $\sigma^2_g$ can be made
+  independently from the expression level by using a mixture model
+  (see {Delmar {\em et~al.} (2002)}). In this framework, genes are supposed to belong
+  to one of $K$ classes, each characterized by a variance $s^2_k$
+  ($k=1..K$).
+\end{description}
+In the last three approaches, the distribution of the statistic $T_g$
+is still difficult to obtain and is generally approximated by a
+Gaussian or a Student distribution. The comparison of all these
+methods is also difficult to make, mainly because of the lack of test
+datasets in which differentially expressed genes are clearly
+identified.  Simulation comparisons are not really satisfying since
+the simulation model has a major influence on the performance of the
+different methods.  {Pan (2002)} compares the results obtained by
+several methods on {Golub {\em et~al.} (1999)} data.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Mixture model / Bayesian classification} 
+The hypothesis testing framework is not the only way to detect
+differentially expressed genes. A mixture model approach is proposed
+by {Efron {\em et~al.} (2000)} or {Parmigiani {\em et~al.} (2002)}. The components of the mixture
+correspond, for example, to up-regulated ($\Esp(\Delta_g)>0$),
+down-regulated ($\Esp(\Delta_g)<0$) and non differentially expressed
+($\Esp(\Delta_g)=0$) genes. Differentially expressed genes are then
+detected according to their posterior probability of belonging to one
+of the first two components.
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Multiple comparison} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Differential analysis always imply a multiple testing problem since
+several thousands of tests (one for each gene) are made at the same
+time. Controlling the overall level or the false positive rate is one
+of the most crucial statistical problem raised by microarray data. The
+very popular approach (`SAM' for Statistical Analysis of Microarray,
+{Tusher {\em et~al.} (2001)}) is based on permutation tests. The same permutation is
+applied on all the genes at the same time to preserve the correlation
+structure, which is obviously necessary since the genes can not be
+considered as independent. Yet, it seems that the estimation of the
+False Discovery Rate (FDR) can be improved ({Storey and Tibshirani (2001)},
+{Korn {\em et~al.} (2001)}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Classification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The problem of classifying tissues or patients is addressed by many
+biological papers. Many supervised classification methods (Fisher
+discriminant analysis, nearest neighbors, support vector machines
+(SVM), classification trees, etc.) have been tested and all the
+statisticians working in this domain know the {Golub {\em et~al.} (1999)} or
+{Alizadeh {\em et~al.} (2000)} datasets. {Dudoit {\em et~al.} (2000)} or {Brown {\em et~al.} (2000)} propose
+comparisons. The statistical renewal of SVM came together with the
+apparition of microarrays and these two techniques seems to be made
+for each other since SVM generally perform very well on transcriptome
+data. However, one of the key principle of SVM is to augment
+artificially the dimension of the data space in order to make the
+groups linearly separable. In microarray experiments, samples or
+tissues (individuals) are much less numerous as genes (variables), so
+the groups are linearly separable in the
+original data space. \\
+In several papers, the selection of a subset of discriminating genes
+is made on the bases of a differential analysis. This approach is not
+satisfying because of the correlation between genes that may lead to a
+very redundant subsets. Stepwise selection can be used for Fisher
+discriminant analysis.  A selection procedure for SVM is proposed by
+{Weston {\em et~al.} (2000)} and applied to {Golub {\em et~al.} (1999)} data by {Guyon {\em et~al.} (2002)}. The
+reduction of the number of genes improved the performance of the
+classifier on the test data.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\medskip
+\subsubsection{Acknowledgments} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The author thanks Pr M. Eisen for authorizing the reproduction of
+Figure \ref{Fig:ESB98} and Pr J.-J. Daudin for his comments.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Web-sites}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The intense activity of the statistical community about microarray
+data makes it unreasonable to wait for the final publication of
+papers. Published papers do not give a good idea of the up-to-date
+bibliography. This motivates the presence of technical reports and
+web-sites among the references. A frequent look at some web-sites is
+therefore necessary. Of course, the following list is not exhaustive but
+proposes some interesting pages in connection with the topics
+discussed in this paper.
+\begin{description}
+\item[{\sc Stanford Microarray Database}] {\tt <www.dnachip.org/>}:
+  test datasets ({Alizadeh {\em et~al.} (2000)}, {Golub {\em et~al.} (1999)}, ...) can be downloaded
+  from this database.
+\item[{\sc Eisen-lab}] {\tt <rana.lbl.gov/>}: the `{\it Cluster}'
+  software is available there.
+\item[{\sc Gene Expression Data Analysis}] (Department of
+  Biostatistics \& Medical Informatics, University of Wisconsin -
+  Madison) {\tt <www.biostat.wisc.edu/geda/>}: the seminar page
+  presents a good up-to-date bibliography.
+\item[{\sc Terry Speed's Microarray Data Analysis Group}] {\tt
+    <www.stat.berkeley.edu/ users/terry/zarray/Html/>}: this team is
+  one of the most active in the field and proposes an overview of
+  statistical problems.
+\item[{\sc Significance Analysis of Microarrays}] {\tt
+    <www-stat.stanford.edu/\~{ }tibs/SAM/>}: presentation of the SAM
+  method for differential analysis.
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{thebibliography}{1}
+
+\item[] %{AED00}
+{\sc Alizadeh, A.}, {\sc Eisen, M.}, {\sc Davis, R.~E.}, {\sc Ma, C.~A.}, {\sc
+  Lossos, I.}, {\sc Rosenwald, A.}, {\sc Boldrick, J.}, {\sc Sabet, H.}, {\sc
+  Tran, T.~.}, {\sc Yu, X.}, {\sc Powell, J.}, {\sc Yang, L.}, {\sc Marti, G.},
+  {\sc Moore, T.}, {\sc Hudson, J.}, {\sc Chan, W.~C.}, {\sc Greiner, T.~C.},
+  {\sc Weissenberger, D.~D.}, {\sc Armitage, J.~O.}, {\sc Levy, R.}, {\sc
+  Grever, M.~R.}, {\sc Byrd, J.~C.}, {\sc Botstein, D.}, {\sc Brown, P.~O.} and
+  {\sc Staudt, L.~M.}
+\newblock (2000).
+\newblock Distinct types of diffuse large {B}-cell lymphoma identified by gene
+  expression profiling.
+\newblock {\em Nature}.
+\newblock {\bf 403} 503--511.
+
+\item[] %{BGL00}
+{\sc Brown, M. P.~S.}, {\sc Grundy, W.~N.}, {\sc Lin, D.}, {\sc Cristianini,
+  N.}, {\sc Sugnet, C.~W.}, {\sc Furey, T.~S.}, {\sc Ares, M.} and {\sc
+  Haussler, D.}
+\newblock (2000).
+\newblock Knowledge-based analysis of microarray gene expression data by using
+  support vector machines.
+\newblock {\em Proc. Natl. Acad. Sci. USA}.
+\newblock {\bf 97} 262--267.
+
+\item[] %{BrB99}
+{\sc Brown, P.} and {\sc Botstein, D.}
+\newblock (1999).
+\newblock Exploring the new world of the genome with {DNA} microarrays.
+\newblock {\em Nature Genetics}.
+\newblock {\bf Supplement 21} 33--37.
+
+\item[] %{Cle74}
+{\sc Cleveland, W.~S.}
+\newblock (1979).
+\newblock Robust locally weighted regression and smoothing scatterplots.
+\newblock {\em Journal of the American Statistical Association}.
+\newblock {\bf 74} 829--836.
+
+\item[] %{DRD02}
+{\sc Delmar, P.}, {\sc Robin, S.} and {\sc Daudin, J.-J.}
+\newblock (2002).
+\newblock Mixture model on the variance for the differential analysis of gene
+  expression.
+\newblock {\it submitted}.
+
+\item[] %{DFS00}
+{\sc Dudoit, S.}, {\sc Fridlyand, J.} and {\sc Speed, T.~P.}
+\newblock (2000), Comparison of discrimination methods for the classification
+  of tumors using gene expression data.
+\newblock Technical Report 576, Statistics Department, University of
+  California, Berkeley.
+
+\item[] %{DYC02}
+{\sc Dudoit, S.}, {\sc Yang, Y.}, {\sc Callow, M.~J.} and {\sc Speed, T.~P.}
+\newblock (2002).
+\newblock Statistical methods for identifying differentially expressed genes in
+  replicated c{DNA} microarray experiments.
+\newblock {\em Statistica Sinica}.
+\newblock {\bf 12} 111--139.
+
+\item[] %{ETG00}
+{\sc Efron, B.}, {\sc Tibshirani, R.}, {\sc Goss, V.} and {\sc Chu, G.}
+\newblock (2000), Microarrays and their use in a comparative experiment.
+\newblock Technical report, Department of Statistics, Stanford University.
+\newblock www-stat.stanford.edu/\~{ }tibs/research.html.
+
+\item[] %{ESB98}
+{\sc Eisen, M.~B.}, {\sc Spellman, P.~T.}, {\sc Brown, P.~O.} and {\sc
+  Botstein, D.}
+\newblock (1998).
+\newblock Cluster analysis and display of genome-wide expression patterns.
+\newblock {\em Proc. Natl. Acad. Sci. USA}.
+\newblock  14863--14868.
+
+\item[] %{GST99}
+{\sc Golub, T.~R.}, {\sc Slonim, D.~K.}, {\sc Tamayo, P.}, {\sc Huard, C.},
+  {\sc Gaasenbeek, M.}, {\sc Mesirov, J.~P.}, {\sc Coller, H.}, {\sc Loh, M.},
+  {\sc Downing, J.~R.}, {\sc Caligiuri, M.~A.}, {\sc Bloomfield, C.~D.} and
+  {\sc Lander, E.~S.}
+\newblock (1999).
+\newblock Molecular classification of cancer: Class discovery and class
+  prediction by gene expression.
+\newblock {\em Science}.
+\newblock {\bf 286} 531--537.
+
+\item[] %{GWB02}
+{\sc Guyon, I.}, {\sc Weston, J.}, {\sc Barnhill, S.} and {\sc Vapnik, V.}
+\newblock (2002).
+\newblock Gene selection for cancer classification using support vector
+  machines.
+\newblock {\em Machine Learning}.
+\newblock {\bf 46} 389--422.
+
+\item[] %{HHS02}
+{\sc Huber, W.}, {\sc von Heydebreck, A.}, {\sc Sültmann, H.}, {\sc Poustka,
+  A.} and {\sc Vingron, M.}
+\newblock (2002).
+\newblock Variance stabilization applied to microarray data calibration and to
+  the quantification of differential expression.
+\newblock {\em Bioinformatics}.
+\newblock {\bf 18} 96--104.
+
+\item[] %{KeC01}
+{\sc Kerr, M.~K.} and {\sc Churchill, G.}
+\newblock (2001).
+\newblock Experimental design for gene expression microarrays.
+\newblock {\em Biostatistics}.
+\newblock {\bf 2} 183--201.
+
+\item[] %{KTM01}
+{\sc Korn, E.~L.}, {\sc Troendle, J.~F.}, {\sc McShane, L.~M.} and {\sc Simon,
+  R.}
+\newblock (2001), Controlling the number of false discoveries:application to
+  high-dimensional genomic data.
+\newblock Technical Report 003, National Cancer Institute, Biometric Research
+  Branch, Dicision of Cancer Tratment and Diagnosis.
+\newblock linus.nci.nih.gov/\~{ }brb/TechReport.htm.
+
+\item[] %{Pan02}
+{\sc Pan, W.}
+\newblock (2002).
+\newblock A comparative review of statistical methods for discovering
+  differentially expressed genes in replicated microarray experiments.
+\newblock {\em Bioinformatics}.
+\newblock {\bf 18}~{\bf (4)} 546--554.
+
+\item[] %{PGA02}
+{\sc Parmigiani, G.}, {\sc Garret, E.}, {\sc Anbazhagan, R.} and {\sc E., G.}
+\newblock (2002).
+\newblock A statistical framework for expression-based molecular classification
+  in cancer.
+\newblock {\em J. R. Statist. Soc. B}.
+\newblock {\bf 64}~{\bf (4)} 1--20.
+
+\item[] %{RLM02}
+{\sc Rudemo, M.}, {\sc Lobovkina, T.}, {\sc Mostad, P.}, {\sc Scheidl, S.},
+  {\sc Nilsson, S.} and {\sc Lindahl, P.}
+\newblock (2002).
+\newblock Variance models for microarray data.
+\newblock http://www.math.chalmers.se/\~{ }rudemo/.
+
+\item[] %{SRD01}
+{\sc Sekowska, A.}, {\sc Robin, S.}, {\sc Daudin, J.-J.}, {\sc H\'enaut, A.}
+  and {\sc Danchin, A.}
+\newblock (2001).
+\newblock Extracting biological information from {DNA} arrays: an unexpected
+  link between arginine and methionine metabolism in {\sl {b}acillus subtilis}.
+\newblock {\em Genome Biology}.
+\newblock {\bf 2}~{\bf (6)}~{\tt
+  http://genomebiology.com/2001/2/6/research/0019.1}.
+
+\item[] %{StT01}
+{\sc Storey, J.~D.} and {\sc Tibshirani, R.}
+\newblock (2001), Estimating false discovery rates under dependence, with
+  applications to {DNA} microarrays.
+\newblock Technical Report 2001-28, Department of Statistics, Stanford
+  University.
+\newblock {\tt www.stat.berkeley.edu/\~{ }storey/}.
+
+\item[] %{TTC01}
+{\sc Tusher, V.~G.}, {\sc Tibshirani, R.} and {\sc Chu, G.}
+\newblock (2001).
+\newblock Significance analysis of microarrays applied to the ionizing
+  radiation response.
+\newblock {\em Proc. Natl. Acad. Sci. USA}.
+\newblock {\bf 98} 5116--5121.
+
+\item[] %{WMC00}
+{\sc Weston, J.}, {\sc Mukherjee, S.}, {\sc Chapelle, O.}, {\sc Pontil, M.},
+  {\sc Poggio, T.} and {\sc Vapnik, V.}
+\newblock (2000).
+\newblock Feature selection for {SVMs}.
+\newblock In {\em {Neural Information Processing Systems}}, 668--674.
+\newblock {\tt{http://www.ai.mit.edu/people/sayan/webPub/feature.pdf}}.
+
+\item[] %{WGW01}
+{\sc Wolfinger, R.~D.}, {\sc Gibson, G.}, {\sc Wolfinger, E.}, {\sc Bennett,
+  L.}, {\sc Hamadeh, H.}, {\sc Bushel, P.}, {\sc Afshari, C.} and {\sc Paules,
+  R.~S.}
+\newblock (2001).
+\newblock Assessing gene significance from c{DNA} microarray expression data
+  via mixed models.
+\newblock {\em J. Comp. Biol.}
+\newblock {\bf 8}~{\bf (6)} 625--637.
+
+\end{thebibliography}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+

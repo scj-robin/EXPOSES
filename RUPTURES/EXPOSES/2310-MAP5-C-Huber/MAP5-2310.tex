@@ -1,0 +1,687 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+% \usepackage[dvipsnames]{xcolor}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd, mathabx}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\dN}{\Delta N}
+\newcommand{\dtau}{\Delta \tau}
+
+% Directory
+\newcommand{\figcp}{/home/robin/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title[Change-point in Poisson process]{Change-point detection in a Poisson process}
+
+\author[S. Robin]{S. Robin \\ \medskip
+joint work with E. Lebarbier, C. Dion-Blanc \refer{DLR23}}
+
+\institute[]{Sorbonne université}
+
+\date[Rochebrune'22]{Stats au sommet, Rochebrune, Mar. 2022}
+
+%====================================================================
+%====================================================================
+\maketitle
+
+%====================================================================
+%====================================================================
+\section*{Introduction}
+%====================================================================
+\frame{\frametitle{Example} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<2->{
+      \paragraph{Point process on $t \in [0, 1]$.} \\ ~\\
+      Event times:
+      $$
+      0 < T_1 < \dots T_i < \dots T_n < 1
+      $$ \\
+      
+      Counting process:
+      $$
+      N(t) = \sum_{i=1}^n \Ibb\{T_i \leq t\}
+      $$}      
+      
+      \onslide+<3->{
+      \bigskip
+      \paragraph{Poisson Process.}
+      $$
+      \{N(t)\}_{0 \leq t \leq 1} \sim PP(\lambda(t))
+      $$}
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \paragraph{Bat cries} (night of the 17 jul. 2019) \\ ~\\
+        \includegraphics[width=.45\textwidth, trim=0 10 10 10, clip=]{\figcp/ChauveSouris-GrandBourg}
+        \onslide<2->
+        \paragraph{Bat cries} (night of the 17 jul. 2019)\footnote{source: Vigie-Chiro program, Y. Bas, CESCO-MNHN} \\ 
+        \includegraphics[width=.45\textwidth]{\figcp/FigSegPP-Chiroptere-seq2295-day2019-07-17-Path}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+  \bigskip
+  \onslide+<3->{\paragraph{Intensity function $\lambda(t)$:} 
+  $$
+  \lambda(t) = \lim_{\Delta t \rightarrow 0} \frac{\Pbb\{N(t+\Delta t) - N(t) = 1\}}{\Delta t}, 
+  \qquad \qquad 
+  \Esp N(s) - \Esp N(t) = \int_t^s \lambda(u) \d u
+  $$}
+}
+
+%====================================================================
+\frame{\frametitle{Change-point detection} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Piecewise constant intensity function.} \\ ~ \\
+      Change-points
+      $$
+      (\tau_0 =) \; 0 < \tau_1 \dots < \tau_{K-1} < 1 \; (= \tau_K)
+      $$ \\
+      
+      For $t \in I_k = ]\tau_{k-1}, \tau_k]$:
+      $$
+      \lambda(t) = \lambda_k
+      $$ 
+      
+      \bigskip \bigskip 
+      \ra Continuous piecewise linear cumulated intensity function   
+      $$
+      \Lambda(0, t) = \int_0^t \lambda(s) \d s.
+      $$
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \paragraph{Bat cries} (night of the 17 jul. 2019)\footnote{source: Vigie-Chiro program, Y. Bas, CESCO-MNHN} \\
+        \includegraphics[width=.45\textwidth, trim=0 10 0 10, clip=]{\figcp/FigSegPP-Chiroptere-seq2295-day2019-07-17-Path}
+        \onslide<2>
+        \paragraph{Bat cries} (night of the 17 jul. 2019)\footnote{source: Vigie-Chiro program, Y. Bas, CESCO-MNHN} \\
+        \includegraphics[width=.45\textwidth, trim=0 10 0 10, clip=]{\figcp/FigSegPP-Chiroptere-seq2295-day2019-07-17-Seg}
+        \onslide<3>
+        \paragraph{Kilauea eruptions} \\ ~ \\
+        \includegraphics[width=.45\textwidth, height=.5\textheight]{\figcp/Kilauea-Wikipedia}
+        \onslide<4>
+        \paragraph{Kilauea eruptions} (from 1750 to 1984)\footnote{source: \refer{HoB17}} \\
+        \includegraphics[width=.45\textwidth, trim=0 10 0 10, clip=]{\figcp/FigSegPP-Kilauea-Path}
+        \onslide<5>
+        \paragraph{Kilauea eruptions} (from 1750 to 1984)\footnote{source: \refer{HoB17}}  \\
+        \includegraphics[width=.45\textwidth, trim=0 10 0 10, clip=]{\figcp/DLR23-ArXiv-Fig6a}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  
+  \bigskip \pause
+  \paragraph{Aim.} 
+  \begin{itemize}
+   \item Segmentation: estimate $(\tau, \lambda)$ in a reasonnably fast manner
+   \item Model selection: choose $K$
+  \end{itemize}
+}
+
+%====================================================================
+%====================================================================
+\section{Estimation}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Maximum-likelihood segmentation} 
+
+  \paragraph{First useful property of Poisson processes:} Independence of disjoint intervals.
+  
+  \bigskip \bigskip \pause
+  \paragraph{(Neg-log-)likelihood.} Denoting
+  \begin{itemize}
+    \item $\dtau_k$ the length of the $k$-th interval ($= \tau_k - \tau_{k-1}$), 
+    \item $\dN_k$ the number of events within the  $k$-th interval ($= N(\tau_k) - N(\tau_{k-1})$):
+  \end{itemize}
+  \begin{align*}
+%     p_{\tau, \lambda}(N) 
+%     & = \prod_{k=1}^K  p_{\lambda_k}(N(I_k))
+%     = \prod_{k=1}^K  \lambda_k^{\dN_k} \; e^{-\lambda _k \dtau_k}, \\
+    - \log p_{\tau, \lambda}(N) 
+    & = \sum_{k=1}^K \lambda_k \dtau_k - \dN_k \log \lambda_k, 
+%   \qquad \text{where} \quad
+%   \left\{ \begin{array}{l}
+%             \dN_k = N(\tau_k) - N(\tau_{k-1}), \\
+%             \dtau_k = \tau_k - \tau_{k-1}
+%           \end{array}\right.
+  \end{align*}
+
+  \bigskip \pause
+  \paragraph{Additive contrast.} General form = sum over the segments
+  $$
+  \gamma(\tau, \lambda) = \sum_{k=1}^K C(\dN_k, \dtau_k, \lambda_k)
+  $$
+
+  \bigskip \pause
+  \paragraph{Optimization problem.} 
+  $$
+  (\widehat{\tau}, \widehat{\lambda}) = \argmin_{\tau \in \Tcal^K, \lambda \in (\Rbb^+)^K} \; \; \gamma(\tau, \lambda).
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{Minimizing the contrast function} 
+
+  \paragraph{Optimal $\lambda$.}
+  Because the contrast is additive, we may define
+  $$
+  \widehat{\lambda}_k 
+  = \widehat{\lambda}_k(\tau)
+  = \argmin_{\lambda_k \in \Rbb^+} C(\dN_k, \dtau_k, \lambda_k)
+  $$
+  e.g. $\widehat{\lambda}_k = \dN_k / \dtau_k$ if $\gamma = -\log p_\theta$.
+
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Optimal $\tau$.}
+  We are left with the minimization problem
+  $$
+  \widehat{\tau} = \argmin_{\tau \in \Tcal^K} \; \; \widehat{\gamma}(\tau), 
+  \qquad \text{where} \quad
+  \widehat{\gamma}(\tau) = \gamma(\tau, \widehat{\lambda}(\tau))
+  $$
+  where $\Tcal^K$ is the continuous segmentation space:
+  %$\Tcal^K$ is a {\sl continuous set}  :
+  $$
+  \Tcal = \left\{\tau \in [0, 1]^{K+1}: 0 = \tau_0 < \tau_1 \dots < \tau_{K-1} < \tau_K = 1\right\}.
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Main issue:}
+  The contrast $\widehat{\gamma}(\tau)$ is \emphase{neither convex nor continuous} wrt $\tau$.
+
+}
+
+%====================================================================
+\frame{\frametitle{Shape of the contrast fonction} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Observed $N(t)$:} $n = 10$, \\
+      ~ 
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.55\textwidth}}
+      \includegraphics[width=.430\textwidth, height=.25\textheight]{\figcp/FigSegPPP-simul-n10-K1-seed1-Path} \\       
+    \end{tabular} 
+    \\ \pause
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Contrast $\widehat{\gamma}(\tau)$ for $K=3$ segments:}
+      $$
+      \tau = (\tau_1, \tau_2).
+      $$     
+     
+      \bigskip \bigskip
+      One 'block' = \\
+      one specific value for the vector \footnote{gray borders come by pair}
+      $$
+      \dN = (\dN_1, \dN_2, \dN_3)
+      $$
+      
+      \bigskip \bigskip \bigskip ~
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.55\textwidth}}
+      \includegraphics[width=.48\textwidth, trim=0 0 20 50, clip=]{\figcp/FigSegPPP-simul-n10-K1-seed1-Contrast}
+    \end{tabular} 
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Partitioning the segmentation space} 
+
+  \paragraph{Partitioning the number of events.} Define
+  $
+  \Ncal^K = \left\{\nu \in \Nbb^K: \sum_{k=1}^K \nu_k = n\right\}.
+  $ \\
+  \ra $\nu_k =$ given number of events in segment $k$.
+
+  \bigskip \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Partitioning the segmentation space.} For $\nu \in \Ncal_K$, define
+      $$
+      \Tcal^K_\nu = \left\{\tau \in \Tcal^K: \dN = \nu\right\}.
+      $$
+      \ra $\Tcal^K_\nu =$ set of segmentation satisfying the prescribed $\nu = (\nu_1, \dots \nu_K)$.
+
+      \bigskip
+      We have
+      $$
+      \min_{\tau \in \Tcal^K} \widehat{\gamma}(\tau) 
+      = \min_{\nu \in \Ncal^K} \min_{\tau \in \Tcal^K_\nu} \widehat{\gamma}(\tau, ).
+      $$
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.45\textwidth, trim=0 0 0 0, clip=]{\figcp/DLR23-ArXiv-Fig1}
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Optimal segmentation} 
+
+  \paragraph{Proposition 1.} If $K\leq n$ and 
+  \emphase{if $\widehat{\gamma}(\tau)$ is strictly concave wrt $\tau \in \Tcal^K_\nu$} for each $\nu \in \Ncal^K$, then
+  $$
+  \widehat{\tau} = \argmin_{\tau \in \Tcal^K} \widehat{\gamma}(\tau) 
+  \subset \{T_1^-, T_1, T_2^-, T_2^-, \dots T_n^-, T_n\}.
+  $$
+
+  \bigskip \bigskip \pause  
+  \paragraph{Proposition 2.} If each $\widehat{C}(\nu_k, \dtau_k) := C(\nu_k, \dtau_k, \widehat{\lambda}_k)$ is strictly concave wrt $\dtau_k$, $\widehat{\gamma}(\tau)$, then is strictly concave wrt $\tau \in \Tcal^K_\nu$.
+
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Consequence.} $\widehat{\tau}$ can be obtained by dynamic programming over the $2n+2$ possible change-points 
+  $$
+  \Scal = \{0, T_1^-, T_1, T_2^-, T_2, \dots T_n^-, T_n, 1\}
+  $$
+  with complexity at most $O(n^2)$.
+}
+
+%====================================================================
+\frame{\frametitle{Admissible contrasts} 
+
+  \paragraph{Poisson contrast.} $\widehat{C}_P(\nu_k, \dtau_k) = \nu_k (1 - \log \nu_k + \log \dtau_k)$ is concave wrt $\dtau$.
+
+  \bigskip \bigskip \bigskip \bigskip \pause
+  \paragraph{Poisson-Gamma model.} For each segment $1 \leq k \leq K$:
+    $$
+    \Lambda_k \text{ iid } \sim \Gam(a, b), \qquad \qquad
+    \{N(t)\}_{t \in I_k} \mid \Lambda_k \sim PP(\Lambda_k).
+    $$
+    
+    \bigskip \pause
+    Contrast for one segment:
+    \begin{align*}
+      C_{PG}(\dN_k, \dtau_k) 
+      %& = - \log p_{a, b}(\{N(t)\}_{t \in I_k}) \\
+      & = \cst - \log \Gamma(a + \dN_k) + (a + \dN_k) \log(b + \dtau_k)
+    \end{align*}
+    \ra Strictly concave wrt $\dtau_k$.
+
+}
+
+%====================================================================
+\frame{\frametitle{Desirable contrast} 
+
+  \paragraph{Remark.} The Poisson contrast $\widehat{C}_P(\nu_k, \dtau_k) = \nu_k (1 - \log \nu_k + \log \dtau_k)$ satisfies
+  $$
+  \widehat{C}_P(\nu_k = 1, \dtau_k = 0) = -\infty.
+  $$
+  \begin{itemize}
+    \setlength{\itemsep}{1.1\baselineskip}
+    \item The optimal solution will involve segments with null length and containing only one event. 
+    \item 'Undesirable' contrast.
+  \end{itemize}
+
+
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Poisson-Gamma contrast.} $C_{PG}(\nu_k, \dtau_k) = - \log \Gamma(a + \nu_k) + (a + \nu_k) \log(b + \dtau_k)$. \\
+  ~
+  \begin{itemize}
+    \setlength{\itemsep}{1.1\baselineskip}
+    \item Satisfies the concavity property (\ra admissible), 
+    \item but avoids segments with null length (\ra desirable).
+  \end{itemize}
+  
+}
+
+%====================================================================
+%====================================================================
+\section{Model selection}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Model selection} 
+
+  \paragraph{Second useful property of Poisson processes:} Thining. ~ \\
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{itemize}
+        \setlength{\itemsep}{1.1\baselineskip}
+        \item $\{N(t)\} \sim PP(\lambda(t))$
+        \item \textcolor{blue}{Sample event times} (with prob. $v$) 
+        \item \textcolor{red}{Store the remaining events}
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.15\textwidth}
+    \begin{tabular}{p{.4\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \includegraphics[width=.5\textwidth, trim=0 225 0 225, clip=]{\figcp/FigSegPP-ThiningOriginal.png}
+        \onslide<2->
+        \includegraphics[width=.5\textwidth, trim=0 225 0 225, clip=]{\figcp/FigSegPP-ThiningSampling.png}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  \pause
+  $$
+  \textcolor{blue}{\{N^L(t)\}} \sim PP(v\lambda(t)), \qquad
+  \textcolor{red}{\{N^T(t)\}} \sim PP((1-v)\lambda(t)), \qquad
+  {\{N^L(t)\}} \perp {\{N^T(t)\}}
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Consequence.} If $\{N(t)\}_{0 \leq t \leq 1} \sim PP(\lambda(t))$, with $\lambda(t)$ piecewise constant with change-points $\tau = (\tau_k)$ and intensities $\lambda = (\lambda_k)$, then \\ ~ \pause
+  \begin{itemize}
+    \setlength{\itemsep}{1.1\baselineskip}
+    \item $\textcolor{blue}{\lambda^L(t)}$ piecewise constant with change-points $(\textcolor{blue}{\tau_k})$ and intensities $(\textcolor{blue}{v \lambda_k})$, 
+    \item $\textcolor{red}{\lambda^T(t)}$ piecewise constant with change-points $(\textcolor{red}{\tau_k})$ and intensities $(\textcolor{red}{(1-v) \lambda_k})$, 
+    \item $\{N^L(t)\} \perp \{N^T(t)\}$.
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Cross validation} 
+
+  Sampling event times provides two independent Poisson processes with \emphase{same change-points}.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Cross-validation procedure.} For $1 \leq K \leq K_{\max}$, \\ ~
+  \begin{itemize}
+   \item Repeat for $1 \leq m \leq M$ : \\
+      \medskip
+      1 -- Sample the event times to form $\textcolor{blue}{\{N^{L, m}(t)\}}$ (learn) and $\textcolor{red}{\{N^{T, m}(t)\}}$ (test), \\
+      \medskip
+      2 -- Estimate $\widehat{\tau}^{L, m}$ and $\widehat{\lambda}^{L, m}$ from $\textcolor{blue}{\{N^{L, m}(t)\}}$, \\
+      \medskip
+      3 -- Compute the contrast $\displaystyle{\gamma_K^{T, m} = \gamma\left(\textcolor{red}{\{N^T(t)\}}; \widehat{\tau}^{L, m}, \textcolor{red}{\frac{1-v}{v}}\widehat{\lambda}^{L, m}\right)}$.
+    \bigskip
+    \item \pause Compute
+    $$
+    \overline{\gamma}_K = \frac1M \sum_{m=1}^M \gamma_K^{T, m}
+    $$
+    \medskip
+    \item \pause Select
+    $$
+    \widehat{K} = \argmin_K \overline{\gamma}_K
+    $$
+  \end{itemize}
+}
+
+%====================================================================
+%====================================================================
+\section{Illustrations}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Practical implementation.} 
+%====================================================================
+
+  \paragraph{Contrasts.} During the CV process, we use
+  \begin{itemize}
+    \item a sampling rate of $v = 4/5$, 
+    \item the Poisson-Gamma contrast $\gamma_{PG}$ for the learning step and
+    \item the Poisson contrast $\gamma_P$ for the test step.
+  \end{itemize}
+  
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Hyper-parameters.} For an observed path $\{N(t)\}_{0 \leq t \leq 1}$ with $n$ events, we use 
+  $$
+  a = 1, \qquad b = 1/n
+  $$
+  to fit the observed total number of events.
+  
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{R package {\tt CptPointProcess}} available on \url{github.com/Elebarbier/CptPointProcess}.
+}
+
+%====================================================================
+\frame{\frametitle{Some simulations} 
+
+  \bigskip
+  \paragraph{Simulation setting.} $K = 6$ segments with varying length. Tuning parameters:
+  \begin{itemize}
+    \item $\overline{\lambda}$ average intensity (\ra total number of events), 
+    \item $\lambda_R =$ height of the steps (\ra contrast between segments).
+  \end{itemize}
+
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Results.} Choose $K$ via CV, then refit the parameters to the whole dataset. \\ ~\\
+  \begin{tabular}{ccc}
+    Model selection & 
+    Change-point location & 
+    Cumulated intensity  \\
+    $\widehat{K}$ & 
+    Haussdorf$(\widehat{\tau}, \tau^*)$ & 
+    $\ell_2(\widehat{\Lambda}, \Lambda^*)$ \\
+    \includegraphics[width=.3\textwidth, trim=10 10 20 20, clip=]{\figcp/DLR23-ArXiv-Fig3}
+    &
+    \includegraphics[width=.3\textwidth, trim=10 10 20 20, clip=]{\figcp/DLR23-ArXiv-Fig4a}
+    &
+    \includegraphics[width=.3\textwidth, trim=10 10 20 20, clip=]{\figcp/DLR23-ArXiv-Fig4b}    
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Kilauea eruptions} 
+
+  \paragraph{$n = 63$ eruptions} reported between the mid 18th and the late 20th century. \\ ~
+  
+  $$
+  \begin{tabular}{cc}
+    Model selection via CV &
+    Resulting segmentation \\
+    \includegraphics[width=.35\textwidth, trim=0 10 10 10, clip=]{\figcp/DLR23-ArXiv-Fig5a}
+    & 
+    \includegraphics[width=.35\textwidth, trim=0 10 0 10, clip=]{\figcp/DLR23-ArXiv-Fig6a}
+  \end{tabular}
+  $$
+}
+
+%====================================================================
+%====================================================================
+\section{Extensions}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Extensions} 
+
+  \paragraph{Marked Poisson Process.}
+  \begin{itemize}
+    \item $\{Y(t)\}_{0 \leq t \leq 1} \sim MPP(\lambda(t), \mu(t))$:
+    $$
+    \{N(t)\}_{0 \leq t \leq 1} \sim PP(\lambda(t)), \qquad
+    \text{at each $T_i$:} \quad X_i \sim \Fcal(\mu(T_i))
+    $$
+    \item Works the same way, provided that concavity holds.
+    \item Bat cries: Mark = bat species or cry duration.
+    \item Poisson-Gamma events + Exponential-Gamma durations is both admissible and desirable.
+  \end{itemize}
+  
+  \bigskip \pause
+  \paragraph{Segmentation-clustering.}
+  \begin{itemize}
+    \item Each segment belongs to a class $1 \leq q \leq Q$ (with probability $\pi_q$ and intensity $\lambda_k = \ell_q$), 
+    \item Combination of EM and DP algorithms \refer{PRL07}, 
+    \item Bat cries: Class = animal behaviour (hunt, transit, ...)
+  \end{itemize}
+
+  \bigskip \pause
+  \paragraph{And also.}
+  \begin{itemize}
+    \item Theoretically grounded model selection criterion (BIC), 
+    \item Consistency of the estimated change-points, 
+    \item Other desirable contrasts, ...
+  \end{itemize}
+}
+
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References}
+  {
+   \small
+   \nocite{DLR23}
+   \bibliography{/home/robin/Biblio/BibGene}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+\backupbegin
+%====================================================================
+
+
+%====================================================================
+\frame{\frametitle{Appendix} 
+
+  \paragraph{Number of elements in the partition of the segmentation space.}
+  $$
+  |\Ncal_K| = \sum_{h=\lfloor (K-1)/2\rfloor}^K {{n-1}\choose{h-1}} {{h+1}\choose{K-h}}
+  $$
+
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Simulations: Shape of the intensity function $\lambda(t)$.} $K=6$, $\overline{\lambda} = 100$, $\lambda_R = 1, 3, 8$.
+  $$
+  \includegraphics[width=.6\textwidth, trim=0 10 0 10, clip=]{\figcp/DLR23-ArXiv-Fig2}
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Poisson process: Mauna Loa eruptions} 
+
+  $$
+  \begin{tabular}{ccc}
+    $n = 40$ & $K = 2$ & $K = 3$ \\
+    & 
+    \includegraphics[width=.28\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10_}    
+    &
+    \includegraphics[width=.28\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10a}    
+    \\ ~ \\
+    $K = 4$ & $K = 5$ & $K = 6$ \\
+    \includegraphics[width=.28\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10b}    
+    &
+    \includegraphics[width=.28\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10c}    
+    &
+    \includegraphics[width=.28\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10d}    
+  \end{tabular}
+  $$
+
+}
+
+
+%====================================================================
+\frame{\frametitle{Marked Poisson process: Etna eruptions} 
+
+  \paragraph{Count and marks:} Events = eruptions, marks = duration of each eruption.
+  
+  \bigskip \bigskip 
+  \paragraph{Model.} 
+  \begin{itemize}
+    \item Piecewise-constant intensity Poisson process for the events
+    \item Exponential distribution (with segment specific parm.) for the durations
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{CV for the selection of $K$.} 
+  $$
+  \begin{tabular}{c|c}
+    Poisson & Marked Poisson \\
+    \includegraphics[width=.25\textwidth, height=.3\textheight, trim=0 10 10 30, clip=]{\figcp/DLR23-ArXiv-Fig7a}    
+    &
+    \includegraphics[width=.25\textwidth, height=.3\textheight, trim=0 10 10 30, clip=]{\figcp/DLR23-ArXiv-Fig7b} \\
+%     Events & Events \qquad \qquad \qquad \qquad \qquad Marks \\
+%     \includegraphics[width=.3\textwidth, height=.325\textheight, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig8a}
+%     &
+%     \includegraphics[width=.6\textwidth, height=.3\textheight, trim=0 10 10 50, clip=]{\figcp/DLR23-ArXiv-Fig8bc}    
+  \end{tabular}
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Marked Poisson process: Etna eruptions} 
+
+  $$
+  \begin{tabular}{c|c}
+    Poisson ($\widehat{K} = 2$) & Marked Poisson ($\widehat{K} = 2$) \\
+%     \includegraphics[width=.25\textwidth, height=.3\textheight, trim=0 10 10 30, clip=]{\figcp/DLR23-ArXiv-Fig7a}    
+%     &
+%     \includegraphics[width=.25\textwidth, height=.3\textheight, trim=0 10 10 30, clip=]{\figcp/DLR23-ArXiv-Fig7b} \\
+    Events & Events \qquad \qquad \qquad \qquad \qquad Marks \\
+    \includegraphics[width=.3\textwidth, height=.325\textheight, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig8a}
+    &
+    \includegraphics[width=.6\textwidth, height=.3\textheight, trim=0 10 10 50, clip=]{\figcp/DLR23-ArXiv-Fig8bc} \\
+    \hline
+    \pause
+    & Marked Poisson ($K = 3$) \\
+    & Events \qquad \qquad \qquad \qquad \qquad Marks \\
+    &  
+    \includegraphics[width=.6\textwidth, height=.3\textheight, trim=0 35 10 10, clip=]{\figcp/DLR23-ArXiv-Fig9}    
+  \end{tabular}
+  $$
+
+}
+
+
+%====================================================================
+\backupend
+%====================================================================
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+  
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

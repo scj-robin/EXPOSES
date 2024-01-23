@@ -1,0 +1,1147 @@
+\documentclass{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+\usetheme{CambridgeUS}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+%\usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{stmaryrd}
+\usepackage{epsfig}
+\usepackage{/Latex/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+% Commands
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+\newcommand{\paragraph}[1]{\emphase{#1}}
+\newcommand{\refer}[1]{\textcolor{blue}{\sl \cite{#1}}}
+\newcommand{\newblock}{}
+
+% Symbols
+\newcommand{\Abf}{{\bf A}}
+\newcommand{\Beta}{\text{B}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\BIC}{\text{BIC}}
+\newcommand{\dd}{\text{d}}
+\newcommand{\dbf}{{\bf d}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Ebf}{{\bf E}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Ibb}{\mathbb{I}}
+\newcommand{\ICL}{\text{ICL}}
+\newcommand{\Cov}{\mathbb{C}\text{ov}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\Vsf}{\mathsf{V}}
+\newcommand{\pen}{\text{pen}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Jcal}{\mathcal{J}}
+\newcommand{\Kbf}{{\bf K}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\mum}{\mu(\mbf)}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Nbf}{{\bf N}}
+\newcommand{\Nm}{N(\mbf)}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\Obf}{{\bf 0}}
+\newcommand{\Omegas}{\underset{s}{\Omega}}
+\newcommand{\Pbf}{{\bf P}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\sbf}{{\bf s}}
+\newcommand{\Tbf}{{\bf T}}
+\newcommand{\Ubf}{{\bf U}}
+\newcommand{\ubf}{{\bf u}}
+\newcommand{\xbf}{{\bf x}}
+\newcommand{\Xbf}{{\bf X}}
+\newcommand{\Ybf}{{\bf Y}}
+\newcommand{\Zbf}{{\bf Z}}
+\newcommand{\pibf}{\mbox{\mathversion{bold}{$\pi$}}}
+\newcommand{\Sigmabf}{\mbox{\mathversion{bold}{$\Sigma$}}}
+\newcommand{\gammabf}{\mbox{\mathversion{bold}{$\gamma$}}}
+\newcommand{\mubf}{\mbox{\mathversion{bold}{$\mu$}}}
+\newcommand{\nubf}{\mbox{\mathversion{bold}{$\nu$}}}
+\newcommand{\thetabf}{\mbox{\mathversion{bold}{$\theta$}}}
+\newcommand{\BP}{\text{BP}}
+\newcommand{\EM}{\text{EM}}
+\newcommand{\VEM}{\text{VEM}}
+\newcommand{\VBEM}{\text{VB}}
+\newcommand{\cst}{\text{cst}}
+\newcommand{\obs}{\text{obs}}
+
+
+%====================================================================
+\title[Null models for biological networks]{Using 'null' models to
+  study \\ biological interaction networks}
+
+\author{S. Robin}
+
+\institute[AgroParisTech / INRA]{AgroParisTech / INRA \\
+  \bigskip
+  \emphase{\large NeMo ANR project} \\
+  \bigskip
+  \begin{tabular}{ccccc}
+    \epsfig{file=../Figures/LogoINRA-Couleur.ps, width=2.5cm} &
+    \hspace{.5cm} &
+    \epsfig{file=../Figures/logagroptechsolo.eps, width=3.75cm} &
+    \hspace{.5cm} &
+    \epsfig{file=../Figures/Logo-SSB.eps, width=2.5cm} \\
+  \end{tabular} \\
+  \bigskip
+  }
+
+\date{SeMoVi, Lyon, June 2010}
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\frame{\titlepage}
+%====================================================================
+
+%====================================================================
+\frame{ \frametitle{Outline}
+%==================================================================== 
+  %\settocdepth[1]
+  \tableofcontents
+  }
+
+%====================================================================
+%====================================================================
+\section{Network analysis}
+\frame{\frametitle{Network analysis}
+%====================================================================
+  }
+
+%====================================================================
+\subsection*{Different models}
+\frame{\frametitle{Different models for different purposes}
+%====================================================================
+  \paragraph{Dynamic modelling} provides a mechanistic description of
+  how the network behaves. 
+
+  \bigskip
+  \paragraph{Evolutionary models} propose a scenario about the way the
+  network has been build.
+  
+  \bigskip
+  \paragraph{'Null' or reference models} provide a naive and yet
+  reasonably faithful description of the observed network.   
+  \begin{itemize}
+  \item They provide a global picture of the network structure.
+  \item They predict expected topologies for 'similar' networks.
+  \item They allow us to detect 'unexpected' structures in observed
+    networks.
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{\frametitle{A model as a reference}
+  \paragraph{Aim:} Discover new phenomena that can not be explained
+  from what we already know.
+
+  \bigskip
+  \paragraph{General strategy:}
+  \begin{enumerate}
+  \item Determine some relevant properties:\\
+    \centerline{\emphase{$\rightarrow$ Global topology},}
+  \item Define a model that fits these properties,
+  \item Predict some other characteristics according to the model\\
+    \centerline{\emphase{$\rightarrow$ Motif frequencies},} 
+  \item Compare to what is observed.
+  \end{enumerate}
+
+  Discrepancies can not be due to the prescripted properties.
+
+  \bigskip\bigskip
+  \paragraph{Similar approach:} sequence motifs and Markovian models.
+  }
+
+%====================================================================
+\subsection*{Interaction networks}
+\frame{\frametitle{Interaction networks}
+%====================================================================
+  \paragraph{Nodes =} biological entities ($i = 1 .. n$).
+
+  \paragraph{Edges =} (intensity of the) links between 2 nodes
+  ($X_{ij}$) (oriented or valued).
+
+  \bigskip \pause
+  \paragraph{Protein-protein interaction network:} Nodes =  proteins, 
+  $$
+  X_{ij} = \Ibb\{\text{possibility of a physical interaction
+    between proteins $i$ ans $j$}\}
+  $$
+  
+  \paragraph{Regulatory network:} Nodes = genes, 
+  $$
+  X_{ij} = \Ibb\{\text{gene $i$ regulates gene $j$}\} \qquad (X_{ij} \neq X_{ji})
+  $$
+
+  \paragraph{Metabolic network:} Nodes = reactions,
+  $$
+  X_{ij} = \Ibb\{\text{the product of reaction $i$ is the substrate of
+    reaction $j$, or vice-versa}\}
+  $$
+  }
+
+%====================================================================
+\subsection*{1 prerequisite + 2 questions}
+\frame{\frametitle{1 prerequisite + 2 questions}
+%====================================================================
+  \paragraph{P: Random graph model}
+  \begin{itemize}
+  \item Fix set of nodes: $ i \in  \{1, ... n\}$ 
+  \item Linked by random edges: $\Xbf = \{X_{ij}\}_{i, j}$
+  \item With distribution: $P(\Xbf; \thetabf) = P(\{X_{ij}\}; \thetabf)$.
+  \end{itemize}
+
+  \pause\bigskip
+  \paragraph{Q1: Exceptional network motifs}
+  \begin{itemize}
+  \item \emphase{Coloured motifs} reveal systematic association between
+    enzymes categories in metabolic networks.
+  \item \emphase{Topological motifs} perform specific functions in
+    regulatory networks (e.g. feed-forward loop).
+  \end{itemize}
+
+  \pause\bigskip
+  \paragraph{Q2: Network comparison} ({\sl ... in progress})
+  \begin{itemize}
+  \item Networks can be compared based on \emphase{motif frequencies}.
+  \item The dissimilarity measure must get rid of some
+    \emphase{nuisance parameters} (network size, density, redundancy
+    between motif frequencies, etc.)
+  \end{itemize}
+  }
+
+%====================================================================
+%====================================================================
+\section{Random graph models}
+\frame{ \frametitle{Random graph models}
+%==================================================================== 
+  }
+  
+%====================================================================
+\subsection*{Fitting network characteristics}
+\frame{ \frametitle{Some (simple) models fitting network characteristics}
+%==================================================================== 
+  \paragraph{Density (number of edges):} The Erdös \& Rényi (ER)
+  model states that 
+  $$
+  \{X_{ij}\}_{1 \leq i < j \leq n} \text{ i.i.d.}, \quad X_{ij}
+  \sim \Bcal(\gamma) \qquad (\thetabf = \gamma)
+  $$
+  \emphase{$\rightarrow$} Does not fit other characteristics (degree
+  distribution, diameter, etc.) of most real network.
+
+  \bigskip\bigskip\pause
+  \paragraph{Colour frequencies (coloured networks):} Denoting $C_i$
+  the colour of node $i$, the coloured Erdös \& Rényi (CER) model
+  states that 
+  $$
+  \begin{array}{ll}
+    \{C_i\}_{1 \leq i \leq n} \text{ i.i.d.}, & \quad C_i
+    \sim \Mcal(1; \sbf=(s_1, s_2, \dots)) \\
+    \{X_{ij}\}_{1 \leq i < j \leq n} \text{ i.i.d.}, & \quad X_{ij}
+    \sim \Bcal(\gamma)
+  \end{array}  
+  \qquad (\thetabf = (\sbf, \gamma))
+  $$
+  }
+
+%==================================================================== 
+\frame{ \frametitle{Some (simple) models (cont'd)}
+  \paragraph{Node degree:} Given $d_i =$ observed degree of
+  node $i$, the fix degree distribution (FDD) models states that
+  $$
+  \Xbf \sim \Ucal\{\xbf: \sum_j x_{ij} = d_i\}
+  \qquad (\thetabf = \dbf = \{d_i\})
+  $$
+  \emphase{$\rightarrow$} Sampling such graphs is not that easy (edge
+  swapping algorithm). 
+
+  \bigskip\bigskip\pause
+  \paragraph{Degree distribution.} Given $\dbf_{\obs} =
+  \{d_i\}_i$ the degrees in the observed graph, the expected degree
+  distribution (EDD) model states that
+  $$
+  \begin{array}{rcl}
+    \{K_i\}_i \text{ i.i.d. } & \sim & \Ucal\{\dbf_{\obs}\} \\
+    \{X_{ij}\} \text{ independent } | \{K_i\}: X_{ij}  & \sim &
+    \Bcal(c K_i K_j)
+  \end{array}
+  \qquad (\thetabf = \dbf_{\obs})
+  $$
+
+  \bigskip\bigskip\pause
+  \paragraph{Similar to} permutation vs Markovian models for
+  sequences. \\
+  \paragraph{Statistical inference:} Easy until now!
+  }
+
+%==================================================================== 
+\frame{ \frametitle{Some (more complex) models}
+  \bigskip
+  \paragraph{Heterogeneity of connexion profiles:} Latent space models
+  (\refer{BJR07}) suppose that each node $i$ occupies an
+  \emphase{unknown latent position $Z_i$} and that
+  $$
+  \begin{array}{rcl}
+    \{Z_i\} \text{ i.i.d. } & \sim & \pi \\
+    \{X_{ij}\} \text{ independent } | \{Z_i\}: X_{ij}  & \sim &
+    \Bcal[\gamma(Z_i, Z_j)]
+  \end{array}
+  \qquad (\thetabf = (\pi, \gamma))
+  $$
+
+  \pause
+  \paragraph{Continuous (\refer{HRH02}):} ($\simeq$ PCA)
+  $$
+  Z_i \in \Rbb^d, \qquad \text{logit}[\gamma(z, z')] = a - |z-z'|
+  $$
+
+  \pause
+  \paragraph{Discrete (\refer{NoS01}):} ($\simeq$ clustering, $=$
+  mixture model)
+  $$
+  Z_i \in \{1, \dots, K\}, \qquad \gamma(k, \ell) = \gamma_{k\ell}.
+  $$
+
+  \pause
+  \paragraph{Statistical inference:} Not that easy
+  \begin{itemize}
+  \item Burdensome MCMC inference (limited to small networks)
+  \item Variational approximation (\refer{DPR08}, see appendix)
+  \item Variational Bayes inference
+  \end{itemize}
+  }
+
+%==================================================================== 
+\frame{ \frametitle{Inference of mixture models (briefly, or see appendix)}
+  \paragraph{Standard strategies} (such as E-M) require the calculation
+  of
+  $$
+  P(\Zbf | \Xbf; \thetabf)
+  \quad 
+  \rightarrow
+  \quad
+  \text{not tractable for random graph models.}
+  $$
+
+  \bigskip\pause
+  \paragraph{Variational approximation} provides the best
+  approximation, 
+  $$
+  Q^* = \arg\min_{Q \in \Qcal} KL[Q(\Zbf); P(\Zbf|\Xbf)]
+  $$
+  where $\Qcal$ is a class of 'reasonable' (tractable) distributions.
+
+  \bigskip\pause
+  \paragraph{Mean-field approximation:} The optimal $\tau_{ik} = Q(Z_i = k)$
+  must satisfy
+  $$
+  \tau_{ik}^* \propto \pi_k \prod_{j \neq i} \prod_\ell
+  f_{k\ell}(X_{ij})^{\emphase{\tau^*_{j\ell}}}
+  $$
+  $\rightarrow$ works well here, due to a \emphase{specific
+    asymptotic framework}.
+
+  }
+%==================================================================== 
+\frame{ \frametitle{Some (more complex) models (cont'd)}
+  \paragraph{Motif counts:} Exponential random graphs (ERGM, or $p^*$)
+  (\refer{PaR07}) constitute a wide class of models stating that
+  $$
+  P(\Xbf; \thetabf) = \exp[\ubf(\Xbf)' \thetabf - c(\thetabf)]
+  $$
+  where $\ubf(\Xbf)$ is a vector of \emphase{sufficient statistics},
+  e.g.
+  $$
+  \ubf(\Xbf) = \left[ \text{\# edges, \# $\Vsf$'s, \# triangles, \#
+      3-stars, \dots} \right]
+  $$
+  \emphase{$\rightarrow$} Statistical inference is \emphase{quite hard}. Ex:
+  $$
+  c(\thetabf) = \log \left(\sum_{\xbf} \exp[\ubf(\xbf)' \thetabf]\right).
+  $$
+  \emphase{$\rightarrow$} Motifs used in $\ubf(\Xbf)$ will
+  \emphase{never be exceptional} w.r.t. this model.  }
+
+%====================================================================
+%====================================================================
+\section{Network motif detection}
+\frame{\frametitle{Network motif}
+%==================================================================== 
+  }
+
+%====================================================================
+%====================================================================
+\subsection*{2 different motifs}
+\frame{\frametitle{Coloured motif}
+%====================================================================
+  \begin{tabular}{cc}
+    \begin{tabular}{p{0.45\textwidth}}
+      A motif $\mbf$ is defined by a set of $k$ colors (with possible
+      repetitions). \\
+      ~\\    
+      A coloured motif $\mbf$ of size $k$ occurs when
+      \begin{itemize}
+      \item a set of $k$ nodes
+      \item composing a \emphase{connected} subgraph
+      \item with \emphase{prescripted} colors
+      \end{itemize}
+      is observed. \\
+    \end{tabular}
+    &
+    \begin{tabular}{p{0.45\textwidth}}
+      \includegraphics[width=.45\textwidth]{../Figures/SLS09-JBSB-Fig2}
+      \\
+      \\
+      3 occurrences of the motif $m$. \\
+      \\
+      (\refer{SLS09})
+    \end{tabular}
+  \end{tabular}
+  }
+
+%==================================================================== 
+\frame{\frametitle{Topological motif}
+  \paragraph{Definition.}  A topological motif $\mbf$ of is
+  characterised by its adjacency matrix (also denoted by $\mbf$):
+  $$
+  m_{uv} = \Ibb\{u \sim v\}.
+  $$
+
+  \hspace{-0.7cm}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{0.4\textwidth}}
+      \paragraph{Permutations.} For a given motif $\mbf$, we need to
+      consider the set $\Rcal(\mbf)$ of its permutations. \\
+      \\
+      \paragraph{Right:} the $\mathsf{V}$ motif may occure in 3 ways at a
+      {fixed} position $\alpha = (i,j,k)$: \\
+      \\
+    \end{tabular}
+    &
+    \begin{tabular}{ccc}
+      $\mbf$ &  $\mbf^{\prime}$ & $\mbf^{\prime \prime}$ \\
+      & & \\
+      $\tiny{\left[ \begin{array}{ccc} 
+          0 & 1 & 1 \\ . & 0 & 0 \\ . & . & 0 
+        \end{array} \right]}$  &
+      $\tiny{\left[ \begin{array}{ccc} 
+          0 & 1 & 0 \\ . & 0 & 1 \\ . & . & 0 
+        \end{array} \right]}$ &
+      $\tiny{\left[ \begin{array}{ccc} 
+          0 & 0 & 1 \\ . & 0 & 1 \\ . & . & 0 
+        \end{array} \right]} $ \\
+      &&
+      \\
+      \epsfig{file=../Figures/version2.eps, width=0.1\textwidth} & 
+      \epsfig{file=../Figures/version3.eps, width=0.1\textwidth} & 
+      \epsfig{file=../Figures/version1.eps, width=0.1\textwidth} 
+      \\
+    \end{tabular}
+  \end{tabular}
+  }
+
+%====================================================================
+\frame{\frametitle{Occurence of a topological motif}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{0.45\textwidth}}
+      A topological motif $m$ of size $k$ occurs when
+      \begin{itemize}
+      \item a set of $k$ nodes
+      \item with \emphase{prescripted} edges
+      \end{itemize}
+      is observed. \\
+      ~\\
+      So-called 
+      $$
+      \text{\emphase{induced motif}}
+      $$
+      $\neq$ exact occurrence.
+    \end{tabular}
+    &
+    \begin{tabular}{p{0.45\textwidth}}
+      \includegraphics[width=.3\textwidth]{../Figures/PDK08-JCB-Fig1}
+      \\
+      \\
+      1 occurrence of '$\nabla$'\\
+      and 5 occurrences '$\Vsf$'. \\
+      \\
+      (\refer{PDK08})
+    \end{tabular}
+  \end{tabular}
+  }
+
+%====================================================================
+\subsection*{Motif count}
+\frame{\frametitle{Motif occurrence}
+%====================================================================
+  \paragraph{Position.} A ($k$-)position $\alpha$ is a set of $k$
+  different nodes taken is ascending order:
+  $$
+  \alpha = (i_1, ... i_k), \qquad i_1 < i_2 < ... < i_k.
+  $$
+  A graph of size $n$ contains \emphase{$\displaystyle{\binom{n}{k}}$
+    positions}. 
+  
+  \bigskip\bigskip
+  \paragraph{Motif occurrence:} Binary variable $Y_{\alpha}(\mbf) =
+  \Ibb\{\mbf \text{ occurs at } \alpha\}$ \\ \pause
+  ~\\
+  \begin{tabular}{p{0.55\textwidth}p{0.4\textwidth}}
+    \hspace{-0.3cm}
+    \paragraph{Coloured motif:} 
+    \begin{eqnarray*}
+      Y_{\alpha}(\mbf) & = & \Ibb\{\text{$C_\alpha = \mbf$}\} \\ 
+      & \times & \Ibb\{\text{sub-graph $\Xbf_\alpha$
+        connected}\}
+    \end{eqnarray*} \pause
+    &
+    \hspace{-0.3cm}
+    \paragraph{Topological motif:} 
+    $$
+    Y_{\alpha}(\mbf) = \prod_{1 \leq u < v \leq k}
+    (X_{i_ui_v})^{m_{uv}} 
+    $$ 
+    (induced occurrence)  
+  \end{tabular}
+  }
+
+%====================================================================
+\frame{\frametitle{Occurrence probability}
+  \paragraph{Two assumptions (\refer{PDK08}):} 
+  \begin{enumerate}[(H1)]
+  \item {Stationarity:} (not true for FDD)
+    $$ 
+    \Dcal(X_{i_1j_1}, \ldots, X_{i_{\ell}j_{\ell}}) = \Dcal
+    (X_{i'_1j'_1}, \ldots, X_{i'_{\ell}j'_{\ell}}). 
+    $$
+  \item {Independence of disjoint occurrences:}
+    $$
+    Y_\alpha(\mbf) \perp Y_\beta(\mbf) \quad \text{ if } \quad \alpha
+    \cap \beta =\emptyset.  
+    $$
+  \end{enumerate}
+
+  \bigskip\bigskip\pause
+  \paragraph{Occurrence probability:} 
+  Under (H1), $\Pr\{Y_\alpha=1\}$ does not depend on $\alpha$:
+  $$
+  \forall \alpha, \forall \mbf' \in \Rcal(\mbf), \qquad
+  \Pr\{Y_{\alpha}(\mbf') = 1\} = \Pr\{Y_{\alpha}(\mbf) = 1\} = \mum.
+  $$
+  }
+
+%==================================================================== 
+\frame{ \frametitle{Occurrence probability (cont'd)}
+  \begin{tabular}{p{0.5\textwidth}p{0.5\textwidth}}
+    \paragraph{Coloured motif:} 
+
+    {Coloured Erdös-Renyi (CER):}
+    $$
+    \mum =  {f(\mbf)} {g(k, p)}
+    $$
+    where 
+    \begin{itemize}
+    \item 
+      $f(\mbf) = \Pr\{\text{\emphase{colors}}\}$
+      $$
+      = \frac{k!}{\prod_c s(c)!} \prod_i f(m_i)
+      $$
+    \item $g(k, \gamma) = \Pr\{\text{\emphase{connectedness}}\}$: $1 - g(k,
+      \gamma) =$
+      $$
+      \sum_{i=1}^{k-1} \binom{k-1}{i-1} g(i, \gamma) (1-\gamma)^{i(k-i)}
+      $$ 
+    \end{itemize}
+    \pause
+    &
+    \paragraph{Topological motif:} 
+
+    {Erdös-Renyi (ER):}
+    $$
+    \mum = \prod_{1 \leq u<v \leq k} \gamma^{m_{uv}}.
+    $$
+    {Expected degree distribution (EDD):} 
+    $$
+    \mum \propto \prod_{u=1}^k \Esp\left(D^{m_{u+}} \right).
+    $$
+    {Mixture model:}
+    \begin{eqnarray*}
+      \mum   & =   & \sum_{c_1=1}^{Q} \hdots \sum_{c_k=1}^{Q}
+      \alpha_{c_1}\hdots \alpha_{c_k} \\ 
+      & & \times \prod_{1 \leq u<v \leq k} \gamma_{c_u,c_v}^{m_{uv}}.
+    \end{eqnarray*}
+  \end{tabular}
+  
+  }
+
+%====================================================================
+\subsection*{(Exact) Moments of the count}
+\frame{\frametitle{Count}
+%====================================================================
+  \paragraph{Count.} The total number of occurrences is the sum over
+  {all positions} (and {all permutations}) of the binary variables: \\
+  ~\\
+  \begin{tabular}{p{0.4\textwidth}p{0.5\textwidth}}
+    \paragraph{Coloured motif:} 
+    $$
+    N(\mbf) = \sum_{\alpha} Y_{\alpha}(\mbf)
+    $$
+    &
+    \paragraph{Topological motif:} 
+    $$
+    N(\mbf) = \sum_{\alpha} \sum_{\mbf' \in \Rcal(\mbf)} Y_{\alpha}(\mbf')
+    $$
+  \end{tabular}
+
+  \bigskip
+  \paragraph{Counting the occurrences} in a given network is a
+  non-trivial algorithmic task for both motifs:
+  \begin{itemize}
+  \item coloured (\refer{LFS06});
+  \item topological (\refer{WeR06}, \refer{SMM02}).
+  \end{itemize}
+
+  \bigskip
+  \paragraph{Other types of exceptionality} can be considered, such as
+  local concentration of occurrences (\refer{Bir09b})
+
+  
+  }
+
+%==================================================================== 
+\frame{ \frametitle{Moments}
+  \paragraph{Mean:} Straightforwardly
+  $$
+  \Esp_{col} N(\mbf) = \binom{n}{k} \mum,
+  \qquad
+  \Esp_{topo} N(\mbf) = \binom{n}{k} |\Rcal(\mbf)| \mum .
+  $$
+
+  \bigskip\pause
+  \paragraph{Variance:} Obtained via the calculation of $\Esp
+  [N(\mbf)^2]$.
+  \begin{eqnarray*}
+    N^2(\mbf) & = & \sum_{\alpha, \beta \in I_k}
+    \sum_{\mbf^\prime, \mbf''\in \mathcal{R}(\mbf)}
+    Y_{\alpha}(\mbf')Y_{\beta}(\mbf'') \\
+    \text{\emphase{if topological}}& = & \sum_{s=0}^k \sum_{|\alpha
+    \cap \beta| = s} \sum_{\mbf', \mbf'' \in \Rcal(\mbf)} Y_{\alpha
+    \cup \beta}(\mbf' \Omegas \mbf'')
+  \end{eqnarray*}
+  where $\Omegas$ is the \emphase{overlapping operator} with $s$
+  common nodes and $\mbf' \Omegas \mbf''$ is the \emphase{super-motif}
+  made of two overlapping occurrences of $\mbf'$ and $\mbf''$.
+  }
+
+%==================================================================== 
+\frame{ \frametitle{Overlaps of coloured motifs}
+  We have to calculate
+  \begin{eqnarray*}
+    \Esp [Y_\alpha(\mbf) Y_\beta(\mbf)] & \propto  &
+    \Pr\{(\Xbf_\alpha \text{ connected}) \cap (\Xbf_\beta \text{
+    connected}) \} \\
+  & \emphase{\neq} & \Pr\{\Xbf_{\alpha \cup \beta} \text{ connected}\} = g(2k-s, \gamma)
+  \end{eqnarray*}
+    
+%   The calculation of 
+%   $\Esp Y_{\alpha \cup \beta}(\mbf\Omegas \mbf)$ is based on this of 
+%   $$
+%   \Pr\{(\Xbf_\alpha \text{ connected}) \cap (\Xbf_\beta \text{
+%     connected}) \} 
+%   $$
+%   for overlapping positions $\alpha$ and $\beta$.
+
+  \bigskip
+  \noindent
+  \begin{tabular}{cc}
+    \hspace{-0.5cm}
+    \begin{tabular}{p{0.4\textwidth}}
+      This 
+%       is different from
+%       $$
+%       \Pr\{\Xbf_{\alpha \cup \beta} \text{ connected}\} = g(2k-s, \gamma)
+%       $$
+%       and 
+      requires to explore all possibilities for the \emphase{shared edges}.
+      
+      \bigskip
+      \paragraph{Right:} Example for a motif $\mbf$ of size $k =2$ and
+      $s=1$. \\
+    \end{tabular}
+    &
+    \hspace{-0.5cm}
+    \begin{tabular}{p{0.6\textwidth}}
+      \includegraphics[width=.5\textwidth,
+      height=0.4\textheight]{../Figures/SLS09-JBSB-Fig3} 
+    \end{tabular}
+  \end{tabular}
+  }
+
+%==================================================================== 
+\frame{ \frametitle{Overlaps of topological motifs}
+  \hspace{-0.5cm}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{0.4\textwidth}}
+      \paragraph{Super-motifs} are made of overlapping
+      occurrences of equivalent versions of $\mbf$. \\
+      \\ 
+      The adjacency matrices of all super-motifs can be
+      \emphase{systematically enumerated}. \\ 
+%      \\
+%       The algorithm consist in the systematic exploration of all $\mbf'
+%       \Omegas \mbf''=$ 
+%       $$
+%       \left(\begin{array}{c|c|c}
+%           \mbf'_{11} & \mbf'_{12} & \Obf \\
+%           \hline
+%           \mbf'_{21} & \max(\mbf'_{22}, \mbf''_{11}) &  \mbf''_{12} \\
+%           \hline
+%           \Obf  & \mbf''_{21} &  \mbf''_{22} \\
+%         \end{array} \right).
+%       $$
+      \\
+      \paragraph{Right:} All $\mbf' \Omegas \mbf''$ with $s=3$
+      for the 4 spike star motif: \\
+      \centerline{\begin{tabular}{cc}
+          \begin{tabular}{c} $\mbf = $ \end{tabular} & 
+          \begin{tabular}{c} \hspace{-1cm}     
+            \epsfig{file = ../Figures/Motif-Star4.eps, clip=, 
+              width=0.05\textwidth}
+          \end{tabular}   
+        \end{tabular}  } \\
+      \paragraph{Alternative strategy} proposed in \refer{MSB06}
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+      %\hspace{-1cm}
+      \epsfig{file= ../../Motifs/FIGURES/MotifStar4-Recouv3.eps,
+        clip=, width=0.5\textwidth, height=0.8\textheight}
+    \end{tabular}
+  \end{tabular}  
+  }
+
+%==================================================================== 
+\frame{ \frametitle{Choosing the model: FDD vs EDD}
+  \paragraph{Case of the FDD model:} The number of star motifs
+  $\mbf_k$ (with $k$ arrows) is given by the degrees of the nodes
+  $d_i$:
+  $$
+  N(\mbf_k) = \sum_i \binom{d_i}{k}
+  \qquad \Rightarrow \qquad
+  \left\{
+    \begin{array}{rcl}
+      \Esp_{FDD}[N(\mbf_k)] & = & N_{\obs}(\mbf_k), \\
+      \\
+      \Var_{FDD}[N(\mbf_k)] & = & 0.
+    \end{array}
+  \right.
+  $$
+
+  \bigskip
+  \paragraph{Expected degree distribution (EDD) model.} $\dbf_{\obs} =
+  \{d_i\}_i$ degrees in the observed graph;
+    \begin{eqnarray*}
+    \{K_i\}_i \text{ i.i.d. } & \sim & \Ucal\{\dbf_{\obs}\} \\
+    \{X_{ij}\} \text{ independent } | \{Z_i\}: X_{ij}  & \sim &
+    \Bcal(c K_i K_j)
+  \end{eqnarray*}
+  \emphase{$\rightarrow$} Preserves the distribution of the degrees, \\
+  \emphase{$\rightarrow$} Satisfies the stationarity assumption (H1).
+  }
+
+%====================================================================
+\subsection*{(Approximate) Distribution of the count}
+\frame{\frametitle{Compound Poisson approximation}
+  \paragraph{Compound Poisson heuristic:} Motif occurrences appear in
+  clumps
+  \begin{eqnarray*}
+    \text{Number of clumps } C & \sim & \Pcal(\lambda) \\
+    \text{Clump sizes } \{S_c\}_c \text{ i.i.d.} & \sim & \Gcal(1-a) \\
+    N(\mbf) & \overset{\Dcal}{\approx} & \sum_{c=1}^C S_c
+  \end{eqnarray*}
+  (inspired from sequence motifs: {\textcolor{blue}{\sl R. \&
+  al. (2005)}}\nocite{RRS05}).
+
+  \bigskip\bigskip
+  \paragraph{Moment fit:} 
+  $$
+  a = \frac{\Var\Nm - \Esp\Nm}{\Var\Nm + \Esp\Nm}, \qquad
+  \lambda = (1-a) \Esp\Nm.
+  $$
+  }
+
+%==================================================================== 
+\frame{ \frametitle{Some simulations}
+  \vspace{-.5cm}\hspace{-.5cm}
+  \begin{tabular}{p{.5\textwidth}p{.5\textwidth}}
+    \emphase{Motif $\Vsf$  (frequent)} 
+    & 
+    \emphase{Motif $\square$ (rare)} \\
+    \hspace{-.5cm}
+    \epsfig{file = ../figures/hist_200_0.005_0.5_0.1_V.eps,
+      width=.5\textwidth, height=.4\textheight, clip=} 
+    & 
+    \hspace{-.5cm}
+    \epsfig{file = ../figures/hist_200_0.01_0.1_0.1_C.eps,
+      width=.5\textwidth, height=.4\textheight, clip=} \\
+    \hspace{-.5cm}
+    \epsfig{file = ../figures/PPPlot_200_0.005_0.5_0.1_V.eps,
+      width=.5\textwidth, height=.4\textheight, clip=}      
+    &
+    \hspace{-.5cm}
+    \epsfig{file = ../figures/PPPlot_200_0.01_0.1_0.1_C.eps,
+      width=.5\textwidth, height=.4\textheight, clip=}  
+  \end{tabular}
+  }
+
+%==================================================================== 
+\frame{ \frametitle{Some simulations (cont'd)}
+  \hspace{-.5cm}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.2\textwidth}}
+      \paragraph{Mixture model}\\
+      $K = 2$ \\
+      $n = 200$ \\
+      %$\overline{\gamma} = .5$ \\
+      \\             
+      \paragraph{Distributions}\\
+      '$G$': Gaussian, \\
+      '$CP$': compound Poisson \\
+      \\ 
+      \paragraph{Accuracy}  \\
+      $D$: total variation distance, \\
+      $\hat{F}$: actual level of the 99\% quantile.
+    \end{tabular}
+    &
+    \begin{tabular}{p{.6\textwidth}}
+      \emphase{Motif $\Vsf$  (frequent)} \qquad\qquad\qquad ($D$, $F$ in \%)
+      {\small
+        \begin{tabular}{c|c|c|c|c|c|c|c}
+          $\Esp$ & $\mathbb{V}$ & $\lambda$ & $\frac{1}{1-a}$  & $D_G$ &
+          $D_{CP}$ & 
+          $\hat{F}_G$ & \emphase{$\hat{F}_{CP}$} \\ \hline
+          159.5 & 2034.0 & 23.1 & 6.66 & 20.4 & 19.7 & 2.5 & \emphase{1.6} \\
+          104.9 & 590.5  & 31.6 & 3.33 & 15.2 & 14 & 1.9 & \emphase{1.2}\\
+          98.5  & 484.0  & 33.3 & 2.27 & 13.1 & 12.6 & 1.1 & \emphase{0.7}\\
+          98.5  & 484.0  & 33.2 & 2.27 & 14.3 & 13.2 & 1.6 & \emphase{1.1}\\
+          98.5  & 488.4  & 33.1 & 2.27 & 14.5 & 14.8 & 2.5 & \emphase{0.9}\\
+        \end{tabular}
+        }
+      \\  \\
+      \emphase{Motif $\square$ (rare)} \\
+      {\small
+        \begin{tabular}{c|c|c|c|c|c|c|c}
+          $\Esp$ & $\mathbb{V}$ & $\lambda$ & $\frac{1}{1-a}$  & $D_G$ & $D_{CP}$ &
+          $\hat{F}_G$ & \emphase{$\hat{F}_{CP}$} \\ \hline
+          7.31&21.72&3.68& 2 &11.8&5.4&3.2&\emphase{0.9}\\
+          2.57&3.42&2.21 & 1.16 &9.3&2.7&3.6&\emphase{0.5}\\
+          2.74&3.69&2.33 & 1.17 &12.3&3.6&4.7&\emphase{1.2}\\
+          1.94&2.40&1.74 & 1.11  &11.3&2.0&3.2&\emphase{1.6}\\
+          2.74&3.72&2.32 & 1.17 &10.8&4.5&3.7&\emphase{0.7}\\
+        \end{tabular}
+        }
+    \end{tabular}
+  \end{tabular}
+  }
+
+%==================================================================== 
+\frame{ \frametitle{Comparison with 'Mfinder'} 
+  \begin{tabular}{ll}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Here} \\
+      Occurrences: induced \\
+      Model: mixture \\
+      Distribution: compound Poisson
+    \end{tabular}
+    &
+    \hspace{-.5cm}
+    \begin{tabular}{p{.4\textwidth}}
+      \paragraph{Mfinder} \\
+      Occurrences: exact \\
+      Model: FDD \\
+      Distribution: Gaussian
+    \end{tabular}
+    \\
+    \\
+    \hspace{-.6cm}
+    {\small
+    \begin{tabular}{crrrr}
+      Motif & $N_{\obs}(\mbf)$ & $\Esp(N)$ & $\sigma(N)$ & $p$  \\              \hline
+      \epsfig{file = ../figures/Vmotif.eps, width=.3cm, clip=} &
+      14\,113 & 13\,118 & 2\,599 & 3E${-1}$ \\ 
+      \epsfig{file = ../figures/trianglemotif.eps, width=.3cm, clip=}
+      & 75 & 64.4 & 20 & 3E${-1}$ \\ 
+      \epsfig{file = ../figures/chainmotif.eps, width=.3cm, clip=} &
+      98\,697 & 90\,059 & 26\,064 & 3E${-1}$ \\ 
+      \epsfig{file = ../figures/starmotif.eps, width=.3cm, clip=} &
+      112\,490 & 89\,372 & 26\,423 & 2E${-1}$ \\
+      \epsfig{file = ../figures/squaremotif.eps, width=.3cm, clip=} &
+      1\,058 & 492 & 202 & \emphase{1E${-2}$} \\ 
+      \epsfig{file = ../figures/whisker.eps, width=.3cm, clip=} &
+      3\,535 & 2\,756 & 1\,087 & 2E${-1}$ \\ 
+      \epsfig{file = ../figures/halfclique.eps, width=.3cm, clip=} & 79 &
+      33.2 & 19.5 & \emphase{3E${-2}$} \\ 
+      \epsfig{file = ../figures/clique.eps, width=.3cm, clip=} & 0 &
+      0.165 & 0.432 & 1.00 \\ 
+    \end{tabular}
+    }
+    &
+    \hspace{-.6cm}
+    {\small
+    \begin{tabular}{rrrr} 
+      $N_{\obs}(\mbf)$ &
+      $\overline{N}_{100}$&$\overline{\sigma }_{100}$&
+      $p$ \\
+      \hline
+      13\,888 & {13\,648} & \emphase{51.8} &  {2E${-6}$}    \\
+      75      & {155}   & \emphase{17.3} & {2E${-6}$}     \\
+      87\,869 & {112\,532} & {1\,957} & {1E${-36}$}  \\
+      109\,113& {103\,186} & {1\,084} & {2E${-8}$}     \\
+      979     & {796} & {64.7} & {2E${-3}$}    \\
+      3\,219  & {8\,734} & {945} & {3E${-9}$}   \\
+      79      & {273} & {66.7}& {2E${-3}$}    \\
+      0       & {6.2} & {3.7} & {4E${-2}$}       
+    \end{tabular}
+    }
+  \end{tabular}
+  }
+
+%====================================================================
+%====================================================================
+\section{Network comparison}
+\subsection*{Motif-based description}
+\frame{\frametitle{Network comparison} \pause
+%====================================================================
+  \paragraph{Aim:} Define a (dis-)similarity measure to compare
+  networks. 
+
+  \bigskip\bigskip
+  \paragraph{Strategy:} Define it based on network frequencies.
+
+  \bigskip\bigskip
+  \paragraph{Desirable properties:} avoid dependency on
+  'irrelevant' characteristics, such as
+  \begin{itemize}
+  \item network sizes, 
+  \item network densities, 
+  \item colour frequencies in each network, 
+  \item redundancy between motifs frequencies.
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{\frametitle{Motif-based description}
+  \paragraph{Vector of counts.} For a set of (coloured or topological)
+  motifs $(\mbf_1, \dots, \mbf_M)$ and a given network $g$, define
+  $$
+  {\Nbf}_g = [{N}_g(\mbf_1) \; \dots \; {N}_g(\mbf_M)].
+  $$
+
+  \bigskip
+  \paragraph{Moments.} For a series of random graph models
+  --~satisfying (H1) and (H2)~--, we know how to compute
+  \begin{itemize}
+  \item means: 
+    $$
+    \Esp N_g(\mbf) \propto \binom{n_g}{k_\mbf} \mu_g(\mbf),
+    $$
+  \item variances: $\Var N_g(\mbf)$,
+  \item covariances $\Cov[N_g(\mbf), N_g(\mbf')]$ (not shown).
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{\frametitle{Normalised counts} 
+  To account for both \emphase{network and motif sizes}, we define 
+  $$
+  \tilde{N}_g(\mbf)  =  \binom{n_g}{k_\mbf}^{-1} N_g(\mbf)
+  \qquad \text{and} \qquad
+  \tilde{\Nbf}_g  =  [\tilde{N}(\mbf_1) \; \dots \;
+  \tilde{N}(\mbf_M)].
+  $$
+%   \begin{eqnarray*}
+%   \tilde{N}_g(\mbf) & = & \binom{n_g}{k_\mbf}^{-1} N_g(\mbf) \\
+%   \text{and} \qquad
+%   \tilde{\Nbf}_g & = & [\tilde{N}(\mbf_1) \; \dots \; \tilde{N}(\mbf_M)].
+%   \end{eqnarray*}
+
+  \bigskip
+  \paragraph{Moments of the normalised counts:}
+  $
+  \mubf_g := \Esp(\tilde{\Nbf}_g), 
+  \quad
+  \tilde{\Sigmabf}_g := \Var(\tilde{\Nbf}_g)
+  $
+  \begin{eqnarray*}
+    \Esp\tilde{N}_g(\mbf) & = & \binom{n_g}{k_\mbf}^{-1} \Esp N_g(\mbf)\\ 
+    \Var\tilde{N}_g(\mbf) & = & \binom{n_g}{k_\mbf}^{-2} \Var {N}_g(\mbf) \\
+    \Cov[\tilde{N}_g(\mbf), \tilde{N}_g(\mbf')] & = &
+    \binom{n_g}{k_\mbf}^{-1}\binom{n_g}{k_{\mbf'}}^{-1}
+    \Cov[{N}_g(\mbf), {N}_g(\mbf')] 
+  \end{eqnarray*}
+  }
+
+%====================================================================
+\subsection*{A distance between networks}
+\frame{ \frametitle{Mahalanobis distance}
+%====================================================================
+  If networks $g$ and $g'$ are independent,
+  $$
+  \Esp(\tilde{\Nbf}_g - \tilde{\Nbf}_{g'}) = \mubf_g - \mubf_{g'}, 
+  \qquad
+  \Var(\tilde{\Nbf}_g - \tilde{\Nbf}_{g'}) = \tilde{\Sigmabf}_g +
+  \tilde{\Sigmabf}_{g'} 
+  $$
+
+  \bigskip
+  \paragraph{Cholevski decomposition:} Inverse covariance matrix as a
+  metric accounting for correlations:
+  $$
+  \Var\left[\left(\tilde{\Sigmabf}_g +
+      \tilde{\Sigmabf}_{g'}\right)^{-1/2}(\tilde{\Nbf}_g -
+    \tilde{\Nbf}_{g'})\right] = {\bf I}
+  $$
+  
+  \bigskip
+  \paragraph{Mahalanobis distance:} (cf LDA)
+  $$
+  d^2(g, g') = \|\tilde{\Nbf}_g - \tilde{\Nbf}_{g'}
+  \|^2_{\left(\tilde{\Sigmabf}_g + \tilde{\Sigmabf}_{g'}\right)^{-1}}.
+  $$
+  }
+
+%====================================================================
+\frame{ \frametitle{Descriptive analyses}
+  \paragraph{All distance-based data analysis} techniques can then be
+  applied. 
+
+  \pause\bigskip
+  \begin{tabular}{cc}
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Multidimensional scaling} ($\approx$ PCA) \\
+       \epsfig{file =
+         ../Figures/motusOrganismsMahalanobisDistanceMatrix-MDS.eps,
+         angle=270, clip=, width=.5\textwidth}  
+    \end{tabular} \pause
+    &
+    \hspace{-0.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Distance based clustering} \\
+       \epsfig{file =
+         ../Figures/motusOrganismsMahalanobisDistanceMatrix-HClust.eps,
+         angle=270, clip=, width=.5\textwidth}   
+    \end{tabular}
+  \end{tabular}
+  and more
+  \begin{itemize}
+  \item contribution of each motif to the distance, 
+  \item ...
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{ \frametitle{Hypothesis testing}
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Null hypothesis:}
+      $$      
+      \Hbf_0 = \{\mubf_g = \mubf_{g'}\}
+      $$
+
+      \paragraph{Test statistic:} 
+      $$
+      T = \frac1M d^2(g, g')
+      $$
+      
+      \paragraph{Question:} Distribution of $T$
+      under $\Hbf_0$? $\Fcal_{M, \nu}$? \\
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+    \hspace{-.5cm}
+      \epsfig{file =
+      ../Figures/MahalanobisHist_EstimatedParam_p0.1_AllMotifsSize3.ps,
+      clip=, width=.45\textwidth} 
+    \end{tabular}
+  \end{tabular} \\
+  (Work in progress by \textcolor{blue}{\sl L. Benaroya}) 
+  }
+
+%==================================================================== 
+\frame{ \frametitle{Some open questions}
+  \paragraph{(Asymptotic) distributions}
+  \begin{itemize}
+  \item of the counts $N(\mbf)$,
+  \item of the distance $d(g, g')$,
+  \end{itemize}
+  for non-naive random graph models?
+
+  \bigskip\bigskip
+  \paragraph{(Asymptotic) distributions}
+  \begin{itemize}
+  \item of the counts $N(\mbf)$,
+  \item of the distance $d(g, g')$,
+  \end{itemize}
+  for non-naive random graph models?
+
+  \bigskip\bigskip
+  \paragraph{But most of all:} what is the relevent graph model?
+  }
+
+%====================================================================
+\section{References}
+\frame{ \frametitle{References}
+%====================================================================
+  \tiny{
+    %\bibliographystyle{/Latex/astats}
+    %\bibliography{/Biblio/AST,/Biblio/SSB,/Biblio/ARC}
+    \input{NeMo-SeMoVi.bbl1}
+    }
+  }
+
+%====================================================================
+\frame{ \frametitle{}
+  \tiny{
+    \input{NeMo-SeMoVi.bbl2}
+    }
+  }
+
+%\input{MixNet-SeMoVi-SupMat.tex}
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================

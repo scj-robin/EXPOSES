@@ -1,0 +1,267 @@
+%====================================================================
+%====================================================================
+\section{Incomplete data models}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Models with latent variables} 
+
+  \paragraph{Notations.}
+  \begin{description}
+  \item[$Y$] observed variables (responses)
+  \item[$x$] observed covariates (explanatory)
+  \item[$Z$] latent (= unobserved, hidden, state) variables
+  \item[$\theta$] unknown parameters
+  \end{description}
+  
+  \pause \bigskip \bigskip
+  \paragraph{'Definition' of latent variables.}
+  \begin{itemize}
+  \item Frequentist setting:
+  \begin{align*}
+  \text{latent variables} = \text{random, \qquad parameters} = \text{fixed}
+  \end{align*}
+  \item \pause Bayesian setting: 
+  \begin{align*}
+  \text{both latent variables and parameters} = \text{random}
+  \end{align*}
+  but
+  \begin{align*}
+  \text{\# latent variables } \simeq \text{ \# data,} \qquad 
+  \text{\# parameters } \ll \text{ \# data}  
+  \end{align*}
+  \end{itemize}
+  
+}
+  
+%====================================================================
+\frame{\frametitle{Likelihoods} 
+
+  \paragraph{'Complete' likelihood :} both latent and observed variables\footnote{$x$ is dropped for the sake of clarity}:
+  $$
+  p_\theta(Y, Z) = p_\theta(Y, Z; x)
+  $$
+  \ra often reasonably easy to handle, but involves the unobserved $Z$
+  
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{'Observed' likelihood = marginal likelihood} of the observed data\footnote{We will use $\int \dots \d z$ even when $Z$ is discrete (should be $\sum_{z\in \Zcal}$).}
+  $$
+  p_\theta(Y) = \int_\Zcal p_\theta(Y, z) \d z
+  $$
+  \ra involves only the observed $Y$, but most often intractable
+
+}
+  
+%====================================================================
+\frame{\frametitle{Maximum likelihood} 
+
+  \paragraph{Maximum likelihood estimate (MLE):}
+  $$
+  \theta_{MLE} = \argmax_\theta \; p_\theta(Y) = \argmax_\theta \; \int p_\theta(Y, z) \d z
+  $$
+  most often intractable
+
+  \bigskip \bigskip \pause
+  \paragraph{Decomposition of the log-likelihood \refer{DLR77}:} \pause By definition
+  $$
+  p_\theta(Z \mid Y) = p_\theta(Y, Z) \left/ p_\theta(Y) \right.
+  $$
+  \pause so \textcolor{gray}{(reverting the ratio and taking the log)}
+  $$
+  \log p_\theta(Y) = \log p_\theta(Y, Z) - \log p_\theta(Z \mid Y)
+  $$
+  \pause and \textcolor{gray}{(taking the conditional expectation on both side)}
+  $$
+  \Esp_\theta[\log p_\theta(Y) \mid Y] = \Esp_\theta[\log p_\theta(Y, Z) \mid Y] - \Esp_\theta[\log p_\theta(Z \mid Y) \mid Y] 
+  $$
+  \pause that is
+  $$
+  \log p_\theta(Y) = \Esp_\theta[\log p_\theta(Y, Z) \mid Y] - \Esp_\theta[\log p_\theta(Z \mid Y) \mid Y] 
+  $$
+}
+  
+%====================================================================
+\frame{\frametitle{Decomposition of $\log p_\theta(Y)$} 
+
+  $$
+  \log p_\theta(Y) = \Esp_\theta[\log p_\theta(Y, Z) \mid Y] - \Esp_\theta[\log p_\theta(Z \mid Y) \mid Y] 
+  $$
+  
+  \bigskip 
+  \begin{align*}
+  \log p_\theta(Y) & = \text{ (observed) log-likelihood = objective function} \\
+  \\
+  \emphase{\Esp_\theta[\log p_\theta(Y, Z) \mid Y]} & = \text{ conditional expectation of the 'complete' log-likelihood} \\
+  \\
+  -\Esp_\theta[\log p_\theta(Z \mid Y) \mid Y] & = \text{ conditional entropy } = \Hcal\left(p_\theta(Z \mid Y)\right)
+  \end{align*}
+    
+}
+  
+%====================================================================
+\frame{\frametitle{Expectation-maximization (EM) algorithm (1/2)} 
+
+  \paragraph{Iterative algorithm \refer{DLR77}:} denoting $\theta^h$ the estimate at step $h$, repeat until convergence
+  $$
+  \theta^{h+1} = \argmax_{\emphase{\theta}} \; \Esp_{\theta^h}[\log p_{\emphase{\theta}}(Y, Z) \mid Y]
+  $$
+  
+  which requires to (sub-)steps: \\~ 
+  \begin{description}
+  \item[Expectation step =] \pause computation of all moments needed to evaluate $\Esp_{\theta^h}[\cdot \mid Y]$ \\ ~
+  \item[Maximization step =] \pause update the estimate as $\argmax_\theta$
+  \end{description}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Main property:}
+  $$
+  \emphase{\log p_{\theta^{h+1}}(Y) \geq \log p_{\theta^h}(Y)}
+  $$
+  \ra Proof in \#\ref{goto:EMproof}\label{back:EMproof}.
+  
+}
+
+%====================================================================
+\frame{\frametitle{Expectation-maximization (EM) algorithm (2/2)} 
+
+  $$
+  \theta^{h+1} = 
+  \underset{\text{M step}}{\underbrace{\argmax_{\theta}}} 
+  \;
+  \underset{\text{E step}}{\underbrace{\Esp_{\theta^h}}}[\log p_{\theta}(Y, Z) \mid Y]
+  $$
+
+
+  \paragraph{Some remarks.} 
+  \begin{enumerate}
+  \item \pause $\theta$ occurs twice in the formula \\ ~
+  \item \pause Relies on the 'complete' (= joint): easier to handle \\ ~
+  \item \pause The objective function $\log p_\theta(Y)$ is never evaluated \\ ~
+  \item \pause Actually, no need to maximize wrt $\theta$: 
+  $$
+  \Esp_{\theta^h}[\log p_{\emphase{\theta^h}}(Y, Z) \mid Y] \geq \Esp_{\theta^h}[\log p_{\emphase{\theta^{h+1}}}(Y, Z) \mid Y]
+  $$
+  suffices ('generalized' EM = GEM) \\ ~
+  \end{enumerate}
+
+}
+
+%====================================================================
+\frame{\frametitle{M step} 
+
+  \paragraph{Most of the time,} same difficulty as maximum likelihood in absence of latent variables
+  
+  \pause \bigskip \bigskip 
+  \paragraph{Ex.: Exponential family.} If the joint likelihood belongs to the exponential family\footnote{which includes most PLN, SBM and LBM.}
+  $$
+  \log p_\theta(Y, Z) = t(Y, Z)^\intercal \theta - a(Y, Z) - b(\theta)
+  $$
+  then
+  $$
+  \Esp_\theta[\log p_\theta(Y, Z) \mid Y]
+  = \emphase{\Esp_\theta[t(Y, Z) \mid Y]}^\intercal \theta - \emphase{\Esp_\theta[a(Y, Z) \mid Y]} - b(\theta)
+  $$
+  
+  \pause \bigskip \bigskip  
+  \begin{itemize}
+  \item Usual MLE for $\theta$ \\ ~
+  \item Provided that $\Esp_\theta[t(Y, Z) \mid Y]$ and $\Esp_\theta[a(Y, Z) \mid Y]$ can be evaluated
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{E step} 
+
+  \paragraph{Critical step:} requires to compute some moments of
+  $$
+  p_\theta(Z \mid Y) = \frac{p_\theta(Y, Z)}{p_\theta(Y)}
+  $$
+
+  \bigskip 
+  \paragraph{Three situations.}
+  \begin{itemize}
+  \item \pause \bigskip Easy cases: explicit E step \\
+  \ra mixture models (Bayes formula), simple mixed models (close form conditional)
+  \item \pause \bigskip Tricky cases: non-explicit, but still exact E step, ... \\ 
+  \ra hidden Markov models (forward-backward recursions), evolutionary models (upward-downward), belief propagation on trees... 
+  \item \pause \bigskip Bad cases: no exact evaluation \\
+  \ra either sample from $p_\theta(Z \mid Y)$ (Monte-Carlo) \\
+  \ra or approximate $q(Z) \simeq p_\theta(Z \mid Y)$ (variational approximations)
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Poisson log-normal model} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Univariate case.} ($p = 1$ species) \\ ~
+      \begin{itemize}
+       \item $Z \sim \Ncal(0, \sigma^2)$ \\ ~
+       \item $Y \sim \Pcal\left(e^{\mu + Z}\right)$ \\ ~
+      \end{itemize}
+      \ra $Z$ is marginally Gaussian (- -)
+      
+      \pause \bigskip \bigskip 
+      \paragraph{Conditional distribution.} 
+      $$
+      p(z \mid Y=y) \propto \exp\left(-\frac{z^2}{2 \sigma^2} - e^{\mu + z} + y (\mu + z)\right) 
+      $$
+      \ra no close form \\ ~\\
+      \ra $Z$ is not conditionaly Gaussian ($-$ vs $\cdots$)\\ ~\\
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+      \includegraphics[width=.4\textwidth]{\figeco/FigPLN-pZcondY-mu1-sigma2} \\
+      $\mu = 1, \quad \sigma =2$
+    \end{tabular}
+  \end{tabular}
+}
+
+%====================================================================
+\frame{\frametitle{Stochastic block-model} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Poisson model.} (no covariate) \\ ~
+      \begin{itemize}
+       \item $\{Z_i\} \text{ iid } \sim \Mcal(1, \pi)$ \\ ~
+       \item $Y_{ij} \sim \Pcal\left(e^{\alpha_{Z_iZ_j}}\right)$ \\~
+      \end{itemize}
+      \ra The $Z_i$ are marginally independent
+      
+      \bigskip \bigskip 
+      \onslide+<3->{
+      \paragraph{Moralization.} \refer{Lau96} 
+      $$
+      p(Z_i, Z_j \mid Y_{ij}) = \frac{p(Z_i) p(Z_j) p(Y_{ij} \mid Z_i, Z_j)}{p(Y_{ij})}
+      $$
+      does not factorize in $(Z_i, Z_j)$. \\ ~ \\
+      }
+      \onslide+<5>{
+      \ra The $Z_i$ are all conditionally dependent
+      }
+      
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+      \begin{overprint}
+      \onslide<2>
+      Directed graphical model \\ ~ \\
+      \input{\figlux/GG-SBM}
+      \onslide<3>
+      Moralization of $(Z_1, Z_i)$ \\ ~ \\
+      \input{\figlux/GG-SBM-moralization-1i}
+      \onslide<4>
+      Moralization for all pairs \\ ~ \\
+      \input{\figlux/GG-SBM-moralization}
+      \onslide<5->
+      Conditional graphical model \\ ~ \\
+      \input{\figlux/GG-SBM-conditional}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+}

@@ -1,0 +1,495 @@
+\documentclass[dvips,lscape]{foils}
+%\documentclass[dvips, french]{slides}
+\textwidth 18.5cm
+\textheight 25cm 
+\topmargin -1cm 
+\oddsidemargin  -1cm 
+\evensidemargin  -1cm
+
+% Maths
+\usepackage{amsfonts, amsmath, amssymb,graphics}
+
+\newcommand{\coefbin}[2]{\left( 
+    \begin{array}{c} #1 \\ #2 \end{array} 
+  \right)}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\alphabf}{\mbox{\mathversion{bold}{$\alpha$}}}
+\newcommand{\betabf}{\mbox{\mathversion{bold}{$\beta$}}}
+\newcommand{\gammabf}{\mbox{\mathversion{bold}{$\gamma$}}}
+\newcommand{\mubf}{\mbox{\mathversion{bold}{$\mu$}}}
+\newcommand{\Pibf}{\mbox{\mathversion{bold}{$\Pi$}}}
+\newcommand{\psibf}{\mbox{\mathversion{bold}{$\psi$}}}
+\newcommand{\Sigmabf}{\mbox{\mathversion{bold}{$\Sigma$}}}
+\newcommand{\taubf}{\mbox{\mathversion{bold}{$\tau$}}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\Sbf}{{\bf S}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\ubf}{{\bf u}}
+\newcommand{\vbf}{{\bf v}}
+\newcommand{\xbf}{{\bf x}}
+\newcommand{\Xbf}{{\bf X}}
+\newcommand{\Esp}{{\mathbb E}}
+\newcommand{\Var}{{\mathbb V}}
+\newcommand{\Cov}{{\mathbb C}\mbox{ov}}
+\newcommand{\Ibb}{{\mathbb I}}
+\newcommand{\Rbb}{\mathbb{R}}
+
+% sommes
+\newcommand{\sumk}{\sum_k}
+\newcommand{\sumt}{\sum_{t \in I_k}}
+\newcommand{\sumth}{\sum_{t=t_{k-1}^{(h)}+1}^{t_k^{(h)}}}
+\newcommand{\sump}{\sum_{p=1}^{P}}
+\newcommand{\suml}{\sum_{\ell=1}^{P}}
+\newcommand{\sumtau}{\sum_k \hat{\tau}_{kp}}
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+\newcommand{\Example}{tfl2_1_ResReg}
+
+% Texte
+\usepackage{lscape}
+\usepackage{fancyheadings, rotating, enumerate}
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.5}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\definecolor{jaune}{cmyk}{0, 0.5, 0.5, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\textred}[1]{\textcolor{red}{#1}}
+\newcommand{\textgreen}[1]{\textcolor{green}{ #1}}
+\newcommand{\textlightgreen}[1]{\textcolor{green}{#1}}
+%\newcommand{\textgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{#1}}
+\newcommand{\textyellow}[1]{\textcolor{yellow}{#1}}
+\newcommand{\refer}[2]{{\sl #1}}
+
+% Sections
+%\newcommand{\chapter}[1]{\centerline{\LARGE \textblue{#1}}}
+% \newcommand{\section}[1]{\centerline{\Large \textblue{#1}}}
+% \newcommand{\subsection}[1]{\noindent{\Large \textblue{#1}}}
+% \newcommand{\subsubsection}[1]{\noindent{\large \textblue{#1}}}
+% \newcommand{\paragraph}[1]{\noindent {\textblue{#1}}}
+% Sectionsred
+\newcommand{\chapter}[1]{
+  \addtocounter{chapter}{1}
+  \setcounter{section}{0}
+  \setcounter{subsection}{0}
+  {\centerline{\LARGE \textblue{\arabic{chapter} - #1}}}
+  }
+\newcommand{\section}[1]{
+  \addtocounter{section}{1}
+  \setcounter{subsection}{0}
+  {\centerline{\Large \textblue{\arabic{chapter}.\arabic{section} - #1}}}
+  }
+\newcommand{\subsection}[1]{
+  \addtocounter{subsection}{1}
+  {\noindent{\large \textblue{#1}}}
+  }
+% \newcommand{\subsection}[1]{
+%   \addtocounter{subsection}{1}
+%   {\noindent{\large \textblue{\arabic{chapter}.\arabic{section}.\arabic{subsection} - #1}}}
+%   }
+\newcommand{\paragraph}[1]{\noindent{\textblue{#1}}}
+\newcommand{\emphase}[1]{\textblue{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\landscape
+\newcounter{chapter}
+\newcounter{section}
+\newcounter{subsection}
+\setcounter{chapter}{0}
+\headrulewidth 0pt 
+\pagestyle{fancy} 
+\cfoot{}
+\rfoot{\begin{rotate}{90}{
+      %\hspace{1cm} \tiny S. Robin: Segmentation-clustering for CGH
+      }\end{rotate}}
+\rhead{\begin{rotate}{90}{
+      \hspace{-.5cm} \tiny \thepage
+      }\end{rotate}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+  \textblue{\LARGE ChIPmix : Mixture model of regressions}
+  \textblue{\LARGE   for ChIP-chip experiment analysis}
+  
+  \vspace{1cm}
+  {\large M.-L. Martin-Magniette$^{1,2}$, T. Mary-Huard$^{1}$,}
+  
+  {\large C.  Bérard$^{2}$, S. Robin$^{1}$}
+
+  \vspace{1cm}
+  ($^1$) UMR AgroParisTech/INRA MIA, team Statistics and Genome, Paris, France \\
+  ($^2$) UMR INRA/CNRS/UEVE Plant Genomic Research Unit, Evry, France
+
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Detecting Hybridization in CHip-Chip data}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\section{CHip-Chip technology and biological question}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$$
+\begin{tabular}{cc}
+  \begin{tabular}{c}
+    \epsfig{file =/home/Q/math_recherche/StatGenome/chIP-chip/Valorisation-methode/Figures/Chip-chip.ps, width=12cm,
+    height=12cm, clip=} 
+  \end{tabular}
+  \begin{tabular}{p{11cm}}
+    IP sample: immuno-precipited~DNA\\
+    INPUT sample: total DNA\\\\
+    Both samples are co-hybridized on a same array\\\\
+    Aim to determine which probes have an IP signal 
+significantly higher than the INPUT signal. 
+  \end{tabular}
+ \end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Unsupervised Classification Problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Data:} For each probe, we hence get the IP signal and the INPUT 
+signal\\\\
+\bigskip
+\paragraph{Question:} According to these two signals, we \emphase{have to}  
+\begin{itemize}
+\item \vspace{-0.5cm} Account for the \emphase{link between the IP and
+    Input} signals
+\item \vspace{-0.5cm} \emphase{Classify each probe} into the
+  \emphase{enriched} group or into the \emphase{normal} group,
+
+\end{itemize}
+
+\bigskip
+\noindent In addition we \emphase{would like to}
+\begin{itemize}
+\item \vspace{-0.5cm} Evaluate the quality of the classification;
+\item \vspace{-0.5cm} Avoid numerous false detections (false enriched probes).
+\end{itemize}
+
+\bigskip
+\paragraph{Bibliography:}
+ \begin{itemize}
+    \item model based on the spatial structure of the data (sliding window, peak detection),
+    \item model considering that the whole population can be divided 
+      into two groups.
+ \end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{About logratios...}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  A link between the two signals is observed in all studies. \\ 
+  $\leadsto$ All methods already published are based 
+  on the logratio IP/Input, considered informative about the probe status.\\
+\begin{tabular}{ccc}
+  \begin{tabular}{c}
+\hspace{-3.0cm}\includegraphics[scale=0.35]{/home/Q/math_recherche/StatGenome/chIP-chip/Valorisation-methode/Figures/BelleDistribution.ps}
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+   \epsfig{file=/home/Q/math_recherche/StatGenome/chIP-chip/Valorisation-methode/Figures/Graph_Histogramme_LogRatio_MoyDye_Rep2_chr4.ps,width=5cm,height=6cm,angle=-90,clip=}
+  \end{tabular}  
+  & 
+\begin{tabular}{c}
+   \epsfig{file=/home/Q/math_recherche/StatGenome/chIP-chip/Valorisation-methode/Figures/Graph_MoyDye_Rep2_chr4_projection.ps,width=5cm,height=6cm,angle=-90,clip=}
+ \end{tabular} \\
+ Good case (Buck \& Lieb, 2004) & Bad case  & log(IP) versus log(Input) \\
+\end{tabular}\\
+Explanation of the poor performance of the log-ratio
+\begin{itemize}
+\item Technical difficulties to obtainthe IP sample
+\item Possible cross-hybridization phenomena
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{About logratios on synthetic data.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{tabular}{c}
+  \includegraphics[scale=0.6]{/home/Q/math_recherche/StatGenome/chIP-chip/Valorisation-methode/Figures/ComparaisonHistoTheoriques.ps}
+\end{tabular}
+
+\noindent \textbf{Top:} Two populations with linear relationship and equal slopes. \\
+The corresponding logratio histogram is bimodal. \\
+\noindent \textbf{Bottom:} Two populations with linear relationship but different slopes.\\ 
+The corresponding logratio histogram is unimodal.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{ChIPmix: Mixture Model of Regressions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tabular}{cc}
+\begin{tabular}{p{10cm}}
+    A closer look shows that the relation between IP and Input
+    may differ between the 'normal' group and 'enriched' group.\\ \\
+    $\leadsto$ it is worth working directly with the 2 signals rather than the logratio
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \epsfig{file = /home/Q/math_recherche/StatGenome/chIP-chip/Valorisation-methode/Figures/NuageIPInput.ps,width=12cm,height=12cm, angle=0,clip=} 
+  \end{tabular}
+\end{tabular}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Mixture model}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We assume that each probe $i$ has probability $\pi$
+to be enriched:
+$$
+\Pr\{\text{Probe $i$ enriched}\} = \pi, 
+\qquad
+\Pr\{\text{Probe $i$ normal}\} = 1 - \pi, 
+$$
+and that the relation between log-IP ($Y_i$) and log-Input ($X_i$) depends on
+the status of the probe:
+$$
+Y_i = \left\{ \begin{array}{ll}
+    a_0 + b_0 X_i + E_i & \quad \text{if $i$ is normal} \\
+    \\
+    a_1 + b_1 X_i + E_i & \quad \text{if $i$ is enriched}
+  \end{array} \right.
+$$
+
+The marginal distribution of $Y_i$ for a given $X_i$ is
+$(1-\pi) \phi_0(Y_i | x_i) + \pi \phi_1(Y_i | x_i),$
+where $\phi_j(\cdot|x)$ stands for the probability density function of
+a Gaussian distribution with mean $a_j+b_j x$ and variance $\sigma^2$.
+
+\paragraph{Comparison with the 'Logratio' analysis.} 
+Analysis based on the logratio is the particular case of the
+regression mixture model where
+$b_0 = b_1 = 1.$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Parameter Estimation and Probe Classification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bigskip
+\paragraph{Task.} We have to estimate
+\begin{itemize}
+\item \vspace{-0.5cm} the proportion of enriched probes: $\pi$;
+\item \vspace{-0.5cm} the regression parameters: intercepts ($a_0$,
+  $a_1$), slopes ($b_0$, $b_1$) and the variance $\sigma^2$.
+\end{itemize}
+
+\bigskip\bigskip
+\paragraph{Algorithm.} This can be done using the E-M algorithm which
+alternates
+\begin{description}
+\item[E-step:] \vspace{-0.5cm} prediction of the probe status given
+  the parameters;
+\item[M-step:] \vspace{-0.5cm} estimation of the parameters given the
+  (predicted) probe status.
+\end{description}
+
+\bigskip\bigskip
+\paragraph{Posterior probability.} The status prediction is based on
+the posterior probability $\tau_i$
+$$
+\textred{\tau_i = \Pr\{\text{$i$ enriched} \; |\; X_i, Y_i\}},
+\qquad 1 - \tau_i = \Pr\{\text{$i$ normal} \; |\; X_i, Y_i\}.
+$$
+This probability provides a \emphase{probe classification rule}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{center}
+  \epsfig{file=/home/Q/math_recherche/StatGenome/chIP-chip/Valorisation-methode/Figures/PosteriorPlot_MoyDye_Rep2_chr4.eps}
+\end{center}
+
+How to classify a probe according to its posterior probability ?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Limiting False Detections}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bigskip
+\paragraph{Maximum A Posteriori (MAP) rule.} Probes are usually classified
+into their most probable class, using the 50\% threshold:
+$$
+\begin{array}{rclcl}
+  \widehat{\tau_i} & \geq & 50\% & \Rightarrow & \text{$i$ classified as 'enriched'}, \\ 
+  \widehat{\tau_i} & < & 50\% & \Rightarrow & \text{$i$ classified as 'normal'}. 
+\end{array}
+$$
+Misclassifications in 'enriched' group or in 'normal' group 
+have the same cost.  \\
+\paragraph{Controlling false detections.} We want to control the
+probability for the $\tau_i$ of a normal probe to fall above the
+classification threshold. 
+
+For a \emphase{fixed risk $\alpha$} we calculate the threshold $s$
+such that
+$$
+\textred{s: \qquad \Pr\{\tau_i > s \;|\; \text{$i$ normal}, \;
+  \log(\text{Input})=X_i\} \leq \alpha}
+$$
+and if $\tau_i > s$ then $i$ is classified as 'enriched'.\\
+The threshold $s$ depends on both $\alpha$ and the log-Input $X_i$.\\
+This control focuses on misclassifications in 'enriched' group.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Applications}
+\section{Promoter DNA methylation in the human genome}
+
+\paragraph{Data}(Weber \emph{et al.} 2007)
+
+\noindent NimbleGen tiling array of promoter regions of 15\;609
+human genes.
+
+\noindent Each promoter region has 15 probes.
+
+\noindent We  consider the Intermediate CpG class of promoters
+(2056).
+
+\paragraph{Results}
+
+\noindent A high proportion of enriched probes
+($\widehat{\pi}\approx$80\%).
+
+\noindent 403 of the 460 promoter regions found by Weber have 5
+enriched probes or more.
+
+\noindent 38 new promoter candidates with 9 enriched probes or more.
+
+\noindent 1 promoter region found by Weber has no enriched probe.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Histone modification of \textit{Arabidopsis thaliana}}  
+
+\noindent NimbleGen tiling array of very high density, 
+more than 1,000,000 probes ($\approx$200,000 per chromosome)
+
+\noindent Two biological replicates with dye-swap, normalized according to Kerr et al., 2002
+
+\paragraph{Results of ChIPmix}
+
+\noindent At level $\alpha=0.01$, $\sim 20\%$ of the probes are enriched on each chromosome. \\
+ 
+\noindent Overlap of 2/3 between the two biological replicates. \\
+
+\noindent Probes are clustered in genomic regions. \\
+
+\noindent For chromosome 4 : $\widehat{\pi}=0.28$, $\widehat{b}_0=0.75 ,\widehat{b}_1=1.05$\\
+
+\newpage
+\paragraph{Comparison with two other methods}
+
+\begin{tabular}{cc}
+\begin{tabular}{r}
+    \\ \\
+    Annotation \\ \\
+    NimbleGen  \\ \\
+    ChIPmix    \\ \\
+    ChIPOTle
+\end{tabular}
+&
+\begin{tabular}{c}
+\includegraphics[scale=0.5]{/home/Q/math_recherche/StatGenome/chIP-chip/Valorisation-methode/Figures/8516_chr4_sortie_ecran_annotation.eps}\\
+\end{tabular}
+\end{tabular} \\
+
+\noindent \textbf{NimbleGen:} finds smaller genomic regions, and fail to identify some targets.
+
+\noindent \textbf{ChIPOTle: } agrees with ChIPmix, not with NimbleGen.
+\newpage
+\paragraph{Comparison with results of Turck \textit{et al.} (2007)}
+
+Home-made tiling array of chr 4 of \textit{Arabidopsis thaliana} with the same sample
+
+More than 75 $\%$ of the probes declared enriched with the NimbleGen's array
+cover genomic regions already found in Turck \textit{et al.} (2007).
+
+\begin{tabular}{c}
+\includegraphics[scale=0.6]{/home/Q/math_recherche/StatGenome/chIP-chip/Valorisation-methode/Figures/DiagrammeVenn_couleur_legend.ps}
+\end{tabular} \\
+
+For NimbleGen, less than 20\% of the specific probes are
+validated targets. In contrast, for ChIPmix, more than 55\% of 
+the specific probes are validated targets.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Conclusions}
+
+New method for analyzing chIP-chip data based on mixture model of regressions
+
+A control of the false discovery is provided
+
+Other explicative variables in the regressions can be added
+
+Applications to ChIP-chip data from different arrays and different organisms 
+are promising: our results are coherent with results already published and 
+new candidates are found.
+
+R program of ChIPmix is available at 
+$$\texttt{http://www.agroparistech.fr/mia/outil\_A.html}$$
+
+\newpage
+\chapter{In progress}
+
+ChIPmix is generalized to analyze simultaneously the independant biological replicates.
+ 
+The marginal distribution of $Y_i$ for a given $X_i$ is
+$$(1-\pi) \phi_{0,k}(Y_i | x_i) + \pi \phi_{1,k}(Y_i | x_i),$$
+where $\phi_{j,k}(\cdot|x)$ stands for the probability density function of
+a Gaussian distribution with mean $a_{j,k}+b_{j,k} x$ and variance $\sigma^2_k$.
+
+\begin{tabular}{c}
+\includegraphics[scale=0.35]{/home/Q/math_recherche/StatGenome/chIP-chip/Valorisation-methode/Figures/capture_SignalMap1.ps}
+\end{tabular} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

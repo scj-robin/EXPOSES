@@ -1,0 +1,42 @@
+\documentclass[12pt]{article}
+
+\usepackage[T1]{fontenc} 
+\usepackage[latin1]{inputenc}
+
+% packages
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{enumerate}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{multirow}
+
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{21cm}
+\setlength{\hoffset}{-1.4cm}
+
+\newcommand{\Bcal}{\mathcal{B}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\title{Detecting change-points in the structure of a network: Exact Bayesian inference}
+\author{L. Schwaller \& S. Robin}
+
+\date{}
+\maketitle
+
+% Exact Bayesian inference for off-line change-point detection in tree-structured graphical models
+
+We consider the problem of change-point detection in a multivariate time-series, e.g. the expression of a set of genes, or the activity of a set of brain regions, over time. We adopt the framework of graphical models to described the dependency between the series. We are interested in the situation where the graphical model is affected by abrupt changes throughout time. In the above examples, such changes would correspond to gene or brain region rewiring.
+
+We demonstrate that it is possible to perform exact Bayesian inference whenever one considers a simple class of undirected graphs called spanning trees as possible structures. We are then able to integrate on both the graph and segmentation spaces at the same time by combining classical dynamic programming with algebraic results pertaining to spanning trees. In particular, we show that quantities such as posterior distributions for change-points or posterior edge probabilities over time can efficiently be obtained. 
+
+We illustrate our results on both synthetic and experimental data arising from molecular biology and neuro-sciences. 
+
+\nocite{ScR16}
+\bibliography{/home/robin/Biblio/BibGene.bib}
+\bibliographystyle{plain}
+
+\end{document}

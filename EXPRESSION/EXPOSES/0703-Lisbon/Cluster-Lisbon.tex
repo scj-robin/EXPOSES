@@ -1,0 +1,1078 @@
+\documentclass[dvips, lscape]{foils}
+%\documentclass[dvips, french]{slides}
+\textwidth 18.5cm
+\textheight 25cm 
+\topmargin -1cm 
+\oddsidemargin  -1cm 
+\evensidemargin  -1cm
+
+% Maths
+\usepackage{amsfonts, amsmath, amssymb}
+
+\newcommand{\coefbin}[2]{\left( 
+    \begin{array}{c} #1 \\ #2 \end{array} 
+  \right)}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\alphabf}{\mbox{\mathversion{bold}{$\alpha$}}}
+\newcommand{\betabf}{\mbox{\mathversion{bold}{$\beta$}}}
+\newcommand{\gammabf}{\mbox{\mathversion{bold}\newcommand{\psibf}{\mbox{\mathversion{bold}{$\psi$}}}
+{$\gamma$}}}
+\newcommand{\mubf}{\mbox{\mathversion{bold}{$\mu$}}}
+\newcommand{\psibf}{\mbox{\mathversion{bold}{$\psi$}}}
+\newcommand{\Sigmabf}{\mbox{\mathversion{bold}{$\Sigma$}}}
+\newcommand{\taubf}{\mbox{\mathversion{bold}{$\tau$}}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\Sbf}{{\bf S}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\ubf}{{\bf u}}
+\newcommand{\vbf}{{\bf v}}
+\newcommand{\xbf}{{\bf x}}
+\newcommand{\Xbf}{{\bf X}}
+\newcommand{\Esp}{{\mathbb E}}
+\newcommand{\Var}{{\mathbb V}}
+\newcommand{\Cov}{{\mathbb C}\mbox{ov}}
+\newcommand{\Ibb}{{\mathbb I}}
+\newcommand{\Rbb}{\mathbb{R}}
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+% Texte
+\usepackage{lscape}
+\usepackage{../../../../Latex/fancyheadings, rotating, enumerate}
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.5}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\definecolor{jaune}{cmyk}{0, 0.5, 0.5, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\textred}[1]{\textcolor{red}{#1}}
+\newcommand{\textgreen}[1]{\textcolor{green}{ #1}}
+\newcommand{\textlightgreen}[1]{\textcolor{green}{#1}}
+%\newcommand{\textgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{#1}}
+\newcommand{\textyellow}[1]{\textcolor{yellow}{#1}}
+\newcommand{\refer}[2]{{\sl #1}}
+
+% Sections
+%\newcommand{\chapter}[1]{\centerline{\LARGE \textblue{#1}}}
+% \newcommand{\section}[1]{\centerline{\Large \textblue{#1}}}
+% \newcommand{\subsection}[1]{\noindent{\Large \textblue{#1}}}
+% \newcommand{\subsubsection}[1]{\noindent{\large \textblue{#1}}}
+% \newcommand{\paragraph}[1]{\noindent {\textblue{#1}}}
+% Sectionsred
+\newcommand{\chapter}[1]{
+  \addtocounter{chapter}{1}
+  \setcounter{section}{0}
+  \setcounter{subsection}{0}
+  {\centerline{\LARGE \textblue{\arabic{chapter} - #1}}}
+  }
+\newcommand{\section}[1]{
+  \addtocounter{section}{1}
+  \setcounter{subsection}{0}
+  {\centerline{\Large \textblue{\arabic{chapter}.\arabic{section} - #1}}}
+  }
+\newcommand{\subsection}[1]{
+  \addtocounter{subsection}{1}
+  {\noindent{\large \textblue{\arabic{chapter}.\arabic{section}.\arabic{subsection} - #1}}}
+  }
+\newcommand{\paragraph}[1]{\noindent{\textblue{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\landscape
+\newcounter{chapter}
+\newcounter{section}
+\newcounter{subsection}
+\setcounter{chapter}{0}
+\headrulewidth 0pt 
+\pagestyle{fancy} 
+\cfoot{}
+\rfoot{\begin{rotate}{90}{
+      \hspace{1cm} \tiny S. Robin: Clustering for microarrays data
+      }\end{rotate}}
+\rhead{\begin{rotate}{90}{
+      \hspace{-.5cm} \tiny \thepage
+      }\end{rotate}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+  \textblue{\LARGE Clustering analysis of microarray data} 
+
+   \vspace{1cm}
+   {\large S. {Robin}} \\
+   robin@inapg.inra.fr
+
+   {UMR INA-PG / ENGREF / INRA, Paris} \\
+   {Mathématique et Informatique Appliquées}
+   
+%   \vspace{3cm}
+    \vspace{1cm}
+    {Microarray Design and Statistical Analysis} \\
+    {Lisbon, \today}
+\end{center}
+
+\paragraph{Outline}
+
+1 - General problem
+
+2 - Distance based methods
+
+3 - Model based methods
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Introduction} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+To understand the genes' functions, clusters of genes having
+similar expression profiles in a set of conditions are defined \\
+\epsfig{figure=../Figures/SLA01-Fig3.ps,height=24cm,width=12cm,angle=270,
+  clip=}
+
+\refer{Schaffer \& al. (01)}{Diurnal and Circadian-Regulated Genes in
+Arabidopsis}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{General problem} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Unsupervised classification:} 
+Let $\Pcal$ denote the ``population'' of the $G$ genes. The problem is
+to find a partition (\textblue{``class discovery''}) $\{\Ccal_1, \dots,
+\Ccal_K\}$ of $\Pcal$:
+$$
+\bigcup_{k=1}^K \Ccal_k = \Pcal, 
+$$
+where groups $\Ccal_k$ are \\
+$\bullet \quad$ homogeneous (low within-group variability) \\
+$\bullet \quad$ well separated (high between-group variability)
+
+\paragraph{Remark:} Most clustering techniques provide disjoint clusters: 
+$$
+\Ccal_k \cap \Ccal_{k'} = \varnothing \quad \mbox{if} \quad k \neq k'.
+$$
+This property is not always biologically desirable.
+
+\newpage
+\paragraph{Main difficulty:} Number of partitions in $K$ groups of a set of
+size $G =$
+$$
+\frac{1}{K!} \sum_{k=0}^K (-1)^k (K-k)^G 
+\coefbin{K}{k}
+$$
+
+\centerline{$\simeq 10^{47}$ partitions of $G=100$ genes into $K=3$ groups} 
+\centerline{$\simeq 10^{68}$ partitions of $G=100$ genes into $K=5$ groups} 
+
+\paragraph{Distance based (heuristic) methods:}
+\begin{itemize}
+\item  Hierarchical algorithms ($K$ unknown)
+\item $K$ means ($K$ known)
+\end{itemize}
+
+\paragraph{Model based (statistical) methods:} 
+\begin{itemize}
+\item  Mixture models
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Distance based methods} 
+\bigskip\bigskip
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Hierarchical clustering} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The clusters are built iteratively joining the two ``closest'' genes
+or groups at each step. The result is a \textblue{tree} (dendrogram).
+
+These methods are based on three basic elements: 
+\begin{itemize}
+\item a distance between genes 
+  $$
+  d(g, g')
+  $$
+\item  a distance between groups 
+  $$
+  d(\Ccal, \Ccal')
+  $$
+\item a stopping rule
+\end{itemize}
+
+\newpage
+\paragraph{Typical output:} free software ``{\sl Cluster}''
+
+\begin{pspicture}(24, 10)
+  \rput[bl](0, 0){\epsfig{figure=../Figures/ESB98-Fig1.ps, height=24cm,
+      width=10cm, angle=270, bbllx=22, bblly=15, bburx=300, bbury=825,
+      clip=}
+    }
+  
+  \rput[tr](23, 10){\begin{tabular}{r}
+      \refer{Eisen \& al. (98)}{} \\
+      \\
+      \\
+    \end{tabular}}
+\end{pspicture}
+
+Genes are clustered according to their expression profile over a given
+period. \\
+Every algorithm will \textblue{always provide a tree} \dots even if the
+data are \textblue{not structured} according to a tree. \\
+
+\centerline{\begin{tabular}{rl} But: & \textblue{\sl If all a man
+      has is a hammer} \\
+    & \textblue{\sl then every problem looks like a nail.}
+      \end{tabular}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Distance between genes}
+
+Typically, euclidian distance:
+$$
+\begin{tabular}{ll}
+  simple: &  $\displaystyle{d^2(g, g') = \sum_t (x_{gt} -
+    x_{g't})^2}$, \\
+  \\
+  standardized: & $\displaystyle{d^2(g, g') = \sum_t (x_{gt} - x_{g't})^2 /
+    \sigma^2_t}$.
+\end{tabular}
+$$
+Some algorithms work with only a dissimilarity (or a similarity).
+
+\paragraph{Dissimilarity:} 3 properties 
+$$
+d(g, g') \geq 0, \qquad d(g, g) = 0, \qquad d(g, g') = d(g', g)
+$$
+
+\paragraph{Distance:} 1 additional property
+$$
+d(g, g'') \leq d(g, g') + d(g', g'')
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage 
+Similarity can be based on the correlation coefficient
+$$
+\begin{tabular}{ll}
+  centered: & $\displaystyle{r(g, g') = \frac{\sum_t (x_{gt} -
+        \bar{x}_g)(x_{g't} - \bar{x}_{g'})}{\sqrt{\sum_t (x_{gt} -
+        \bar{x}_g)^2} \sqrt{\sum_t (x_{g't} - \bar{x}_{g'})^2}}}$ \\
+  \\
+  non centered: & $\displaystyle{r'(g, g') = \frac{\sum_t x_{gt}
+      x_{g't}}{\sqrt{\sum_t x_{gt}^2} \sqrt{\sum_t x_{g't}^2}}}$.
+\end{tabular}
+$$
+
+Different similarities derived from $r(g, g')$ may have (very)
+different significations: \\
+%$$
+\begin{tabular}{lccc}
+  & \epsfig{file=../Figures/GraphCorr09.ps, height=4cm, width=6cm, bbllx=123,
+    bblly=347, bburx=505, bbury=510, clip=}  
+  & \epsfig{file=../Figures/GraphCorr00.ps, height=4cm, width=6cm, bbllx=123,
+    bblly=347, bburx=505, bbury=510, clip=} 
+  & \epsfig{file=../Figures/GraphCorr-09.ps, height=4cm, width=6cm, bbllx=123,
+    bblly=347, bburx=505, bbury=510, clip=} \\
+  $r(g, g')$ & 0.90 & 0.0 & -0.90 \\
+%  $\displaystyle{\frac{1 + r(g, g')}{2}}$ & 0.95 & 0.5 & 0.05 \\
+  $\left[1 + r(g, g')\right]$ / 2 & 0.95 & 0.5 & 0.05 \\
+  $\left[r(g, g')\right]^2$ & 0.81 & 0.0 & 0.81 
+\end{tabular}
+%$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Distance between groups} 
+
+This criterion gives the general name of the clustering algorithm
+
+\begin{tabular}{llcl}
+  Single linkage: & $\displaystyle{d(\Ccal, \Ccal')}$ & = & $\displaystyle{
+    \min_{g \in \Ccal, g' \in \Ccal'} d(g, g')}$ \\
+  \\
+  Average linkage: & $\displaystyle{d(\Ccal, \Ccal')}$ & = & $\displaystyle{
+    \frac{1}{|\Ccal| |\Ccal'|} \sum_{g \in \Ccal} \sum_{g' \in \Ccal'}
+    d(g, g')}$ \\
+  \\
+  Complete linkage: & $\displaystyle{d(\Ccal, \Ccal')}$ & = &
+    $\displaystyle{ \max_{g \in \Ccal, g' \in \Ccal'} d(g, g')}$ \\
+  \\
+  Centroid: & $\displaystyle{d(\Ccal, \Ccal')}$ & = & $\displaystyle{
+    d(\overline{g}, \overline{g}')}$ \\
+  \\
+  Ward: & $\displaystyle{d^2(\Ccal, \Ccal')}$ & = & $\displaystyle{
+    \frac{|\Ccal| |\Ccal'|}{|\Ccal| + |\Ccal'|} d^2(\overline{g},
+    \overline{g}')}$ \\
+  \\
+  & & = & within variance of the groups
+\end{tabular}
+
+\newpage
+\paragraph{Ward method:} based on the inertia $I_n$ at step $n$
+
+Step 0: $p_g \equiv 1/G$
+
+Step $n$:
+\begin{equation*}
+  \hspace{-1cm}
+  \begin{split}
+    & I_n = \sum_g p_g \|\xbf_g - \mbf\|^2 \\
+    & = p_1 \|\xbf_1 - \mbf\|^2 + p_2 \|\xbf_2 - \mbf\|^2
+    + \sum_{g> 2} p_g \|\xbf_g - \mbf\|^2  \\
+    & = \underset{d^2(1, 2)}{\underbrace{p_1 \left\|\xbf_1 -
+          \tilde{\xbf}^{12}\right\|^2 + p_2 \left\|\xbf_2 -
+          \tilde{\xbf}^{12}\right\|^2}} +
+    \underset{I_{n+1}}{\underbrace{(p_1+p_2) \|\tilde{\xbf}^{12} -
+        \mbf\|^2 + \sum_{g> 2} p_g \|\xbf_g - \mbf\|^2}}
+  \end{split}
+\end{equation*}
+where
+$$
+\xbf_g = (x_{g1}\dots x_{gT}), 
+\quad 
+\mbf = (\bar{x}_1 \dots \bar{x}_T), 
+\quad
+\tilde{\xbf}^{12} = \frac{p_1 \xbf_1 + p_2 \xbf_2}{p_1 + p_2}
+$$
+
+The new element ``12'' has weight $(p_1 + p_2)$ and coordinates $\tilde{\xbf}^{12}$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Stopping rule} 
+
+\paragraph{Local:} for ex. distance between the two clusters to be
+joined at the current step
+$$
+d^2(g, g') > \mbox{threshold}
+$$
+
+\paragraph{Global:} for ex. remaining variance or inertia
+$$
+I_n > \mbox{threshold}
+$$
+
+\newpage
+\paragraph{Other methods:} 
+
+\begin{tabular}{ll}
+  UPGMA: & Average linkage\\
+  \\
+  UPGMC: & $\displaystyle{d(\Ccal, \Ccal'\Ccal'') = \frac{|\Ccal'| d(\Ccal, \Ccal') +
+    |\Ccal''| d(\Ccal, \Ccal'')}{|\Ccal'| + |\Ccal''|} - 
+  \frac{|\Ccal'| |\Ccal''| d(\Ccal', \Ccal'')}{(|\Ccal'| + |\Ccal''|)^2}}$ \\
+  \\
+ WPGMA: & $\displaystyle{d(\Ccal, \Ccal'\Ccal'') = \frac{d(\Ccal, \Ccal') + d(\Ccal,
+    \Ccal'')}{2}}$ \\
+ \\
+ WPGMC: & $\displaystyle{d(\Ccal, \Ccal'\Ccal'') = \frac{d(\Ccal, \Ccal') +
+    d(\Ccal, \Ccal'')}{2} - \frac{d(\Ccal', \Ccal'')}{4}}$ \\
+\end{tabular}
+
+$$
+\left. \begin{tabular}{r} Unweighted \\ Weighted \end{tabular} \right\}
+\mbox{Pairwise Group Method}
+\left\{ \begin{tabular}{l} Average \\ Centroid \end{tabular} \right.
+$$
+%\refer{Sokal \& Michener (58)}{}, 
+
+\refer{Sokal \& Sneath (63)}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Toy example} 
+$$
+\begin{array}{c|ccccc|c}
+  d(g,g') & a & b & c & \textblue{d} & \textblue{e} & f\\ 
+  p(g) & (1) & (1) & (1) & \textblue{(1)} & \textblue{(1)} & (?)\\ 
+  \hline \hline
+  a &   & 3 & 7 & \textblue{3} & \textblue{4} & ? \\ 
+  b & 3 &   & 4 & \textblue{4} & \textblue{1} & ? \\ 
+  c & 7 & 4 &   & \textblue{2} & \textblue{6} & ? \\ 
+  d & \textblue{3} & \textblue{4} & \textblue{2} &   & \textblue{.5} & \textblue{*} \\ 
+  e & \textblue{4} & \textblue{1} & \textblue{6} & \textblue{.5} &   & \textblue{*} \\
+  \hline
+  f &  ? &  ? &  ? & \textblue{*} & \textblue{*} &   
+\end{array}
+$$
+
+At the first step of the algorithm, elements $d$ and $e$ are gathered
+into a new element $f$.
+
+\begin{itemize}
+\item What are the distances $d(\cdot, f)$ ?
+\item What is the weight of $f$ ?
+\end{itemize}
+\refer{Bouroche \& Saporta (98)}{L'analyse des données}
+
+\newpage
+\paragraph{Different methods provide different trees:} 
+$$
+\begin{tabular}{c||c||c}
+  Single linkage & Average linkage & Complete linkage \\
+                                % LIEN MINIMUM
+  \begin{pspicture}(4, 5)(-1, -1)
+                                % Ordonnées   
+    \psline(0, 0)(0, 4.25)
+    \psline(-0.25, 0)(0, 0) \rput[B]{0}(-0.5, -0.1){0}
+    \psline(-0.25, 0.5)(0, 0.5) 
+    \psline(-0.25, 1)(0, 1) \rput[B]{0}(-0.5, 0.9){2}
+    \psline(-0.25, 1.5)(0, 1.5) 
+    \psline(-0.25, 2)(0, 2) \rput[B]{0}(-0.5, 1.9){4}
+    \psline(-0.25, 2.5)(0, 2.5) 
+    \psline(-0.25, 3)(0, 3) \rput[B]{0}(-0.5, 2.9){6}
+    \psline(-0.25, 3.5)(0, 3.5) 
+    \psline(-0.25, 4)(0, 4) \rput[B]{0}(-0.5, 3.9){8}
+                                % Abscisses
+    \psline(0, 0)(4, 0)
+    \rput[B]{0}(0.5, -0.75){$d$}
+    \rput[B]{0}(1.25, -0.75){$e$}
+    \rput[B]{0}(2, -0.75){$b$}
+    \rput[B]{0}(2.75, -0.75){$c$}
+    \rput[B]{0}(3.5, -0.75){$a$}
+                                % Arbre
+    \psline[linestyle=dashed](0, 0.25)(0.5, 0.25)
+    \psline[linewidth=.075](0.5, 0)(0.5, 0.25)(1.25, 0.25)(1.25, 0)
+    \psline[linestyle=dashed](0, 0.5)(2, 0.5)
+    \psline[linewidth=.075](0.875, 0.25)(0.875, 0.5)(2, 0.5)(2, 0)
+    \psline[linestyle=dashed](0, 1)(1.44, 1)
+    \psline[linewidth=.075](1.44, 0.5)(1.44, 1)(2.75, 1)(2.75, 0)
+    \psline[linestyle=dashed](0, 1.5)(2.1, 1.5)
+    \psline[linewidth=.075](2.1, 1)(2.1, 1.5)(3.5, 1.5)(3.5, 0)
+    \psline[linewidth=.075](2.8, 1.5)(2.8, 1.75)
+  \end{pspicture}
+  &
+                                % LIEN MOYEN
+  \begin{pspicture}(4, 5)(-1, -1)
+                                % Ordonnées   
+    \psline(0, 0)(0, 4.25)
+    \psline(-0.25, 0)(0, 0) \rput[B]{0}(-0.5, -0.1){0}
+    \psline(-0.25, 0.5)(0, 0.5) 
+    \psline(-0.25, 1)(0, 1) \rput[B]{0}(-0.5, 0.9){2}
+    \psline(-0.25, 1.5)(0, 1.5) 
+    \psline(-0.25, 2)(0, 2) \rput[B]{0}(-0.5, 1.9){4}
+    \psline(-0.25, 2.5)(0, 2.5) 
+    \psline(-0.25, 3)(0, 3) \rput[B]{0}(-0.5, 2.9){6}
+    \psline(-0.25, 3.5)(0, 3.5) 
+    \psline(-0.25, 4)(0, 4) \rput[B]{0}(-0.5, 3.9){8}
+                                % Abscisses
+    \psline(0, 0)(4, 0)
+    \rput[B]{0}(0.5, -0.75){$d$}
+    \rput[B]{0}(1.25, -0.75){$e$}
+    \rput[B]{0}(2, -0.75){$b$}
+    \rput[B]{0}(2.75, -0.75){$a$}
+    \rput[B]{0}(3.5, -0.75){$c$}
+                                % Arbre
+    \psline[linestyle=dashed](0, 0.25)(0.5, 0.25)
+    \psline[linewidth=.075](0.5, 0)(0.5, 0.25)(1.25, 0.25)(1.25, 0)
+    \psline[linestyle=dashed](0, 1.25)(0.875, 1.25)
+    \psline[linewidth=.075](0.875, 0.25)(0.875, 1.25)(2, 1.25)(2, 0)
+    \psline[linestyle=dashed](0, 1.625)(1.44, 1.625)
+    \psline[linewidth=.075](1.44, 1.25)(1.44, 1.625)(2.75, 1.625)(2.75, 0)
+    \psline[linestyle=dashed](0, 2.75)(2.1, 2.75)
+    \psline[linewidth=.075](2.1, 1.625)(2.1, 2.75)(3.5, 2.75)(3.5, 0)
+    \psline[linewidth=.075](2.8, 2.75)(2.8, 3)
+  \end{pspicture}
+  &
+                                % LIEN MAXIMAL
+  \begin{pspicture}(4, 5)(-1, -1)
+                                % Ordonnées   
+    \psline(0, 0)(0, 4.25)
+    \psline(-0.25, 0)(0, 0) \rput[B]{0}(-0.5, -0.1){0}
+    \psline(-0.25, 0.5)(0, 0.5) 
+    \psline(-0.25, 1)(0, 1) \rput[B]{0}(-0.5, 0.9){2}
+    \psline(-0.25, 1.5)(0, 1.5) 
+    \psline(-0.25, 2)(0, 2) \rput[B]{0}(-0.5, 1.9){4}
+    \psline(-0.25, 2.5)(0, 2.5) 
+    \psline(-0.25, 3)(0, 3) \rput[B]{0}(-0.5, 2.9){6}
+    \psline(-0.25, 3.5)(0, 3.5) 
+    \psline(-0.25, 4)(0, 4) \rput[B]{0}(-0.5, 3.9){8}
+                                % Abscisses
+    \psline(0, 0)(4, 0)
+    \rput[B]{0}(0.5, -0.75){$d$}
+    \rput[B]{0}(1.25, -0.75){$e$}
+    \rput[B]{0}(2, -0.75){$b$}
+    \rput[B]{0}(2.75, -0.75){$a$}
+    \rput[B]{0}(3.5, -0.75){$c$}
+                                % Arbre 
+    \psline[linestyle=dashed](0, 0.25)(0.5, 0.25)
+    \psline[linewidth=.075](0.5, 0)(0.5, 0.25)(1.25, 0.25)(1.25, 0)
+    \psline[linestyle=dashed](0, 2)(0.875, 2)
+    \psline[linewidth=.075](0.875, 0.25)(.875, 2)(2.325, 2)(2.325, 1.5)
+    \psline[linestyle=dashed](0, 3.5)(1.6, 3.5)
+    \psline[linewidth=.075](1.6, 2)(1.6, 3.5)(3.5, 3.5)(3.5, 0)
+    \psline[linestyle=dashed](0, 1.5)(2, 1.5)
+    \psline[linewidth=.075](2, 0)(2, 1.5)(2.75, 1.5)(2.75, 0) 
+    \psline[linewidth=.075](2.55, 3.5)(2.55, 3.75)
+  \end{pspicture}
+  \\
+                                % LIEN MINIMUM
+  $\begin{array}{ccccc}
+    a & b & c & d & e \\
+    \hline
+    0  &  3  &  3  &  3  &  3  \\
+    &  0  &  2  &  1  &  1  \\
+    &     &  0  &  2  &  2  \\
+    &     &     &     & 0.5 \\
+    &     &     &     &  0    
+  \end{array}$
+  &
+                                % LIEN MOYEN
+  $\begin{array}{ccccc}
+    a & b & c & d & e \\
+    \hline
+    0  & 3.25 & 5.5 & 3.25 & 3.25 \\
+    &  0  & 5.5 & 2.5 & 2.5 \\
+    &     &  0  & 5.5 & 5.5 \\
+    &     &     &  0  & 0.5 \\
+    &     &     &     &  0  \\
+  \end{array}$
+  &
+                                % LIEN MAXIMAL
+  $\begin{array}{ccccc}
+    a & b & c & d & e \\
+    \hline
+    0  &  3  &  7  &  4  &  4   \\
+    &  0  &  7  &  4  &  4   \\
+    &     &  0  &  7  &  7    \\
+    &     &     &     & 0.5 \\
+    &     &     &     &  0  
+  \end{array}$
+\end{tabular}
+$$
+
+\newpage
+\paragraph{Comparison of trees:} 
+Denoting $d$ the original distance and $\hat{d}$ the distance in the
+tree, the ``cophenetic'' correlation is the correlation between $d$
+and $\hat{d}$:
+$$
+\rho(d, \hat{d}) = \frac{\sum_{i<j}
+  \left[d(i,j)-\bar{d}\right]\left[\hat{d}(i,j)-\bar{\hat{d}}\right]}{\sqrt{\sum_{i<j}
+    \left[d(i,j)-\bar{d}\right]^2 \sum_{i<j}
+    \left[\hat{d}(i,j)-\bar{\hat{d}}\right]^2}}.
+$$
+In the toy example we have
+$$
+\begin{tabular}{lcccc}
+  & original & \begin{tabular}{c}simple\\ linkage\end{tabular} 
+  & \begin{tabular}{c}average\\ linkage\end{tabular}  
+  & \begin{tabular}{c}complete\\ linkage\end{tabular}  \\
+  \hline
+  \begin{tabular}{l}mean\\ distance\end{tabular} & 3.45 & 2.05 & 3.73
+  & 4.75 \\
+  \\
+  \begin{tabular}{l}standard\\ deviation\end{tabular} & 2.03 & 0.96 &
+  1.72 & 2.20 \\
+  \\
+  \begin{tabular}{l}phenotic\\ correlation\end{tabular}  & 1 &  0.54 & 0.67 & 0.65
+\end{tabular}
+$$
+
+\newpage
+\hspace{-1cm}
+\begin{tabular}{cc}
+  \begin{tabular}{l}
+    \subsection{Example} \\
+    \\
+    \textblue{Clustering genes / } \\
+    \\
+    \textblue{clustering patients:} \\
+    \\ \\ \\
+    rows = genes \\ 
+    \\
+    columns = patients\\
+    (blue = BLBCL) \\
+    \\ \\ \\
+    \refer{Alizadeh \& al. (00)}{Distinct Type of Diffuse Large
+    B-cell Lymphoma ... } \\   
+  \end{tabular}
+  & 
+  \begin{tabular}{l}
+  \epsfig{figure=../Figures/AED00-Fig1.ps, height=18cm, width=15cm, bbllx=85, bblly=115,
+    bburx=510, bbury=570, clip=} 
+  \end{tabular}
+\end{tabular} 
+
+\newpage 
+BLBCL subgroups respond differentially to therapy:
+
+\begin{tabular}{cc}
+  \begin{tabular}{l}
+  \epsfig{figure=../Figures/AED00-Fig3.ps, height=15cm, width=10cm, bbllx=45, bblly=170,
+    bburx=290, bbury=480, clip=} 
+  \end{tabular}
+  & 
+  \begin{tabular}{r}
+    \refer{Alizadeh \& al. (00)}{} \\
+    \\ \\
+  \epsfig{figure=../Figures/AED00-Fig5.ps, height=10cm, width=10cm, bbllx=370, bblly=80,    bburx=490, bbury=205, clip=} 
+  \end{tabular}
+\end{tabular} \\
+
+%\epsfig{figure=../Figures/AEDM00-p5.ps, height=6cm, width=18cm, bbllx=47, bblly=165,
+%  bburx=290, bbury=260, clip=} 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{$K$ means} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The number $K$ of group is a priori known 
+
+\paragraph{Start:} (In general) choose $K$ points at random among $\xbf_1
+\dots \xbf_G$ that become the means $\mbf^0_1 \dots \mbf^0_K$ of the
+$K$ groups
+
+\paragraph{Step $n$:} \\
+$a) \quad$ Affect each element $g$ to the closest group $\Ccal^n_k$:
+$$
+d(\xbf_g, \mbf^n_k) = \min_{k'} d(\xbf_g, \mbf^n_{k'})
+$$
+$b) \quad$ Update the mean of each group:
+$$
+\mbf^{n+1}_k = \frac{1}{|\Ccal_k|}\sum_{g \in \Ccal_k} \xbf_g
+$$
+
+\newpage
+\paragraph{Property:} The within-group inertia decreases at each step\\
+Let $I_n$ denote it at step $n$:
+$$
+I_n = \sum_{k=1}^K \sum_{g \in \Ccal^n_k} d^2\left(\xbf_g - \mbf^n_k\right)^2
+$$
+$a) \quad$ If element $g$ moves from group $\Ccal_k$ to group $\Ccal_{k'}$
+then
+$$
+d^2\left(\xbf_g - \mbf^n_{k'}\right)^2 \leq d^2\left(\xbf_g - \mbf^n_k\right)^2
+$$
+$b) \quad$ Since $\mbf^{n+1}$ is the mean of group $\Ccal^{n+1}_k$
+$$
+\sum_{g \in \Ccal^{n+1}_k} d^2\left(\xbf_g - \mbf^{n+1}_k\right)^2
+\leq
+\sum_{g \in \Ccal^{n+1}_k} d^2\left(\xbf_g - \mbf^n_k\right)^2
+$$
+
+The $K$ means algorithm converges but some groups may empty.
+
+\newpage
+\paragraph{Drawback:} 
+Clusters provided by the $K$ means algorithm are very sensitive to the
+starting points $\mbf^0_1 \dots \mbf^0_K$
+
+\hspace{-1cm}
+\begin{tabular}{ccc}
+  Selection 1 & Selection 2 & Selection 3 \\
+  \epsfig{file = ../Figures/Kmeans-tra1.eps, height = 5cm,width = 7.5cm}
+  & \epsfig{file = ../Figures/Kmeans-tra3.eps, height = 5cm,width = 7.5cm}
+  & \epsfig{file = ../Figures/Kmeans-tra2.eps, height = 5cm,width = 7.5cm} 
+\end{tabular}
+
+
+\paragraph{In practice:} Use $K$ mean 
+\begin{itemize}
+\item when you have good prior informations to choose
+  $\mbf^0_1 \dots \mbf^0_K$ 
+\item after a hierarchical clustering to allow small changes 
+\item  at least, try several starting points
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Mixture models}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Statistical modeling of the data $\Longrightarrow$ the variability is
+considered
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\section{General model} 
+
+Each element $g$ has probability $\pi_k$ to belong to group $\Ccal_k$
+\\
+If element $g$ belongs to group $\Ccal$, then
+$$
+(\Xbf_g \;|\; g \in \Ccal_k) \sim \phi(\cdot; \theta_k)
+\qquad \Leftrightarrow \qquad
+\Xbf_g \sim \sum_k \pi_k \phi(\cdot; \theta_k)
+$$
+where $\phi$ is a distribution parameterized by $\theta$.
+
+\paragraph{``Complete'' data:} 
+In an ideal world, we should observe an i.i.d. sample $\{(\Xbf_1,
+Z_1)$, \dots, $(\Xbf_G, Z_G)\}$ with distribution
+$$
+Z_g \sim \Mcal(1; \pi_1, \dots, \pi_K), 
+\qquad
+(\Xbf_g \; | \; Z_g = k)  \sim \phi(\cdot; \theta_k)
+$$
+
+\newpage 
+\hspace{-2cm}
+\begin{tabular}{c|c|c}
+  the model & what we would like & what we have \\
+  & & \\
+  \epsfig{file = ../Figures/Melange-modele.eps, height = 8cm,width = 8cm,
+    clip=} 
+  & \epsfig{file = ../Figures/Melange-complet.eps, height = 8cm,width = 8cm,
+    bbllx=90, bblly=224, bburx=540, bbury=580, clip=} 
+  & \epsfig{file = ../Figures/Melange-incomplet.eps, height = 8cm,width = 8cm,
+    bbllx=90, bblly=224, bburx=540, bbury=580, clip=} 
+  \\
+  & & \\
+  & complete data & incomplete data \\
+  & $Z: 1 = \textblue{\bf \circ}, 2 = \textred{+}, 3 = {\bf *}$
+  & $Z =$ ?
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Likelihoods}
+
+
+\paragraph{Incomplete likelihood:} data $\{\Xbf_g\}$ 
+$$
+\log \Lcal\left(\{\Xbf_g\}; \{\pi_k, \theta_k\}\right) = \sum_g
+\log \left[\sum_k \pi_k \phi(\Xbf_g; \theta_k)\right]
+$$
+
+\paragraph{Complete likelihood:} data $\{(\Xbf_g, Z_g)\}$ \\
+\begin{equation*}
+  \begin{split}
+    \log \Lcal\left(\{\Xbf_g, Z_g\}; \{\pi_k, \theta_k\}\right) & =
+    \sum_k \sum_{Z_g = k} \log\left[\pi_k \phi(\Xbf_g;
+      \theta_k)\right]
+    \\
+    \\
+    & \begin{array}{ccc}
+      = \displaystyle{\sum_g} & \underbrace{\Ibb\{Z_g =  k\}} 
+      & \underbrace{\log\left[\pi_k \phi(\Xbf_g;\theta_k)\right]}
+    \\
+    & \mbox{Expectation} & \mbox{Maximization} \\
+    & \mbox{(E) step} & \mbox{(M) step}
+    \end{array}
+  \end{split}
+\end{equation*}
+    
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Estimation with the EM algorithm} 
+
+\paragraph{E step:} Estimates missing data $\{Z_g\}$ 
+denoting $\{\pi^n_k, \theta^n_k\}$ the estimates at step $n$, the
+\textblue{posterior probability} to belong to group $k$ is
+$$
+p^n_g(k) = \Pr\left\{Z_g = k \;|\; \Xbf_g, \{\pi^n_k,
+  \theta^n_k\}\right\}
+= 
+\frac{\pi^n_k \phi(\Xbf_g; \theta^n_k)}{\sum_{k'} \pi^n_{k'}
+  \phi(\Xbf_g; \theta^n_{k'})}
+$$
+
+Several possibilities 
+$$
+\begin{tabular}{ll}
+  $a)$ deterministic (CEM): & $\widehat{Z}^n_g =
+  \underset{k}{\arg\max} \left[p^n_g(k)\right]$ \\
+  \\
+  $b)$ stochastic (SEM): & $\widehat{Z}^n_g \sim \Mcal[p^n_g(1), \dots,
+  p^n_g(K)]$ \\
+  \\
+  $c)$ weighted (EM): & use $p^n_g(k) =
+  \widehat{\Esp}^n\left(\Ibb\{Z_g=k\} \;|\; \Xbf_g\right)$ \\
+\end{tabular}
+$$
+
+\newpage
+\paragraph{Posterior probabilities:} 
+$$
+  \begin{tabular}{cc}
+    Distributions: & Posterior probabilities: \\
+    \\
+    $f(x) = \textred{\pi_1 f_1(x)} + \textgreen{\pi_2 f_2(x)} +
+    \textblue{\pi_3 f_3(x)}$ & $\tau_{gk} = \Pr\{g \in f_k \;|\; x_g\}
+    = \pi_k f_k(x_g) / f(x_g)$\\
+    \\
+    \epsfig{file=../Figures/Melange-densite.ps, height=6cm,
+      width=12cm, bbllx=77, bblly=328, bburx=549, bbury=528, clip=}
+    &
+    \epsfig{file=../Figures/Melange-posteriori.ps, height=6cm, width=12cm,
+      bbllx=83, bblly=320, bburx=549, bbury=537, clip=} 
+  \end{tabular}
+$$
+
+% \centerline{
+%   \begin{pspicture}(20, 11)
+%     \rput[B](8, 0){$x_1$}
+%     \rput[B](12.2, 0){$x_2$}
+%     \rput[B](17, 0){$x_3$}
+%     \rput[bl](0, 1){\epsfig{file=../Figures/Melange-densite.ps, height=10cm,
+%         width=20cm, bbllx=77, bblly=328, bburx=549, bbury=528, clip=}}
+%   \end{pspicture}
+% }
+
+\centerline{$
+  \begin{array}{cccc}
+    \quad p_g(k)~~(\%) \quad & \qquad g=1 \qquad & \qquad g=2 \qquad &
+    \qquad g=3 \qquad \\
+    \hline
+    k = 1 & \textred{65.8} & 0.7 & 0.0 \\
+    k = 2 & 34.2 & 47.8 & 0.0 \\
+    k = 3 & 0.0 & \textblue{51.5} & \textblue{1.0} \\
+  \end{array}
+$}
+
+\newpage
+\paragraph{M step:} Maximize $\Lcal(\{\Xbf_g \; | \;Z_g=k\})$
+(separately for each $k$)
+$$
+\log \Lcal(\{\Xbf_g \; | \;Z_g=k\}) 
+=
+\sum_g \Ibb\{Z_g=k\} \log\left[\phi(\Xbf_g; \theta_k)\right]
+$$
+$$
+\begin{array}{lrcl}
+  a) \mbox{ or } b): \qquad & 
+  \theta^{n+1}_k & = &
+  \displaystyle{\underset{\theta_k}{\arg\max}\sum_{\widehat{Z}^n_g = k}
+  \log\left[\phi(\Xbf_g; \theta_k)\right]} \\
+  & \pi^{n+1}_k & = & \displaystyle{\frac{1}{G} \sum_g \widehat{Z}^n_g} \\
+  \\
+  c): \qquad & 
+  \theta^{n+1}_k & = & \displaystyle{\underset{\theta_k}{\arg\max} \sum_g
+  p^n_g(k) + \log\left[\phi(\Xbf_g; \theta_k)\right]}
+  \\
+  & \pi^{n+1}_k & = & \displaystyle{\frac{1}{G} \sum_g p^n_g(k)}
+\end{array}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Univariate Gaussian mixture:}
+$ \theta_k = (\mu_k, \sigma^2_k), \quad \phi_k = \Ncal(\mu_k,
+\sigma^2_k) $
+\begin{equation*}
+  \begin{split}
+    \phi(X_k; \mu_k, \sigma^2_k) = &
+    \frac{1}{\sigma_k \sqrt{2 \pi}}\exp\left[(X_k - \mu_k)^2 / (2 \sigma^2_k)\right] \\
+    \mu^{n+1}_k = &
+    \frac{1}{\sum_g p^n_g(k) } \sum_g p^n_g(k) X_g \\
+    (\sigma^2_k)^{n+1} = &
+    \frac{1}{\sum_g p^n_g(k) } \sum_g p^n_g(k) \left(X_g - \mu^{n+1}_k\right)^2\\
+  \end{split}
+\end{equation*}
+
+\paragraph{$K$ means:} $\pi_k \equiv 1/K$, $\sigma^2_k \equiv 
+\sigma^2$, E step = CEM
+$$
+\underset{k}{\arg\max} \left[\pi_k \phi(X_g; \mu_k, \sigma^2_k)\right] =
+\underset{k}{\arg\min} (X_g - \mu_k)^2
+$$
+multivariate version ($\Sigmabf = \sigma^2 \Ibf$):
+$$
+\underset{k}{\arg\max} \left[\pi_k \phi(\Xbf_g; \mubf_k, \Sigmabf)\right] =
+\underset{k}{\arg\min} \|\Xbf_g - \mubf\|^2
+$$
+
+\newpage
+\subsection{Simulated data} 
+
+2 groups with different means $\mubf_k$ and variances $\Sigmabf_k$
+
+\paragraph{Posterior probabilities $\tau_{g1}$:} 
+$$
+\epsfig{figure=../Figures/FigMixtureGauss2.eps,height=15cm,width=12cm,
+  clip=, bbllx=340, bblly=75, bburx=555, bbury=350, angle=90} 
+$$
+
+\newpage
+%\vspace{2cm}
+\paragraph{Comparison Mixture model / $K$ means:}
+$$
+%\hspace{-1cm}
+\begin{tabular}{cc}
+  MAP classification & $K$-mean classification \\
+  \epsfig{figure=../Figures/FigMixtureGauss2.eps,height=12.5cm,width=12.5cm,
+    clip=, bbllx=65, bblly=420, bburx=285, bbury=690, angle=90} 
+  & \epsfig{figure=../Figures/FigMixtureGauss2.eps,height=12.5cm,width=12.5cm,
+    clip=, bbllx=65, bblly=75, bburx=285, bbury=350, angle=90} 
+\end{tabular}
+$$
+$K$ means classification would lead to biased estimates of both
+$\mubf_k$ and $\Sigmabf_k$.
+% \newpage
+% \begin{tabular}{lc}
+%   \begin{tabular}{p{10cm}}
+%     \paragraph{Comparison on simulated data:} 
+%     2 groups with different 
+%     means $\mubf_k$ 
+%     and variances $\Sigmabf_k$ 
+%   \end{tabular}
+%   &
+%   \begin{tabular}{c}
+%     \epsfig{figure=../Figures/FigMixtureGauss2.eps,height=8cm,width=6cm,
+%       clip=, bbllx=340, bblly=75, bburx=555, bbury=350, angle=90} 
+%   \end{tabular}
+% \end{tabular} 
+
+% \begin{tabular}{cc}
+%   MAP classification & $K$-mean classification \\
+%   \epsfig{figure=../Figures/FigMixtureGauss2.eps,height=10cm,width=10cm,
+%     clip=, bbllx=65, bblly=420, bburx=285, bbury=690, angle=90} 
+%   & \epsfig{figure=../Figures/FigMixtureGauss2.eps,height=10cm,width=10cm,
+%     clip=, bbllx=65, bblly=75, bburx=285, bbury=350, angle=90} 
+% \end{tabular}
+
+
+\newpage
+\paragraph{Properties of EM:}
+\begin{itemize}
+\item always converges (at each step, $\log \Lcal$
+  increases)
+\item but not necessarily to the true maximum
+\end{itemize}
+
+\paragraph{Practical use of EM:} 
+\begin{itemize}
+\item easy to compute 
+\item  sometimes slow to converge
+\item  try several starting points
+\end{itemize}
+
+\refer{McLahlan \& Peel (00)}{}
+
+%\comment{Autre ref : cf FP}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Choice of the number of groups}
+
+\paragraph{Likelihood ratio test:}
+\begin{itemize}
+\item the $K$-group model is nested in the ($K+1$)-group model:
+  $\Lcal_{K+1} \geq \Lcal_K$
+\item but LRT is not valid (border of the parameter space)
+\end{itemize}
+
+\paragraph{Penalized likelihood criterion:} 
+\begin{eqnarray*}
+AIC & = & -2 \log \Lcal + 2 \times \mbox{number of parameters} \\
+BIC & = & -2 \log \Lcal + \log G \times \mbox{number of of parameters}
+\end{eqnarray*}
+\refer{Burnahm \& Anderson}{}
+
+\paragraph{MCMC methods:} \\
+estimate the parameters and the number $K$ as any parameter using a
+random walk over the parameter space (reversible jump algorithm)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Mixture models for time course experiments} \qquad
+\qquad \refer{Luan \& Li (03)}{}
+
+\paragraph{Data:}  $X_{gt} = $ expression level of gene $g$ ($=1..G$)
+at time $t$ ($=1..T$).
+
+\paragraph{Idea:} Each cluster of genes is characterized by a ``mean''
+profile.
+
+\paragraph{Trick:} Mean profiles and clusters can be estimated at
+simultaneously. 
+ 
+\paragraph{Model:} denote $\Xbf_g = (X_{g1}, \dots, X_{gT})$ the
+  espression profile of gene $g$
+$$
+\Xbf_g \;|\; g \in \Ccal_k \sim \Ncal_T
+$$
+where 
+\begin{itemize}
+\item $\Esp(X_{gt}) = F_k(t)$ having some general form (polynomial,
+  B-spline, etc), 
+\item $\Var(X_{gt}) = \sigma^2_k$ (constant variance), 
+\item $\Cov(X_{gt}, X_{gs}) = \sigma^2 \delta(|s-t|)$, with $\delta$
+  some decreasing function.
+\end{itemize}
+
+\newpage
+\paragraph{Application to yeast cell cycle data} \refer{Spellmann \&
+  al. (98)}{} 
+
+\hspace{-2cm}
+\begin{tabular}{cc}
+  \begin{tabular}{p{12cm}}
+    \epsfig{figure=../Figures/LuL03-Fig2.ps, height=12cm, width=12cm, 
+      bbllx=120, bblly=460, bburx=470, bbury=750,
+      clip=} \\
+    BIC selects $K=7$ groups (top left) \\
+    \\
+    Other plots = group mean profiles
+  \end{tabular}
+  &
+  \begin{tabular}{p{12cm}}
+    \epsfig{figure=../Figures/LuL03-Tab2.ps, height=8cm, width=12cm, 
+      bbllx=37, bblly=616, bburx=282, bbury=757,
+      clip=} \\
+    \\
+  Some of them are consistent with biologically relevent groups
+  defined independently
+  ~\\
+  ~\\
+  ~\\
+  ~\\
+  \end{tabular} 
+\end{tabular}
+
+\newpage
+\paragraph{Application to human fibroblast data} \refer{Iyer \&
+  al. (99)}{} 
+\begin{itemize}
+\item BIC again select 7 groups.
+\item Posterior probabilities measure the confidence with which
+  genes are classified into groups:
+  $$
+  \epsfig{figure=../Figures/LuL03-Fig3.ps, height=8cm, width=16cm, 
+    bbllx=306, bblly=479, bburx=464, bbury=548,
+    clip=} \\
+  $$
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

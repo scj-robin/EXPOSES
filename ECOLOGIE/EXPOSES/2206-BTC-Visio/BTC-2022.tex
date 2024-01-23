@@ -1,0 +1,351 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+\usepackage{xspace}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\GMSBM}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/1903-SemStat/}
+\newcommand{\figeconet}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/1904-EcoNet-Lyon/Figs}
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
+\newcommand{\figbayes}{/home/robin/RECHERCHE/BAYES/EXPOSES/FIGURES}
+\newcommand{\figCMR}{/home/robin/Bureau/RECHERCHE/ECOLOGIE/CountPCA/sparsepca/Article/Network_JCGS/trunk/figs}
+% \newcommand{\figtree}{/home/robin/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Data/Tree/Fig}
+
+\renewcommand{\nodesize}{1.75em}
+\renewcommand{\edgeunit}{2.25*\nodesize}
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+\title[MC-EM PLN]{MC-EM for Composite Likelihood Inference \\
+\medskip
+for the Poisson Log-Normal Model}
+
+\author[S. Robin]{S. Robin \\ ~\\
+  {\small Sorbonne universit\'e (LPSM)} \\ ~\\ ~\\ ~\\
+  joint work with J. Stoehr % \\ ~\\ ~\\
+  % \refer{CMR21}: \Refer{\tt www.frontiersin.org/article/10.3389/fevo.2021.588292}
+  }
+
+\date[BTC, Jun'22]{1st meeting BTC, June 2022}
+
+\maketitle
+
+%====================================================================
+\frame{\frametitle{Outline} \tableofcontents}
+
+%====================================================================
+%====================================================================
+\section{Introduction}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+%====================================================================
+\frame{\frametitle{Poisson log-normal (PLN) model \refer{AiH89}}
+ 
+  \bigskip 
+  \begin{itemize}
+    \item {$Z_i =$ latent vector} associated with site $i$
+      $$
+      Z_i \sim \Ncal_p(0, {\Sigma})
+      $$
+      \item $Y_{ij} = $ observed abundance for species $j$ in site $i$
+      $$
+      Y_{ij} \sim \Pcal(\exp(\textcolor{gray}{o_{ij} \,+\,} x_i^\intercal {\beta_j} + Z_{ij}))
+      $$
+  \end{itemize}
+  
+  \bigskip
+  \ra $\beta =$ regression coefficients, $\Sigma =$ covariance matrix.
+  
+  \bigskip \bigskip  
+  For short
+  $$
+  Y_i \sim PLN(x_i; \emphase{\theta = (\beta, \Sigma)}).
+  $$
+
+}
+
+
+% %====================================================================
+% %====================================================================
+% \section{Inference of incomplete data models}
+% \frame{\frametitle{Outline} \tableofcontents[currentsection]}
+% %====================================================================
+% \subsection*{A reminder on the EM algorithm}
+%====================================================================
+\frame{\frametitle{A reminder on the EM algorithm} 
+
+  \paragraph{Maximum likelihood inference.}
+  $$
+%   \widehat{\theta} = \arg
+  \max_\theta \; \log p(Y; \theta) = \max_\theta \int \underset{\text{complete likelihood}}{\underbrace{p(Y, Z; \theta)}} \d Z
+  $$
+
+  \pause \bigskip \bigskip
+  \paragraph{Incomplete data models.} EM algorithm \refer{DLR77}
+  $$
+  \log p(Y; \theta) 
+  = \underset{\text{\normalsize \emphase{M step}}}{\underbrace{\Esp(\log p(Y, Z; \theta) \mid Y)}} 
+  - \Esp(\log \underset{\text{\normalsize \emphase{E step}}}{\underbrace{p(Z \mid Y; \theta)}} \mid Y)
+  $$
+  
+  \pause \bigskip
+  \begin{description}
+   \item[E step:] Evaluate $\Esp( \log p_\theta(Y, Z) \mid Y)$
+   \bigskip
+   \item[M step:] Maximize $\Esp(\log p(Y, Z; \theta) \mid Y )$ with respect to $\theta$
+  \end{description}
+
+}
+
+%====================================================================
+\frame{\frametitle{Variational approximation} 
+
+  \paragraph{Problem.} Under the PLN model $Y_i \sim PLN(x_i; \theta)$, the conditional distribution 
+  $$
+  p(Z_i \mid Y_i; \theta)
+  $$
+  is intractable.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Variational approximation for PLN.} Find 
+  $$
+  q(Z_i) := \mathcal{N}(Z_i; m_i, S_i) \approx p(Z_i \mid Y_i; \theta)
+  $$
+  so that
+  $$
+  m_i \approx \Esp(Z_i \mid Y_i), \qquad S_i \approx \Var(Z_i \mid Y_i), 
+  $$
+  
+  More specifically, find
+  $q^*(Z_i) = \arg\min_{q \in \mathcal{N}} KL\left[q(Z_i) \;||\; p(Z_i \mid Y_i; \theta)\right]$.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Variational EM algorithm.} 
+  Replace the E step with the determination of $q^*(Z_i)$ for each $i$. 
+
+  \bigskip \bigskip \pause
+  \paragraph{Collateral dammage.} Not a genuine MLE \\
+  \ra No theoretical statistical guaranty, no uncertainty, no test, ...
+}
+
+%====================================================================
+%====================================================================
+\section{Proposed methodology}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\subsection{Monte-Carlo EM}
+%====================================================================
+\frame{\frametitle{Importance sampling (1/2)} 
+
+  \paragraph{Principle.} $p(Z_i \mid Y_i)$ is unknown, but $q(Z_i) = \Ncal(Z_i; m_i, Si)$ is. 
+  
+  $$
+  \includegraphics[height=.7\textheight]{\figeco/BMC13-DigitalSignalProc-Fig1}
+  $$
+  (from \refer{BMC13})
+  
+}
+
+%====================================================================
+\frame{\frametitle{Importance sampling (2/2)} 
+
+  \paragraph{Monte-Carlo E-step.} Importance sampling: 
+  \begin{itemize}
+    \medskip
+    \item For each $1 \leq i \leq n$, sample $\{Z_i^m\}_{1 \leq m \leq M}$ iid $\Ncal(m_i, S_i)$;
+    \medskip
+    \item Compute the importance weights
+    $$
+    W_i^m = \frac{p(Z_i^r, Y_i ; x_i)}{\Ncal(Z_i^r; m_i, S_i)}, 
+    \qquad
+    w_i^m = W_i^m \left/ \left( \sum_{m=1}^M W_i^m \right) \right.;
+    $$
+    \item Estimate 
+    $$
+    \widehat{\Esp}( \log p_\theta(Y, Z) \mid Y)
+    = \sum_{i=1}^n \sum_{m=1}^M w_i^m \log p_\theta(Z_i^r, Y_i ; x_i).
+    $$
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{M-step.} Maximize $\widehat{\Esp}( \log p_\theta(Y, Z) \mid Y)$ wrt $\theta$: same problem as VEM.
+  
+}
+
+%====================================================================
+\subsection{Composite likelihood}
+%====================================================================
+\frame{\frametitle{A reminder on composite likelihood (1/2)} 
+
+  ... but: importance sampling yields poor accuracy even for intermediate dimension $p$.
+
+  \bigskip \bigskip \pause
+  \paragraph{Blocks of responses.} Consider $B$ blocks $C_1, \dots C_b$ of responses = subsets of $\{1, \dots p\}$ such that
+  \begin{itemize}
+    \item all block have same size $k$;
+    \item each responses $j$ and each couple of responses $(j, j')$ belongs to at least one block $C_b$.
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Composite likelihood.}
+  $$
+  \cl(\theta) = \sum_{b=1}^B \lambda_b \log p_\theta(Y^{(b)}; X)
+  $$
+  where
+  \begin{itemize}
+    \item $Y^{(b)} =$ responses from block $b$: $\{Y_{ij}\}_{1 \leq i \leq n, j \in C_b}$;
+    \item $\lambda_b =$ weight of block $B$ (set to 1).
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Example.} $p = 3$, $k = 2$, 
+  $$
+  \cl(\theta) = \log p_\theta(Y^{1, 2}; X) + \log p_\theta(Y^{1, 3}; X) + \log p_\theta(Y^{2, 3}; X)
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{A reminder on composite likelihood (2/2)}
+
+  \paragraph{Statistical guaranty \refer{VRF11}.} $\widetilde{\theta} = \arg\max_\theta \cl(\theta)$ is
+  \begin{itemize}
+    \medskip
+    \item consistent;
+    \medskip
+    \item asymptotically normal;
+    \medskip
+    \item with asymptotic variance matrix = Godambe matrix:
+    $$
+    \Var_\infty(\widehat{\theta}) = H_\theta J^{-1}_\theta H_\theta
+    $$    
+    with
+    $$
+    H_\theta = - \Esp(\nabla^2_\theta \cl(\theta)), 
+    \qquad
+    J_\theta = \Var(\nabla_\theta \cl(\theta)), 
+    $$
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{MC-EM for Composite likelihood.}
+  \begin{itemize}
+    \medskip
+    \item The decomposition of $\ell(\theta) = \log p_\theta(Y)$ still holds for $\cl(\theta)$;
+    \medskip
+    \item All quantities (e.g. $\Esp( \log p_\theta(Y^{(b)}, Z^{(b)} \mid Y^{(b)})$ can be estimated by importance sampling.
+  \end{itemize}
+
+}
+
+%====================================================================
+\subsection{Proposed algorithm}
+%====================================================================
+\frame{\frametitle{Proposed algorithm}
+
+  \paragraph{Input:} Data $X = n \times d$ and $Y = n \times p$ + Blocks $\{C_b\}_{1 \leq b \leq B}$; 
+  
+  \bigskip \pause
+  \paragraph{Init:} Run VEM to get $\theta^{(0)}$ and $\{(m_i^{(0, b)}$, $S_i^{(0, b)})\}_{1 \leq i \leq n}$;
+  
+  \bigskip \pause
+  \paragraph{Iterate:} at step $h$, for each block $b$, for each $i$:
+  \begin{description}
+    \pause
+    \item[E-step:]
+    \begin{enumerate}
+      \item Sample $\{Z_i^{h, b, m}\} \sim \Ncal(m_i^{(b, h)}, S_i^{(b, h)})$;
+      \item Compute the weigths $w_i^{(h, b, m)}$;
+      \item Update $m_i^{(h+1, b)}$ and $S_i^{(h+1, b)}$ according to these weigths;
+    \end{enumerate}
+    \pause
+    \item[M-step:] update 
+    $$
+    \theta^{(h+1)} = \arg\max_\theta \sum_{i, b, m} \lambda_b w_i^{(h, b, m)} \log p_\theta(Y_i^{(b)}, Z_i^{h, b, m}; x_i);
+    $$
+  \end{description}
+  
+  \bigskip \pause
+  \paragraph{Stop:} when $\|\theta^{(h+1)} - \theta^{(h)}\| < \varepsilon$;
+  
+  \bigskip \pause
+  \paragraph{Post-process:} use the samples $\{Z_i^{h, b, m}\} \sim \Ncal(m_i^{(b, h)}, S_i^{(b, h)})$ and weigths $w_i^{(h, b, m)}$ to estimate
+  $$
+  H_\theta, \quad J_\theta \quad \text{and} \quad \Var_\infty(\widehat{\theta}).
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{To do}
+
+  \paragraph{Tuning parameters.}
+  \begin{itemize}
+    \medskip
+    \item Number of particles: actually $M = M^{(h)} \uparrow$ with $h$ (ex.: $M^{(h)} = h M^{(0)}$).
+    \medskip
+    \item Choosing the blocks: same problems as finding a incomplete (balanced) block design. \\
+    \medskip    
+    \ra Not that simple for large $p$, but algorithms are available
+  \end{itemize}  
+  
+  \bigskip \bigskip \pause
+  \paragraph{Left to do.}
+  \begin{itemize}
+    \medskip
+    \item Finish the code for composite likelihood
+    \medskip
+    \item Run simulation to assess assymptotic normality
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References}
+  {%\footnotesize
+   \footnotesize
+   \bibliography{/home/robin/Biblio/BibGene}
+%    \bibliographystyle{/home/robin/LATEX/Biblio/astats}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

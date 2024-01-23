@@ -1,0 +1,281 @@
+\documentclass{llncs}
+\usepackage{makeidx}  % allows for indexgeneration
+\usepackage{graphicx,graphics,color, epsfig}
+\usepackage{amsfonts,amssymb,amsmath}
+\usepackage{latexsym}
+
+\newcommand{\replace}[2]{\textcolor{red}{{#1}} \textcolor{blue}{#2}}
+
+\begin{document}
+\frontmatter          % for the preliminaries
+\pagestyle{headings}  % switches on printing of running heads
+%\addtocmark{Hamiltonian Mechanics} % additional mark in the TOC
+
+\title{Mixture model of regressions for ChIP-chip experiment analysis}
+\titlerunning{ChIP-chip analysis} \author{Marie-Laure
+  Martin-Magniette\inst{1,2, *}\and Tristan Mary-Huard\inst{1, *} \and
+  Caroline B\'erard\inst{1,2} \and St\'ephane Robin\inst{1}}
+
+\authorrunning{Martin-Magniette \textit{et al.}}   % abbreviated author list (for running head)
+\institute{UMR AgroParisTech/INRA MIA 518\\ 16 rue Claude Bernard
+75231 Paris Cedex 05, France
+\\
+\email{marie\_laure.martin@agroparistech.fr}\\
+%WWW home page:\texttt{http://www.inapg.fr/ens_rech/maths/index.html}
+\and URGV UMR INRA/CNRS/UEVE\\ 2 rue Gaston Cr\'emieux, CP5708,
+91057, Evry Cedex, France \\
+(*) These authors equally contributed to this work.}
+
+\maketitle              % typeset the title of the contribution
+
+\begin{abstract}
+  Chromatin immunoprecipitation (ChIP) is a well-established procedure
+  to investigate proteins associated with DNA. We propose a
+  method based on a linear regression mixture model to identify
+  actual binding targets of the protein under study and we are able to
+  control the number of false-positives. We apply our method
+  on NimbleGen technology data in order to determine genomic regions
+  marked by a specific histone modification.
+\end{abstract}
+
+\section{Introduction}
+Chromatin immunoprecipitation (ChIP) is a well-established procedure
+used to investigate proteins associated with DNA. ChIP on chip
+involves analysis of DNA recovered from ChIP experiments by
+hybridization to microarray. In a two-color ChIP-chip experiment,
+two samples are compared: DNA fragments crosslinked to a protein of
+interest (IP), and genomic DNA (Input). The two samples are
+differentially labeled and then co-hybridized on a single array. The
+goal is then to identify actual binding targets of the protein of
+interest, i.e. probes whose IP signal is significantly larger
+than the Input signal. {\par}
+%the two samples are DNA fragments crosslinked to a protein of
+%interest (IP) and genomic DNA (Input). They are differentially
+%labeled and co-hybridized on the same array. This technique allows
+%the determination of DNA binding sites for any given protein.
+Many authors already pointed out the need of efficient statistical
+procedures to detect enriched probes \cite{BuckLieb04,Keles07}.
+Recently, two strategies have been widely applied for the detection of
+enriched DNA regions. The first strategy takes advantage of the
+spatial structure of the data. Since probes are positioned all along
+the genome, if one region is enriched we expect several adjacent
+probes to obtain high ratio measurements, resulting in a ``peak'' of
+intensity. Spatial methods such as sliding windows
+\cite{Cawley04,Keles07} or Hidden Markov Models
+\cite{JiWong05,LiMeyerLiu05} have been proposed to detect these peaks.
+Alternatively, the second strategy is to consider that the whole
+population of probes can be divided into two components: the
+population of IP-enriched genomic fragments, and the population of
+genomic DNA that is not IP enriched. Different statistical methods
+have been proposed to distinguish between the two populations by
+considering the distribution of the ratios (or their associated rank).
+Assuming that a non negligible proportion of the fragments are
+enriched, the ratio distribution is bimodal, the highest mode
+corresponding to the enriched population. A probe is then declared
+enriched when its ratio exceeds a selected cutoff, that is fixed
+according to the data distribution \cite{BuckLieb04}. {\par} It is
+worth to mention that in both strategies the statistical methods are
+based on the assumption that the ratio measurement is a pertinent
+statistical quantity of interest to assess the probe status (enriched
+or not).  In practice, this is debatable.
+%First from a biological
+%point of view, it is well known that quantity of DNA recovered in the
+%IP fraction depends on the antibody used and the type of protein
+%analyzed and cannot thus be properly controlled. Second on the same
+%array, where probes are not specific \cite{Turck07}, it is shown
+%that it has an impact on the ratio value.
+Figure
+\ref{Figure:NuageIPInput} shows that the IP signal does not only depend on
+the probe status but also on the Input signal.  This dependency is not
+taken into account when the statistical model directly describes the
+IP/Input ratio. For these reasons, ratios may be a partial indicator
+of the probe status. {\par}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.3]{NuageIPInput.ps}
+\end{center}
+\caption{IP intensities vs Input Intensities
+\label{Figure:NuageIPInput}}
+\end{figure}
+
+In this work, we propose a new method to analyse ChIP-chip data based
+on mixture model of regressions.  This framework allows us to well
+characterize the IP-Input relationship, and to provide a statistical
+procedure to control the number of probes wrongly declared enriched.
+The article is organized as follows. The statistical model and the
+procedure for false positive control are described in Section
+\ref{methodo} Application to real data are presented in Section
+\ref{appli}.
+
+\section{Statistical framework}\label{methodo}
+\subsection{Model and inference}
+Let $(X_i,Y_i)$ be the Input and IP intensities of probe $i$,
+respectively, and let $Z_i$ be the (unknown) status of the probe,
+with $Z_i=1$ if $i$ belongs to the enriched population, and $Z_i=0$
+otherwise. We assume the Input-IP relationship to be linear whatever
+the population, but with different slope and intercept. More
+precisely, we have :
+\begin{eqnarray}
+Y_i = a_j + b_j X_i + \epsilon_i  \qquad \text{if } Z_i=j,
+\qquad j=0,1,
+\end{eqnarray}
+where $\epsilon_i$ is a Gaussian random variable with mean 0 and
+variance $\sigma^2_j$. The overall distribution of $Y_i$ for a
+given level of Input $X_i$ is a mixture of two regressions is
+\begin{eqnarray}
+\pi_0 \phi(Y_i | X_i; \theta_0) + \pi_1 \phi(Y_i | X_i;
+\theta_1),\label{Equation:Melange} %\leadsto
+\end{eqnarray}
+where $\pi_1 = 1-\pi_0$ is the proportion of enriched probes, and
+$\theta_j$ stands for $(a_j, b_j, \sigma^2_j)$.
+% To describe the relationship between IP and Input, we
+%consider a mixture model of two linear regression. For a given probe
+%$i$ with Input intensity $Input_i$, the IP intensity distribution is
+%given by
+%\begin{eqnarray}
+%IP_i = \pi_0 \phi(Input_i, \theta_0) + \pi_1 \phi(Input_i, \theta_1)
+%\ \ ,
+%\end{eqnarray}
+%where $\pi_1 = 1-\pi_0$ is the proportion of enriched probes, and
+%$\phi(Input_i, \theta_j)$ is the gaussian distribution with mean
+%$$a_j + b_j Input_i, \ \ j=0,1 $$ and variance $\sigma^2_j$.
+%The parameter $\theta_j$ stands for $(a_j, b_j, \sigma^2_j)$. The
+%first component (resp. the second) characterizes the distribution of
+%the non-enriched (resp. enriched) probes. This model states that the
+%relationship is linear for both components, but with different
+%parameters.
+According to the biological interpretation, for a given Input
+intensity we expect the IP intensity to be higher when the probe is
+enriched, and the prior probability $\pi_1$ to be lower than $\pi_0$
+since most of the probes are supposed not to be targeted by the
+protein. After estimation, these two characterizations will help to
+designate the enriched population. {\par} From Equation
+\ref{Equation:Melange}, we can define the posterior probability for a
+given probe to be enriched by
+\begin{eqnarray}
+\tau_i = \Pr\{Z_i=1 \;|\; X_i,Y_i\} = \frac{\pi_0
+  \phi(Y_i |X_i; \theta_0)}{\pi_0 \phi(Y_i|X_i; \theta_0) + \pi_1 \phi(Y_i|X_i;
+  \theta_1)}. \label{Equation:Posterior}
+\end{eqnarray}
+The mixture parameters can be estimated using the classical EM
+algorithm, and the posterior probability $\tau_i$ for a given probe
+with Input and IP intensities $(X_i,Y_i)$ can then be estimated with
+Formula (\ref{Equation:Posterior}) by replacing parameters with their
+estimates. {\par}
+
+\subsection{False discovery control}
+Posterior probabilities can be used to decide which probes are
+enriched, using a classification rule such as
+$$
+\hat{\tau}_{i} > s \qquad \Rightarrow \qquad
+\hat{Z}_i =1,
+$$
+where $s$ is a threshold that has to be fixed by the experimenter.
+In the context of mixture models, $s$ is usually fixed to 1/2 ({\it
+  Maximum A Posteriori} rule) which implicitly involves that
+misclassifications in population 0 or in population 1 have the same
+cost. In ChIP-chip experiments where false positives are under
+concern, it is better to fix $s$ in order to control the false
+positive rate.
+
+In the hypothesis test theory, the false discovery control is
+performed by controlling the probability to reject wrongly the null
+hypothesis. An analogous false discovery control in the framework of
+the mixture models is to control the probability to assign a probe
+in the enriched population wrongly. We want therefore $\Pr\{\tau_{i}
+> s \;|\; X_i, Z_i =0\}$ to be equal to predefined level $\alpha$.
+It can be rewritten as
+\begin{equation}
+\Pr\{ \pi_0 \phi(Y_i|X_i; \theta_0) (1-s) - s \pi_1 \phi(Y_i|X_i;
+\theta_1) > 0 \;|\; X_i, Z_i =0\}  =  \alpha.
+\label{Equation:FDR}
+\end{equation}
+%where $\alpha$ is a probability given by the user.
+In practice, we fix $\alpha$ and find the threshold $s(\alpha, X_i)$
+satisfying Equation (\ref{Equation:FDR}).  This leads to study the
+sign of a second degree polynomial in $Y_i$.
+% In practice, we fix $\alpha$ and find the threshold $s(\alpha, X_i)$
+% satisfying Equation (\ref{Equation:FDR}).  Straightforward
+% calculations show that $s(\alpha, X_i)$ satisfies
+% \begin{equation}
+% \Pr\left\{
+% \left(\frac{1}{\sigma^2_0}-\frac{1}{\sigma^2_1}\right)Y_i^2 +
+% 2\left(\frac{\mu_{i0}}{\sigma^2_0}-\frac{\mu_{i1}}{\sigma^2_1}\right) Y_i +
+% \gamma[s(\alpha, X_i)] \geq 0 \;|\; X_i, Z_i =0 \right\} = \alpha,
+% \end{equation}
+% where for $j=0,1$, $\mu_{ij}=a_j+b_j X_i$ and $\gamma(s)
+% =\left(\frac{\mu_{i0}^2}{\sigma^2_0}-\frac{\mu_{i1}^2}{\sigma^2_1}\right)
+% -2\log\left(\frac{ \pi_0 \sigma_1 s}{\pi_1 \sigma_0 (1-s) }\right)$.
+
+Note that the same strategy can be applied to control the probability
+to assign a probe in the non-enriched population wrongly.
+
+\section{Application}\label{appli}
+
+We applied our method on Chip-chip data produced on a two-color
+NimbleGen array.
+% This array is a tiling array where probes were
+% designed in a window of 110 nt such that the probe size is between 50
+% and 75 nt and Tm is about 76$^°$.  The total number of probes is 1
+% 132 140, each chromosome being covered by about 200 000 probes.
+This tiling array consists of 1\;132\;140 probes, each chromosome
+being covered by about 200\;000 probes.  The biological objective is
+to detect genomic regions of the model plant \textit{Arabidopsis
+  thaliana} marked by histone H3 tri-methylated at lysine 9.
+Available data are two biological replicates, for which hybridizations
+were performed in dye-swap. Since this experiment was already
+performed on a genomic tilling array covering the chromosome 4
+\cite{Turck07}, we focus on this chromosome.
+
+Normalization of Chip-chip data is essential to remove technical biases
+as well as dye bias. Since the Input and IP samples differ
+substantially, array-by-array normalization such as lowess cannot be applied.
+We just quantify biases by an anova model \cite{Kerr02}, and
+remove them to the raw data. The IP and Input signals for each
+biological replicate are averaged on the dye-swap.
+
+Estimations of the parameter of our model on the data of the first
+replicate are $\widehat{\pi}_1=0.32$, $\widehat{\theta}_0=(1.48,\;
+0.81,\; 0.32)$ and $\widehat{\theta}_1=(-0.29,\; 1.13,\; 0.64)$, and
+on the data of the second replicate are $\widehat{\pi}_1=0.28$,
+$\widehat{\theta}_0=(2.32,\; 0.75,\; 0.34)$ and
+$\widehat{\theta}_1=(0.61,\; 1.05,\; 0.52)$.
+Figure \ref{Figure:Resultats} displays the results of our analysis for
+the first replicate.
+% paragraphe sur alpha
+
+\begin{figure}
+  \begin{center}
+    \begin{tabular}{cc}
+%       \includegraphics[scale=0.3, angle=90]{Graph_Regression_MoyDye_Rep1_chr4.ps}
+%       &
+%       \includegraphics[scale=0.3, angle=90]{Graph_Regression_MoyDye_Rep1_chr4.ps}
+      \epsfig{file=Graph_Regression_MoyDye_Rep1_chr4_degrade.ps, angle=270,
+      width=6cm, clip=}
+      &
+      \epsfig{file=Graph_Regression_MoyDye_Rep1_chr4.ps, angle=270,
+      width=6cm, clip=}
+    \end{tabular}
+  \end{center}
+\caption{Left panel: IP intensities vs Input Intensities colored
+  according to the posterior probabilities $\hat{\tau}_i$. Colors change every
+20 \% (blue: $\hat{\tau}_i<20\%$, red: $\hat{\tau}_i>80\%$). Right
+  panel: Number enriched probes as a function of the risk $\alpha$.
+\label{Figure:Resultats}}
+\end{figure}
+
+To assess the reproducibility of the analysis, we compared the lists
+of enriched probes in the two biological replicates. A total of 37\;360
+probes where detected in the first replicate and 31\;124 in the second.
+The intersection contains 27\;560 probes, i.e.
+more than two third of probes declared enriched in at least in one
+replicate. We point out that although our method does not take spatial structure of the
+genome into account, enriched probes are clustered in genomic regions
+(data not shown). These regions are rich in genes and
+corroborate the results of \cite{Turck07}, who
+have shown that H3K9me3 is actually an euchromatin mark.
+
+\bibliographystyle{plain}
+\bibliography{Chipchip}
+
+\end{document}

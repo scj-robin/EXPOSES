@@ -1,0 +1,221 @@
+%====================================================================
+%====================================================================
+\section{Statistical inference}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Incomplete data models} 
+
+  \paragraph{Reminder.}
+  \begin{description}
+  \item[$Y =$] observed variables (responses)
+  \item[$X =$] \textcolor{gray}{observed covariates (explanatory: dropped for the sake of clarity)}
+  \item[$Z =$] latent (= unobserved, hidden) variables
+  \item[$\theta =$] unknown parameters
+  \end{description}
+  
+  \pause \bigskip \bigskip
+  \paragraph{Two inference frameworks.}
+  \begin{itemize}
+  \item Frequentist:
+  \begin{align*}
+  \text{latent variables} = \text{random, \qquad parameters} = \text{fixed}
+  \end{align*}
+  \item \pause Bayesian: 
+  \begin{align*}
+  \text{both latent variables and parameters} = \text{random}
+  \end{align*}
+  (still: \# latent variables $\simeq$ { \# data,} 
+  {\# parameters } $\ll$ { \# data})
+  \end{itemize}
+
+  \pause \bigskip \bigskip
+  \paragraph{In both case:} Inference would be easy if $Z$ was observed.
+  
+}
+
+%====================================================================
+\frame{\frametitle{Frequentist setting} 
+
+  Maximum-likelihood inference requires to deal with
+  $$
+  p_\theta(Y) = \int p_\theta(Y \mid Z) \d p_\theta(Z)
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Most common approach.} Expectation-Maximization (EM) algorithm \refer{DLR77}:
+  \medskip
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item E step = determination of (some moments of)
+    $$
+    p_{\widehat{\theta}}(Z \mid Y)
+    $$
+    \item M step = update of $\widehat{\theta}$
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Bayesian setting} 
+
+  Aims at determining the {\sl posterior} distribution
+  \begin{align*}
+    p(\theta, Z \mid Y) 
+    & = p(\theta \mid Y) p(Z \mid \theta, Y) \\ 
+    & = p(Z \mid Y) p(\theta \mid Z, Y) 
+  \end{align*}
+
+  \bigskip \pause
+  \paragraph{Similar issue.} Need to known something about
+  \medskip
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item either
+    $$
+    p(Z \mid Y)
+    $$
+    \item or
+    $$
+    p(Z \mid Y, \theta)
+    $$
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Conditional distributions} 
+
+  \paragraph{Critical step:} evaluate \textcolor{gray}{(some moments of)} the conditional distribution $p_\theta(Z \mid Y)$ or $p(Z \mid Y, \theta)$
+
+  \bigskip \bigskip 
+  \paragraph{Three main cases.}
+  \medskip
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item \pause Easy cases: explicit \\
+    \ra mixture models, simple mixed models, conjugacy, ...
+    \item \pause Tricky cases: non-explicit
+    , but still exact, ... \\ 
+    \ra hidden Markov models, evolutionary models, belief propagation on trees... 
+    \item \pause Bad cases: no exact evaluation \\
+    \ra either sample from it (Monte-Carlo) \\
+    \ra or approximate it (variational approximations)
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Back to the two models} 
+
+  \paragraph{Species abundance (PLN).} $Z_i =$ latent vector encoding species dependencies:
+  \medskip
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item $Z_i$ is marginally Gaussian, but not conditionally Gaussian
+    \item No close form for $p_\theta(Z_i \mid Y_i)$ (even for $p = 1$ species)
+  \end{itemize}
+
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Network (SBM).} $Z =$ latent group structure of the network:
+  \medskip
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item species memberships $Z_i$ are marginally independent, but not conditionally independent
+    \item $p_\theta(Z \mid Y)$ defined over the $K^n$ possible configurations
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Variational approximation} 
+
+  \paragraph{Problem.} $p_\theta(Z \mid Y)$ being intractable, look for a 'good' approximation of it:
+  $$
+  q(Z) \approx p_\theta(Z \mid Y)
+  $$
+
+  \bigskip \bigskip \pause 
+  More specifically, given
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item \emphase{a set of approximating distributions $\Qcal$} and
+    \item \emphase{a divergence measure $D[q \,\|\, p]$},
+  \end{itemize}
+  \pause \bigskip take
+  $$
+  q^* = \argmin_{q \in \emphase{\Qcal}} \; \emphase{D}\left[q(Z) \,\|\, p_\theta(Z \mid Y)\right]
+  $$
+
+  \bigskip \bigskip \pause 
+  \paragraph{Most common choice for $D$ =} K\"ulback-Leibler divergence \refer{BKM17}
+  $$
+  D\left[q(Z) \,\|\, p_\theta(Z \mid Y)\right] = KL\left[q(Z) \,\|\, p_\theta(Z \mid Y)\right]
+  $$
+  but alternative choices exist \refer{Min05,WaJ08}
+}
+
+%====================================================================
+\frame{\frametitle{Back to the two models} 
+
+  \paragraph{Species abundance (PLN).} $Z_i =$ latent variable encoding species dependencies:
+  \medskip
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item $Z_i$ is marginally Gaussian, but not conditionally Gaussian, still, take \refer{CMR18a,CMR18b}:
+    $$
+    p(Z_i \mid Y_i) \approx q(Z_i) = \Ncal(Z_i; \widetilde{m}, \widetilde{S}_i)
+    $$
+  \end{itemize}
+
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Network (SBM).} $Z =$ latent group structure of the network:
+  \medskip
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item species memberships $Z_i$ are marginally independent, but not conditionally independent, still, take \refer{DPR08,MRV10}:
+    $$
+    p(Z \mid Y) \approx q(Z) = \prod_i q_i(Z_i)
+    $$
+    (mean-field approximation)
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Variational Bayes} 
+
+  \paragraph{Problem.} We look for the posterior
+  $$
+  p(\theta, Z \mid Y)
+  $$
+  where $\theta$ and $Z$ have no reason to be conditionally independent.
+  
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Variational Bayes (VB).} Still, look for
+  $$
+  p(\theta, Z \mid Y) \approx q(\theta, Z) = q_1(\theta) q_2(Z).
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Variational approximation for latent variable models} 
+
+  \paragraph{What do we gain?} 
+  \medskip
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item Something rather than nothing
+    \item Good empirical results (in terms of bias, classification accuracy, ...)
+    \item Computationally efficient algorithms (may deal with hundreds or thousands of species)
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{What do we lose?} 
+  \medskip
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item Nothing as opposed to something
+    \item Almost no statistical guaranty (consistency, asymptotic normality, ...) except for specific models (binary SBM without covariates)
+    \item No or poor measure of uncertainty (VB tends to underestimate posterior variances, variational EM does not provide any)
+  \end{itemize}
+  
+}

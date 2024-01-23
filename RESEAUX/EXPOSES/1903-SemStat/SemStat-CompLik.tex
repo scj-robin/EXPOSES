@@ -1,0 +1,125 @@
+%====================================================================
+%====================================================================
+\section{Frequentist inference via composite likelihood}
+\subsection*{Composite likelihood}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Composite likelihood} 
+
+  \paragraph{Reminder.} Maximizing $\log p_\theta(Y)$ via EM is impossible because $p_\theta(Z \mid Y)$ is intractable.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Composite likelihood.} Other contrasts can be considered, such as \refer{VRF11}
+  \begin{align*}
+   \cl_\theta(Y) = \sum_{h=1}^H w_h \log p_\theta(Y_{S_h})
+  \end{align*}
+  where $S_h \subset \{1, \dots n\}$ data subset, $Y_S = \{Y_i: i \in S\}$, $w_h =$ weight.
+
+  \bigskip \bigskip \pause
+  \paragraph{Case of SBM.} Take pairs as subsets:
+  \begin{align*}
+   \cl_{n, \theta}(Y) = \frac2{n(n-1)}\sum_{1 \leq i < \leq j \leq n}\log p_\theta(Y_{ij})
+  \end{align*}
+}
+
+%====================================================================
+\frame{\frametitle{Asymptotic normality} 
+
+  \paragraph{Proposition.} Let $\widehat{\theta}_n = \arg\max_\theta \cl_{n, \theta}(Y)$, 
+  $$
+  \sqrt{n} (\widehat{\theta}_n - \ts) 
+  \overset{P_\ts}{\underset{n \rightarrow \infty}{\longrightarrow}} \Ncal\left(0, H_{\ts}^{-1}  J_{\ts}  H_{\ts}^{-1}\right)
+  $$
+  where 
+  \begin{align*}
+%   V_{\ts}
+%   & = H_{\ts}^{-1}  J_{\ts}  H_{\ts}^{-1}, \\
+  H_{\ts} 
+  & = \Esp_\ts\left( \partial^2_\theta \log p_\theta(Y_{12}\mid X_{12})_{| \theta=\ts}\right) \\
+  ~ \\
+  J_{\ts} 
+  & =\Cov_\ts\left( \partial_\theta\log p_\theta(Y_{12}\mid X_{12})_{| \theta=\ts}, \partial_\theta \log p_\theta(Y_{13}\mid X_{13})_{| \theta=\ts} \right) \\
+  & = \Var_\ts\left(\Esp_\ts \left(\partial_\theta\log p_\theta(Y_{12}\mid X_{12})_{| \theta=\ts} \mid Z_1\right) \right)
+  \end{align*}
+  
+  \bigskip \bigskip 
+  \paragraph{Remarks.}
+  \begin{itemize}
+   \item Asymptotic variance similar to the Godambe information matrix \refer{VRF11}
+   \item $\cl$ already considered in \refer{AmM12} with triplets of edges for the binary SBM without covariates
+  \end{itemize}
+
+}
+
+%====================================================================
+\subsection*{EM algorithm}
+%====================================================================
+\frame{\frametitle{Mixture representation} 
+
+  \paragraph{Mixture distribution.} Under SBM, the marginal distribution of $Y_{ij}$ is mixture with $K(K+1)/2$ component:
+  $$
+  Y_{ij} \mid X_{ij} \sim \sum_\kl \rho_\kl f(\cdot; \gamma_\kl, X_{ij})
+  $$
+  where $\rho_\kl = \pi_k^2$ if $k=\ell$ and $2 \pi_k \pi_\ell$ otherwise.
+  
+  \bigskip \bigskip \pause
+  \paragraph{EM-like decomposition.} Denoting $Z_{ij} := \{Z_i, Z_j\}$, we have
+  $$
+  \log p_\theta(Y_{ij}) = \Esp_\theta\left(\log p_\theta(Y_{ij}, Z_{ij}) \mid Y_{ij} \right) 
+  - \Esp_\theta \left(\log p_\theta(Z_{ij} \mid Y_{ij}) \right)
+  $$
+  which only requires to evaluate \emphase{$P_\theta(Z_{ij} = \kl \mid Y_{ij})$}.
+}
+
+%====================================================================
+\frame{\frametitle{Regular EM algorithm} 
+
+
+  \paragraph{EM algorithm.} Maximizing $\cl_{n, \theta}(Y)$ amounts at maximizing
+  \begin{align*}
+   Q(\theta'; \theta)
+   & = \sum_{1 \leq i < \leq j \leq n} 
+   \Esp_\theta\left(\log p_{\theta'}(Y_{ij}, Z_{ij}) \mid Y_{ij} \right) ,
+  \end{align*}
+  \begin{description}
+   \item[E step:] Compute $P_{\theta^h}(Z_{ij} = \kl \mid Y_{ij})$
+   \item[M step:] Update $\theta^{h+1} = \arg\max_\theta (\theta; \theta^h)$
+  \end{description}
+
+  \bigskip \bigskip
+  \paragraph{Proposition.} $\cl_{\theta^{h+1}}(Y) \leq \cl_{\theta^{h}}(Y)$.
+
+  \bigskip \bigskip
+  \paragraph{Initialization.} Use VEM (faster)
+
+}
+
+%====================================================================
+\subsection*{Identifiability}
+\frame{\frametitle{No free lunch...} 
+
+  \bigskip
+  \emphase{Up to label switching}, the proposed schemes provides consistent estimates of the parameters of the mixture
+  $$
+  \sum_\kl \rho_\kl f(\cdot; \gamma_\kl, X_{ij}),
+  $$
+  that is $\theta = ((\rho_\kl), (\gamma_\kl), \beta)$, but the $K \times K$ structure is lost.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Restoring the labels.} Project $(\widehat{\rho}_\kl)$ on the set of admissible $(\rho_\kl)$. \\  
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+    $K = 2$: \\ ~\\
+    $\textcolor{blue}{\bullet} : (\widehat{\rho}_\kl)$ \\ ~\\
+    $\textcolor{red}{\mathbf{-}} : \{\text{admissible } (\rho_\kl)\}$ \\
+    \\ ~\\ ~\\
+    \end{tabular}
+    & 
+    \hspace{-.35\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \includegraphics[width=.5\textwidth]{../FIGURES/PiRhoManifold}
+    \end{tabular}
+  \end{tabular}
+}
+
+

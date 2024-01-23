@@ -1,0 +1,389 @@
+\documentclass[french, 12pt]{article}
+
+% Packages
+\usepackage{amsfonts,amsmath,amssymb,epsfig,epsf,psfrag}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+\usepackage[latin1]{inputenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{url}
+\RequirePackage{natbib}
+
+% Margins
+\textwidth  18cm 
+\textheight 24cm
+\topmargin -2 cm
+\oddsidemargin -1 cm
+\evensidemargin -10 cm
+
+% Commands
+\newtheorem{theorem}{Theorem}
+\newcommand{\proofbegin}{\noindent{\sl Proof.}~}
+\newcommand{\proofend}{$\blacksquare$\medskip}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+
+% Symbols
+\newcommand{\Abf}{{\bf A}}
+\newcommand{\Beta}{\text{B}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\BIC}{\text{BIC}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\dd}{\text{~d}}
+\newcommand{\dbf}{{\bf d}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Espt}{\widetilde{\Esp}}
+\newcommand{\Ebf}{{\bf E}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Gam}{\mathcal{G}\text{am}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Ibb}{\mathbb{I}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\ICL}{\text{ICL}}
+\newcommand{\Cov}{\mathbb{C}\text{ov}}
+\newcommand{\Corr}{\mathbb{C}\text{orr}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\Vsf}{\mathsf{V}}
+\newcommand{\pen}{\text{pen}}
+\newcommand{\pt}{\widetilde{p}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Jcal}{\mathcal{J}}
+\newcommand{\Kbf}{{\bf K}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\mum}{\mu(\mbf)}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Nbf}{{\bf N}}
+\newcommand{\Nm}{N(\mbf)}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\Obf}{{\bf 0}}
+\newcommand{\Omegas}{\underset{s}{\Omega}}
+\newcommand{\Pbf}{{\bf P}}
+\newcommand{\Pt}{\widetilde{P}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\Xcal}{\mathcal{X}}
+\newcommand{\BP}{\text{BP}}
+\newcommand{\EM}{\text{EM}}
+\newcommand{\VEM}{\text{VEM}}
+\newcommand{\VBEM}{\text{VBEM}}
+\newcommand{\cst}{\text{cst}}
+\newcommand{\obs}{\text{obs}}
+\newcommand{\ra}{{\mathversion{bold}{$\rightarrow$}~}}
+%\newcommand{\transp}{\text{{\tiny $\top$}}}
+\newcommand{\transp}{\text{{\tiny \mathversion{bold}{$\top$}}}}
+\newcommand{\logit}{\text{logit}\xspace}
+
+\newcommand{\paragraphSkip}[1]{\medskip\paragraph{#1}}
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+\title{$W$-graphe \& Inférence}
+
+\author{SR}
+
+\date{\today}
+
+\maketitle
+
+\tableofcontents
+
+%====================================================================
+%====================================================================
+\section{Graphes échangeables}
+
+%====================================================================
+\subsection{Graphe aléatoire}
+\begin{itemize}
+ \item Graphe $\Gcal = (\Vcal, \Ecal)$, $\Vcal = [n] = (1, \dots n)$
+ \item Matrice d'adjacence $Y = [Y_{ij}]_{i, j}$
+ \item Graphe non orienté: $Y_{ij} = Y_{ji}$, $Y_{ii} = 0$
+ \item Loi du graphe: $p(Y) = p([Y_{ij}]_{i < j})$.
+\end{itemize}
+
+%====================================================================
+\subsection{\'Echangeabilité classique}
+$X = [X_i]_i$ vecteur aléatoire, pour toute permutation $\sigma$, 
+$$
+P\{[X_i] = [x_i]\} = P\{[X_i] = [x_{\sigma(i)}]\}.
+$$
+\begin{theorem}[de Finetti + Hewitt \& Savage] \label{thm:deFinetti}
+  $[X_i]_i \in \Xcal^n$ échangeable ssi il existe une mesure $\mu$ sur l'ensemble des distributions sur $\Xcal$:
+  $$
+  P\{\forall i: X_i \in A_i\} = \int \prod_i Q(A_i) \dd \mu(Q).
+  $$
+  de plus, $\mu$ est la distribution de la mesure empirique limite $M$:
+  $$
+  M(A) = \lim_{n \rightarrow \infty} \frac1n \sum_i \Ibb\{X_i \in A\},
+  \qquad
+  M \sim \mu.
+  $$
+\end{theorem}
+
+\paragraphSkip{Modèles à variable latente.}
+$[X_i]$ indépendantes conditionnellement à $Z$
+\begin{eqnarray*}
+ P\{[X_i]=[x_i]\} & = & \int \prod_i P\{X_i=x_i | Z\} \dd P(Z), \\
+ p_X(x) & = & \int \prod_i p_{X_1|Z}(x_i) \dd P(Z), \\ 
+\end{eqnarray*}
+$\Rightarrow (X_i)_i$ échangeables
+
+%====================================================================
+\subsection{\'Echangeabilité pour un tableau à deux dimensions} 
+$Y = [Y_{ij}]_{i, j}$:
+\begin{itemize}
+ \item \'Echangeabilité jointe (dimensions égales): pour toute permutation $\sigma$, 
+ $$
+ P\{[Y_{ij}] = [y_{ij}]\} = P\{[Y_{ij}] = [y_{\sigma(i), \sigma(j)}]\}.
+ $$
+  \item \'Echangeabilité séparée: pour toutes permutations $\sigma$ et $\tau$, 
+ $$
+ P\{[Y_{ij}] = [y_{ij}]\} = P\{[Y_{ij}] = [y_{\sigma(i), \tau(j)}]\}.
+ $$
+\end{itemize}
+\begin{theorem}[Aldous \& Hoover]
+ $[Y_{ij}]$ jointement échangeables ssi il existe $F : [0, 1]^3 \mapsto[0, 1]$:
+ $$
+ [Y_{ij}] \overset{d}{=} [F(U_i, U_j, U_{ij})]
+ $$
+ avec $(U_i)_i$ et $(U_{ij})_{i, j}$ iid $\Ucal[0, 1]$.
+\end{theorem}
+\begin{itemize}
+ \item Les $Y_{ij}$ ne sont pas indépendantes du fait des $U_i$ et $U_j$.
+ \item Les $Y_{ij}$ sont indépendantes conditionnellement à $[U_i]$ car
+ $$
+ \left([Y_{ij}] | [U_i] = [u_i]\right) \overset{d}{=} [F(u_i, u_j, U_{ij})]
+ $$
+ et les $U_{ij}$ sont iid.
+\end{itemize}
+
+%====================================================================
+\subsection{Modèles de graphes échangeables}
+
+\paragraphSkip{Modèles à espaces latents.} Forme générale:
+\begin{eqnarray*}
+  [Z_i]_i \text{ iid}, & & Z_i \sim \pi \\ 
+  \left[Y_{ij}\right]_{i < j} \text{ indép. cond. } Z = [Z_i],  & & Y_{ij} | Z \sim \Bcal[w(Z_i, Z_j)]
+\end{eqnarray*}
+Exemples \citep{MaR14}:
+\begin{itemize}
+\item Latent position \citep{HRH02}\footnote{$Z_i$ pas explicitement aléatoires. \label{note:Zfixe}}: $Z_i \in \Rbb^d, \quad w(Z_i, Z_j) = f(\|Z_i-Z_j\|)$
+\item Latent clusters \citep{HRT07}: $\pi =$ mélange gaussien, 
+\item EDD \citep{ChL02}: $Z_i =$ degré attendu, $w(Z_i, Z_k) \propto Z_iZ_j$.
+\item Stochastic bloc-model (SBM) \citep{HoL79,NoS01}: $\pi = \Mcal$
+\item Continuous version of SBM \citep{DPV10}$^{\ref{note:Zfixe}}$: $Z_i \in \Scal^d$
+\item $W$-graphe \citep{LoS06,DiJ08}: $\pi = \Ucal_{[0, 1]}$
+\end{itemize}
+Tous échangeables en prenant:
+$$
+F(U_i, U_j, U_{ij}) = \Ibb\left\{U_{ij} < w(\pi^{-1}(U_i), \pi^{-1}(U_j))\right\}.
+$$
+
+\paragraphSkip{Exponential random graph models (ERGM).} Modèle de la famille exponentielle
+$$
+p(Y) = \exp\left(-b(\theta) + \sum_h \theta_h s_h(Y) \right). \footnote{$\theta_h$ est supposé contrôler l'espérance de $s_h(Y)$ mais en fait $\Esp s_h(y) = \partial_{\theta_h} b(\theta)$ et $b(\theta)$ n'est généralement pas calculable.}
+$$
+Les statistiques exhaustives $s_h$ sont généralement choisies symétriques (densité, distribution des degrés, fréquences de motifs, etc...):
+$$
+\forall h, \sigma: \quad s_h([Y_{ij}]) = s_h([Y_{\sigma(i)\sigma(j)}]).
+$$
+Le modèle est alors échangeable par construction:
+$$
+P\{[Y_{ij}] = [y_{ij}]\} 
+% = \exp\left(-b(\theta) + \sum_h a_h s_h([y_{ij}]) \right) 
+= \exp\left(-b(\theta) + \sum_h a_h s_h([y_{\sigma(i), \tau(j)}]) \right)
+= P\{[Y_{ij}] = [y_{\sigma(i), \tau(j)}])\}
+$$
+Mais la variable latente n'est pas explicite.
+
+%====================================================================
+%====================================================================
+\section{$W$-graphe}
+
+%====================================================================
+\subsection{Définition}
+
+\begin{definition} $Y \sim P_w$ ou $w$ = '{\sl graphon}' ssi $[0, 1]^2 \mapsto [0, 1]$:
+$$
+[Z_i] = [U_i] \text{ iid } \sim \Ucal[0, 1], \qquad Y_{ij} | U \sim \Bcal[w(U_i, U_j)].
+$$
+\end{definition}
+
+\paragraphSkip{Graphon typiques:} 
+``Scale free'', communauté, SBM, petit monde, \dots
+$$
+\text{\ra Topologie moyenne du graphe résumée par le graphon $w$.}
+$$
+
+%====================================================================
+\subsection{Identifiabilité}
+
+\paragraphSkip{Problème.} \citep{DiJ08,YHA14}
+Soit $\phi: [0, 1] \mapsto [0, 1]$ préservant la mesure et $w'(u, v) = w(\phi(u), \phi(v))$, 
+$$
+P_w = P_{w'}.
+$$
+$$
+\text{\ra $w$ n'est pas identifiable.}
+$$
+
+\begin{remark} [\cite{DiJ08}]
+ Même problème pour certaines transformation $\phi$ ne préservant pas la mesure. Exemple: 
+ $$\phi(u) = 2u \mod 1.$$
+\end{remark}
+
+\paragraphSkip{Fonction degré.} 'degree function':
+$$
+g(u) = \int w(u, v) \dd v
+$$
+Soit $D_i = \sum_j Y_{ij}$ le degrée du noeud $i$:
+$$
+\Esp (D_i | U_i) = \sum_j \Esp(Y_{ij}|U_i) = \sum_j \int w(U_i, v) \dd v = (n-1) g(U_i).
+$$
+
+\paragraphSkip{Solution au problème d'identifiabilité: \cite{BiC09}.} 
+\begin{itemize}
+ \item Soit $\phi_g$ la transformation préservant la mesure telle que 
+ $$
+ g(\phi_g(u)) \text{ monotone croissante.}
+ $$
+ \item On définit les versions canoniques $w_{CAN}$ et $g_{CAN}$ de $w$ et $g$:
+ $$
+ w_{CAN}(u, v) = w(\phi_g(u), \phi_g(u)),
+ \qquad
+ g_{CAN}(u) = g(\phi_g(u)).
+ $$
+ \item L'inférence porte alors seulement sur la version canonique $w_{CAN}$ de $w$.
+\end{itemize}
+ 
+
+%====================================================================
+\subsection{Limite pour des graphes denses}
+
+\paragraphSkip{Fréquence de motifs.} Soit $G$ un graphe de $n$ noeuds et $F$ un motif (sous-graphe) de $k$ noeuds, on note
+$$
+t(F, G) = \frac{\text{\# occurrences de $F$ dans $G$}}{n(n-1)..(n-k+1)}.
+$$
+
+\begin{theorem}[\cite{LoS06,DiJ08}] \label{thm:CvgWgraph}
+  Soit $(\Gcal_n)_n$ une suite de graphes aléatoires échangeables. Si 
+  \begin{equation} \label{eq:CondCvg}
+  \forall (F_1, \dots, F_m): \qquad
+  [t(F_1, \Gcal_n), \dots t(F_m, \Gcal_n)] \text{ converge en loi,}
+  \end{equation}
+  alors
+  \begin{eqnarray*}
+  \exists w: & & (\Gcal_n)_n \overset{d}{\rightarrow} P_w; \\
+  \forall F: & & 
+  \Esp t(F, \Gcal_n) \rightarrow f(F) := \int_{[0, 1]^k} \prod_{(a, b) \in \Ecal(F)} w(u_a, u_b) \dd u_1 \dots \dd u_k.
+  \end{eqnarray*}
+\end{theorem}
+
+\begin{remark}
+  Le théorème \ref{thm:CvgWgraph} dit que pour tous les modèles de graphes échangeables satisfaisant \eqref{eq:CondCvg}, asymptotiquement, seules les interactions deux à deux comptent. 
+  
+  \ra \eqref{eq:CondCvg} est-elle vérifiée par ERGM?
+  
+  \ra Réponse partielle dans \cite{ChD13}: \eqref{eq:CondCvg} est vérifiée quand les $s_h(Y)$ sont des fréquences normalisées de motifs. Exemple: 
+  $$
+  s_1(Y) = \frac{\text{\# arêtes}}{n(n-1)}, 
+  \qquad
+  s_2(Y) = \frac{\text{\# triangles}}{n(n-1)(n-2)}.
+  $$
+\end{remark}
+
+
+%====================================================================
+%====================================================================
+\section{Inférence du graphon $w$}
+
+%====================================================================
+\subsection{Contexte}
+
+\paragraphSkip{Intérêt.} $W$-graphe = limite d'une large (?) classe de modèles 
+
+\ra Grande flexibilité dans la forme du graphon $w$
+
+\ra Ppalement des approches non-paramétriques pour préserver cette flexibilité.
+
+\paragraphSkip{Problèmes spécifiques.} 
+\begin{itemize}
+ \item $P_w =$ modèle de graphe \ra pas d'ordre a priori pertinent pour les noeuds.
+ \item $P_w =$ modèle à variable latente mais stratégies usuelle (EM) utilisent $p(U|Y)$ ... qui est incalculable.
+\end{itemize}
+
+%====================================================================
+\subsection{Approximation de faible rang de $P$}
+
+\paragraphSkip{Principe.}
+Matrice de connectivité (aléatoire)
+$$
+P = [P_{ij}], \qquad P_{ij} = w(U_i, U_j).
+$$
+Estimateur de $P$:
+$$
+\widehat{P} = \arg\min_P \sum_{i, j} (Y_{ij} - P_{ij})^2 
+\qquad\text{s.c. rang($\widehat{P}$) petit}.
+$$
+
+\paragraphSkip{Quelques références:}
+\begin{itemize}
+   \item \cite{Cha15}: seuillage des valeurs singulières de $Y$ + borne sur le MSE
+   \item \cite{YHA14}: même principe + lissage du graphon estimé.
+\end{itemize}
+
+
+%====================================================================
+\subsection{Approximation par un SBM}
+
+\paragraphSkip{Principe.}
+SBM correspond à un graphon constant par blocs.
+\ra Estimateur de $w$:
+\begin{itemize}
+ \item Affectation des noeuds aux blocs.
+ \item Estimation de $w(u, v)$ par la fréquence empirique des connexions.
+\end{itemize}
+
+\paragraphSkip{Références.}
+\begin{itemize}
+\item \cite{OlW14}: Blocs de largeur constante $h$ (après tri des noeuds en fonction de leur degré) + borne sur $MISE(\widehat{w})$ %\footnote{conditional on a correct block allocation}
+\item \cite{ChA14}: Même principe + lissage entre blocs voisins
+\item \cite{KTV16,GLZ15}: Vitesse de convergence pour l'estimateur des moindres carrés d'un graphon creux $w_n(u, v) = \rho_n w(u, v)$
+\item \cite{LaR15}: agrégation bayésienne de modèles SBM avec nombre croissant de blocs, sans garantie théorique (approximation variationnelle). 
+\item et aussi \cite{CAF15,BCC16}...
+\end{itemize}
+
+%====================================================================
+%====================================================================
+\bibliography{/home/robin/Biblio/BibGene}
+\bibliographystyle{/home/robin/LATEX/Biblio/astats}
+% \bibliographystyle{plain}
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================

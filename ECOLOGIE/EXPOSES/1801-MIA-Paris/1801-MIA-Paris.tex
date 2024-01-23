@@ -1,0 +1,690 @@
+\documentclass[9pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/Commands}
+
+% Directory
+\newcommand{\fignet}{/home/robin/Bureau/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figchp}{/home/robin/Bureau/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title[Variational inference of the PLN model]{Variational inference of the Poisson log-normal model \\ Some applications in ecology}
+
+\author[S. Robin]{J. Chiquet, M. Mariadassou \& S. Robin}
+
+\institute[INRA / AgroParisTech]{~ \\%INRA / AgroParisTech \\
+%   \vspace{-.1\textwidth}
+  \begin{tabular}{ccc}
+    \includegraphics[height=.06\textheight]{\fignet/LogoINRA-Couleur} & 
+    \hspace{.02\textheight} &
+    \includegraphics[height=.06\textheight]{\fignet/logagroptechsolo} % & 
+%     \hspace{.02\textheight} &
+%     \includegraphics[height=.09\textheight]{\fignet/logo-ssb}
+    \\ 
+  \end{tabular} \\
+  \bigskip
+  }
+
+\date[MIA, Paris]{MIA, Jan. 2018, Paris}
+
+%====================================================================
+%====================================================================
+\maketitle
+%====================================================================
+
+%====================================================================
+%====================================================================
+\section{Multivariate analysis of abundance data}
+\frame{\tableofcontents[currentsection]}
+%====================================================================
+
+%====================================================================
+\subsection*{Abundance data}
+%====================================================================
+\frame{\frametitle{Community ecology}
+
+  \paragraph{Abundance data.} $Y = [Y_{ij}]: n \times p$: 
+  \begin{eqnarray*}
+   Y_{ij} & = & \text{abundance of species $j$ in sample $i$ (old)} \\
+    & = & \text{number of reads associated with species $j$ in sample $i$ (new)}
+  \end{eqnarray*}
+%   $$
+%   Y = [Y_{ij}]: n \times p, \qquad \text{either $n$ or $p$ 'large'}
+%   $$
+%   \begin{itemize}
+%    \item $Y_{ij} =$ count of $k$-mer $j$ in sample $i$
+%    \item $Y_{ij} =$ abundance of species $j$ in sample $i$
+%    \item ...
+%   \end{itemize}
+  
+  \bigskip \bigskip 
+  \paragraph{Need for multivariate analysis:} 
+  \begin{itemize}
+   \item to summarize the information from $Y$
+   \item to exhibit patterns of diversity
+   \item to understand between-species interactions
+   \item to account for the effect of covariates
+%    \item ...
+  \end{itemize}
+  
+  \bigskip
+  \pause More generally, to \emphase{model dependences between count variables}
+  $$
+  \text{\ra Need for a generic (probabilistic) framework}
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Models for multivariate count data.}
+
+  \paragraph{Abundance vector:} $Y_i = (Y_{i1}, \dots Y_{ip})$, $Y_{ij} = \emphase{\text{ counts } \in \Nbb}$
+
+  \bigskip \bigskip \pause
+  No generic model for multivariate counts.
+  \bigskip 
+  \begin{description}
+    \item[Data transformation] ($\widetilde{Y}_{ij} = \log (1+Y_{ij}), \sqrt{Y_{ij}}$)
+    \begin{itemize}
+    \item Pb when many counts are zero. \\ ~
+    \end{itemize}
+  \item[Poisson multivariate distributions] ~
+    \begin{itemize}
+    \item Constraints of the form of the dependency \refer{IYA16} \\ ~
+    \end{itemize}
+  \item[Latent variable models] ~
+    \begin{itemize}
+    \item Poisson-Gamma (= negative binomial): positive dependency
+    \item \emphase{Poisson-log normal} \refer{AiH89} 
+    \end{itemize}
+  \end{description}
+}
+
+%====================================================================
+\frame{\frametitle{{P}oisson-log normal (PLN) distribution}
+
+  \paragraph{Latent Gaussian model:} 
+  \begin{itemize}
+   \item $(Z_i)_i:$ iid latent vectors $\sim \Ncal_p(0, \Sigma)$ \\ 
+   \item $Y_i = (Y_{ij})_j:$ counts independent conditional on $Z_i$ 
+   $$
+   Y_{ij} \,|\, Z_{ij} \sim \Pcal\left(e^{\mu_j + Z_{ij}}\right)
+   $$
+  \end{itemize}
+
+  \bigskip \pause
+  \paragraph{Properties:}
+  \begin{align*}
+   \Esp(Y_{ij}) & = e^{\mu_j + \sigma^2_j/2} =: \lambda_j > 0 \\
+   \Var(Y_{ij}) & = \lambda_j + \lambda_j^2 \big( e^{\sigma^2_j} - 1\big) 
+   & (\text{over-dispersion}) \\
+   \Cov(Y_{ij}, Y_{ik}) & = \lambda_j \lambda_k \big( e^{\sigma_{jk}} - 1\big)
+   & (\text{same sign as $\sigma_{jk}$}) 
+   \end{align*}
+}
+
+%====================================================================
+\frame{\frametitle{{P}oisson-log normal (PLN) distribution}
+
+  \paragraph{Extensions.} 
+  \begin{itemize}
+   \item $x_i =$ vector of covariates for observation $i$;
+   \item $o_{ij} = $ known 'offset'.
+  \end{itemize}
+  $$
+  Y_{ij} \,|\, Z_{ij} \sim \Pcal(e^{\emphase{o_{ij} + x_i^\intercal \beta_j} + Z_{ij}})
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Interpretation.} 
+  \begin{itemize}
+   \item Dependency structure encoded in the latent space (i.e. in $\Sigma$)
+   \item Additional effects are fixed
+   \item Conditional Poisson distribution = noise model
+  \end{itemize}
+
+}
+
+%====================================================================
+%====================================================================
+\section{Variational inference of PLN}
+\frame{\tableofcontents[currentsection]}
+%====================================================================
+
+%====================================================================
+\subsection*{Variational inference}
+%====================================================================
+\frame{\frametitle{Intractable EM}
+  
+  \paragraph{Aim of the inference:} 
+  \begin{itemize}
+   \item estimate $\theta = (\beta, \Sigma)$ 
+   \item predict the $Z_i$'s
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Maximum likelihood.} 
+  \begin{itemize}
+  \item PLN is an incomplete data model: Try EM:
+  $$
+  \log p_\theta(Y) = \Esp[\log p_\theta(Y, Z) \,|\, Y] + \Hcal[p_\theta(Z\,|\,Y)]
+  $$ 
+  \item  EM requires to evaluate (some moments of)
+  $$
+  p(Z \,|\,  Y) = {\prod_i p(Z_i \,|\,  Y_i)}
+  $$
+  but no close form for $p(Z_i \,|\,  Y_i)$.
+  \pause
+  \item \refer{Kar05} resorts to numerical or Monte-Carlo integration.
+  \item Variational approach \refer{WaJ08}: use a proxy of $p(Z\,|\,Y)$.
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Variational EM}
+
+  \paragraph{Variational approximation:} choose a class of distribution $\Qcal$
+  $$
+  \qquad \Qcal = \Big\{\pt: \quad \pt(Z) = \prod_i \pt_i(Z_i), \quad \pt_i(Z_i) = \emphase{\Ncal}(Z_i; \mt_i, \St_i) \Big\}  
+  $$
+  and maximize the lower bound ($\Espt$ = expectation under $\pt$)
+  \begin{eqnarray*}
+    J(\theta, \pt) 
+    = \log p_\theta(Y) - KL[\pt(Z) \,||\, p_\theta(Z\,|\,Y)] 
+    = \Espt [\log p_\theta(Y, Z)] + \Hcal[\pt(Z)]
+  \end{eqnarray*}
+
+  \bigskip \pause
+  \paragraph{Variational EM.} 
+  \begin{itemize}
+   \item VE step: find the optimal $\pt$: 
+   $$
+   \pt^h = \argmax J(\theta^h, \pt) = \argmin_{\pt \in \Qcal} KL[\pt(Z) \,||\, p_{\theta^h}(Z\,|\,Y)] 
+   $$
+   \item M step: update $\widehat{\theta}$
+   $$
+   \widehat{\theta}^h = \argmax J(\theta, \pt^h) = \argmax_\theta \Espt [\log p_\theta(Y, Z)]
+   $$
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Variational EM}
+  
+  \paragraph{Property:} The lower $J(\theta, \pt)$ is bi-concave, i.e.
+  \begin{itemize}
+  \item wrt $\pt = (\Mt, \St)$ for given $\theta$ 
+  \item wrt $\theta = (\Sigma, \beta)$ for given $\pt$ % (close form for $\widehat{\Sigma} = n^{-1} (\Mt^\trans \Mt + \St_+)$)
+  \end{itemize}
+  but not jointly concave in general.
+
+  \bigskip \bigskip 
+  \paragraph{Implementation:} Gradient ascent for the complete parameter $(\Mt, \St, \theta)$
+%   \begin{itemize}
+%    \item No formal VEM algorithm.
+%   \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{{\tt PLNmodels} package:} 
+  $$
+  \text{\url{https://github.com/jchiquet/PLNmodels}}
+  $$
+}
+
+%====================================================================
+%====================================================================
+\section{Probabilistic PCA for counts}
+\frame{\tableofcontents[currentsection]}
+%====================================================================
+%====================================================================
+\subsection*{pPCA}
+%====================================================================
+\frame{\frametitle{Probabilistic PCA}
+
+  \paragraph{Dimension reduction.} Typical task in multivariate analysis
+
+  \bigskip \bigskip \pause
+  \paragraph{Model:} Probabilistic PCA (pPCA):
+  \begin{align*}
+   (Z_i)_i \text{ iid} & \sim \Ncal_p(0, \Sigma), & \emphase{\text{rank}(\Sigma) = q \ll p} \\
+   Y_{ij} \,|\, Z_{ij} & \sim \Pcal(e^{o_{ij} + x_i^\trans \beta_j + Z_{ij}})
+  \end{align*}
+  Recall that: $\text{rank}(\Sigma) = q \quad \Leftrightarrow \quad \exists B (p \times q): 
+  \Sigma = B B^\intercal$.
+  
+  \bigskip \bigskip \pause
+  \paragraph{pPCA in the PLN model.} Variational inference:
+  $$
+  \text{maximize } J(\theta, \pt) %\qquad \text{s.t. rank}(\Sigma) \leq  q 
+  $$
+  \ra Still bi-concave in $\theta = (\emphase{B}, \beta)$ and $(\Mt, \St)$
+
+}
+
+%====================================================================
+\frame{\frametitle{Model selection}
+
+  \paragraph{Number of components $q$:} needs to be chosen.
+  
+  \bigskip \bigskip %\pause
+  \paragraph{Penalized 'likelihood'.}
+  \begin{itemize}
+   \item $\log p_{\widehat{\theta}}(Y)$ intractable: replaced with $J(\widehat{\theta}, \pt)$ \\ ~
+   \item $BIC$ \ra $\widetilde{BIC}_q = J(\widehat{\theta}, \pt) - pq \log(n)/2$ \\ ~ 
+   \item $ICL$ \ra $\widetilde{ICL}_q = \widetilde{BIC}_q - \Hcal(\pt)$ \\ ~ 
+  \end{itemize}
+  
+  \bigskip
+  \paragraph{Chosen rank:}
+  $$
+  \widehat{q} = \arg\max_q \widetilde{BIC}_q
+  \qquad \text{or} \qquad
+  \widehat{q} = \arg\max_q \widetilde{ICL}_q
+  $$
+}
+
+%====================================================================
+\subsection*{Illustration}
+%====================================================================
+
+%====================================================================
+\frame{\frametitle{Pathobiome: Oak powdery mildew}
+
+  \paragraph{Data from \refer{JFS16}.} 
+  \begin{itemize}
+   \item $n = 116$ oak leaves = samples
+   \item $p_1 = 66$ bacterial species (OTU)
+   \item $p_2 = 48$ fungal species ($p = 114$)
+   \item covariates: tree (resistant, intermediate, susceptible), branch height, distance to trunk, ...
+   \item offsets: $o_{i1}, o_{i2} =$ offset for bacteria, fungi
+  \end{itemize}
+
+%   \bigskip \bigskip \pause
+%   \paragraph{Aim.} Understand the interaction between the species, including the oak mildew pathogene {\sl E. alphitoides}.
+}
+
+%====================================================================
+\frame{\frametitle{Pathobiome: PLN model ($q = p$)}
+
+  \begin{overprint}
+   \onslide<1>
+   \paragraph{Without covariates:} offset only
+   $$
+   \includegraphics[width=.8\textwidth]{../FIGURES/PLN_oaks_plot2-1}
+   $$
+   \onslide<2>
+   \paragraph{With covariates:} offset, tree (suscept., interm, resist.), orientation
+   $$
+   \includegraphics[width=.8\textwidth]{../FIGURES/PLN_oaks_plot3-1}
+   $$
+  \end{overprint}
+}
+
+%====================================================================
+\frame{\frametitle{Pathobiome: PCA rank selection}
+
+  $$
+  \includegraphics[width=.9\textwidth]{../FIGURES/CMR17-Fig1a_ModSel.pdf}
+  $$
+  \qquad \qquad \qquad offset only: $\widehat{q} = 24$ \qquad \qquad offset + covariates: $\widehat{q} = 21$
+}
+
+%====================================================================
+\frame{\frametitle{Visualization}
+
+  \paragraph{PCA:} Optimal subspaces nested when $q$ increases.
+  
+  \bigskip \bigskip 
+  \paragraph{PLN-pPCA:} Non-nested subspaces.
+
+  \bigskip
+  \ra For a the selected dimension $\widehat{q}$: \\~
+  \begin{itemize}
+   \item Compute the estimated latent positions $\widetilde{M}$ \\~
+   \item Perform PCA on the $\widetilde{M}$ \\~
+   \item Display results in any dimension $q \leq \widehat{q}$
+  \end{itemize}
+}
+
+
+%====================================================================
+\frame{\frametitle{Pathobiome: First 2 PCs}
+
+  $$
+  \includegraphics[width=.9\textwidth]{../FIGURES/CMR17-Fig1c_IndMap.pdf}
+  $$
+  \qquad \qquad \qquad offset only \qquad \qquad \qquad \qquad offset + covariates 
+}
+
+
+%====================================================================
+\frame{\frametitle{Pathobiome: Precision of $\widehat{Z}_{ij}$}
+  
+  \begin{center}
+     \begin{tabular}{cc}
+	 $\sqrt{\widetilde{\Var}(Z_{ij})}$ & \begin{tabular}{c}
+	 \includegraphics[width=.5\textwidth]{../FIGURES/CMR17-Fig2_VarZ.pdf} 
+	 \end{tabular} \\
+	 & $Y_{ij}$
+	\end{tabular}
+  \end{center}
+
+  \bigskip
+  Due to the link function (log), $\widetilde{\Var}(Z_{ij})$ is higher when $Y_{ij}$ is close to 0.}
+
+
+
+%====================================================================
+%====================================================================
+\section{Network inference}
+\frame{\tableofcontents[currentsection]}
+%====================================================================
+
+%====================================================================
+\subsection*{Problem}
+%====================================================================
+\frame{\frametitle{Problem}
+
+  \paragraph{Aim:} 'infer the ecological network'
+  
+  \bigskip \bigskip 
+  \paragraph{Statistical interpretation:} infer the graphical model \refer{Lau96} of the $Y_i = (Y_{i1}, \dots Y_{ip})$, i.e. the graph $G$ such that
+  $$
+  p(Y_i) \propto \prod_{C \in \Ccal(G)} \psi_C(Y_i^C)
+  $$
+  where $\Ccal(G) =$ set of cliques of $G$
+  
+  \bigskip \bigskip 
+  \paragraph{Count data:} No generic framework (see Intro)
+}
+
+%====================================================================
+\frame{\frametitle{PLN network inference}
+  
+  \renewcommand{\nodesize}{1.75em}
+  \renewcommand{\edgeunit}{2.5*\nodesize}
+  \paragraph{Cheat:} Use the PLN model and infer the graphical model of $Z$
+  
+  \bigskip  
+  \begin{overprint}
+   \onslide<2>
+    $$
+    \begin{array}{ccc}
+    {\footnotesize \input{Fig2-jointZY} }
+    & \qquad &
+    {\footnotesize \input{Fig2-margY} }
+    \end{array}
+    $$
+  \onslide<3>
+   $$
+   \begin{array}{ccc}
+   {\footnotesize \input{Fig1-jointZY} }
+   & \qquad &
+   {\footnotesize \input{Fig1-margY} }
+   \end{array}
+  $$
+  \end{overprint}
+
+  \bigskip
+  \onslide+<3->{
+  $$
+  \text{Graphical model of $Z$ \emphase{$\neq$} Graphical model of $Y$}
+  $$
+  }
+}
+
+%====================================================================
+\frame{ \frametitle{PLN network model}
+
+  \paragraph{Model:}
+  \begin{align*}
+   (Z_i)_i \text{ iid} & \sim \Ncal_p(0, \emphase{\Omega^{-1}}), & \emphase{\Omega \text{ sparse}} \\
+   Y_{ij} \,|\, Z_{ij} & \sim \Pcal(e^{o_{ij} + x_i^\trans \beta_j + Z_{ij}})
+  \end{align*}
+  
+  \bigskip \pause
+  \paragraph{Interest:} Similar to Gaussian graphical model (GGM) inference
+
+  \bigskip \bigskip \pause
+  \paragraph{Sparsity-inducing regularization:} graphical lasso (gLasso, \refer{FHT08})
+  $$
+  \log p_\theta(Y) - \lambda \; \|\Omega\|_{1, \text{off}}
+  $$
+}
+
+%====================================================================
+\subsection*{Variational inference}
+%====================================================================
+\frame{ \frametitle{Variational inference}
+
+  \paragraph{Same problem:} $\log p_\theta(Y)$ is intractable
+  
+  \bigskip \bigskip \pause
+  \paragraph{Variational approximation:} maximize
+  $$
+  J(\theta, \pt) - \lambda \; \|\Omega\|_{1, \text{off}}
+  =
+  \Espt[\log p_\theta(Y, Z)] + \Hcal[\pt(Z)] \emphase{- \lambda \; \|\Omega\|_{1, \text{off}}}
+  $$
+  taking $\pt \in \Qcal$.
+  
+  \bigskip \bigskip \pause
+  \ra Still bi-concave in $\theta = (\emphase{\Omega}, \beta)$ and $\pt = (\Mt, \St)$. Ex:
+  $$
+  \widehat{\Omega} = \arg\max_\Omega \, \frac{n}2 \left(\log \,|\,\Omega\,|\, - \tr(\widehat{\Sigma} \Omega)\right) - \lambda \|\Omega\|_{1, \text{off}}:
+  \quad \text{gLasso problem}
+  $$
+}
+
+%====================================================================
+\frame{ \frametitle{Model selection}
+
+  \paragraph{Network density:} controlled by $\lambda$ 
+  
+  \bigskip \bigskip \pause
+  \paragraph{Penalized 'likelihood'.} 
+  \begin{itemize}
+   \item $\widetilde{BIC}(\lambda) = J(\widehat{\theta}, \pt)- \frac12 {\log n} \left(p q + \,|\,\text{Support}(\widehat{\Omega}_\lambda)\,|\, \right)$
+   \item $EBIC(\lambda):$ Extended BIC \refer{FoD10}
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Stability selection.} 
+  \begin{itemize}
+   \item Get $B$ subsamples
+   \item Get $\widehat{\Omega}^b_\lambda$ for an intermediate $\lambda$ and $b = 1...B$
+   \item Count the selection frequency of each edge
+  \end{itemize}
+
+}
+
+%====================================================================
+\subsection*{Illustration}
+%====================================================================
+\frame{\frametitle{Oak powdery mildew: {\tt PLNmodels} package}
+
+  \paragraph{Syntax:} ~\\ ~
+  
+  {\tt formula.offset <- Count $\sim$ 1 + offset(log(Offset))} \\~
+  
+  {\tt models.offset  <- PLNnetwork(formula.offset)} \\~ 
+
+  {\tt best.offset <- models.offset\$getBestModel("BIC")} 
+
+  }
+
+%====================================================================
+\frame{\frametitle{Oak powdery mildew: no covariates}
+
+ \bigskip
+ {\tt models.offset\$plot()}
+ $$
+ \includegraphics[height=.7\textheight]{../FIGURES/network_oak_offset_criteria}
+ $$
+}
+ 
+%====================================================================
+\frame{\frametitle{Oak powdery mildew: no covariates}
+
+ \bigskip
+ {\tt best.offset\$plot()}
+ $$
+ \includegraphics[height=.7\textheight]{../FIGURES/network_oak_offset_plot}
+ $$
+}
+
+%====================================================================
+\frame{\frametitle{Oak powdery mildew: no covariates}
+
+ \bigskip
+ {\tt best.offset\$plot\_network()}
+ $$
+ \includegraphics[height=.7\textheight]{../FIGURES/network_oak_offset_plot_network}
+ $$
+}
+
+%====================================================================
+\frame{\frametitle{Oak powdery mildew: effect of the covariates}
+
+  \begin{tabular}{cc}
+   no covariates & covariate = tree + orientation \\
+   \begin{tabular}{c}
+    \includegraphics[height=.6\textheight]{../FIGURES/network_oak_offset_network}
+   \end{tabular}
+   &
+   \begin{tabular}{c}
+    \includegraphics[height=.6\textheight]{../FIGURES/network_oak_tree_or_network}
+   \end{tabular}
+  \end{tabular}
+  
+  Ea = {\sl Erysiphe alphitoides} = pathogene responsible for oak mildew
+  }
+
+%====================================================================
+\section{Discussion}
+\frame{\tableofcontents[currentsection]}
+%====================================================================
+\frame{ \frametitle{Discussion}
+
+  \paragraph{Summary}
+  \begin{itemize}
+   \item PLN = generic model for multivariate count data analysis
+   \item Allows for covariates
+   \item Flexible modeling of the covariance structure
+   \item Efficient VEM algorithm
+   \item {\tt PLNmodels} package: \url{https://github.com/jchiquet/PLNmodels}
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Extensions}
+  \begin{itemize}
+   \item Model selection criterion for network inference
+   \item Tree-based network inference (Raphaelle's PhD)
+   \item Other covariance structures (spatial, time series, ...)
+   \item Confidence interval and tests for the regular PLN
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Statistical properties of variational estimates}
+
+\paragraph{General properties of V(B)EM inference.}
+\begin{itemize}
+ \item VEM stationary point $\neq$ log-likelihood stationary point
+ \item VBEM posterior variance are too small
+ \item Some consistency results, typically when $p(Z\,|\,Y)$ asymptotically belongs to $\Qcal$ (SBM, Bayesian logistic regression).
+\end{itemize}
+
+\bigskip \bigskip \pause
+\paragraph{Using V(B)EM output as a starting point} for regular inference:
+\begin{itemize}
+ \item PLN: get maximum-(composite-)likelihood estimates starting from $\widetilde{\theta}_{VEM}$ (proposed internship) \\~
+ \item SBM: get the true posterior $p(\theta\,|\,Y)$ starting from $\pt_{VBEM}(\theta)$ (on-going work with Sophie). \\~ 
+\end{itemize}
+\ra Hopefully: few iterations are needed
+
+}
+%====================================================================
+\frame{ \frametitle{References}
+{\tiny
+  \bibliography{/home/robin/Biblio/BibGene}
+%   \bibliographystyle{/home/robin/LATEX/Biblio/astats}
+  \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+%====================================================================
+%====================================================================
+\appendix 
+\backupbegin
+\section{Appendix}
+
+%====================================================================
+\frame{\frametitle{Oak powdery mildew: stability selection}
+
+  \begin{tabular}{cc}
+   no covariates & covariate = tree + orientation \\
+   \begin{tabular}{c}
+    \includegraphics[height=.6\textheight]{../FIGURES/network_oak_offset_network_stabsel}
+   \end{tabular}
+   &
+   \begin{tabular}{c}
+    \includegraphics[height=.6\textheight]{../FIGURES/network_oak_tree_or_network_stabsel}
+   \end{tabular}
+  \end{tabular}
+  }
+
+
+
+\backupend
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

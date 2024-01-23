@@ -1,0 +1,145 @@
+% Maths
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{algorithm}{Algorithm}
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
+\newtheorem{exercise}{Exercise}
+% \newcommand{\propname}{Prop.}
+% \newcommand{\proof}{\noindent{\sl Proof:}\quad}
+% \newcommand{\eproof}{$\blacksquare$}
+
+% \setcounter{secnumdepth}{3}
+% \setcounter{tocdepth}{3}
+\newcommand{\pref}[1]{\ref{#1} p.\pageref{#1}}
+\newcommand{\qref}[1]{\eqref{#1} p.\pageref{#1}}
+
+% Colors : http://latexcolor.com/
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\definecolor{darkgreen}{rgb}{0,0.4,0}
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\definecolor{amethyst}{rgb}{0.6, 0.4, 0.8}
+\definecolor{asparagus}{rgb}{0.53, 0.66, 0.42}
+\definecolor{applegreen}{rgb}{0.55, 0.71, 0.0}
+\definecolor{awesome}{rgb}{1.0, 0.13, 0.32}
+\definecolor{blue-green}{rgb}{0.0, 0.87, 0.87}
+\definecolor{red-ggplot}{rgb}{0.52, 0.25, 0.23}
+\definecolor{green-ggplot}{rgb}{0.42, 0.58, 0.00}
+\definecolor{purple-ggplot}{rgb}{0.34, 0.21, 0.44}
+\definecolor{blue-ggplot}{rgb}{0.00, 0.49, 0.51}
+
+% Commands
+\newcommand{\backupbegin}{
+   \newcounter{finalframe}
+   \setcounter{finalframe}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+   \setcounter{framenumber}{\value{finalframe}}
+}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+\newcommand{\comment}[1]{\textcolor{gray}{#1}}
+
+\newcommand{\tabequation}[1]{{\medskip \centerline{#1} \medskip}}
+% \renewcommand{\binom}[2]{{\left(\begin{array}{c} #1 \\ #2 \end{array}\right)}}
+
+% Variables 
+\newcommand{\Abf}{{\bf A}}
+\newcommand{\Beta}{\text{B}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Bias}{\xspace\mathbb B}
+\newcommand{\Cov}{{\mathbb C}\text{ov}}
+\newcommand{\cl}{\text{\it c}\ell}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\cst}{\text{cst}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Esp}{\xspace\mathbb E}
+\newcommand{\Espt}{\widetilde{\Esp}}
+\newcommand{\Covt}{\widetilde{\Cov}}
+\newcommand{\Ibb}{\mathbb I}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Jcal}{\mathcal{J}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mt}{\widetilde{M}}
+\newcommand{\mt}{\widetilde{m}}
+\newcommand{\Nbb}{\mathbb{N}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\pt}{\widetilde{p}}
+\newcommand{\Pt}{\widetilde{P}}
+\newcommand{\Pbb}{\mathbb{P}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\qt}{\widetilde{q}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Sbb}{\mathbb{S}}
+\newcommand{\st}{\widetilde{s}}
+\newcommand{\St}{\widetilde{S}}
+\newcommand{\todo}{\textcolor{red}{TO DO}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Un}{{1}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\Vart}{\widetilde{\Var}}
+\newcommand{\Zcal}{\mathcal{Z}}
+
+% Symboles & notations
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}} 
+\renewcommand{\d}{\text{\xspace d}}
+\newcommand{\gv}{\mid}
+\newcommand{\ggv}{\, \| \, }
+% \newcommand{\diag}{\text{diag}}
+\newcommand{\card}[1]{\text{card}\left(#1\right)}
+\newcommand{\trace}[1]{\text{tr}\left(#1\right)}
+\newcommand{\matr}[1]{\boldsymbol{#1}}
+\newcommand{\matrbf}[1]{\mathbf{#1}}
+\newcommand{\vect}[1]{\matr{#1}} %% un peu inutile
+\newcommand{\vectbf}[1]{\matrbf{#1}} %% un peu inutile
+\newcommand{\trans}{\intercal}
+\newcommand{\transpose}[1]{\matr{#1}^\trans}
+\newcommand{\crossprod}[2]{\transpose{#1} \matr{#2}}
+\newcommand{\tcrossprod}[2]{\matr{#1} \transpose{#2}}
+\newcommand{\matprod}[2]{\matr{#1} \matr{#2}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\tr}{tr}
+\newcommand{\ra}{\emphase{$\rightarrow$} \xspace}
+
+% Hadamard, Kronecker and vec operators
+\DeclareMathOperator{\Diag}{Diag} % matrix diagonal
+\DeclareMathOperator{\diag}{diag} % vector diagonal
+\DeclareMathOperator{\mtov}{vec} % matrix to vector
+\newcommand{\kro}{\otimes} % Kronecker product
+\newcommand{\had}{\odot}   % Hadamard product
+
+% TikZ
+\newcommand{\nodesize}{2em}
+\newcommand{\edgeunit}{2.5*\nodesize}
+\tikzstyle{square}=[rectangle, draw]
+\tikzstyle{param}=[draw, rectangle, fill=gray!50, minimum width=\nodesize, minimum height=\nodesize, inner sep=0]
+\tikzstyle{hidden}=[draw, circle, fill=gray!50, minimum width=\nodesize, inner sep=0]
+\tikzstyle{hiddenred}=[draw, circle, color=red, fill=gray!50, minimum width=\nodesize, inner sep=0]
+\tikzstyle{observed}=[draw, circle, minimum width=\nodesize, inner sep=0]
+\tikzstyle{observedred}=[draw, circle, minimum width=\nodesize, color=red, inner sep=0]
+\tikzstyle{eliminated}=[draw, circle, minimum width=\nodesize, color=gray!50, inner sep=0]
+\tikzstyle{empty}=[draw, circle, minimum width=\nodesize, color=white, inner sep=0]
+\tikzstyle{blank}=[color=white]
+\tikzstyle{edge}=[-, line width=1pt]
+\tikzstyle{edgebendleft}=[-, >=latex, line width=1pt, bend left]
+\tikzstyle{lightedge}=[-, line width=1pt, color=gray!50]
+\tikzstyle{arrow}=[->, >=latex, line width=1pt]
+\tikzstyle{arrowbendleft}=[->, >=latex, line width=1pt, bend left]
+\tikzstyle{arrowred}=[->, >=latex, line width=1pt, color=red]
+\tikzstyle{arrowbendleftred}=[->, >=latex, line width=1pt, bend left, color=red]
+\tikzstyle{arrowblue}=[->, >=latex, line width=1pt, color=blue]
+\tikzstyle{dashedarrow}=[->, >=latex, dashed, line width=1pt]
+\tikzstyle{dashededge}=[-, >=latex, dashed, line width=1pt]
+\tikzstyle{dashededgebendleft}=[-, >=latex, dashed, line width=\edgewidth, bend left]
+\tikzstyle{lightarrow}=[->, >=latex, line width=1pt, color=gray!50]

@@ -1,0 +1,135 @@
+%====================================================================
+\subsection*{Directed networks} 
+%====================================================================
+\frame{\frametitle{Conditional independance}
+
+  \paragraph{Definition.} $X$ is independent of $Y$ conditional on $Z$ ($X \independent Y \mid Z$) iff
+  $$
+  p(x, y \mid z) = p(x \mid z) p(y \mid z)
+  \qquad \Leftrightarrow \qquad 
+  p(x \mid z, y) = p(x \mid z) 
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Example.} $A \independent C \mid B$ in the 3 DAGs:
+  $$
+  \input{\figeco/LeftRightChain} \qquad
+  \input{\figeco/RightLeftChain} \qquad
+  \input{\figeco/AwayFromCenter}
+  $$
+  Indeed, for first one,
+  $$
+  p(x, z \mid y)
+  = \frac{p(x, y, z)}{p(y)}
+  = \frac{p(x) p(y \mid x) p(z \mid y)}{p(y)}
+  = p(x \mid y) p(z \mid y)
+  $$
+  because $p(x) p(y \mid x) = p(y) p(x \mid y)$.
+}
+
+%====================================================================
+\frame{\frametitle{V-structure}
+
+%   \paragraph{Counter-example.} 
+  In the V-structured (or 'head to head') DAG:
+  $$
+  \input{\figeco/HeadToHead}
+  $$
+  $X$ and $Z$ are \emphase{conditionally dependent} ($X \not\independent Y \mid Z$):
+  \begin{align*}
+  p(x, y, z) & = p(x) p(z) p(y \mid x, z) \\ ~\\
+  \Rightarrow \quad
+  p(x, z \mid y) & = \frac{p(x, y, z)}{p(y)}   = \frac{p(x) p(z) p(y \mid x, z)}{p(y)}  
+  \end{align*}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Remark.} 
+  $X$ and $Z$ are \emphase{marginally independent}:
+  $$
+   p(x, z)
+  = \sum_y p(x) p(z) p(y \mid x, z)
+  = p(x) p(z) \underset{= 1}{\underbrace{\sum_y p(y \mid x, z)}}
+  $$
+}
+
+
+%====================================================================
+\frame{\frametitle{From directed to undirected graphical models}
+
+  \paragraph{Resolve {\sl immoralities}.} Graph {\sl moralization} (parents must be married):
+  $$
+  \begin{array}{ccccc}
+   \input{\figeco/Moral-DAG}
+   & \qquad & 
+   \input{\figeco/Moral-marriage}
+   & \qquad & 
+   \input{\figeco/Moral-GM}
+  \end{array}
+  $$
+  
+  \pause
+  \paragraph{Example.}
+  $$
+  \begin{array}{ccccc}
+   \input{\figeco/DAG6nodes}
+   & \qquad & 
+   \input{\figeco/DAG6nodes-marriage}
+   & \qquad & 
+   \input{\figeco/DAG6nodes-GM}
+  \end{array}
+  $$
+}
+
+%====================================================================
+\subsection*{Causality}
+%====================================================================
+\frame{\frametitle{Causality \refer{Pea09}}
+
+  \begin{tabular}{c|c|c}
+    'Truth' & Equivalent & 'Causality' \\  
+    & {based on observational data} \\  
+    & & \\\hline & & \\
+    \includegraphics[trim={0 15 180 0}, height=.22\textheight, clip]{\figeco/Pea09-Fig2-3}
+    &
+    \includegraphics[trim={0 15 0 0}, height=.21\textheight, clip]{\figeco/Pea09-Fig2-4}
+    &
+    \includegraphics[trim={180 15 0 0}, height=.22\textheight, clip]{\figeco/Pea09-Fig2-3}
+  \end{tabular}
+
+  \bigskip \bigskip 
+  $$
+  \{a \leftrightarrow b\} \qquad = \qquad \{a \leftarrow u \rightarrow b, 
+  \quad \text{$u$ unobserved}\}
+  $$  
+}
+
+%====================================================================
+\subsection*{Dynamic networks}
+% %==================================================================
+% \frame{\frametitle{Lotka-Voltera interpretation}
+% 
+%   \begin{itemize}
+%   \item Review \& methods: \refer{FLG15}
+%   \item Fundamental limitations: \refer{AML17} ('all state variables are measured without any measurement noise') + \refer{Ver12}
+%   \item Actually doable? Steady-state approach: \refer{XAF17}
+%   \item Lotka-Volterra (simul): \refer{BeW14}
+%   \item Lotka-Volterra micro: \refer{SBT13}
+%   \item Pseudo Lotka-Volterra: \refer{AHL12}, \refer{FaR12}
+%   \item Likelihood-free approach (Lotka-Volterra as an example): \refer{TRB17}
+%   \end{itemize}
+% }
+% 
+%====================================================================
+\subsection*{Latent GGM}
+%==================================================================
+\frame{\frametitle{Effect of covariates}
+
+  \paragraph{Fish species in the Fatala river \refer{Bar95}.} $n = 95$ observations, $p = 33$ fish species, $x_i =$ date and site of the observations
+
+  \bigskip \bigskip 
+  \paragraph{Inferred networks.} 
+  $$
+  \includegraphics[width=.9\textwidth]{\fignet/MRA19-Fig8} 
+  $$
+  \ra Even 'key-species' change according to which covariates are taken into account.
+}

@@ -1,0 +1,824 @@
+\documentclass[presentation]{beamer}
+\mode<presentation>
+% grise les zones en pause
+{\setbeamercovered{transparent}}
+
+%l'option 'handout' pour imprimer sans les pauses
+%\documentclass[handout]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+\usetheme{CambridgeUS}
+%\usetheme{Boadilla}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+%\usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+%\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+% Commands
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+% \newcommand{\emphase}[1]{{#1}}
+\newcommand{\paragraph}[1]{\textcolor{darkred}{#1}}
+\newcommand{\refer}[1]{{\footnotesize{\textcolor{gray}{{[\cite{#1}]}}}}}
+\newcommand{\Refer}[1]{{\footnotesize{\textcolor{gray}{[{\sl #1}]}}}}
+\newcommand{\newblock}{}
+
+% Symbols
+\newcommand{\Abf}{{\bf A}}
+\newcommand{\Beta}{\text{B}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\BIC}{\text{BIC}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\dd}{\text{~d}}
+\newcommand{\dbf}{{\bf d}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Ebf}{{\bf E}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Gam}{\mathcal{G}\text{am}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Ibb}{\mathbb{I}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\ICL}{\text{ICL}}
+\newcommand{\Cov}{\mathbb{C}\text{ov}}
+\newcommand{\Corr}{\mathbb{C}\text{orr}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\Vsf}{\mathsf{V}}
+\newcommand{\pen}{\text{pen}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Jcal}{\mathcal{J}}
+\newcommand{\Kbf}{{\bf K}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\mum}{\mu(\mbf)}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Nbf}{{\bf N}}
+\newcommand{\Nm}{N(\mbf)}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\Obf}{{\bf 0}}
+\newcommand{\Omegas}{\underset{s}{\Omega}}
+\newcommand{\Pbf}{{\bf P}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\BP}{\text{BP}}
+\newcommand{\EM}{\text{EM}}
+\newcommand{\VEM}{\text{VEM}}
+\newcommand{\VBEM}{\text{VBEM}}
+\newcommand{\cst}{\text{cst}}
+\newcommand{\obs}{\text{obs}}
+\newcommand{\ra}{\emphase{\mathversion{bold}{$\rightarrow$}~}}
+%\newcommand{\transp}{\text{{\tiny $\top$}}}
+\newcommand{\transp}{\text{{\tiny \mathversion{bold}{$\top$}}}}
+
+% Directory
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figrup}{/home/robin/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+\newcommand{\figocc}{/home/robin/RECHERCHE/OCCURRENCES/EXPOSES/FIGURES}
+%\newcommand{\figmotif}{/home/robin/RECHERCHE/RESEAUX/Motifs/FIGURES}
+
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\begin{document}
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+
+%--------------------------------------------------------------------
+\title[Accounting for exogenous information ]{Accounting for exogenous information in genomic analysis: Two examples}
+
+\author{J. Chiquet, T. Mary-Huard, \underline{S. Robin}}
+
+\institute[INRA / AgroParisTech]{INRA / AgroParisTech \\
+  \vspace{-.25\textheight}
+  \begin{center}
+  \begin{tabular}{ccccc}
+    \includegraphics[width=2.5cm]{\fignet/LogoINRA-Couleur} & 
+    \hspace{.5cm} &
+    \includegraphics[width=3.75cm]{\fignet/logagroptechsolo} & 
+    \hspace{.5cm} &
+    \includegraphics[width=2.5cm]{\fignet/logo-ssb}
+    \\ 
+  \end{tabular} 
+  \end{center}
+  \medskip
+  }
+
+\date[URGV'14]{Journées de l'URGV, June 2014, Evry}
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\maketitle
+%--------------------------------------------------------------------
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\section*{'Association' studies}
+\frame{\frametitle{'Association' studies}
+
+  \paragraph{Aim: Decipher the relationships between}
+  
+  \bigskip
+  \begin{tabular}{cc}
+%     \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+     a series of genomic 'markers'
+     \begin{itemize}
+     \item AFLP, RFLP, SNP,
+     \item motifs in regulatory regions
+     \item ...
+     \end{itemize}
+    \end{tabular}
+    & 
+%     \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+     and one or several traits 
+     \begin{itemize}
+     \item phenotypic traits,
+     \item gene expression
+     \item ...
+     \end{itemize}
+    \end{tabular}
+  \end{tabular}
+
+  \bigskip \bigskip 
+  \paragraph{Association study.} Find the markers which have an effect on the variation of the trait.
+  
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Outline}
+
+  \tableofcontents
+}
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\section{Multivariate regression}
+\frame{\frametitle{Multivariate regression: A reminder}}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Linear regression: One trait}
+
+  \paragraph{$p$ markers / one trait.} Each marker $x_j$ ($j = 1 \dots p$) has a specific effect $\beta_j$ on the trait
+  \begin{eqnarray*}
+    y_i & = & \underset{\text{effects of the markers}}{\underbrace{\beta_1 x_{i1} + \dots + \beta_p x_{ip}}} + \underset{\text{residual}}{\underbrace{\varepsilon_i}} \\
+    & = & \underset{x_i' = \text{markers}}{\underbrace{\left[ \begin{array}{ccc} x_{i1} & \dots & x_{ip} \end{array} \right]}}
+    \underset{\beta = \text{coefficients}}{\underbrace{\left[ \begin{array}{c} \beta_{1} \\ \dots \\ \beta_{p} \end{array} \right]}} + \varepsilon_i 
+  \end{eqnarray*}
+  
+  \bigskip \pause
+  \paragraph{All observations together.}  $Y = X \beta + E$
+  $$
+  \underset{Y = \text{trait}}{\underbrace{
+  \left[{\footnotesize \begin{array}{c} 
+    y_{1}  \\ \vdots \\ y_{n}
+    \end{array} }\right]}}
+  =
+  \underset{X = \text{markers}}{\underbrace{
+  \left[{\footnotesize  \begin{array}{ccc} 
+    x_{11} & \dots  & x_{1p} \\
+    \vdots & & \vdots \\
+    x_{n1} & \dots  & x_{np} \\
+    \end{array} }\right]}}
+  \underset{\beta = \text{coefficients}}{\underbrace{
+  \left[{\footnotesize  \begin{array}{ccc} 
+    \beta_{1} \\
+    \vdots\\
+    \beta_{p} \\
+    \end{array} }\right]}}
+  +
+  \underset{E = \text{residual}}{\underbrace{
+  \left[{\footnotesize  \begin{array}{ccc} 
+    \varepsilon_{1} \\
+    \vdots \\
+    \varepsilon_{n}
+    \end{array} }\right]}}
+  $$
+}
+  
+%--------------------------------------------------------------------
+\frame{\frametitle{Inducing sparsity: LASSO}
+
+  \paragraph{Estimation.} The vector of coefficient is estimated by $\widehat{\beta}$ which minimizes
+  $$
+  -\log p(Y; \beta) \propto \| Y - X \beta\|_2^2 = \sum_i (Y_i - x_i' \beta)^2
+  $$
+  \begin{itemize} \vspace{-.05\textheight}
+    \item   Marker $j$ is said 'associated' with the trait if $\widehat{\beta}_j$ is 'significant'.
+   \item But: this problem can not be solved when $p > n$.
+   \item Furthermore: few markers are expected to be associated with the trait, so most coefficients $\beta_{j}$ are expected to be zero. 
+  \end{itemize}
+  
+  \bigskip \pause
+  \paragraph{Inducing sparsity.} Rather minimize \refer{Tib96}
+  $$
+  \| Y - X \beta\|_2^2 + \lambda_ 1 \|\beta\|_1, 
+  \qquad \text{where } \|\beta\|_1 = \sum_j |\beta_j| = \text{LASSO penalty}
+  $$
+  \ra Selection of the 'relevant' markers.
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Linear regression: Several traits}
+
+  \paragraph{$p$ markers / $q$ traits.} Similar model for each trait $y_k$ ($k = 1 \dots q$)
+  $$
+  y_{ik} = \beta_{1k} x_{i1} + \dots + \beta_{pk} x_{ip} + \varepsilon_{ik}
+  $$
+  
+  \bigskip 
+  \bigskip \pause
+  \paragraph{All observations and all traits together.}
+  $$
+  \underset{Y = \text{traits}}{\underbrace{
+  \left[{\footnotesize \begin{array}{ccc} 
+    y_{11} & \dots  & y_{1q} \\
+    \vdots & & \vdots \\
+    y_{n1} & \dots  & y_{nq} \\
+    \end{array} }\right]}}
+  =
+  \underset{X = \text{markers}}{\underbrace{
+  \left[{\footnotesize  \begin{array}{ccc} 
+    x_{11} & \dots  & x_{1p} \\
+    \vdots & & \vdots \\
+    x_{n1} & \dots  & x_{np} \\
+    \end{array} }\right]}}
+  \underset{B = \text{coefficients}}{\underbrace{
+  \left[{\footnotesize  \begin{array}{ccc} 
+    \beta_{11} & \dots  & \beta_{1q} \\
+    \vdots & & \vdots \\
+    \beta_{p1} & \dots  & \beta_{pq} \\
+    \end{array} }\right]}}
+  +
+  \underset{E = \text{residuals}}{\underbrace{
+  \left[{\footnotesize  \begin{array}{ccc} 
+    \varepsilon_{11} & \dots  & \varepsilon_{1q} \\
+    \vdots & & \vdots \\
+    \varepsilon_{n1} & \dots  & \varepsilon_{nq} \\
+    \end{array} }\right]}}
+  $$
+  that is
+  $$
+  Y = X \; B + E
+  $$
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Aim}
+  
+  
+  \paragraph{Main aim: }
+  Find the markers which have an effect on the variation of the trait. 
+
+  \bigskip \bigskip \pause
+  \paragraph{In addition,} we want to\\~
+  \begin{enumerate}
+   \item account for the dependency structure between the traits; \\~
+   \item pay attention to the {\sl direct} links between 'markers' and traits; \\~
+   \item integrate some prior information about the relation between markers.
+  \end{enumerate}
+
+}
+
+%--------------------------------------------------------------------
+\section{SPRING}
+\frame{\frametitle{SPRING = Structured selection of primordial relationships in the
+general linear model}}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Multivariate point of view}
+
+  For one individual $i$, consider the whole vector
+  $$
+  \left[ \begin{array}{cc} x_i' & y_i' \end{array} \right] = \left[ \begin{array}{cccccc} x_{i1} & \dots & x_{ip} & y_{i1} & \dots & y_{iq} \end{array} \right]
+  \sim \Ncal(0, \Sigma)
+  $$
+
+  \bigskip
+  \paragraph{The variance matrix and its inverse.}
+  $$
+  \Sigma = \left[ \begin{array}{cc} \Sigma_{xx} & \Sigma_{xy} \\ \Sigma_{yx} & \Sigma_{yy} \end{array} \right], 
+  \qquad
+  \Sigma^{-1} := \Omega = \left[ \begin{array}{cc} \Omega_{xx} & \Omega_{xy} \\ \Omega_{yx} & \Omega_{yy} \end{array} \right] 
+  $$
+
+  \bigskip
+  \paragraph{Different interpretations:}   $\Sigma$ reveals correlations, $\Omega$ reveals direct effects, e.g.
+  \begin{itemize}
+   \item $\Sigma_{xx}$ is the covariance between the markers and the traits
+   \item $\Omega_{yy}$ reveals the direct links between the traits (not due to the markers)
+  \end{itemize}
+
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Non-zero coefficients $\neq$ direct effects}
+
+  \begin{tabular}{cc}
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+    \paragraph{Back to regression.} 
+    $$
+    y_i | x_i \sim \Ncal (\underset{B'}{\underbrace{\emphase{-\Omega_{yy}^{-1}
+    \Omega_{yx}}}} x_i, \underset{R}{\underbrace{\Omega_{yy}^{-1}}} )
+    $$
+    The regression coefficients $B$ combine:
+    \begin{itemize}
+     \item the directs effects $\Omega_{xy}$
+     \item the residual covariance $R = \Omega_{yy}^{-1}$
+    \end{itemize}
+
+    \bigskip \bigskip 
+    \onslide+<7->{\paragraph{\ra Sparsity} for $\Omega_{xy}$, not for $B$.}
+   
+    \end{tabular}
+    & 
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{tabular}{cc}
+    & 
+    \onslide+<3->{$R =$ }
+    \begin{tabular}{l}
+	 \begin{overprint}    
+	 \onslide<3-4>
+	 \includegraphics[width=.075\textwidth]{\figocc/R_low_cov}	  
+	 \onslide<5>
+	 \includegraphics[width=.075\textwidth]{\figocc/R_med_cov}	  
+	 \onslide<6->
+	 \includegraphics[width=.075\textwidth]{\figocc/R_high_cov}	  
+	 \end{overprint}
+    \end{tabular}
+    \\
+    \hspace{.05\textwidth}
+    \onslide+<2->{$\Omega_{xy} =$}
+    \begin{tabular}{l}
+    \onslide+<2->{
+	 \includegraphics[width=.09\textwidth]{\figocc/omega_cov} 
+	 }
+    \end{tabular}
+    & 
+%     \hspace{.05\textwidth}
+    \onslide+<4->{$B =$} 
+    \begin{tabular}{l}
+	 \begin{overprint}    
+	 \onslide<4>
+	 \includegraphics[width=.09\textwidth]{\figocc/beta_low_cov}	  
+	 \onslide<5>
+	 \includegraphics[width=.09\textwidth]{\figocc/beta_med_cov}	  
+	 \onslide<6->
+	 \includegraphics[width=.09\textwidth]{\figocc/beta_high_cov}	  
+	 \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Accounting for linkage between the markers}
+
+  \paragraph{Prior information on the 'markers'} is often available, e.g.
+  \begin{itemize}
+  \item Linkage disequilibrium between SNP, etc; 
+  \item Pattern similarity between motifs.
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Similarity matrix.} This information can typically be encoded in a matrix
+  $$
+  L = [\ell_{j j'}], 
+  \qquad \ell_{j j'} = \text{'proximity' between marker $j$ and $j'$}
+  $$
+  so that, for each trait, we would like
+  $$
+  \beta' L \beta = \sum_{j, j'} \ell_{j j'} (\beta_{j} - \beta_{j'})^2
+  $$
+  to be small, so that similar markers have similar coefficients.
+  
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Estimation}
+
+  \paragraph{Penalized criterion.} To sum up, we want to minimize
+  $$
+  \underset{\text{fit to data}}{\underbrace{- \log p(Y; \Omega_{xy},\Omega_{yy})}}
+   + {\lambda_2} \;   
+   \underset{\text{marker similarity}}{\underbrace{
+   \text{tr} \left( \Omega_{yx} L \Omega_{xy} \Omega_{yy}^{-1} \right)
+    }}
+  + \lambda_1 \underset{\text{few direct effects}}{\underbrace{\|\Omega_{xy}\|_1}}.
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Proposition.} The  objective function is {jointly convex} in $(\Omega_{xy},\Omega_{yy})$ and  admits at least  one global  minimum  which  is unique  when  $n\geq q$  and $(\lambda_2 L + \Sigma_{xx})$ is positive definite.
+
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Consequence.} Efficient algorithms can be designed to estimate all parameters. 
+  }
+
+%--------------------------------------------------------------------
+\section{Applications}
+\frame{\frametitle{Applications}}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Quantitative Trait Loci (QTL) study in Colza}
+
+  
+  \paragraph{Doubled haploid samples:}
+  $n=103$ {homozygous lines} of \textit{Brassica napus} \refer{KTK02,FSY95}
+%   by crossing `Stellar' and `Major' cultivars.
+  
+  \bigskip \bigskip 
+  \paragraph{Bi-parental markers:}
+  $p =  300$ markers  with {known loci}  dispatched on the   19   chromosomes   
+%   with   value   in   ${{\tt Major}, {\tt Stellar}, {\tt Missing}} \to {1,-1,0}$.
+
+  \bigskip \bigskip 
+  \paragraph{Traits;} $q=8$ traits 
+  \begin{itemize}
+    \item 5 {survival traits} ($\%$ survival in winter):
+      {\tt surv92},        {\tt surv93},        {\tt surv94},
+      {\tt surv97}, {\tt surv99}
+    \item 3 {flowering traits} (no vernalization, 4 weeks or 8 weeks vernalization):
+      {\tt flower0}, {\tt flower4}, {\tt flower8}
+      \end{itemize}
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Linkage disequilibrium}
+
+  \paragraph{Genetic distance} between markers $j$ and $j'$: $d_{jj'}$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Linkage  disequilibrium} as  correlation between the markers. In   a  {biparental}   population   with  {independent recombination} events: 
+  \begin{equation*}
+  \mathbb{C}\text{orr}(x_j, x_{j'}) =  \rho^{d_{jj'}} 
+  \qquad \text{with }\rho=e^{-2}.
+  \end{equation*}
+
+  \bigskip \bigskip \pause
+  \paragraph{Including LD information in the model.}
+    The  matrix $L$  is given  by inverting  the  correlation matrix (and this {can be done analytically}).
+
+  \bigskip \bigskip \pause
+  \paragraph{Question.} Which locus controls which trait.
+
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Correlation between traits}
+
+  $$
+  \includegraphics[height=.75\textheight]{\figocc/brassica_cor}
+  $$
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Coefficients and direct effects}
+
+  \begin{overprint}
+   \onslide<1>
+   \paragraph{Estimated Regression Coefficients {$\hat{B}$}}
+   $$
+    \includegraphics[height=.75\textheight]{\figocc/brassica_beta_spring}
+   $$
+   \onslide<2>
+   \paragraph{Estimated Direct Effects {$\hat{\Omega}_{xy}$}}
+   $$
+    \includegraphics[height=.75\textheight]{\figocc/brassica_omega_spring}
+   $$
+   \onslide<3>
+   \paragraph{Estimated Direct Effects {$\hat{\Omega}_{xy}$}}
+   $$
+    \includegraphics[height=.75\textheight]{\figocc/brassica_omega_spring_subset}
+   $$
+  \end{overprint}
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{QTL Mapping (chr.  2, 8, 10)}
+  
+  \begin{overprint}
+  \onslide<1>
+  \paragraph{regression coefficients $\hat{B}$}
+  $$
+  \includegraphics[height=.75\textheight,clip=true,trim=20pt 10pt 20pt 35pt]{\figocc/brassica_reg_map_subset}
+  $$
+  \onslide<2>
+  \paragraph{direct links
+      $\hat{\Omega}_{xy}$}
+  $$
+  \includegraphics[height=.75\textheight,clip=true,trim=20pt 10pt 20pt 35pt]{\figocc/brassica_dir_map_subset}
+  $$
+  \end{overprint}
+  }
+
+%--------------------------------------------------------------------
+\frame{\frametitle{QTL Mapping (all chromosomes)}
+
+  \begin{overprint}
+  \onslide<1>
+  \paragraph{$\hat{B}$}
+  $$
+  \includegraphics[height=.75\textheight]{\figocc/brassica_beta_spring_map}
+  $$
+  \onslide<2>
+  \paragraph{$\hat{\Omega}_{xy}$}
+  $$
+  \includegraphics[height=.75\textheight]{\figocc/brassica_omega_spring_map}
+  $$
+  \end{overprint}
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Prediction improvement}
+
+  \paragraph{Estimated  prediction error  (sd):}
+
+  \bigskip \bigskip 
+  \begin{small}
+    \begin{tabular}{l|rrrrr}
+    \hline
+    \textit{\textsf{Method}} &
+    \textit{\textsf{surv92}}  &
+    \textit{\textsf{surv93}}  &
+    \textit{\textsf{surv94}}  &
+    \textit{\textsf{surv97}}  &
+    \textit{\textsf{surv99}} \\
+    \hline
+    {LASSO} & .730 (.011) & .977 (.009) & .943 (.010) & .947 (.009) & .916
+    (.010) \\
+    {S. Enet}  & \textbf{.697} (.011) &  .987 (.009) & .941  (.011) & .945
+    (.009) & .911 (.010) \\
+    {MRCE} & .759 (.010)  & \textbf{.919} (.003) & 917 (.006) & \textbf{.924} (.004) & .926
+    (.006) \\
+    {SPRING} &  .724 (.010) &  .948 (.008) & \textbf{.848}  (.010) & .940  (.006) &
+    \textbf{.907} (.009) \\
+  \end{tabular}
+
+  \bigskip \bigskip 
+  \begin{tabular}{l|rrr}
+    \hline
+    \textit{\textsf{Method}} &
+    \textit{\textsf{flower0}} &
+    \textit{\textsf{flower4}} &
+    \textit{\textsf{flower8}} \\
+    \hline
+    {LASSO} & .609 (.011) & .501 (.011) & .744 (.011) \\
+    {S. Enet} & .577 (.011) & .478 (.010) & .727 (.012) \\
+    {MRCE} & .591 (.011) & .479 (.011) & .736 (.011) \\
+    {SPRING} & \textbf{.489} (.010) & \textbf{.419} (.009) & \textbf{.616} (.012) \\
+  \end{tabular}
+  
+  \end{small}
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Regulatory motifs detection}
+
+  \paragraph{Expression data.} $n = 5883$ yeast genes \refer{GSK00,LGL12}
+  
+  \bigskip \bigskip \pause
+  \paragraph{'Markers' = Motifs.} Presence / absence of $p = 4^m$ possible motifs with length $m$ within regulatory region (100 bp)
+  
+  \bigskip \bigskip \pause
+  \paragraph{'Traits' = Time course.} 12 times course dataset under 12 different conditions \ra $q = 79$ measurements
+  
+  \bigskip \bigskip \pause
+  \paragraph{Question.} Which motif controls the expression of the genes under which condition.
+
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Motif similarity}
+
+  \paragraph{Hamming distance.} Distance between two motifs
+  $$
+  d_{i, i'} = \# \text{mismatches between motifs } i \text{ and } i'
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Matrix $L$.} Denoting $d^{k,t}_{i i'} = 1$ if $d_{ii'} \leq t$ and zero otherwise, 
+  $$
+  \ell^{k,t}_{ii'} =
+  \begin{cases}
+  \sum_{i'' \in \mathcal M_k} d^{k,t}_{i i''} & \text{if } i = i', \\
+  -1 & \text{if } d^{k,t}_{ii'} = 1, \\
+  0 & \text{otherwise}.
+  \end{cases}
+  $$
+
+  \paragraph{Proposition.}
+  $L$ can be computed recursively (i.e. efficiently).
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Selected motifs: $m = 7$}
+
+  \begin{center}
+   \begin{footnotesize}
+  \begin{tabular}{lc|c@{\hspace{2.5em}}c@{\hspace{2.5em}}c}
+    \textit{Experiment}     &     \textit{\#     time    point}     &
+    \multicolumn{3}{c}{\it \# motifs selected by SPRING} \\
+    \cline{3-5} 
+    & & $m=7$ & $m=8$ & $m=9$ \\
+    \hline 
+    Heat shock & 8 & 30 & 68 & 43 \\
+    Shift from 37$°$ to 25$°$C & 5 & 3 & 11 & 33 \\
+    Mild Heat shock & 4 & 24 & 13 & 23 \\
+    Response to $\text{H}_2 \text{O}_2$ & 10 & 15 & 10 & 21 \\
+    Menadione Exposure & 9 & 16 & 1 & 7 \\
+    DDT exposure 1 & 8 & 15 & 10 & 30 \\
+    DDT exposure 2 & 7 & 11 & 33 & 21 \\
+    Diamide treatment & 8 & 45 & 25 & 35 \\
+    Hyper-osmotic shock & 7 & 36 & 24 & 15 \\
+    Hypo-osmotic shock & 5 & 20 & 8 & 29 \\
+    Amino-acid starvation & 5 & 47 & 30 & 39 \\
+    Diauxic Shift & 7 & 16 & 14 & 20 \\
+    \hline 
+    \multicolumn{2}{l}{\it total number of unique motif inferred} & 87 & 82 & 72 \\
+  \end{tabular}    
+   \end{footnotesize}
+  \end{center}
+
+  {Time-course data and SPRING motifs}
+  
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Comparison with MotifDB}
+
+  \begin{center}
+    \begin{footnotesize}
+    \begin{tabular}{@{}cccc@{}}
+	 \input{\figocc/ResMotif-K7.tex}
+    \end{tabular}
+  \end{footnotesize}
+  \end{center}
+
+  \bigskip
+  {Comparison    of     \texttt{MotifDB}   \refer{Sha13} patterns (top) with motifs with size 7  selected by SPRING (bottom).}
+ 
+}
+
+%--------------------------------------------------------------------
+\section*{Conclusion}
+\frame{\frametitle{Conclusion}
+
+  \paragraph{Multivariate regression.}
+  \begin{itemize}
+   \item A general framework for many genomic analyses.
+   \item (Structured) penalties can induce desirable properties of the estimate (and efficient algorithms)
+   \item Exogenous information can be included via problem-oriented penalties
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Package SPRING.}
+  \begin{itemize}
+   \item Available on the CRAN,
+   \item Associated paper on ArXiv: 'Structured Regularization for Conditional Gaussian Graphical Models', Chiquet \& al. \refer{CMR14}
+  \end{itemize}
+}
+
+%--------------------------------------------------------------------
+  \paragraph{References:} \\~
+  \tiny{
+  \bibliography{/home/robin/Biblio/SSB,/home/robin/Biblio/AST}
+  \bibliographystyle{plain}
+%   \bibliographystyle{/home/robin/LATEX/Biblio/astats}
+  }
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\end{document}
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+
+  \begin{tabular}{cc}
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{}
+
+  \begin{tabular}{cc}
+    & 
+    \hspace{.0025\textwidth}
+    $R =$ 
+    \begin{tabular}{l}
+	 \begin{overprint}    
+	 \onslide<1>
+	 \includegraphics[width=.075\textwidth]{\figocc/R_low_cov}	  
+	 \onslide<2>
+	 \includegraphics[width=.075\textwidth]{\figocc/R_med_cov}	  
+	 \onslide<3>
+	 \includegraphics[width=.075\textwidth]{\figocc/R_high_cov}	  
+	 \end{overprint}
+    \end{tabular}
+    \\
+    \hspace{.05\textwidth}
+    $\Omega =$
+    \begin{tabular}{l}
+    \includegraphics[width=.09\textwidth]{\figocc/omega_cov}
+    \end{tabular}
+    & 
+%     \hspace{.05\textwidth}
+    $B =$ 
+    \begin{tabular}{l}
+	 \begin{overprint}    
+	 \onslide<1>
+	 \includegraphics[width=.09\textwidth]{\figocc/beta_low_cov}	  
+	 \onslide<2>
+	 \includegraphics[width=.09\textwidth]{\figocc/beta_med_cov}	  
+	 \onslide<3>
+	 \includegraphics[width=.09\textwidth]{\figocc/beta_high_cov}	  
+	 \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{}
+
+  \begin{tabular}{cc}
+    & 
+    \hspace{.0025\textwidth}
+    $R =$ 
+    \begin{tabular}{l}
+	 \begin{overprint}    
+	 \onslide<1>
+	 \includegraphics[width=.075\textwidth]{\figocc/R_low_cov}	  
+	 \onslide<2>
+	 \includegraphics[width=.075\textwidth]{\figocc/R_med_cov}	  
+	 \onslide<3>
+	 \includegraphics[width=.075\textwidth]{\figocc/R_high_cov}	  
+	 \end{overprint}
+    \end{tabular}
+    \\
+    \hspace{.05\textwidth}
+    $\Omega =$
+    \begin{tabular}{l}
+    \includegraphics[width=.09\textwidth]{\figocc/omega_str}
+    \end{tabular}
+    & 
+%     \hspace{.05\textwidth}
+    $B =$ 
+    \begin{tabular}{l}
+	 \begin{overprint}    
+	 \onslide<1>
+	 \includegraphics[width=.09\textwidth]{\figocc/beta_low_str}	  
+	 \onslide<2>
+	 \includegraphics[width=.09\textwidth]{\figocc/beta_med_str}	  
+	 \onslide<3>
+	 \includegraphics[width=.09\textwidth]{\figocc/beta_high_str}	  
+	 \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+}
+
+  \begin{overprint}
+  \onslide<>
+  \paragraph{}
+  $$
+  $$
+  \onslide<>
+  \paragraph{}
+  $$
+  $$
+  \end{overprint}
+

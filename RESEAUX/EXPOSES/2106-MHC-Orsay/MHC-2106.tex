@@ -1,0 +1,686 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+% \usepackage[dvipsnames]{xcolor}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd, mathabx}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\bEDD}{BEDD\xspace}
+\newcommand{\Fbar}{\overline{F}}
+\newcommand{\phibar}{\overline{\phi}}
+
+% Directory
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figbayes}{/home/robin/RECHERCHE/BAYES/EXPOSES/FIGURES}
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title[Network Poisson models]{Network Poisson models: \\ ~\\
+From variational estimates to Bayesian inference \\}
+
+\author[S. Robin]{S. Robin \\ \medskip
+joint work with S. Donnet \refer{DoR21}\\ ~}
+
+\institute[]{univ. Paris-Saclay / AgroParisTech / INRAE / Museum National d'Histoire Naturelle \\~ \\~}
+
+\date[MHC, Orsay, Jun.'21]{Mixtures, Hidden Markov Models, Clustering, Orsay, Jun. 2021}
+
+%====================================================================
+%====================================================================
+\maketitle
+%====================================================================
+\frame{\frametitle{Outline} \tableofcontents}
+%====================================================================
+
+%====================================================================
+%====================================================================
+\section{Network Poisson model}
+%\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Interaction networks} 
+
+  \bigskip
+  \paragraph{Counting interactions.} 
+  Consider $n$ entities = nodes ($1 \leq i, j \leq n$)
+  \begin{itemize}
+   \item $Y_{ij} =$ number of interactions observed between $i$ and $j$
+   \item $x_{ij} =$ vector of covariates specific to $(i, j)$
+  \end{itemize}
+  
+  \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.65\textwidth}}
+      \paragraph{Zebra social network:} 
+      \begin{itemize}
+      \item $Y_{ij} =$ number of social contacts between individual $i$ and $j$
+      \item $x_{ij} =$ same sex, same age, same both
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.3\textwidth}}
+      \includegraphics[width=.25\textwidth]{\figbayes/DoR21-Fig6-Zebra}
+    \end{tabular}
+    \\ \pause
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.65\textwidth}}
+      \paragraph{Tree species parasitic network:} 
+      \begin{itemize}
+      \item $Y_{ij} =$ number of fungal parasites shared by species $i$ and $j$
+      \item $x_{ij} =$ taxonomic, distance, genetic distances \\ ~
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.3\textwidth}}
+      \includegraphics[width=.25\textwidth]{\figbayes/DoR21-Fig6-Tree}
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Network Poisson model} 
+
+  \paragraph{Aim.} 
+  \begin{itemize}
+   \item Account / assess the effect of the covariates on the number of interactions
+   \item Exhibit some {\sl residual} structure
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Poisson stochastic blockmodel, with covariates.} \refer{MRV10}
+  \begin{itemize}
+   \item Assume that nodes are spread among $K$ groups (= blocks = clusters)
+   \item $Z_i =$ group membership of node $i$:
+   $$
+   \Pr\{Z_i = k\} = \pi_k, \qquad 1 \leq k \leq K
+   $$
+   \item \pause Emission distribution:
+   $$
+   Y_{ij} \sim \Pcal(\exp(\alpha_{Z_iZ_j} + x_{ij}^\intercal \beta))
+   $$
+   \item $\alpha_{k\ell} =$ effect of the group memberships
+   \item $\beta =$ vector of regression coefficients
+  \end{itemize}
+  
+  \bigskip \pause
+  \paragraph{Unknowns:} 
+  Parameter $\theta = (\pi, \alpha, \beta)$ + latent $Z = \{Z_i\}_{1 \leq i \leq n}$
+
+}
+
+%====================================================================
+%====================================================================
+\section{Variational inference}
+%\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Variational approximation (1/2)} 
+
+  \paragraph{Stochastic blockmodels (SBM) = incomplete data models.}
+  \begin{itemize}
+  \setlength{\itemsep}{1.25\baselineskip}
+  \item Intractable likelihood: $\displaystyle{p_\theta(Y) = \sum_{z \in \llbracket K \rrbracket^n} p_\theta(Y \mid Z=z) P_\theta(Z = z)}$
+  \item \pause Intractable conditional distribution: $p_\theta(Z \mid Y)$ (no nice factorization) \\
+  \ra Cannot resort to a regular EM algorithm
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Variational approximation \refer{WaJ08,BKM17}.}
+  \begin{itemize}
+  \setlength{\itemsep}{1.25\baselineskip}
+  \item \pause Replace the E-step with an approximation step (VE-step):
+  $$
+  q^{h+1} = \arg\min_{q \in \Qcal} KL\left(q(Z) \;||\; p_{\theta^h}(Z \mid Y)\right)
+  $$
+  \item \pause VEM aims at maximizing a lower bound of the log-likelihood ('ELBO'):
+  \begin{align*}
+  J(Y; \theta, q) 
+  & = \log p_\theta(Y) - KL\left(q(Z) \;||\; p_\theta(Z \mid Y)\right) \\
+  \\
+  & = \Esp_q6 \left[\log p_\theta(Y, Z)\right] - \Esp_q \left[\log q(Z)\right]
+  \end{align*}
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Variational approximation (2/2)} 
+
+  \paragraph{Approximation class.}   
+  Standard choice for SBMs = product-form distribution \refer{DPR08}: 
+  $$
+  \Qcal = \left\{q: q(Z) = \prod_i q_i(Z_i)\right\}
+  $$
+  \ra mean-field approximation
+
+  \bigskip \bigskip \pause
+  \paragraph{Theoretical guaranties.}
+  \begin{itemize}
+  \setlength{\itemsep}{1.25\baselineskip}
+  \item Consistency and asymptotic normality for binary SBMs without covariates \refer{CDP12,BCC13,MaM15}
+  \item No generic property for variational estimates
+  \item No measure of uncertainty for the estimates
+  \item (But VEM runs fast and is $\sim $ easy to implement, see e.g. \url{blockmodels} \refer{Leg16})
+  \end{itemize}
+
+  \bigskip \pause
+  \paragraph{Aim of this work.} 
+  Use frequentist VEM inference to achieve (efficient) Bayesian inference for Poisson SBM with covariates
+  
+}
+
+%====================================================================
+%====================================================================
+\section{From VEM to SMC}
+%\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Bayesian framework} 
+
+  \paragraph{Frequentist inference.} VEM provides
+  $$
+  (\widetilde{\theta}, \qt) = \arg\max_{\theta, q \in \Qcal} J(Y; \theta, q)
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Bayesian inference.} 
+  \begin{itemize}
+  \setlength{\itemsep}{1.25\baselineskip}
+  \item Prior distributions
+  $$
+  \pi \sim \Dcal(e_0), \qquad \qquad \gamma := (\alpha, \beta) \sim \Ncal(\gamma_0, V_0)
+  $$
+  \item Aim = (sample from the) posterior distributions
+  $$
+  p(\theta \mid Y), \qquad \qquad p(\theta, Z \mid Y)
+  $$
+  \item \pause Two-step inference: \\ ~ \\
+    1 -- derive a proxy of the posterior $p(\theta \mid Y)$ based on $(\widetilde{\theta}, \qt)$ \\ ~ \\
+    2 -- use sequential Monte-Carlo to get a sample from the true posterior
+  \end{itemize}
+
+}
+
+% %====================================================================
+% \frame{\frametitle{Guesstimate of the posterior variance} 
+% 
+%   \paragraph{Louis formulas \refer{Lou82}.} 
+%   Compute Fisher information using EM side-products:
+%   $$
+%   \partial^2_{\theta^2} \log p_\theta(Y) 
+%   = \Esp\left(\partial^2_{\theta^2} \log p_\theta(Y, Z) \mid Y \right) 
+%   + \Var\left(\partial_\theta \log p_\theta(Y, Z) \mid Y \right)
+%   $$
+%   
+%   \bigskip \bigskip \pause
+%   \paragraph{Approximate variance for VEM estimates.} Take
+%   \begin{align*}
+%   \widetilde{\Var}\left(\widetilde{\theta}\right)^{-1} 
+%   & \simeq \Esp_{\qt}\left(\partial^2_{\theta^2} \log p_\theta(Y, Z) \right) 
+%   + \Var_{\qt}\left(\partial_\theta \log p_\theta(Y, Z) \right) \\
+%   & \simeq \Esp_{\qt}\left(\partial^2_{\theta^2} \log p_\theta(Y, Z) \right) 
+%   & & \text{as } \Var_{\qt}(\cdot) \simeq 0.
+%   \end{align*}
+%   
+%   \bigskip \bigskip \pause
+%   \paragraph{Approximate posterior.} Combine the prior with $\widetilde{\Var}\left(\widetilde{\theta}\right)$ to define the proxy
+%   $$
+%   \pt(\pi) = \Dcal(\widetilde{e}), \qquad \qquad
+%   \pt(\gamma) = \Ncal(\widetilde{\gamma}, \widetilde{V}).
+%   $$
+%   
+% }
+
+%====================================================================
+\frame{\frametitle{Approximate posterior distribution} 
+
+  \paragraph{No simple variational \emphase{Bayes} algorithm here.}
+  But variational approximation + Taylor expansion yields
+  \begin{align*}
+    p(\theta \mid Y) 
+    & \propto \; \exp\left(\log p(\theta) + \log p_\theta(Y)\right) \\ ~ \\
+    & \simeq \; \exp\left(\log p(\theta) + J(Y; \theta, \widetilde{q})\right) \\~ \\
+    & \simeq \; \exp\left(\log p(\theta) + J(Y; \widetilde{\theta}, \widetilde{q}) + \frac12 (\theta - \widetilde{\theta})^\intercal \nabla^2_\theta\left(J(Y; \theta, \widetilde{q})\right) (\theta - \widetilde{\theta}) \right)
+  \end{align*}
+  where $\nabla^2(\cdot)$ stands for the Hessian matrix.
+
+  \bigskip \bigskip \pause
+  \paragraph{Approximate posterior.} Because $\nabla^2_\theta\left(J\right)$ is block diagonal, we end up with the proxy \refer{DoR21}
+  $$
+  \pt(\theta) = \Dcal(\pi; \widetilde{e}) \times \Ncal(\gamma; \widetilde{\gamma}, \widetilde{V}).
+  $$
+  and we set $\pt(Z) = \qt(Z)$.
+}
+
+%====================================================================
+\frame{\frametitle{Sequential Monte-Carlo} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.6\textwidth}}
+      \paragraph{General principle.} \refer{DDJ06}
+      \begin{itemize}
+      \setlength{\itemsep}{1.25\baselineskip}
+      \item $\textcolor{red}{\pt} = $ proposal, $\textcolor{blue}{p^*} = $ target
+      \item Intermediate distributions
+      $$
+      \pt = p_0, p_1, ..., p_H = p^*
+      $$
+      \item Iteratively 
+      use $p_{h-1}$ to get a weighted sample from $p_h$
+      $$
+      \Ecal_h = \{(U_h^m; w_h^m)\}_{1 \leq m \leq M}
+      $$
+      where $U = (\theta, Z)$.
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.4\textwidth}}
+      \includegraphics[width=.35\textwidth]{../FIGURES/FigVBEM-IS-Tempering.pdf}
+    \end{tabular}
+  \end{tabular}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Distribution path.} $0 = \rho_0 < \rho_1 < \dots < \rho_{H-1} < \rho_H = 1$,
+  \begin{align*}
+     p_h(U) & \propto \; \pt(U)^{\emphase{{1-\rho_h}}} \; \times \; p(U | Y)^{\emphase{{\rho_h}}} \\
+%      \\
+     & \propto \; \pt(U) \; \times \; r(U)^{\emphase{{\rho_h}}}, 
+     & r(U) & = \frac{p(U) p(Y | U)}{\pt(U)}
+  \end{align*}
+  where $\rho_h$ can be tuned adaptively to guaranty a prescribed ESS at each step.
+
+}
+
+%====================================================================
+\frame{\frametitle{What do we gain?} 
+
+  \begin{itemize}
+  \setlength{\itemsep}{2\baselineskip}
+  \item \paragraph{Time:} synthetic data ($n = 40$, $K=2$, $d=4$ covariates, $M=2000$ particles)
+  $$
+  \begin{array}{c}
+    \includegraphics[width=.4\textwidth]{\figbayes/DoR21-Fig1-simu-rho} \\
+    \text{\textcolor{blue-ggplot}{starting from $\pt(U)$}, \qquad \qquad  \textcolor{awesome}{starting from $p(U)$}}
+  \end{array}
+  $$
+  \item \pause \paragraph{All relevent quantities} posterior inference
+  \end{itemize}
+
+}
+%====================================================================
+\frame{\frametitle{Model selection} 
+
+  \paragraph{Posterior distribution of the number of groups.} Given a prior $P(K)$, we look for
+  $$
+  P(K \mid Y) \; \propto \; P(K)p(Y \mid K)
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Marginal likelihood.} \refer{DDJ06} introduce the estimate
+  $$
+  \widehat{p}(Y \mid K) = \prod_{h=1}^H \sum_m W_h^m r(U_h^m)^{\rho_h - \rho_{h-1}}
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Model averaging.} $P(K \mid Y)$ can be use to choose $K$ or to average with respect to it, e.g.
+  $$
+  p(\beta \mid Y) = \sum_k P(K \mid Y) \; p(\beta \mid Y, K)
+  $$
+
+}
+
+%====================================================================
+%====================================================================
+\section{Illustrations}
+%\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Tree network} 
+
+  \paragraph{Data.} 
+  $n = 51$ tree species, $d = 3$ covariates (distances), $Y_{ij} =$ number of shared parasites
+  
+  \bigskip \bigskip \pause
+  \paragraph{Sampling path and model selection.} 
+  $$
+  \begin{array}{ccc}
+    \text{Model selection} & & \text{Distribution path ($K = 5$)} \\
+    \includegraphics[width=.3\textwidth]{\figbayes/DoR21-Fig7-logpY} & \qquad &
+    \includegraphics[width=.3\textwidth]{\figbayes/DoR21-Fig7-rho} \\
+    \text{\textcolor{awesome}{ELBO}, \textcolor{amethyst}{ICL}, \textcolor{green-ggplot}{$\log p(Y \mid K)$}} & & 
+    \text{$\rho_h = f(h)$}
+  \end{array}
+  $$
+  
+}
+
+%====================================================================
+\frame{\frametitle{Posterior for the regression coefficients} 
+
+  $$
+  \begin{array}{ccc}
+    \text{taxonomy ($\beta_1$)} & \text{geography ($\beta_2$)} & \text{phylogeny ($\beta_3$)} \\
+    \includegraphics[width=.25\textwidth]{\figbayes/DoR21-Fig7-beta1} & 
+    \includegraphics[width=.25\textwidth]{\figbayes/DoR21-Fig7-beta2} & 
+    \includegraphics[width=.25\textwidth]{\figbayes/DoR21-Fig7-beta3} \\
+    \multicolumn{3}{c}{\text{\textcolor{awesome}{proxy $\pt(\beta_j)$}, 
+    \qquad \textcolor{green-ggplot}{posterior $p(\beta_j \mid Y, \widehat{K})$} \qquad \textcolor{amethyst}{averaged $p(\beta_j \mid Y)$} (dotted)}}
+  \end{array}
+  $$
+  \bigskip 
+  $$
+  P(\text{taxonomy} \mid Y) = 52.1\%, \qquad 
+  P(\text{taxonomy + geography} \mid Y) = 46.8\%
+  $$
+  
+  \bigskip \bigskip \pause 
+  \paragraph{Why does it take 25 steps to go from $\pt(\beta)$ to $p(\beta \mid Y)$?}
+  
+  \begin{itemize}
+  \item Partly because of correlations:
+  $$
+  \begin{array}{l|ccc}
+    & (\beta_1, \beta_2) & (\beta_1, \beta_3) & (\beta_2, \beta_3) \\
+    \hline
+    \pt(\beta) & -0.037 & -0.010 & 0.235 \\
+    p(\beta \mid Y) & -0.139 & -0.017 & 0.325
+  \end{array}
+  $$
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Posterior distribution of the latent variables} 
+
+  \begin{itemize}
+  \item ... but mostly because of the sampling of the $Z_i$'s.
+  \end{itemize}
+  
+  \bigskip \pause 
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.6\textwidth}}
+      The proxy $\pt$ assumes their conditional independence:
+      $$
+      \pt(Z) = \prod_i \pt(Z_i)
+      $$
+      \bigskip \pause \\
+      At each step of the SMC, we may evaluate their mutual information
+      $$
+      MI_h(Z) = KL\left(p_h(Z) \;||\; \prod_i p_h(Z_i)\right)
+      $$
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{c}
+      \includegraphics[width=.35\textwidth]{\figbayes/DoR21-Fig7-MI} \\
+      $MI_h = f(h)$
+    \end{tabular}
+  \end{tabular}
+
+}
+
+
+%====================================================================
+%====================================================================
+\section{Conclusion}
+%\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{To summarize} 
+
+  \paragraph{Combining VEM with SMC.}
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item VEM is efficient and empirically accurate, but does not come along with desirable guaranties
+    \item SMC enable to sample from the posterior, and is efficient provided that the initial distribution is not to far from the target
+    \item Combining the two enables us to make proper statistical inference
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Available extensions.}
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item \pause $K=1$ corresponds to a standard Poisson regression model, with no residual structure \\
+    \ra $P(K = 1 \mid Y)$ is a goodness-of-fit measure for the regression
+    \item \pause Stochastic block models are specific instances of $w$-graph models \\
+    \ra Averaging over $K$ provides an estimation of the 'residual graphon' \refer{LaR16}
+    \item \pause The methodology can be extended to many other models such as logistic regression, latent class analysis, ... \refer{DoR17}
+  \end{itemize}
+
+}
+
+% %====================================================================
+% \frame{\frametitle{Some comments} 
+% 
+% }
+
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References}
+  {
+   \tiny
+   \bibliography{/home/robin/Biblio/BibGene}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+\backupbegin
+%====================================================================
+
+%====================================================================
+%====================================================================
+\section*{Backup}
+%====================================================================
+\frame{\frametitle{Sequential importance sampling scheme}
+
+  Denote
+  $$
+  \emphase{U = (\theta, Z)}, \qquad
+  \pi = \text{ prior}, \qquad
+  \ell = \text{ likelihood}
+  $$
+
+  \bigskip
+  \paragraph{Distribution path:} 
+    set $0 = \rho_0 < \rho_1 < \dots < \rho_{H-1} < \rho_H = 1$,
+  \begin{align*}
+     p_h(U) & \propto \pt(U)^{\emphase{{1-\rho_h}}} \; \times \; p(U | Y)^{\emphase{{\rho_h}}} \\
+%      \\
+     & \propto \pt(U) \; \times \; r(U)^{\emphase{{\rho_h}}}, 
+     & r(U) & = \frac{\pi(U) \ell(Y | U)}{\pt(U)}
+  \end{align*}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Sequential sampling.} At each step $h$, provides
+  $$
+  \Ecal_h = \{(U_h^m, w_h^m)\}_m = \text{ weighted sample of } p_h
+  $$
+
+  \bigskip \pause
+  \paragraph{Question.} 
+  How to tune $\{\rho_h\}$ or $H$ to keep each sampling step efficient?
+
+}
+  
+%====================================================================
+\frame{\frametitle{Proposed algorithm}
+
+  \begin{description}
+   \item[Init.:] Sample $(U_0^m)_m$ iid $\sim \pt$, $w_0^m = 1$ \\ ~
+   \pause
+   \item[Step $h$:] Using the previous sample $\Ecal_{h-1} = \{(U_{h-1}^m, w_{h-1}^m)\}$ \\ ~
+   \pause
+   \begin{enumerate}
+    \item set $\rho_h$ such that $cESS(\Ecal_{h-1}; p_{h-1}, p_h) = \emphase{\tau_1}$ \\ ~
+    \pause
+    \item compute $w_h^m = \emphase{w_{h-1}^m \times (r_h^m)^{\rho_h - \rho_{h-1}}}$ \\ ~
+    \pause
+    \item (\footnote{To avoid degeneracy. Weights set to 1 after it.}) if $ESS_h = \overline{w}_h^2 / \overline{w_h^2} < \emphase{\tau_2}$, resample the particles  \\ ~
+    \pause
+    \item (\footnote{$K_h$ has stationary distribution \emphase{$p_h$} (e.g. Gibbs sampler). Only propagation: no convergence needed}) propagate the particles $U_h^m \sim \emphase{K_h}(U_h^m | U_{h-1}^m)$ 
+   \end{enumerate} ~ 
+   \pause
+   \item[Stop:] When $\rho_h$ reaches 1.
+  \end{description}
+  
+  \bigskip \pause
+  \paragraph{Justification \refer{DDJ06}.} At each step $h$, construct a distribution for the whole particle path with marginal $p_h$.
+
+}
+  
+%====================================================================
+\frame{\frametitle{Adaptive step size}
+
+  \paragraph{Conditional ESS:} efficiency of sample $\Ecal$ from $q$ for distribution $p$
+  $$
+  cESS(\Ecal; q, p) = \frac{M \left(\sum_m W^m a^m\right)^2}{\sum_m W^m (a^m)^2}, 
+  \qquad a^m = \frac{p(U^m)}{q(U^m)}
+  $$
+  \ra Step 1: find next $p_h$ s.t. sample $\Ecal_{h-1}$ is reasonably efficient.
+  
+%   \bigskip \bigskip \bigskip \pause
+%   \paragraph{ESS:} intrinsic efficiency of a sample 
+%   $$
+%   ESS(\{(U^m, w^m)\}) = \frac{M \left(\sum_m w^m\right)^2}{\sum_m (w^m)^2}
+%   $$
+%   \ra Step 1c: resample if to few particles actually contribute
+  
+  \bigskip \bigskip \pause
+  Update formula of the weights
+  $$
+  cESS(\Ecal_{h-1}; p_{h-1}, p_h) 
+  = 
+  \frac
+  {M \left[\sum_m W_{h-1}^m \; (\emphase{r^m_{h-1}})^{\rho_h -\rho_{h-1}}\right]^2}
+  {\sum_m W_{h-1}^m \; (\emphase{r^m_{h-1}})^{2\rho_h - 2\rho_{h-1}}}
+  $$
+  \ra can be computed for any $\rho_h$ \emphase{before sampling}.
+  
+  \bigskip
+  \ra $\rho_h$ tuned to meet $\tau_1$, which controls the step size $\rho_h - \rho_{h-1}$ (and $H$)
+}
+
+%====================================================================
+\frame{\frametitle{'Residual graphon'}
+
+  $$
+  \includegraphics[width=.8\textwidth]{\figbayes/DoR21-JRSSC-Fig8}
+  $$
+  
+}
+
+%====================================================================
+\frame{\frametitle{Accounting for individual effects}
+
+  \paragraph{Model posterior probabilities.}
+  \begin{center}
+%   {\small \begin{tabular}{l|rr|rr|rr|rr}
+%     & \multicolumn{8}{c}{Networks} \\
+%     & & & & & & & & \\
+%     & \multicolumn{2}{c|}{Trees} & \multicolumn{2}{c|}{Flowers} & \multicolumn{2}{c|}{Zebras} & \multicolumn{2}{c}{Onagers} \\
+%     & \multicolumn{2}{c|}{$(n=51)$} & \multicolumn{2}{c|}{$(n=105)$} & \multicolumn{2}{c|}{$(n=28)$} & \multicolumn{2}{c}{$(n=29)$} \\    
+%     & & & & & & & & \\    
+%     Model $M$ & ($a$) & ($b$) & ($a$) & ($b$) & ($a$) & ($b$) & ($a$)& ($b$) \\
+%     \hline
+%     & & & & & & & & \\
+%     1st & -1382.9 & 0 & -3734.1 & 0 & -358.0 & 0 & -699.7 & 0 \\
+%     1st + 2nd & -1383.0 & 0 & -- & -- & -362.2 & 0 & -- & -- \\
+%     & & & & & & & & \\
+%     \hline
+%     & & & & & & & & \\
+%     degree & -1288.1 & 0 & -3661.0 & 98.4 & -333.3 & 28.9 & -594.1 & 3.7\\ 
+%     degree + 1st & -1263.7 & 97.4 & -3665.1 & 1.6 & -332.4 & 71.1 & -590.9 & 96.3\\ 
+%     degree + 1st + 2nd & -1267.3 & 2.6 & -- & -- & -- & -- & -- & -- \\ 
+%     & & & & & & & & \\
+%     \hline
+%     & & & & & & & & \\
+%     indiv. & -1505.9 & 0 & -4165.2 & 0 & -428.7 & 0 & -718.2 & 0 \\ 
+%     indiv. + 1st & -1443.3 & 0 & -4186.7 & 0 & -429.5 & 0 & -685.2 & 0 \\ 
+%     indiv. + 1st + 2nd & -1446.1 & 0 & -- & -- & -- & -- & -- & -- \\
+%   \end{tabular} }
+  {\small \begin{tabular}{lrrrr}
+    & \multicolumn{4}{c}{Networks} \\
+    & & & \\
+    & Trees &  Flowers &  Zebras &  Onagers \\
+    Model $M$ & $(n=51)$ & $(n=105)$ & $(n=28)$ & $(n=29)$ \\    
+    & & & \\    
+    \hline
+    & & & \\    
+    1st best covariate & 0 & 0 & 0 & 0 \\
+    1st + 2nd & 0 & -- & 0 & -- \\
+    & & & \\    
+    \hline
+    & & & \\    
+    degree & 0 & 98.4 & 28.9 & 3.7\\ 
+    degree + 1st & 97.4 & 1.6 & 71.1 & 96.3\\ 
+    degree + 1st + 2nd & 2.6 & -- & -- & -- \\ 
+    & & & \\    
+    \hline
+    & & & \\    
+    indiv. & 0 & 0 & 0 & 0 \\ 
+    indiv. + 1st & 0 & 0 & 0 & 0 \\ 
+    indiv. + 1st + 2nd & 0 & -- & -- & -- \\
+  \end{tabular} }
+  \end{center}
+  
+  \bigskip 
+  {
+  \begin{itemize}
+%   \item $(a) = \log P(Y \mid M)$, $(b) = P(M \mid Y)$
+%   \item 1st (2nd) = 1st (2nd) best covariate
+  \item Prior variance for the regression coefficients: $v_0 = 10$
+  \end{itemize}
+  }
+
+}
+
+%====================================================================
+\backupend
+%====================================================================
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+  
+  \hspace{-.025\textwidth}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

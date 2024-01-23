@@ -1,0 +1,831 @@
+Segmentation (and classification) of point processes
+S. Robin
+joint work with C. Dion-Blanc & E. Lebarbier and A. Bonnet & C. Matias
+Sorbonne université
+
+HCERES, LPSM, Dec. 2023
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+1 / 13
+
+Change-point detection
+
+Point process on t P r0, 1s.
+Event times:
+0 ă T1 ă . . . Ti ă . . . Tn ă 1;
+Counting process:
+Nptq “
+
+n
+ÿ
+
+ItTi ď tu.
+
+i“1
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+2 / 13
+
+Change-point detection
+
+Bat cries (night of the 17 jul. 2019)a
+
+Point process on t P r0, 1s.
+Event times:
+0 ă T1 ă . . . Ti ă . . . Tn ă 1;
+Counting process:
+Nptq “
+
+n
+ÿ
+
+ItTi ď tu.
+
+i“1
+
+a
+
+S. Robin
+
+source: Vigie-Chiro program, CESCO-MNHN
+
+Segmentation of point processes
+
+HCERES
+
+2 / 13
+
+Change-point detection
+
+Bat cries (night of the 17 jul. 2019)a
+
+Point process on t P r0, 1s.
+Event times:
+0 ă T1 ă . . . Ti ă . . . Tn ă 1;
+Counting process:
+Nptq “
+
+n
+ÿ
+
+ItTi ď tu.
+
+i“1
+
+Change-point detection.
+Look for times
+0 ă τ1 ă ¨ ¨ ¨ ă τK ´1 ă 1
+where the distribution of N changes abruptly.
+
+S. Robin
+
+a
+
+source: Vigie-Chiro program, CESCO-MNHN
+
+Segmentation of point processes
+
+HCERES
+
+2 / 13
+
+Change-point detection
+
+Kilauea eruptions (from 1750 to 1984)a
+
+Point process on t P r0, 1s.
+Event times:
+0 ă T1 ă . . . Ti ă . . . Tn ă 1;
+Counting process:
+Nptq “
+
+n
+ÿ
+
+ItTi ď tu.
+
+i“1
+
+Change-point detection.
+Look for times
+0 ă τ1 ă ¨ ¨ ¨ ă τK ´1 ă 1
+where the distribution of N changes abruptly.
+
+S. Robin
+
+a
+
+source: [HB17]
+
+Segmentation of point processes
+
+HCERES
+
+2 / 13
+
+Change-point detection
+
+Kilauea eruptions (from 1750 to 1984)a
+
+Point process on t P r0, 1s.
+Event times:
+0 ă T1 ă . . . Ti ă . . . Tn ă 1;
+Counting process:
+Nptq “
+
+n
+ÿ
+
+ItTi ď tu.
+
+i“1
+
+Change-point detection.
+Look for times
+0 ă τ1 ă ¨ ¨ ¨ ă τK ´1 ă 1
+where the distribution of N changes abruptly.
+
+S. Robin
+
+a
+
+source: [HB17]
+
+Segmentation of point processes
+
+HCERES
+
+2 / 13
+
+Change-point detection
+Three typical steps.
+1. Propose a set of reasonably realistic models;
+2. Design an (efficient) algorithm to get the parameter estimates;
+3. Choose among the models.
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+3 / 13
+
+Change-point detection
+Three typical steps.
+1. Propose a set of reasonably realistic models;
+2. Design an (efficient) algorithm to get the parameter estimates;
+3. Choose among the models.
+
+Example.
+1. Nptq is a Poisson process with piece-wise constant intensity function λ:
+λptq “ λk
+
+if
+
+τk´1 ď t ă τk .
+
+Parameters: change-points τ “ pτk q1ďkďK ´1 and intensities λ “ pλk q1ďkďK .
+2. For a given number of segments K find
+p τpq “ arg min CK pN; τ, λq,
+pλ,
+τ,λ
+
+e.g.
+
+CK pN; τ, λq “ ´ log pK ,τ,λ pNq;
+
+3. Choose the number of segments K .
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+3 / 13
+
+Change-point detection
+
+Discrete-time.
+§ Data = tYt ut“1,...n (independent);
+§ Change-points: τ P T Ă Jn ´ 1KK ´1 ;
+§ τk´1 ă t ď τk : Yt „ N pµk , 1q.
+Parameters: µk continuous, τk discrete.
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+4 / 13
+
+Change-point detection
+
+Discrete-time.
+§ Data = tYt ut“1,...n (independent);
+§ Change-points: τ P T Ă Jn ´ 1KK ´1 ;
+§ τk´1 ă t ď τk : Yt „ N pµk , 1q.
+Parameters: µk continuous, τk discrete.
+
+T “ ’segmentation space’:
+T “ tτ P Jn ´ 1KK ´1 : 1 ď τ1 ă . . . τK ´1 ă nu,
+
+cardpT q “
+
+´n ´ 1¯
+K ´1
+
+.
+
+Dynamic programming (DP) recovers the optimal τpk in Opn2 q (or less), as long as the contrast
+(e.g. neg-log-likelihood) is additive [AL89].
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+4 / 13
+
+Change-point detection in a Poisson process
+Model. Poisson process with piece-wise constant intensity.
+
+Independence of disjoint segments: classical contrasts (negative log-likelihood, least squares, . . . )
+are additive:
+CK pN; τ, λq “
+
+K
+ÿ
+
+cpNrτk´1 , τk s, λk q
+
+k“1
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+5 / 13
+
+Change-point detection in a Poisson process
+Model. Poisson process with piece-wise constant intensity.
+
+Independence of disjoint segments: classical contrasts (negative log-likelihood, least squares, . . . )
+are additive:
+CK pN; τ, λq “
+
+K
+ÿ
+
+cpNrτk´1 , τk s, λk q
+
+k“1
+
+Segmentation space.
+T “ tτ P r0, 1sK ´1 : 1 ă τ1 ă . . . τK ´1 ă 1u
+so DP does not apply
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+5 / 13
+
+Change-point detection in a Poisson process
+[DBLR23]: T can be partitioned according to the
+number of events in each segments:
+ď
+T “
+Tν ,
+ν
+
+where
+Tν “ tτ P r0, 1sK ´1 : @k, Npτk q´Npτk´1 q “ νk u
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+6 / 13
+
+Change-point detection in a Poisson process
+[DBLR23]: T can be partitioned according to the
+number of events in each segments:
+ď
+T “
+Tν ,
+ν
+
+where
+Tν “ tτ P r0, 1sK ´1 : @k, Npτk q´Npτk´1 q “ νk u
+
+Right: K “ 3, τ “ pτ1 , τ2 q, NpT q “ 10.
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+6 / 13
+
+Change-point detection in a Poisson process
+[DBLR23]: T can be partitioned according to the
+number of events in each segments:
+ď
+T “
+Tν ,
+ν
+
+where
+Tν “ tτ P r0, 1sK ´1 : @k, Npτk q´Npτk´1 q “ νk u
+
+Right: K “ 3, τ “ pτ1 , τ2 q, NpT q “ 10.
+
+[DBLR23]: Classical contrasts are concave wrt to τ in each Tν ,
+
+§ Optimal change points are located at event times:
+´
+τp P tT1 , T2´ , T2 , . . . TNpT
+uK ´1
+q
+
+§ and τp can be recovered by DP in OpNpT q2 q.
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+6 / 13
+
+Change-point detection in a Poisson process: Model selection
+Thining property of Poisson processes.
+§ tNptqu „ PPpλptqq
+§ Sample event times (with prob. v )
+§ Store the remaining events
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+7 / 13
+
+Change-point detection in a Poisson process: Model selection
+Thining property of Poisson processes.
+§ tNptqu „ PPpλptqq
+§ Sample event times (with prob. v )
+§ Store the remaining events
+tN L ptqu „ PPpv λptqq,
+
+S. Robin
+
+tN T ptqu „ PPpp1 ´ v qλptqq,
+
+tN L ptqu K tN T ptqu
+
+Segmentation of point processes
+
+HCERES
+
+7 / 13
+
+Change-point detection in a Poisson process: Model selection
+Thining property of Poisson processes.
+§ tNptqu „ PPpλptqq
+§ Sample event times (with prob. v )
+§ Store the remaining events
+tN L ptqu „ PPpv λptqq,
+
+tN T ptqu „ PPpp1 ´ v qλptqq,
+
+tN L ptqu K tN T ptqu
+
+Consequence. If λptq piece-wise constant with change-points τ “ pτk q and intensities λ “ pλk q,
+then
+§ λL ptq piece-wise constant with change-points pτk q and intensities pv λk q,
+§ λT ptq piece-wise constant with change-points pτk q and intensities pp1 ´ v qλk q,
+§ tN L ptqu K tN T ptqu.
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+7 / 13
+
+Change-point detection in a Poisson process: Model selection
+Thining property = ideal setting for cross-validation, as tN L ptqu K tN T ptqu.
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+8 / 13
+
+Change-point detection in a Poisson process: Model selection
+Thining property = ideal setting for cross-validation, as tN L ptqu K tN T ptqu.
+Kilauea eruptions
+
+Model selection.
+Choose K using cross-validation [DBLR23].
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+8 / 13
+
+Change-point detection in a Poisson process: Extensions
+Marked Poisson process: a mark Xi is associated with each event time Ti .
+§ Provided the marks are independent, with segment-dependent distribution, the whole
+machinery (inference + model selection) applies [DBLR23].
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+9 / 13
+
+Change-point detection in a Poisson process: Extensions
+Marked Poisson process: a mark Xi is associated with each event time Ti .
+§ Provided the marks are independent, with segment-dependent distribution, the whole
+machinery (inference + model selection) applies [DBLR23].
+
+Segmentation and classification.
+Cluster segments according to different underlying
+behaviors.
+
+S. Robin
+
+Kilauea eruptions
+
+Segmentation of point processes
+
+HCERES
+
+9 / 13
+
+Change-point detection in a Poisson process: Extensions
+Marked Poisson process: a mark Xi is associated with each event time Ti .
+§ Provided the marks are independent, with segment-dependent distribution, the whole
+machinery (inference + model selection) applies [DBLR23].
+
+Segmentation and classification.
+Cluster segments according to different underlying
+behaviors.
+
+Kilauea eruptions
+
+Reduced number L ă K of intensities:
+λk P tµ1 , . . . , µL u
+and πℓ “ Prtλk “ µℓ u.
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+9 / 13
+
+Change-point detection in a Poisson process: Extensions
+Marked Poisson process: a mark Xi is associated with each event time Ti .
+§ Provided the marks are independent, with segment-dependent distribution, the whole
+machinery (inference + model selection) applies [DBLR23].
+
+Segmentation and classification.
+Cluster segments according to different underlying
+behaviors.
+
+Kilauea eruptions
+
+Reduced number L ă K of intensities:
+λk P tµ1 , . . . , µL u
+and πℓ “ Prtλk “ µℓ u.
+Estimation: EM algorithm including DP for the
+estimation (M) step [PRLD07].
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+9 / 13
+
+Segmentation in a Hawkes process
+Modeling. Many counting process display a self-exciting behavior (events generate – or prevent –
+new events), which the Poisson process does not account for.
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+10 / 13
+
+Segmentation in a Hawkes process
+Modeling. Many counting process display a self-exciting behavior (events generate – or prevent –
+new events), which the Poisson process does not account for.
+
+Hawkes process. Counting process Nptq with intensity conditional on the past events:
+żt
+ÿ
+hpt ´ sqdNpsq “ m `
+hpt ´ Ti q.
+λptq “ m `
+0
+
+i:Ti ăt
+
+§ m “ baseline intensity,
+§ f “ kernel, e.g. exponential: f puq “ ae ´bu .
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+10 / 13
+
+Segmentation in a Hawkes process
+Modeling. Many counting process display a self-exciting behavior (events generate – or prevent –
+new events), which the Poisson process does not account for.
+
+Hawkes process. Counting process Nptq with intensity conditional on the past events:
+żt
+ÿ
+hpt ´ sqdNpsq “ m `
+hpt ´ Ti q.
+λptq “ m `
+0
+
+i:Ti ăt
+
+§ m “ baseline intensity,
+§ f “ kernel, e.g. exponential: f puq “ ae ´bu .
+
+Change point detection in the baseline. Change-points 0 ă τ1 ă ¨ ¨ ¨ ă τK ´1 ă 1:
+ÿ
+λptq “ mk `
+hpt ´ Ti q,
+if τk´1 ă t ď τk .
+i:Ti ăt
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+10 / 13
+
+Segmentation in a Hawkes process: Discrete time
+Non-additive contrast. Disjoint time segments are not independent, so classical contrasts (e.g.
+negative log-likelihood, . . . ) are not additive anymore.
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+11 / 13
+
+Segmentation in a Hawkes process: Discrete time
+Non-additive contrast. Disjoint time segments are not independent, so classical contrasts (e.g.
+negative log-likelihood, . . . ) are not additive anymore.
+
+Discrete time Hawkes process. Consider discrete times ti “ i{n and define
+¨
+˛
+ÿ
+j
+Yi „ P ˝µ `
+αβ Yi´j ‚
+jě1
+
+(taking µ “ m{n, β “ e ´b{n ).
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+11 / 13
+
+Segmentation in a Hawkes process: Discrete time
+Non-additive contrast. Disjoint time segments are not independent, so classical contrasts (e.g.
+negative log-likelihood, . . . ) are not additive anymore.
+
+Discrete time Hawkes process. Consider discrete times ti “ i{n and define
+¨
+˛
+ÿ
+j
+Yi „ P ˝µ `
+αβ Yi´j ‚
+jě1
+
+(taking µ “ m{n, β “ e ´b{n ).
+
+Makovian reformulation.
+§ tYi uiě1 is not a Markov chain,
+§ but, defining
+U1 “ 0,
+
+Ui “ αYi´1 ` βUi´1 ,
+
+tpYi , Ui quiě1 is a Markov chain.
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+11 / 13
+
+Segmentation and classification in a Hawkes process: Discrete time
+Hidden Markov models (HMM) provide a convenient framwork for segmentation and
+classification.
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+12 / 13
+
+Segmentation and classification in a Hawkes process: Discrete time
+Hidden Markov models (HMM) provide a convenient framwork for segmentation and
+classification.
+
+Discrete time Hawkes HMM.
+§ Hidden path: tZi uiď1 “ homogeneous Markov chain, with transition matrix π,
+§ ’Observed path’: for i ě 1, set U1 “ 0 and
+¨
+Yi „ P ˝µZi `
+
+˛
+ÿ
+
+j
+
+αβ Yi´j ‚,
+
+Ui “ αYi´1 ` βUi´1 .
+
+jě1
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+12 / 13
+
+Segmentation and classification in a Hawkes process: Discrete time
+Hidden Markov models (HMM) provide a convenient framwork for segmentation and
+classification.
+
+Discrete time Hawkes HMM.
+§ Hidden path: tZi uiď1 “ homogeneous Markov chain, with transition matrix π,
+§ ’Observed path’: for i ě 1, set U1 “ 0 and
+¨
+Yi „ P ˝µZi `
+
+˛
+ÿ
+
+j
+
+αβ Yi´j ‚,
+
+Ui “ αYi´1 ` βUi´1 .
+
+jě1
+
+Inference. Regular EM algorithm for HMM.
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+12 / 13
+
+Segmentation and classification in a Hawkes process: Discrete time
+Hidden Markov models (HMM) provide a convenient framwork for segmentation and
+classification.
+
+Discrete time Hawkes HMM.
+§ Hidden path: tZi uiď1 “ homogeneous Markov chain, with transition matrix π,
+§ ’Observed path’: for i ě 1, set U1 “ 0 and
+¨
+Yi „ P ˝µZi `
+
+˛
+ÿ
+
+j
+
+αβ Yi´j ‚,
+
+Ui “ αYi´1 ` βUi´1 .
+
+jě1
+
+Inference. Regular EM algorithm for HMM.
+
+Extensions.
+§ Multivariate (discrete time) Hawkes process.
+§ Applications: neuro-sciences, ecology.
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+12 / 13
+
+References I
+
+I. E. Auger and C. E. Lawrence. Algorithms for the optimal identification of segment neighborhoods. Bull. Math. Biol., 51(1):39–54, 1989.
+C Dion-Blanc, E Lebarbier, and S Robin. Multiple change-point detection for poisson processes. Technical Report 2302.09103, arXiv, 2023.
+C-H Ho and M Bhaduri. A quantitative insight into the dependence dynamics of the Kilauea and Mauna Loa volcanoes, Hawaii. Mathematical Geosciences,
+49(7):893–911, 2017.
+F. Picard, S. Robin, E Lebarbier, and J-J Daudin. A segmentation/clustering model for the analysis of array CGH data. Biometrics, 63(3):758–766, 2007.
+
+S. Robin
+
+Segmentation of point processes
+
+HCERES
+
+13 / 13
+
+HMM for discrete time Hawkes process
+
+Graphical model.
+Zi´1
+Ui´1
+
+S. Robin
+
+Ui`1
+
+Ui
+Yi´1
+
+Zi`1
+
+Zi
+
+Yi
+
+Ui`2
+Yi`1
+
+Segmentation of point processes
+
+HCERES
+
+14 / 13
+
+

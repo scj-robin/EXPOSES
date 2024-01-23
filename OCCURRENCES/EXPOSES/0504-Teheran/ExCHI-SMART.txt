@@ -1,0 +1,21 @@
+http://www.bioss.sari.ac.uk/smart/unix/mrmes/slides/frames.htm
+
+We analyzed a DNA sequence of E. coli of length 384243, successively under models M0, M1, M2, ..., M6 to find exceptional 8-words (8-words significantly over- or under-represented). 
+
+Surprisingly, we found a very over-represented one: GCTGGTGG. This word occurs 81 times in the sequence. The table below gives, for each model, an estimator of the expected count of GCTGGTGG, an estimator of the variance of the difference (observed count - expected count), and the associated z-score asymptotically Gaussian (0,1). The rank represents the rank of the z-score when we list the z-scores of all the 8-words in decreasing order. 
+
+model | expect |   var  | z-score| rank
+---------------------------------------
+  M0  |  7.72  |  7.71  | 26.39  |   1
+  M1  |  7.69  |  7.67  | 26.46  |   1
+  M2  | 19.29  | 18.99  | 14.16  |   1
+  M3  | 32.94  | 31.32  |  8.59  |  28
+  M4  | 32.41  | 28.55  |  9.09  |  18
+  M5  | 38.61  | 26.96  |  8.16  |   7
+  M6  | 62.40  | 18.98  |  4.27  |  34
+
+Analyzing a word with different models brings different, and often additional, information since models become richer by increasing the order. We will discuss later how to choose the order of the model. 
+GCTGGTGG is over-represented under each model and is always among the most exceptional 8-words. This remarkable exceptionality looks like a constraint for the bacteria to have a lot of GCTGGTGG along its genome. The naïve idea at this point of the analysis is that GCTGGTGG is probably involved in a mechanism ensuring the stability of the bacteria. 
+
+In fact, GCTGGTGG is well known to molecular biologists and is called CHI (Cross-over Hotspot Instigator). It protects E. coli's genome from enzymes that damage DNA. 
+

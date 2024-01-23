@@ -1,0 +1,23 @@
+  \begin{tikzpicture}[scale=.8]
+    \node[hidden] (Z1) at ( 0.95*\edgeunit,  0.31*\edgeunit) {$Z_1$};
+    \node[hidden] (Z2) at (-0.00*\edgeunit,  1.00*\edgeunit) {$Z_2$};
+    \node[hidden] (Z3) at (-0.95*\edgeunit,  0.31*\edgeunit) {$Z_3$};
+    \node[hidden] (Z4) at (-0.59*\edgeunit, -0.81*\edgeunit) {$Z_4$};
+    \node[hidden] (Z5) at ( 0.59*\edgeunit, -0.81*\edgeunit) {$Z_5$};
+    
+    \draw[edge] (Z1) to (Z2);  \draw[edge] (Z1) to (Z4);  
+    \draw[edge] (Z1) to (Z5);  \draw[edge] (Z2) to (Z3);  
+    \draw[edge] (Z2) to (Z4);  \draw[edge] (Z3) to (Z4); 
+
+    \node[observed] (Y1) at ( 1.05*\edgeunit, -0.39*\edgeunit) {$Y_1$};
+    \node[observed] (Y2) at (-0.00*\edgeunit,  0.30*\edgeunit) {$Y_2$};
+    \node[observed] (Y3) at (-1.05*\edgeunit, -0.39*\edgeunit) {$Y_3$};
+    \node[observed] (Y4) at (-0.59*\edgeunit, -1.51*\edgeunit) {$Y_4$};
+    \node[observed] (Y5) at ( 0.59*\edgeunit, -1.51*\edgeunit) {$Y_5$};
+
+    \draw[arrow] (Z1) to (Y1); 
+    \draw[arrow] (Z2) to (Y2);
+    \draw[arrow] (Z3) to (Y3);
+    \draw[arrow] (Z4) to (Y4);
+    \draw[arrow] (Z5) to (Y5);
+  \end{tikzpicture}

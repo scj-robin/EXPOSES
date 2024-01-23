@@ -1,0 +1,1424 @@
+\documentclass[dvips, lscape]{foils}
+%\documentclass[dvips, french]{slides}
+\textwidth 18.5cm
+\textheight 25cm 
+\topmargin -1cm 
+\oddsidemargin  -1cm 
+\evensidemargin  -1cm
+
+% Maths
+\usepackage{amsfonts, amsmath, amssymb}
+
+\newcommand{\coefbin}[2]{\left( 
+    \begin{array}{c} #1 \\ #2 \end{array} 
+  \right)}
+\newcommand{\bbullet}{\bullet\bullet}
+\newcommand{\bbbullet}{\bbullet\bullet}
+\newcommand{\bbbbullet}{\bbbullet\bullet}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\alphabf}{\mbox{\mathversion{bold}{$\alpha$}}}
+\newcommand{\betabf}{\mbox{\mathversion{bold}{$\beta$}}}
+\newcommand{\gammabf}{\mbox{\mathversion{bold}\newcommand{\psibf}{\mbox{\mathversion{bold}{$\psi$}}}
+{$\gamma$}}}
+\newcommand{\mubf}{\mbox{\mathversion{bold}{$\mu$}}}
+\newcommand{\psibf}{\mbox{\mathversion{bold}{$\psi$}}}
+\newcommand{\Sigmabf}{\mbox{\mathversion{bold}{$\Sigma$}}}
+\newcommand{\taubf}{\mbox{\mathversion{bold}{$\tau$}}}
+\newcommand{\thetabf}{\mbox{\mathversion{bold}{$\theta$}}}
+\newcommand{\Dbf}{{\bf D}}
+\newcommand{\Ebf}{{\bf E}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\Sbf}{{\bf S}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\ubf}{{\bf u}}
+\newcommand{\vbf}{{\bf v}}
+\newcommand{\xbf}{{\bf x}}
+\newcommand{\Xbf}{{\bf X}}
+\newcommand{\Esp}{{\mathbb E}}
+\newcommand{\Corr}{{\mathbb C}\mbox{orr}}
+\newcommand{\Var}{{\mathbb V}}
+\newcommand{\Ibb}{{\mathbb I}}
+\newcommand{\Rbb}{\mathbb{R}}
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+% Texte
+\usepackage{lscape}
+\usepackage{../../../../Latex/fancyheadings, rotating, enumerate}
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+%\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.5}
+%\definecolor{green}{cmyk}{0.5, 0, 0.5, 0.5}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\definecolor{jaune}{cmyk}{0, 0.5, 0.5, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\textred}[1]{\textcolor{red}{#1}}
+\newcommand{\textgreen}[1]{\textcolor{green}{ #1}}
+\newcommand{\textlightgreen}[1]{\textcolor{green}{#1}}
+%\newcommand{\textgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{#1}}
+\newcommand{\textyellow}[1]{\textcolor{yellow}{#1}}
+\newcommand{\refer}[2]{{\sl #1}}
+
+% Sections
+%\newcommand{\chapter}[1]{\centerline{\LARGE \textblue{#1}}}
+% \newcommand{\section}[1]{\centerline{\Large \textblue{#1}}}
+% \newcommand{\subsection}[1]{\noindent{\Large \textblue{#1}}}
+% \newcommand{\subsubsection}[1]{\noindent{\large \textblue{#1}}}
+% \newcommand{\paragraph}[1]{\noindent {\textblue{#1}}}
+% Sectionsred
+\newcommand{\chapter}[1]{
+  \addtocounter{chapter}{1}
+  \setcounter{section}{0}
+  \setcounter{subsection}{0}
+  {\centerline{\LARGE \textblue{\arabic{chapter} - #1}}}
+  }
+\newcommand{\section}[1]{
+  \addtocounter{section}{1}
+  \setcounter{subsection}{0}
+  {\centerline{\Large \textblue{\arabic{chapter}.\arabic{section} - #1}}}
+  }
+\newcommand{\subsection}[1]{
+  \addtocounter{subsection}{1}
+  {\noindent{\large \textblue{\arabic{chapter}.\arabic{section}.\arabic{subsection} - #1}}}
+  }
+\newcommand{\paragraph}[1]{\noindent{\textblue{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\landscape
+\newcounter{chapter}
+\newcounter{section}
+\newcounter{subsection}
+\setcounter{chapter}{0}
+\headrulewidth 0pt 
+\pagestyle{fancy} 
+\cfoot{}
+\rfoot{\begin{rotate}{90}{
+      \hspace{1cm} \tiny S. Robin: Designs for microarray experiments 
+      }\end{rotate}}
+\rhead{\begin{rotate}{90}{
+      \hspace{-.5cm} \tiny \thepage
+      }\end{rotate}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+  \textblue{\LARGE Experimental designs for microarray experiments} 
+
+   \vspace{1cm}
+   {\large S. {Robin}} \\
+   robin@inapg.inra.fr
+
+   {UMR INA-PG / ENGREF / INRA, Paris} \\
+   {Mathématique et Informatique Appliquées}
+   
+    \vspace{1cm}
+    {Microarray Design and Statistical Analysis} \\
+    {Lisbon, March 2006}
+\end{center}
+
+\paragraph{Outline.} 
+
+\begin{tabular}{lll}
+  1 - Introduction & \hspace{2.5cm} & 3 - Designs for two channels \\
+  \\
+  2 - Designs for one channel & & 4 - Example with dependent data \\
+\end{tabular}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip\bigskip
+\section{A design, what for?}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Aim of experimental designs:} Organize comparisons in order to 
+\begin{itemize}
+\item get precise results from a limited number of experiments,
+\item avoid biases
+\end{itemize}
+
+The design depends on
+\begin{itemize}
+\item the model with which data will be analyzed (ex: anova)
+\item the kind of information one wants to get (ex: contrasts)
+\end{itemize}
+
+%\paragraph{Independence of the experiments} is a crucial assumption. 
+
+\refer{Churchill (02)}{Fundamentals of experimental designs for c{DNA}
+  microarray}, \refer{Kerr \& Churchill (01)}{Experimental design of gene expression microarrays}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{General approach.}
+\begin{description}
+\item[1 - Modeling:] translate biological questions into
+  equations and parameters
+  $$
+  \rightarrow \mbox{ statistical model}
+  $$
+\item[2 - Constraints list:] number of slides, systematic biases to
+  be controlled, {\it etc.}
+  $$
+  \rightarrow \mbox{ propose one or several designs}
+  $$
+\item[3 - Parameter estimates:] mimic how the data will be analyzed
+  when they will be available
+  $$
+  \rightarrow \mbox{ evaluate the precision of the estimates with the
+    proposed design}
+  $$
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Statistical model}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Measurement for one gene:} We denote
+\begin{eqnarray*}
+  X_{tr} & = & \mbox{expression level of the gene} \\
+  & & \mbox{under condition $t$} \\
+  & & \mbox{for the $r$-th replicate.}
+\end{eqnarray*}
+
+\paragraph{Model:}
+$$
+\begin{array}{ccccc}
+  X_{tr} & = & \mu_t & + & E_{tr} \\
+  \\
+  \mbox{measurement} & = & \mbox{signal} & + & \mbox{noise}
+\end{array}
+$$
+where
+\begin{description}
+\item[$\mu_t = $] mean expression level of the gene in condition $t$,
+\item[$E_{tr} =$] residual term due to the random variability
+  affecting the $r$th replicate 
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Definition of the variability}
+
+\paragraph{Reference variability:}
+The variability between replicates is measured by the variance of the
+residual term $E_{tr}$
+$$
+\Var(E_{tr}) = \sigma^2
+$$
+\paragraph{Replicates = different individuals:}
+$$
+\Rightarrow  \quad \sigma = \mbox{'biological' variability}
+$$
+\paragraph{Replicates = different samples within a common individual:}
+$$
+\Rightarrow \quad \sigma = \mbox{'technological' variability}
+$$
+
+\paragraph{Assumption $\sigma = $ constant}
+for all replicates and treatments \\
+$\quad \Rightarrow \quad$ log-transform to stabilize it:
+$$
+\sqrt{\Var(X)} \propto \Esp(X) 
+\qquad \Rightarrow \qquad 
+\Var(\log X) \simeq \mbox{cst}.
+$$
+Other typical transform
+$$
+\Var(X) \propto \Esp(X) 
+\qquad \Rightarrow \qquad 
+\Var(\sqrt{X}) \simeq \mbox{cst}.
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{One basic statistical result}
+
+Suppose we have $R$ replicates ($r = 1..R$). A natural estimate of
+$\mu_t$ is
+$$
+\widehat{\mu}_t = \overline{X}_t = \frac1R \sum_r X_{tr}
+$$
+\paragraph{Variance of one measurement:} 
+$$
+\Var(X_{tr}) = \Var(\mu_t + E_{tr}) = \Var(E_{tr}) = \sigma^2.
+$$
+\paragraph{Variance of a mean:} 
+If the replicates are independent, we have
+$$
+\Var(\widehat{\mu}_t) = \frac1{R^2} \sum_r \Var(X_{tr}) = \frac1{R^2}
+R\sigma^2 = \frac{\sigma^2}R
+\qquad
+\Rightarrow
+\qquad
+\sqrt{\Var(\widehat{\mu}_t)} = \frac{\sigma}{\sqrt{R}}.
+$$
+The precision of the mean increases as the \textblue{square root of
+  the number of replicates}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{One channel designs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bigskip
+\paragraph{Nylon membranes or Affymetrix slides:} 1 slide $\rightarrow$ one
+measurement per gene.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip\bigskip
+\section{Comparing two conditions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Aim:} Comparing two conditions denoted $t = 1, 2$
+
+\paragraph{Contrast of interest:} We want to estimate precisely the
+difference 
+$$
+\delta = \mu_1 - \mu_2
+$$
+
+\paragraph{Contrast estimate:} 
+$$
+\widehat{\delta} = \widehat{\mu}_1 - \widehat{\mu}_2
+$$
+
+\paragraph{Variance of the contrast:} If $R_t$ independent replicates are
+performed in condition $t$
+$$
+\Var(\widehat{\delta}) = \Var(\widehat{\mu}_1) + \Var(\widehat{\mu}_2)
+= \left( \frac1{R_1} + \frac1{R_2} \right) \sigma^2
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{How many replicates?} 
+
+The number of replicates is fixed according to some desirable property
+of the results.
+
+\paragraph{Precision of the estimated contrast.} 
+One may fix a desired value $s^2$ of $\Var(\widehat{\delta})$.
+
+If the number of replicates is the same in both conditions ($R_1 = R_2
+= R$):
+$$
+\Var(\widehat{\delta}) = s^2 \qquad \Longrightarrow \qquad R = \frac{2\sigma^2}{s^2}
+$$
+\begin{enumerate}
+\item $\sigma^2$ has to be known a priori, or $s^2$ should be
+  expressed as a function of $\sigma^2$,
+\item $s^2 = 0$ leads to $R = \infty$.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Power of the test.}
+One may fix a value of $\delta$ we want to detect with high
+probability.
+
+Using the $t$-test, we have \\
+%\vspace{-5cm}
+\centerline{
+  \begin{pspicture}(25, 14)
+    \rput[br](24, 13){unpaired data, $R = $ number of replicates
+      $\rightarrow 2R$ data}
+    \rput[bl](0, 0){ 
+      \epsfig{figure=../Figures/PowerT.ps, height=15cm, width=25cm, clip=}    
+      }
+    \rput[B](14, 1){$\delta/\sigma$}
+    \rput[B](16.25, 8){$R = 2$}
+    \rput[B](10.75, 9){$4$}
+    \rput[B](8.5, 9.5){$8$}
+    \rput[B](4.75, 10){$64$}
+  \end{pspicture}
+}
+\paragraph{Remark.} Again, $\delta$ is expressed as a function of $\sigma$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Factorial designs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\subsection{Anova model} 
+
+We want to study the simultaneous effects of 2 factors:
+\begin{itemize}
+\item Type of patient: $t = $ sick / healthy,
+\item Sex of the patients: $s = $ male / female. 
+\end{itemize}
+The expression level of the gene may be decomposed as
+$$
+X_{tsr} = \mu + \alpha_t + \beta_s + (\alpha\beta)_{ts} + E_{tsr}
+$$
+\begin{tabular}{rcl}
+  where \qquad \qquad $\mu$ & $ = $ & constant term (typically, the global mean) \\
+  $\alpha_t$ & $ = $ & main effect of type $t$ \\
+  $\beta_s$ & $ = $ &  main effect of sex $s$ \\
+  $(\alpha\beta)_{ts}$ & $ = $ & interaction effect between type $t$ and sex $s$ \\
+  $E_{tsr}$ & $ = $ & residual term
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Additive case: no interaction.} $\Esp(X_{tsr}) = \mu +
+\alpha_t + \beta_s$:
+$$
+  \begin{pspicture}(0,1)(24, 16.5)
+    
+                                % axes
+    \psline[linewidth=0.05]{->}(0, 2)(24, 2)
+    \rput[br](24, 2.1){Factor $A$}
+    \psline[linewidth=0.05]{->}(0, 2)(0, 16)
+    \rput[bl](0.1, 15.5){Mean expression level}
+    
+                                % mu
+    \psline[linewidth=0.05, linestyle=dashed]{-}(6, 9)(18, 9)
+    \rput[bc](11.5, 9.25){$\mu$}
+
+                                % alpha effect
+    \psline[linewidth=0.1, linestyle=dashed, linecolor=blue]{-}(6, 7)(18, 11)
+    \psline[linewidth=0.075, linecolor=blue]{<->}(6, 7)(6, 9) 
+    \rput[br](5.75, 8){\textblue{$\alpha_2=-\alpha$}}
+    \rput[bc](6, 6.75){\textblue{$\mu-\alpha$}}
+    \psline[linewidth=0.075, linecolor=blue]{<->}(18, 11)(18, 9) 
+    \rput[bl](18.25, 10){{$\alpha_1=+\alpha$}}
+    \rput[bc](18, 11.25){{$\mu+\alpha$}}
+    \psline[linewidth=0.05, linestyle=dotted]{-}(6, 2)(6, 10)
+    \rput[bc](6, 1){Level $2$ $(-)$}
+    \psline[linewidth=0.05, linestyle=dotted]{-}(18, 2)(18, 14)
+    \rput[bc](18, 1){Level $1$ $(+)$}
+
+                                % beta effect
+    \psline[linewidth=0.1, linecolor=red]{-}(6, 4)(18, 8)
+    \psline[linewidth=0.075, linecolor=red]{<->}(12, 9)(12, 6) 
+    \rput[br](11.75, 7){\textred{$\beta_2=-\beta$}}
+    \rput[bc](12, 5.75){{$\mu-\beta$}}
+    \psline[linewidth=0.1, linecolor=red]{-}(6, 10)(18, 14)
+    \psline[linewidth=0.075, linecolor=red]{<->}(12, 9)(12, 12) 
+    \rput[bl](12.25, 10.5){\textred{$\beta_1=+\beta$}}
+    \rput[bc](12, 12.25){{$\mu+\beta$}}
+
+                                % additive case
+    \rput[bc](18.25, 14.25){{$\mu+\alpha+\beta$}}
+    \rput[bc](18.25, 8.25){{$\mu+\alpha-\beta$}}
+    \rput[bc](5.75, 3.75){{$\mu-\alpha-\beta$}}
+    \rput[bc](5.75, 10.25){{$\mu-\alpha+\beta$}}
+
+  \end{pspicture}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{General case: with interaction.} $\Esp(X_{tsr}) = \mu +
+\alpha_t + \beta_s + (\alpha\beta)_{ts}$:
+%\vspace{0.5cm}
+$$
+  \begin{pspicture}(0,1)(24, 16.5)
+    
+                                % axes
+    \psline[linewidth=0.05]{->}(0, 2)(24, 2)
+    \rput[br](24, 2.1){Factor $A$}
+    \psline[linewidth=0.05]{->}(0, 2)(0, 16)
+    \rput[bl](0.1, 15.5){Mean expression level}
+    
+                                % mu
+    %\psline[linewidth=0.05, linestyle=dashed]{-}(12, 2)(12, 9)
+    \psline[linewidth=0.05, linestyle=dashed]{-}(6, 9)(18, 9)
+    \rput[bc](11.5, 9.25){$\mu$}
+
+                                % alpha effect
+    \psline[linewidth=0.1, linestyle=dashed, linecolor=blue]{-}(6, 7)(18, 11)
+%     \psline[linewidth=0.075, linecolor=blue]{<->}(6, 7)(6, 9) 
+%     \rput[br](5.75, 8){\textblue{$\alpha_2=-\alpha$}}
+%     \psline[linewidth=0.075, linecolor=blue]{<->}(18, 11)(18, 9) 
+%     \rput[bl](18.25, 10){\textblue{$\alpha_1=+\alpha$}}
+
+    %\psline[linewidth=0.05, linestyle=dotted]{-}(6, 2)(6, 10)
+    \rput[bc](6, 1){Level $2$ $(-)$}
+    %\psline[linewidth=0.05, linestyle=dotted]{-}(18, 2)(18, 14)
+    \rput[bc](18, 1){Level $1$ $(+)$}
+
+                                % beta effect
+    \psline[linewidth=0.1, linecolor=red]{-}(6, 4)(18, 8)
+    %\psline[linewidth=0.075, linecolor=red]{<->}(12, 9)(12, 6) 
+    %\rput[br](11.75, 7){\textred{$\beta_2=-\beta$}}
+    \psline[linewidth=0.1, linecolor=red]{-}(6, 10)(18, 14)
+    %\psline[linewidth=0.075, linecolor=red]{<->}(12, 9)(12, 12) 
+    %\rput[bl](12.25, 10.5){\textred{$\beta_1=+\beta$}}
+
+                                % additive case
+    \rput[bc](18.25, 13.75){{$\mu+\alpha+\beta$}}
+    \rput[bc](18.25, 8.25){{$\mu+\alpha-\beta$}}
+    \rput[bc](5.75, 3.75){{$\mu-\alpha-\beta$}}
+    \rput[bc](5.75, 10.25){{$\mu-\alpha+\beta$}}
+
+                                % interaction effect
+    \psline[linewidth=0.1, linecolor=green]{-}(6, 8)(18, 16)
+    \psline[linewidth=0.1, linecolor=green]{-}(6, 6)(18, 6)
+    \psline[linewidth=0.075, linecolor=green]{<->}(18, 14)(18, 16) 
+    \rput[bl](18.25, 14.75){\textgreen{$(\alpha\beta)_{11}=+(\alpha\beta)$}}
+    \rput[bc](18, 16.25){{$\mu +\alpha + \beta  +(\alpha\beta)$}}
+    \psline[linewidth=0.075, linecolor=green]{<->}(6, 4)(6, 6) 
+    \rput[br](5.75, 4.75){\textgreen{$(\alpha\beta)_{22}=+(\alpha\beta)$}}
+    \rput[bc](6., 6.25){{$\mu -\alpha - \beta  +(\alpha\beta)$}}
+    \psline[linewidth=0.075, linecolor=green]{<->}(18, 8)(18, 6) 
+    \rput[bl](18.25, 6.75){\textgreen{$(\alpha\beta)_{12}=-(\alpha\beta)$}}
+    \rput[bc](18, 5.5){{$\mu +\alpha - \beta  -(\alpha\beta)$}}
+     \psline[linewidth=0.075, linecolor=green]{<->}(6, 10)(6, 8) 
+     \rput[br](5.75, 8.75){\textgreen{$(\alpha\beta)_{21}=-(\alpha\beta)$}}
+     \rput[bc](6, 8){{$\mu -\alpha + \beta  -(\alpha\beta)$}}
+  \end{pspicture}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{$+ / -$ notation.} An equivalent expression of the model is
+$$
+X_{tsr} = \mu \pm \alpha \pm \beta \pm (\alpha\beta) + E_{tsr},
+$$
+meaning that, for the four types of individuals, we have:
+$$
+\vspace{-0.5cm} \begin{array}{cc|c}
+  \mbox{Type} & \mbox{Sex} & \mbox{Model} \\
+  \hline
+  + & + & X = \mu + \alpha +\beta +(\alpha\beta) +E \\
+  + & - & X = \mu + \alpha -\beta -(\alpha\beta) +E \\
+  - & + & X = \mu - \alpha +\beta +(\alpha\beta) +E \\
+  - & - & X = \mu - \alpha -\beta -(\alpha\beta) +E \\
+\end{array}
+\qquad \qquad
+\begin{array}{rcl}
+  \multicolumn{3}{c}{\mbox{Parameters}} \\
+  \hline
+  \alpha & = & \alpha_1 = -\alpha_2 \\
+  \beta & = & \beta_1 = - \beta_2 \\
+  (\alpha\beta) & = & (\alpha\beta)_{11} = (\alpha\beta)_{22}  \\ 
+  & = & -(\alpha\beta)_{12} = -(\alpha\beta)_{21}  
+\end{array}
+$$
+\paragraph{Basic factorial design.} It is described by the
+\textblue{design matrix}:
+$$
+\begin{array}{c|cccc}
+  \# \mbox{ individual} & \mu & \alpha & \beta & (\alpha\beta) \\
+  \hline
+  1 & + & + & + & + \\
+  2 & + & + & - & - \\
+  3 & + & - & + & - \\
+  4 & + & - & - & + \\
+\end{array}
+\vspace{-0.5cm}
+$$
+Number of experiments = number of parameters: \textblue{saturated design}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Linear model and matrix representation.}
+Denote 
+\begin{description}
+\vspace{-0.5cm}
+\item[$\Dbf =$] the design matrix
+\item[$\Xbf =$] the vector containing all the expression levels
+  ($X_{tsr}$)
+\item[$\thetabf = $] the vector containing the parameters:
+  $
+  \thetabf = \left[ \mu \quad \alpha \quad \beta \quad (\alpha\beta) \right]'
+  $
+\end{description}
+The anova model can be written as
+$$
+\Xbf = \Dbf \thetabf + \Ebf 
+$$
+The least square estimate of $\thetabf$ is
+$$
+\widehat{\thetabf} = (\Dbf' \Dbf)^{-1} \Dbf' \Xbf
+$$
+Its variance is
+$$
+\Var\left(\widehat{\thetabf}\right) = \sigma^2 (\Dbf' \Dbf)^{-1}
+$$
+\paragraph{Remark: } $\Var\left(\widehat{\thetabf}\right)$ mainly
+depends on $\Dbf$. It depends on $\Xbf$ only through $\sigma^2$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Back to the 2 factor design.} The parameter estimates are
+$$
+\begin{array}{rclcrcl}
+  \widehat{\mu} & = & \frac14(+X_1+X_2+X_3+X_4)
+  & \qquad &
+  \widehat{\alpha} & = & \frac14(+X_1+X_2-X_3-X_4) \\
+  \widehat{\beta} & = & \frac14(+X_1-X_2+X_3-X_4)
+  & \qquad &
+  \widehat{(\alpha\beta)} & = & \frac14(+X_1-X_2-X_3+X_4) \\
+  \multicolumn{7}{c}{\mbox{Saturated design $\Rightarrow$ no estimation of $\sigma^2$}}
+\end{array}
+$$
+\paragraph{Precision of the estimates.} 
+If $R$ replicates are performed in each combination ($n = 4R$
+experiments):
+$$
+\Var(\widehat{\mu}) = \Var(\widehat{\alpha}) =
+\Var\left(\widehat{\beta}\right) = 
+\Var\left(\widehat{(\alpha\beta)}\right) = \frac{\sigma^2}{4R}.
+$$
+\paragraph{Design size.} To estimate the 4 parameters, we need at
+least 4 experiments. 
+
+When studying
+$$
+k = 3, 4, 5 \mbox{ factors}
+$$
+we need at least 
+$$
+2^k = 8, 16, 32 \mbox{ experiments}
+$$
+corresponding to each possible combination.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Reducing the number of experiments}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\subsection{Fractional designs and confounded effects}
+
+The number of experiments may be reduce if some effects are neglected,
+i.e. if we renounce to estimate them.
+
+\paragraph{Design matrix for $k=3$ factors.} $\alpha = $ type, $\beta
+= $ sex, $\gamma = $ age
+$$
+\begin{array}{c|cccccccc}
+ \# & \mu & \alpha & \beta & \gamma & (\alpha\beta) & (\alpha\gamma) &
+ (\beta\gamma) & (\alpha\beta\gamma) \\
+ \hline
+ 1 & + & - & - & - & + & + & + & - \\
+ 2 & + & - & - & + & + & - & - & + \\
+ 3 & + & - & + & - & - & + & - & + \\
+ 4 & + & - & + & + & - & - & + & - \\
+ 5 & + & + & - & - & - & - & + & + \\
+ 6 & + & + & - & + & - & + & - & - \\
+ 7 & + & + & + & - & + & - & - & - \\
+ 8 & + & + & + & + & + & + & + & + \\
+\end{array}
+$$
+Note that the column $(\alpha\beta)$ is the product of columns
+$\alpha$ and $\beta$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage 
+\paragraph{Confounded effects.} To neglect all the interaction terms
+$(\alpha\beta), (\alpha\gamma), (\beta\gamma), (\alpha\beta\gamma)$
+we systematically confound them with main effects:
+$$
+(\alpha\beta) = \gamma, \qquad (\alpha\gamma) = \beta, 
+\qquad (\beta\gamma) = \alpha, \qquad (\alpha\beta\gamma) = \mu
+$$
+to keep only 4 experiments
+$$
+\begin{array}{c|cccccccc}
+ \# & \mu & \alpha & \beta & \gamma & (\alpha\beta) & (\alpha\gamma) &
+ (\beta\gamma) & (\alpha\beta\gamma) \\
+ \hline
+ 2 & + & - & - & + & + & - & - & + \\
+ 3 & + & - & + & - & - & + & - & + \\
+ 5 & + & + & - & - & - & - & + & + \\
+ 8 & + & + & + & + & + & + & + & + 
+\end{array}
+$$
+This design is the half of the full design and is denoted $2^{3-1}$.
+
+\paragraph{Aliasing.} The parameter $\alpha$ is actually an alias for
+$\alpha + (\beta\gamma)$:
+$$
+\widehat{\alpha} = \widehat{\alpha + (\beta\gamma)}, 
+\qquad \widehat{\beta} = \widehat{\beta + (\alpha\gamma)}, 
+\qquad \widehat{\gamma} = \widehat{\gamma + (\alpha\beta)}, 
+\qquad \widehat{\mu} = \widehat{\mu + (\alpha\beta\gamma)}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage 
+\subsection{Example of a $2^{5-2}$ fractional design}
+
+\noindent \hspace{-1cm} \begin{tabular}{lc}
+  \begin{tabular}{l}
+    \paragraph{$SAS$ program:}  \\ \\ \\ \\ \\
+  \end{tabular}
+  & 
+  {\small
+    \begin{tabular}{p{12cm}} 
+\begin{verbatim}
+proc Factex; 
+        factors A B C D E; 
+        size design = 8; 
+        model est = (A B C D E); 
+        examine aliasing confounding design; 
+\end{verbatim}
+    \end{tabular}
+}
+\end{tabular}  \\
+\paragraph{$SAS$ output:} \\
+\begin{tabular}{c|c}
+  {\small
+    \begin{tabular}{p{12cm}} 
+\begin{verbatim}
+                    Design Points
+
+Experiment       A       B       C       D       E
+
+         1      -1      -1      -1      -1       1
+         2      -1      -1       1       1      -1
+         3      -1       1      -1       1      -1
+         4      -1       1       1      -1       1
+         5       1      -1      -1       1       1
+         6       1      -1       1      -1      -1
+         7       1       1      -1      -1      -1
+         8       1       1       1       1       1
+\end{verbatim}
+    \end{tabular}
+    \hspace{4cm}
+    }
+    &
+    {\small
+      \begin{tabular}{p{12cm}} 
+\begin{verbatim}
+Aliasing Structure
+
+ A = D*E
+ B = C*E
+ C = B*E
+ D = A*E
+ E = A*D = B*C
+ A*B = C*D
+ A*C = B*D
+
+
+
+\end{verbatim}
+    \end{tabular}
+    }
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Two channels designs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\section{Data specificity}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Glass slide experiments ($r = $ slide):
+$$
+X_{t r} = \mu_t + \beta_r + \varepsilon_{tr}
+$$
+where $\beta_r$ is the effect of slide $r$.
+
+If $t$ and $t'$ are compared on the same slide $r$, $\beta_r$ vanishes
+in the difference:
+$$
+\begin{array}{cccccc}
+  \underbrace{X_{t r} - X_{t' r}} & = & \underbrace{\mu_t - \mu_{t'}} & + &
+  \underbrace{\varepsilon_{tr} - \varepsilon_{t'r}} \\
+  \\
+  Y_{tt', r} & = &  \delta_{tt'} & + & E_{tt', r}
+\end{array}
+$$
+with $\{E_{tt', r}\}$ iid, $\Var(E) = \sigma^2$.
+
+\textblue{Statistical analysis will consider the 'log-ratio' $Y_{tt', r}$.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Swap designs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Bias in cDNA labeling}
+$$
+\begin{tabular}{l}
+  \textblue{M-A plot:} \\
+  \\
+  $R = $ red signal \\
+  \qquad (cond. 1) \\ 
+  \\
+  $V = $ green signal \\
+  \qquad (cond. 2) \\
+  \\
+  $M = R - V$ \\
+  $A = R + V$ \\
+  \\
+  lowess correction \\
+  for each tip \\
+  \\
+\end{tabular}
+\begin{tabular}{c}
+  \epsfig{figure=../Figures/DYCS00-Fig4.ps, height=12cm, width=15cm,
+    bbllx=80, bblly=290, bburx=520, bbury=560, clip=} 
+\end{tabular}
+$$
+\refer{Dudoit \& al. (00)}{Statistical methods for identifying
+  differentially expressed genes...}, \refer{Yang \& al. (02)}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Swap design}
+
+\paragraph{Statistical model.} $t = $ treatment, $r = $ slide, $d
+= $ dye:
+$$
+X_{trd} = \mu + \alpha_t + \beta_{r} + \gamma_d + E_{trd} 
+$$
+Swap designs aim to correct the bias due to cDNA labeling ($\gamma_d$).
+
+\paragraph{Design.} Two slides, with inverted labeling.
+$$
+\begin{array}{ccc}
+  \begin{tabular}{ll|cc}
+    \multicolumn{2}{l|}{dye $d$} & \multicolumn{2}{c}{condition $t$} \\
+    & & 1 & 2 \\
+    \hline
+    & 1 & 1 (red) & 2 (green) \\
+    slide $r$ & & \\
+    & 2 & 2 (green) & 1 (red)
+  \end{tabular}
+  &
+  \begin{array}{c} 1 \rightarrow + \\ 2 \rightarrow - \end{array} 
+  &
+  \begin{array}{ccc}
+    \multicolumn{3}{c}{\mbox{Design matix}} \\
+    \alpha & \beta & \gamma \\
+    \hline
+    + & + & + \\
+    + & - & - \\
+    - & + & - \\
+    - & - & + \\
+  \end{array}
+\end{array}
+$$
+\paragraph{Aliasing.} Such a design is refereed to as a
+\textblue{latin square} design. 
+
+The treatment effect $\alpha$ is \textblue{confounded} with the dye*slide
+interaction $(\beta\gamma)$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Removing the dye effect.} The slide effects $\beta_s$ vanishes
+in the log-ratios (Red - Green) observed on both slides: 
+$$
+Y_1 = + (\alpha_1 - \alpha_2) + (\gamma_1 - \gamma_2) + E_1, \qquad
+Y_2 = - (\alpha_1 - \alpha_2) + (\gamma_1 - \gamma_2) + E_2
+$$
+The dye effects $\gamma_d$ vanishes in their difference:
+$$
+\Delta Y = Y_1 - Y_2 = 2 (\alpha_1 - \alpha_2) + (E_1 - E_2) \qquad
+\Rightarrow \qquad \widehat{\alpha_1 - \alpha_2} = 2 \widehat{\alpha}
+= \frac{\Delta Y}4
+$$
+\paragraph{Application.} This simple difference remove most part of
+the Gene*Dye interaction. 
+$$
+\begin{tabular}{ccc}
+  \begin{tabular}{l}
+    \hspace{-1.5cm} 
+    \epsfig{figure=..//Figures/MAplot-DyeSwap-ECabannes.ps,
+      bbllx=21, bblly=19, bburx=289, bbury=140, width=12cm, height=6cm,
+      clip=}    
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    $\hspace{-1cm} \overset{\mbox{difference}}{\longrightarrow} \hspace{-1cm}$ 
+  \end{tabular}
+  &
+  \begin{tabular}{l}
+    \epsfig{figure=../Figures/MAplot-DyeSwap-ECabannes.ps,
+      bbllx=345, bblly=19, bburx=574, bbury=143, width=10cm, height=6cm,
+      clip=}
+  \end{tabular}
+\end{tabular}   
+$$
+The labeling bias is supposed to be the same on each slide \\
+\centerline{\textblue{$\Rightarrow$ no dye*slide interaction}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Lowess regression} 
+
+The Gene*Dye interaction is \textblue{modeled} as a function of the
+mean expression level of the gene:
+$$
+M_g = f(A_g).
+$$
+The regression function $f(A)$ is estimated using a
+\textblue{robust, locally weighted} linear regression $A = a_g + b_g
+M$.
+
+Parameters $a_g$ and $b_g$ are obtained minimizing (for gene $g$)
+$$
+\sum_{g'} w(g, g')[M_{g'} - a_g + b_g A_{g'}]^2
+$$
+where \\
+$\bullet \quad$ $w(g, g')$ is a decreasing function of $|A_g - A_{g'}|$,
+\\
+$\bullet \quad$ ``large'' residuals $(M_{g'} - \widehat{M}_{g'})$ are
+excluded from the sum.
+
+\refer{Cleveland (79)}{Robust locally weighted regression...}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Back to the swap design.} 
+% The lowess transform can be viewed as a \textblue{modeling of the
+%   Dye*Gene interaction}
+Generally, a lowess is performed separately for each slide.
+\centerline{$\Rightarrow$ Correction of the \textblue{Slide*Gene*Dye
+    interaction}}
+
+\paragraph{Anova table.} Real data, 2 slides, $\simeq$ 10\;000 genes
+$$
+  \begin{tabular}{lcccccc}
+    & & \multicolumn{2}{l}{\qquad before lowess \qquad\qquad~} &
+    \multicolumn{2}{l}{\qquad after lowess\qquad\qquad~} \\
+    Effect & df & SS & MS & SS & MS \\
+    \hline
+    Chip & 1 & 165 & 165 & 165 & 165 \\ 
+    {\sl Dye} & 1 & {\sl 19149} & 19149 & {\sl 0.0386} & 0.0386 \\ 
+    {\sl Treatment} & 1 & {\sl 480} & 480 & {\sl 0.00242} & 0.00242 \\ 
+    Gene & 9983 & 60826 & 6.09 & 60826 & 6.09 \\ 
+    Chip*Gene & 9983 & 2330 & 0.233 & 2330 & 0.233 \\ 
+    {\bf Dye*Gene} & 9983 & {\bf 5882} & 0.589 & {\bf 299} & 0.0299 \\ 
+    {\sl Treatment*Gene} & 9983 & {\sl 4781} & 0.479 & {\sl 3471} & 0.348 \\ 
+  \end{tabular} 
+$$
+\begin{itemize}
+\item The Gene*Dye interaction is strongly reduced $\rightarrow$ Loess
+  does its job.
+\item The Dye and Treatment effects are also strongly reduced.
+\item The Gene*Treatment interaction is also (slightly) reduced.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Practical conclusions.}
+\begin{itemize}
+\item If the Gene*Dye interaction is the same on all slides,
+  no specific normalization is needed.
+\item The lowess normalization is needed when the Gene*Dye varies with
+  the slides ie, when a Slide*Gene*Dye interaction exists.
+\end{itemize}
+\paragraph{Aliasing.} Due to the latin square structure, the Dye*Slide 
+interaction is confounded with the condition effect
+$$
+\Longrightarrow \mbox{\textblue{Slide*Gene*Dye = Gene*Treatment}}
+$$
+The lowess normalization should be very smooth since it may
+\textblue{correct the signal} we are interested in!
+
+\paragraph{Laser tuning.}
+The Slide*Gene*Dye interaction can be due to slide specific tuning of
+the lasers (PMT)
+$$
+\mbox{\textblue{Avoid tuning the laser for each slide}}
+$$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Comparing $T$ conditions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bigskip
+\begin{tabular}{l}
+  \hspace{-0.5cm}\subsection{`Star' design} \\
+  \\
+  Each condition \\
+  is compared to \\
+  a common \\
+  reference $A_0$ \\
+  \\
+  ($TR$ slides)
+\end{tabular}
+\hspace{2cm}
+\begin{tabular}{c}
+  \begin{pspicture}(8, 8)
+    \rput[B](4, 3.8){$A_0$}
+    
+    \rput[B](1, 1){$A_1$}
+    \psline[linewidth=0.1]{<->}(1.5, 1.5)(3.5, 3.5)
+    
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(3.5, 4)(1, 5.5)
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(4.5, 4)(7, 5.5)
+    
+    \rput[B](4, 8){$A_t$}
+    \psline[linewidth=0.1]{<->}(4, 4.7)(4, 7.5)
+    
+    \rput[B](7, 1){$A_T$}
+    \psline[linewidth=0.1]{<->}(6.5, 1.5)(4.5, 3.5)
+  \end{pspicture}
+\end{tabular}
+\hspace{-2cm}
+\begin{tabular}{l}
+  Typically, \\
+  \\
+  $A_0 = $ wild type \\
+  \\
+  $A_t = $ mutant\\
+\end{tabular}
+$$
+% \begin{array}{lcccc}
+%   \mbox{parameter}\qquad & \qquad \delta_{tt'}
+%   \qquad & \qquad  \delta_{t0} \qquad & \qquad \mu_t \qquad & \qquad
+%   \mu_0 \qquad \\
+%   \hline
+%   \\
+%   \mbox{estimate} & \overline{Y}_{t0} - \overline{Y}_{t'0} &
+%   \overline{Y}_{t0} & \overline{X}_t & \overline{X}_0 \\
+%   \\
+%   \mbox{variance}  & 2\sigma^2 / R & \sigma^2 / R & \gamma^2 / R &
+%   \gamma^2 / (TR) \\
+%   \\
+%   \\
+%   & \multicolumn{4}{r}{\gamma^2 = \sigma^2/2 + \mbox{variance due to 
+%       the slides.}}
+% \end{array}
+\begin{array}{lcc}
+  \mbox{parameter}\qquad & \qquad \delta_{tt'}
+  \qquad & \qquad  \delta_{t0} \qquad  \\
+  \hline
+  \\
+  \mbox{estimate} & \overline{Y}_{t0} - \overline{Y}_{t'0} &
+  \overline{Y}_{t0} \\
+  \\
+  \mbox{variance}  & 2\sigma^2 / R & \sigma^2 / R  \\
+  \\
+%  \\
+%  & \multicolumn{4}{r}{\gamma^2 = \sigma^2/2 + \mbox{variance due to 
+%      the slides.}}
+\end{array}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{tabular}{l}
+  \hspace{-0.5cm}\subsection{`Loop' design} \\
+  \\
+  Each condition \\
+  is compared to \\
+  two (arbitrary) \\
+  others \\
+  \\
+  ($TR$ slides)
+\end{tabular}
+%\hspace{-2cm}
+\begin{tabular}{c}
+  \begin{pspicture}(9, 9)
+    \rput[B](3, 0.5){$A_1$}
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(2.5, 1)(1, 2)
+%    \rput[B](0.5, 2.5){$o$}
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(0.5, 3)(0.5, 5)
+    \rput[B](0.5, 5.5){$A_{t-1}$}
+    \psline[linewidth=0.1]{<->}(1, 6)(2.5, 7)
+    \rput[B](3, 7.5){$A_t$}
+    \psline[linewidth=0.1]{<->}(3.7, 7.5)(6.3, 7.5)
+    \rput[B](7, 7.5){$A_{t+1}$}
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(7.5, 7)(9, 6)
+%    \rput[B](9.5, 5.5){$o$}
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(9.5, 5)(9.5, 3)
+%    \rput[B](9.5, 2.5){$o$}
+    \psline[linewidth=0.1, linestyle=dashed]{<->}(9, 2)(7.5, 1)
+    \rput[B](7, 0.5){$A_T$}
+    \psline[linewidth=0.1]{<->}(6.3, 0.5)(3.7, 0.5)
+  \end{pspicture}
+\end{tabular}
+\hspace{1.5cm}
+\begin{tabular}{l}
+  Typically, \\
+  \\
+  $A_t = $ time $t$
+\end{tabular}
+$$
+\begin{array}{lll}
+  \mbox{parameter} \qquad &  \mbox{estimate} & \mbox{variance} \\
+  \hline
+  \\
+  \delta_{t, t+1} & \overline{Y}_{t, t+1} & \sigma^2 / R \\ 
+  \\
+  \delta_{t, t+d} &  \overline{Y}_{t, t+1} + \dots +
+  \overline{Y}_{t+d-1, t+d} \qquad & d \sigma^2 / R \\
+\end{array}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage 
+\noindent The variance of the estimates can be reduced considering the
+two possible paths from $A_t$ to $A_{t+d}$ in the graph: \vspace{0.5cm}\\
+$\begin{array}{clc}
+  \mbox{parameter} &  \mbox{estimate (least square)} & \mbox{variance} \\
+  \hline
+  \\
+  \delta_{t, t+1} & \displaystyle{ \frac{T-1}{T} \overline{Y}_{t,
+      t+1} + \frac{1}{T} \sum_{u=1}^{T-1} \overline{Y}_{t+u, t+u+1} }
+  & \displaystyle{\frac{T-1}{T} \frac{\sigma^2}{R}} \\
+  \\
+  \delta_{t, t+d} & \displaystyle{ \frac{T-d}{T} \sum_{u=1}^{d}
+    \overline{Y}_{t+u, t+u+1} + \frac{d}{T} \sum_{u=d+1}^{T}
+    \overline{Y}_{t+u, t+u+1} } & \displaystyle{\frac{d(T-d)}{T}
+    \frac{\sigma^2}{R}}
+\end{array}$ 
+\vspace{-1cm} \\
+\centerline{
+  \begin{tabular}{l}
+    $T = 10$ \\
+    \\
+    $\sigma^2 = 1$ \\
+    \\
+    $R = 4$
+  \end{tabular}
+  \begin{tabular}{l}
+    \psfig{file=../Figures/VarLoop.ps, width=15cm, height=9cm}
+  \end{tabular}
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Case of a two factor design}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\paragraph{Biological question.} 
+\begin{itemize}
+\item We want to study the effects of two factors: type ($\alpha_i$)
+  and sex ($\beta_j$) and of their interaction $(\alpha\beta)_{ij}$).
+\item We are mainly interested in the status effect. 
+\end{itemize}
+
+\paragraph{Practical constraints.} 
+\begin{itemize}
+\item We can only afford 8 slides.
+\item We want to estimate all the effects: $\alpha_i, \beta_j,
+  (\alpha\beta)_{ij}$.
+\item We would like to avoid normalizing steps (e.g. loess).
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Statistical model}
+
+\paragraph{One channel.} Slide $s$, dye $d$
+$$
+X_{ijsd} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \gamma_s +
+\delta_d + E_{ijsd}
+$$
+\paragraph{Log-ratio.} Slide $s$
+\begin{eqnarray*}
+  Y_s & = & X_{ijs1} - X_{i'j's2} \\
+  & = & \mu + (\alpha_i-\alpha_{i'}) +
+  (\beta_j-\beta_{j'}) + ((\alpha\beta)_{ij}-(\alpha\beta)_{i'j'}) \\
+  & & + (\delta_1 - \delta_2) + (E_{ijs1} - E_{i'j's2})
+\end{eqnarray*}
+\begin{itemize}
+\item The slide effect $\gamma_s$ vanishes
+\item The labeling bias $(\delta_1 - \delta_2)$ is always present
+\item The effect $(\alpha_i-\alpha_{i'})$ appears only if the
+  individuals have different status: $i \neq i'$.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Proposed design.} Avoiding loess $\Rightarrow$ swap
+experiments.
+
+8 slides = 4 swaps = 8 individuals:
+  $$
+  \begin{array}{c|ccccc|ccc}
+    \mbox{swap} & \multicolumn{2}{c}{\mbox{indiv. 1}} & / &
+    \multicolumn{2}{c|}{\mbox{indiv. 2}} 
+    & \multicolumn{3}{c}{\mbox{Design matrix}} \\
+    & (\mbox{Type} & \mbox{Sex}) & / & (\mbox{Type} & \mbox{Sex}) &
+    \alpha & \beta & (\alpha\beta) \\
+    \hline
+    1 & 1 & 1 & / & 2 & 1 & +4 &    & +4 \\
+    2 & 1 & 1 & / & 2 & 2 & +4 & +4 &  \\
+    3 & 1 & 2 & / & 2 & 1 & +4 & -4 &  \\
+    4 & 1 & 2 & / & 2 & 2 & +4 &    & -4 \\
+  \end{array}
+  $$
+\paragraph{Estimates.} 
+$$
+\widehat{\alpha} = \frac{\Delta Y_1 + \Delta Y_2 + \Delta Y_3 + \Delta
+  Y_4}{16},  
+\qquad
+\widehat{\beta} = \frac{\Delta Y_2 - \Delta Y_3}{8}, 
+\qquad
+\widehat{(\alpha\beta)} = \frac{\Delta Y_1 - \Delta Y_4}{8}.
+$$
+\paragraph{Variance.} $\sigma^2 = $
+mixture of technological and biological variances:
+$$
+\Var(\widehat{\alpha}) = \frac12\Var\left(\widehat{\beta}\right) =
+\frac12\Var\left(\widehat{(\alpha\beta)}\right).
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Example with dependent data}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\section{Biological problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Question.} Measure the effects of trisomy and sex on the
+transcription of genes located on chromosome 21. 
+\begin{itemize}
+\item The major attention is paid to the trisomy effect.
+\item We want to evaluate the between-individual variability.
+\end{itemize}
+
+\paragraph{Patients.} 10 patients with trisomy (T), 10 normal (N); 5 men
+(M) / 5 women (F) in each group.
+
+\paragraph{Constraints.}
+\begin{itemize}
+\item About 40 slides available.
+\item Avoid swap to augment the number of individuals to be studied.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Statistical model}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Mixed model for one channel measurements.}
+$$
+X_{tsir} = \mu + \alpha_t + \beta_s + (\alpha\beta)_{ts} +
+\textblue{A_{tsi}} + \textred{E_{tsir}}
+$$
+$A_{tsi}$ is the random effect of individual $i$ (type $t$, sex
+$s$) affecting all samples coming from it.
+% $$
+% \vspace{-0.5cm}
+% \Var(E) = \sigma^2, \qquad \Var(A) = \gamma^2
+% \qquad \Rightarrow \qquad
+% \Corr(X_{tsir}, X_{tsir}) = \frac{\gamma^2}{\gamma^2 + \sigma^2}
+% $$
+$$
+\vspace{-1cm} \hspace{-1cm}
+\begin{tabular}{cc}
+  \begin{tabular}{ll}
+    \multicolumn{2}{c}{$
+      \begin{array}{l}
+        \Var(E) = \textred{\sigma^2}, \qquad \Var(A) = \textblue{\gamma^2} \\
+        \\
+        \Corr(X_{tsir}, X_{tsir}) =
+        \displaystyle{\frac{\gamma^2}{\gamma^2 + \sigma^2}} \\ 
+        \\
+      \end{array}
+      $}
+    \\
+    {\Large \bf ---}: & fixed effects ($\mu_{ts}$)\\ 
+    \textblue{\Large \bf ---}: & biological variability ($\gamma^2$)\\
+    \textred{\Large \bf $\cdots$}: & technological variability \\
+    & ($\sigma^2$) \\
+    \\
+  \end{tabular}
+  & 
+  \hspace{-1cm}
+  \begin{tabular}{c}
+    \epsfig{figure=../Figures/FigMixedModel.eps, height=9cm, width=15cm,
+      bbllx=101, bblly=225, bburx=532, bbury=571, clip=}
+  \end{tabular}
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Slides / Log-ratios.} 
+\begin{itemize}
+\item As for the preceding design, only T/N comparison are performed.
+\item Log-ratios coming from slides involving a same individual are
+  correlated.
+\end{itemize}
+\paragraph{Proposed design;}
+$$
+{\small
+  \begin{array}{ccc|ccccc|ccccc}
+    & & & \multicolumn{10}{c}{$ Type = Trisomy$} \\
+    \multicolumn{2}{c}{+=R/G} & & \multicolumn{5}{c|}{$ Sex = M$} 
+    & \multicolumn{5}{c}{$ Sex = F$} \\
+    \multicolumn{2}{c}{-=G/R} & & 1 & 2 & 3 & 4 & 5 & 1 & 2 & 3 & 4 & 5 \\
+    \hline
+    &            & 1 &  + &  - &    &    &    &  + &  - &    &    &    \\
+    &            & 2 &    &  + &  - &    &    &    &  + &  - &    &    \\
+    & $ Sex = M$ & 3 &    &    &  + &  - &    &    &    &  + &  - &    \\
+    &            & 4 &    &    &    &  + &  - &    &    &    &  + &  - \\
+    $ Type =$  & & 5 &  - &    &    &    &  + &  - &    &    &    &  +
+    \\
+    \hline
+    $ Normal $ & & 1 &  + &  - &    &    &    &  + &  - &    &    &    \\
+    &            & 2 &    &  + &  - &    &    &    &  + &  - &    &    \\
+    & $ Sex = F$ & 3 &    &    &  + &  - &    &    &    &  + &  - &    \\
+    &            & 4 &    &    &    &  + &  - &    &    &    &  + &  - \\
+    &            & 5 &  - &    &    &    &  + &  - &    &    &    &  + \\
+  \end{array}
+}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Variance of the estimates}
+
+\paragraph{2 scenarios.} 
+$$
+  \begin{array}{c|c}
+    \gamma^2 = 0 & \gamma^2 = 2 \sigma^2 \\
+    \hline
+    \Var(\widehat{\thetabf}) = \sigma^2 \left( 
+      \begin{array}{ccc}
+        0.0125  &          0   &         0 \\
+        0  &      0.025   &         0 \\
+        0  &          0   &     0.025 \\
+      \end{array}    
+    \right)
+    & 
+    \Var(\widehat{\thetabf}) = \sigma^2 \left( 
+      \begin{array}{ccc}
+        0.2125 & 0 & 0 \\
+        0 & 0.225 & 0 \\
+        0 & 0 & 0.225 \\
+      \end{array}
+    \right)
+  \end{array}
+$$
+
+\paragraph{Full design.} If $\gamma^2 = 2 \sigma^2$
+$$
+\begin{tabular}{cc}
+  ${\small
+    \begin{array}{c|ccccc|ccccc}
+      & \multicolumn{5}{c|}{$TM$} 
+      & \multicolumn{5}{c}{$TF$} \\
+      \hline
+            & + & - & + & - & + & - & + & - & + & - \\
+            & - & + & - & + & - & + & - & + & - & + \\
+       $NM$ & + & - & + & - & + & - & + & - & + & - \\
+            & - & + & - & + & - & + & - & + & - & + \\
+            & + & - & + & - & + & - & + & - & + & - \\
+      \hline
+            & - & + & - & + & - & + & - & + & - & + \\
+            & + & - & + & - & + & - & + & - & + & - \\
+       $NF$ & - & + & - & + & - & + & - & + & - & + \\
+            & + & - & + & - & + & - & + & - & + & - \\
+            & - & + & - & + & - & + & - & + & - & + \\
+    \end{array}
+    }
+  $
+  &
+  \begin{tabular}{p{8cm}}
+    $\Var(\widehat{\thetabf}) = \sigma^2 \times$ \\
+    $\left( 
+      \begin{array}{ccc}
+        0.205 & 0 & 0 \\
+        0 & 0.21 & 0 \\
+        0 & 0 & 0.21 \\
+      \end{array}
+    \right)$ \\
+    \\
+    $\Rightarrow$ No need for more slides, \\
+    \\
+    Need for more individual.
+  \end{tabular}
+\end{tabular}
+$$ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Preliminary results}
+
+\paragraph{Estimates of $\gamma^2$ and $\sigma^2$.} 
+
+\hspace{-2cm}
+\begin{tabular}{cc}
+  \begin{tabular}{p{10cm}}
+    Distribution of the ratio
+    $\widehat{\gamma}^2/\widehat{\sigma}^2$ over 700 genes. \\   
+    \\
+    \epsfig{file = ../Figures/FigOBagland-P56.ps, width=10cm, height=10cm,
+      bbllx=174, bblly=326, bburx=419, bbury=542, clip=}
+  \end{tabular}
+  & 
+  \hspace{-2cm}
+  \begin{tabular}{p{15cm}}
+    \begin{itemize}
+    \item For many genes $\widehat{\gamma}^2 = 0$:
+      small biological variance or estimation problems?
+    \item The mean ratio is about 0.7 (instead of 2): should the
+      design be reconsidered?
+    \item Simulations show that the design is still satisfying (but the
+      interest of the full design increases).
+    \item The definition of biological / technological variances is
+      not that clear: for example, the cell growth is a
+      'technological' step.
+    \end{itemize}
+  \end{tabular}
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "Microarray-tra"
+%%% End: 

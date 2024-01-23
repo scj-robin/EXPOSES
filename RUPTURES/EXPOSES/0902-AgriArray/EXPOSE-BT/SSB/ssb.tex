@@ -1,0 +1,628 @@
+
+\documentclass[compress]{beamer}
+\mode<presentation>
+ \usepackage[latin1]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage{amsfonts}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{beamerthemesplit}
+\usepackage{times}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{latexsym}
+\usepackage{pifont}
+\usepackage{fancybox}
+\setbeamercovered{transparent}
+\usepackage{color}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.jpg,.png,.eps}
+\usepackage[francais]{babel}
+  \newcommand{\argmax}{\operatornamewithlimits{Argmax}} 
+  \newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\pibf}{\text{\mathversion{bold}{$\pi$}}}
+\newcommand{\alphabf}{\text{\mathversion{bold}{$\alpha$}}}
+\newcommand{\betabf}{\text{\mathversion{bold}{$\beta$}}}
+\newcommand{\mubf}{\text{\mathversion{bold}{$\mu$}}}
+\newcommand{\thetabf}{\text{\mathversion{bold}{$\theta$}}}
+\newcommand{\sigmabf}{\text{\mathversion{bold}{$\sigma$}}}
+\newcommand{\varbf}{\text{\mathversion{bold}{$\varepsilon$}}}
+\newcommand{\Ybf}{\textbf{Y}}
+\newcommand{\Xbf}{\textbf{X}}
+\newcommand{\xbf}{\textbf{x}}
+\newcommand{\Zbf}{\textbf{Z}}
+\newcommand{\Ubf}{\textbf{U}}
+\newcommand{\Ebf}{\textbf{E}}
+\newcommand{\Tbf}{\textbf{T}}
+\newcommand{\Fbf}{\textbf{F}}
+\newcommand{\Ibf}{\textbf{I}}
+\newcommand{\Sbf}{\textbf{S}}
+\newcommand{\Cbf}{\textbf{C}}
+\newcommand{\Cov}{{\mathbb C}\mbox{ov}}
+\newcommand{\Ibb}{{\mathbb I}}
+\newcommand{\Rbb}{\mathbb{R}}
+ \newcommand{\argmin}{\operatornamewithlimits{argmin}}
+
+%%%%%%Pour changer leformat%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+%\usetheme{sidebar}
+%\usetheme{Antibes}
+ \usetheme{Warsaw}
+%\usetheme{CambridgeUS}
+%\usetheme{Dresden}
+%\usetheme{Darmstadt}
+%\usetheme{JuanLesPins}
+%\usetheme{Malmoe}
+%\usetheme{PaloAlto}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{Copenhagen}
+%\usetheme{Hannover}
+%\usetheme{Goettingen}
+%\usetheme{Montpellier}
+%\usetheme{Rochester}
+%\usetheme{Madrid}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Ilmenau}
+%\usetheme{Luebeck}
+%\usetheme{AnnArbor}
+
+%\usecolortheme{crane}
+
+  \title[]{Joint segmentation of processes: Application to the analysis of multiple CGH profiles}
+%  \author{Thiam B., Lebarbier E., Robin S.}\institute{UMR AgroParisTech / INRA Math\'ematique et Informatique Appliqu\'ees}
+\author[Statistics for Systems Biology]{Thiam B., Lebarbier E., Robin S.\inst{1}\and
+   Picard F.\inst{2}}
+%%
+\date[Benasque]{Benasque, Mars 2008}
+
+\institute
+{
+  \inst{1}%
+\footnotesize{ UMR 518 AgroParisTech/INRA MIA, Paris, France.}
+  \and
+  \inst{2}%
+ \footnotesize{UMR CNRS-5558/Laboratoire de Biom\'etrie et Biologie Evolutive}\\
+\footnotesize{Universit\'e Lyon 1, F-69622, Villeurbanne, France.}}
+\date{}
+\AtBeginSection[]
+{
+ \begin{frame}<beamer>
+   \frametitle{Outline}
+   \tableofcontents[currentsection]
+ \end{frame}
+}
+
+\begin{document}
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%TRANSPARENT1%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}
+ \titlepage
+  \end{frame}
+
+
+
+  \begin{frame}
+ \frametitle{Outline}\tableofcontents
+  \end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% TRANSPARENT2%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%TRANSPARENT3%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Principe of CGH array analysis}
+\begin{frame}
+
+\begin{dinglist}{42}
+\item \textcolor{blue}{Objective:}  Detection of chromosomal aberrations (within chromosome).
+\item \textcolor{blue}{CGH=Comparative Genomic Hybridization.} Method for the
+  comparative measurement of relative DNA copy numbers between two
+  samples (test/reference, disease/normal).
+\end{dinglist}
+
+\begin{figure}
+\begin{center}
+\includegraphics<2->[scale=0.33]{principeCGH.png}
+\end{center}
+\end{figure}
+
+\end{frame}
+\begin{frame}
+\frametitle{Microarray technology in its principle}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.40]{MicroArrayTech.png}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Interpretation of a CGH profile}
+\begin{figure}
+\includegraphics[scale=0.33]{test.png}
+\end{figure}
+\vspace{0.2cm}
+
+\centerline{
+ \textcolor{blue}{ A dot on the graph=}
+  $
+  \displaystyle{
+    \log_2 \left\{ \frac{\text{ $\sharp$ copies of BAC(t) in the test
+          genome }}{\text{$\sharp$ copies of BAC(t) in the reference
+          genome}}\right\}}.
+  $
+}
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Breakpoint detection Model \small{(Work of Picard et
+al. (2005))}}
+
+ \textcolor{blue}{Model.} The observed signal $Y=(Y_1,\ldots,Y_n)$ is such that :
+\begin{eqnarray*}
+Y_t=\mu_k + E_t \ \ \ \  \mbox{ if position $t$ is in segment
+$I_k=[t_{k-1}+1,t_{k}]$,}
+\end{eqnarray*}
+with $\{E_t\}$ i.i.d. $\leadsto \mathcal{N}(0,\sigma^2)$ and $k=1,\ldots,K$.\\
+
+%\vspace{-.2cm}
+\uncover<2->{
+ {\textcolor{blue}{Parameters.}} The parameters of this model are \\
+\begin{itemize}
+\item the breakpoints
+\begin{eqnarray*}
+T  =  (t_1, ..., t_{K-1})
+\end{eqnarray*}
+
+\item means and variance
+\begin{eqnarray*}
+\Theta  = (\mu_1,\hdots,\mu_K,\sigma^2)
+\end{eqnarray*}
+\end{itemize}}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Estimating the parameters}
+\textcolor{blue}{Log-Likelihood} (with a constant variance $\sigma^2$):
+\begin{eqnarray*}
+2 \Lcal_K(T, \Theta) & = & -n \log \sigma^2 - \frac1{\sigma^2}
+\sum_{k=1}^K \sum_{t \in
+  I_k} (Y_t - \mu_k)^2 + \mbox{cst}.
+\end{eqnarray*}
+%\textcolor{blue}{When the breakpoints are known.}
+%$$
+%\widehat{\mu}_k = \frac1{n_k} \sum_{t \in I_k} Y_t  \ \ , \ \
+%\widehat{\sigma}^2=\frac1{n} \sum_{k=1}^K \sum_{t \in I_k} (Y_t -
+ % \widehat{\mu}_k)^2.
+%$$
+
+%\vspace{-1cm}
+\uncover<2->{\textcolor{blue}{How to find the breakpoints?}
+\begin{dinglist}{42}
+\item We have to minimize $\sum_{k=1}^K \sum_{t \in I_k}(Y_t - \widehat{\mu}_k)^2.$
+\item impossible to explore all possible segmentations for
+large $n$ and $K$.
+
+\item Solution: \emph{\textcolor{blue}{dynamic programming}} can be used
+since the contrast to be minimized is additive in $K$.
+\end{dinglist}}
+\uncover<3->{\textcolor{blue}{Choice of $K$.} Model selection: Penalized
+Log-Likelihood.}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Multiple arrays analysis}
+\begin{frame}
+\frametitle{Multiple arrays analysis}
+\textcolor{blue}{Data.}\\
+\begin{enumerate}
+\item URGV.
+\item Institut Curie.
+\end{enumerate}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}
+\begin{columns}
+\begin{column}{4cm}
+\begin{itemize}
+\item profil specific segmentation
+\item\textcolor{blue}{probe effect:} Different probes affinities may alter all the profiles at the same position.
+\end{itemize}
+\end{column}
+\begin{column}{8cm}
+\begin{figure}
+\includegraphics[scale=0.40]{profils.png}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Proposed model}
+\textcolor{blue}{Model.} $Y_{m t}$ denotes the observed logratio at position $t$
+for patient $m$. We assume that
+\begin{eqnarray*}
+Y_{m t} = \mu_{mk} + \alpha_{t} + E_{mt} \qquad \mbox{if
+position $t$ belongs to segment $I_{ k}^m$},
+\end{eqnarray*}
+where
+\begin{itemize}
+\item $I_{k}^m$ is the $k$-th segment of patient
+  $m$ ($K_m$ number of segments of patient $m$),
+\item  $\mu_{mk}$ is the mean signal in segment
+  $I_{k}^m$,
+\item  $\alpha_{t}$ is the fixed effect at position $t$,
+\item $E_{m t}$ is the noise: $\{E_{mt}\}$
+  i.i.d. $\leadsto \mathcal{N}(0, \sigma^2)$.
+\end{itemize}
+\end{frame}
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{General model writing}
+\begin{eqnarray*}
+\Ybf=\Tbf\mubf+\Xbf\thetabf+\Ebf,
+\end{eqnarray*}
+\begin{itemize}
+\item $M$ number total of patients, $N$ the total number of observations, $K$ number total of segments.
+\item $\Tbf$ is the $(N\times K)$ matrix of breakpoints.
+\item $\Xbf$ and $\thetabf$ are respectively  the matrix and vector of constants parameters containing the fixed effect of the probes.
+\item $\Ebf$ a centered Gaussian with diagonal covariance matrix $\sigma^2I$.
+\end{itemize}
+\end{frame}
+
+
+
+\section{Estimation of the parameters}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Estimation of the parameters}
+\textcolor{blue}{Direct maximisation of the likelihood.} The distribution of $\Ybf$ is
+\begin{eqnarray*}
+\Ybf\leadsto \mathcal{N}(\Tbf\mubf+ \Xbf\thetabf,\sigma^2I).
+\end{eqnarray*}
+
+We have to minimize
+\begin{eqnarray*}
+RSS(\Tbf\mubf,\thetabf) &=& \|\Ybf- \Tbf \mubf - \Xbf \thetabf\|^2
+\\&=&\sum_{m=1}^{M} \sum_{k=1}^{K_{m}} \sum_{t \in I_{k}^{m}} 
+\left(Y_{mt} - \mu_{mk} - \alpha_{t}   \right)^2,
+\end{eqnarray*}
+under the constraint $\sum_{m=1}^MK_m=K$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Estimation of the parameters}
+Because, $\thetabf$ is a global parameter, the direct maximization of the observed log-likelihood $\mathcal{L}(\Ybf)$ leads to the minimization of a non additive contrast in $K$. 
+$\Rightarrow$\centerline{Dynamic programming \textcolor{blue}{can not be used} to
+estimate
+  $\Tbf$ and $\mubf$.}\\
+\uncover<2->{\begin{block}{Idea (Bai and Perron (2003) )}
+First, minimize with respect to $\Tbf\mubf$ keeping $\thetabf$ fixed, and then minimize with respect to $\thetabf$ keeping $\Tbf\mubf$ fixed, and iterate. 
+\end{block}}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+ \begin{itemize}
+\frametitle{Estimation of the parameters}
+\item<1-> \textcolor{blue}{Step 1} When $\hat\thetabf$ is known, 
+\begin{eqnarray*}
+\hat{\Tbf\mubf} &=& \argmin_{\Tbf\mubf} \left\{ RSS(\Tbf\mubf,\hat{\thetabf}) \right\}.
+\end{eqnarray*}
+A \textcolor{blue}{dynamic programming} is required to compute the segmentation parameters $\Tbf$ and $\mubf$.
+\item<2-> \textcolor{blue}{Step 2} When $\hat\Tbf\mubf$ is known, the update of $\thetabf$ is done with the classical least squares estimation
+\begin{eqnarray*}
+\hat{\thetabf} &=& \argmin_{\thetabf} \left\{ RSS(\hat{\Tbf\mubf},\thetabf) \right\}.
+\end{eqnarray*}
+ \end{itemize}
+
+\uncover<3->{\textcolor{blue}{Choice of $K$}
+$\Rightarrow$ Penalized log-likelihood}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{The segmentation step (Lebarbier et al. (2007))}
+
+\begin{itemize}
+\item[Stage-1]<2-> Each patient $m$ is segmented into $k=1,\ldots,K_m$
+segments. This step is based on the fact that
+\begin{eqnarray*}
+\forall k \in [1:K_m], & \\
+RSS_{k}^m(]t_{1}^l,n_m]) & = \min_{h}
+\left\{RSS_{k-1}^m(]t_{1}^m,h])+RSS_{1}^m(]h,n_m]) \right\}.
+\end{eqnarray*}
+Denoted by $J^m$ the best segmentation of the patient $m$ into $k$
+segments. \\
+
+\item[Stage-2]<3-> This step is based on the fact that
+\begin{eqnarray*}
+\forall m \in [1:M], &\\
+RSS_{K}(J^1,\hdots,J^m) &= \min_{k}
+\left\{RSS_{k}(J^1,\hdots,J^{m-1})+RSS_{K-k}^m(J^m) \right\}.
+\end{eqnarray*}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Strategy for the repartition of segments accross the series}
+Set \textcolor{blue}{$R_{m,k}$} be the cost of patient $m$ in $k$ segments and set \textcolor{blue}{$C_{m,k}$} be the best cost for the first $m$ patients in $k$ segments.
+\begin{itemize}
+\item <2->\textcolor{blue}{ $m=1$:} $C_{1,k}=R_{1,k}$
+\item <3-> \textcolor{blue}{$m=2$:} $C_{2,1}=\infty$, $C_{2,2}=R_{1,1}+R_{2,1}$, $C_{2,3}=\min\{R_{1,2}+R_{2,1},R_{1,1}+R_{2,2}\},\ldots$
+\item <4-> \textcolor{blue}{$m=3$:} $C_{3,1}=C_{3,2}=\infty$, $C_{3,3}=R_{1,1}+R_{2,1}+R_{3,1}$, $C_{3,4}=\min\{C_{2,3}+R_{3,1},C_{2,2}+R_{3,2}\},\ldots$   
+\end{itemize}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Application on Curie dataset-Chromosome 6}
+\textcolor{blue}{Data.} One group of $56$ patients with bladder tumors.
+$\hat K=140$
+
+ \begin{figure}
+  \includegraphics[scale=0.30]{histo-ruptures.png}
+ \caption{Position of the breakpoints without (red) and with (black) the fixed effect.}
+  \end{figure}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\begin{columns}
+\begin{column}{3cm}
+We find a large positive fixed effet $\alpha_t$ at position $83$. 
+\end{column}
+\begin{column}{8cm}
+\begin{figure}
+  \includegraphics[scale=0.30]{effetfixe.png}
+ \caption{Estimation of the fixed effect.}
+  \end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Segmented mean profil with $\thetabf$ (in black) and without $\thetabf$ (in red)}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.30]{profil_moyen_segmented_avec_sans.png}
+\end{center}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{2 Segmented profils $\hat K=140$ }
+Legend: \textcolor{red}{red= without $\theta$} and black= with $\theta$.
+\begin{figure}
+\begin{tabular}{cc}
+\includegraphics[scale=0.20]{Segmentation_F_patients_12_C6.png}&
+\includegraphics[scale=0.20]{Segmentation_F_patients_25_C6.png}
+\end{tabular}
+\end{figure}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+\begin{frame}
+\frametitle{2 Segmented profils $\hat K=140$ }
+Legend: \textcolor{red}{red= without $\theta$} and black= with $\theta$.
+\begin{figure}
+\begin{tabular}{cc}
+\includegraphics[scale=0.20]{Segmentation_F_patients_3_C6.png}&
+\includegraphics[scale=0.20]{Segmentation_F_patients_9_C6.png}
+\end{tabular}
+\end{figure}
+$\rightarrow$ positions 17-19 : amplified region (\textcolor{blue}{gene $E2F3$})
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Segments classification}
+\begin{frame}
+Considering biologists objective and the need for a new model.
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.45]{graphe_classif.png}
+\end{center}
+\end{figure}
+We'd like segments of same type ('normal', 'deleted', 'amplified') to be gathered into classes.
+\end{frame}
+
+
+\begin{frame}
+\frametitle{A segmentation-clustering model (Work of Picard et al. 2007)}
+\begin{dinglist}{42}
+\item We suppose that there exists a \textcolor{blue}{secondary unobserved structure} that clusters the $K$ segments into $P$ classes with proportions $\pi_1,\cdots,\pi_P$:
+%\begin{eqnarray*}
+%\pi_p=\mbox{proportion of class}\  p, \ \ \sum_{p=1}^P\pi_p=1.
+%\end{eqnarray*}
+\item Conditionally to the class to which the segment belongs, we know the distribution of $Y$.
+\begin{eqnarray*}
+t\in I_{k}, k\in p, \ \ \ y_{t} \leadsto \mathcal{N}(\mu_p, s_p^2).
+\end{eqnarray*}
+\item The parameters of this model are
+\begin{eqnarray*}
+\mbox{ the breakpoint coordinates:} \ \ T  &= &\left\{t_1,\ldots,t_{K-1}\right\},\\ 
+\mbox{the mixture characteristic:}\ \  \Psi &= &(\{\pi_p\},{\mu_p}, \{s_p^2\}). 
+\end{eqnarray*}
+\end{dinglist}
+$\Rightarrow$ Estimation of the parameters can be done using a \textcolor{blue}{DP-EM algorithm}.
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Extension in the multiple case}
+\begin{itemize}
+\item<1-> \textcolor{blue}{model.}
+\begin{eqnarray*}
+t\in I_{k}^m, k\in p, \ \ \ y_{mt} \leadsto \mathcal{N}(\mu_p+\alpha_t, s_p^2).
+\end{eqnarray*}
+\item<2-> \textcolor{blue}{Parameters.}
+The parameters of this model are:
+\begin{eqnarray*}
+\mbox{ the breakpoint coordinates:} \ \ T  &= &\left\{t_1^m,\ldots,t_{K-1}^m\right\},\\
+ \mbox{the parameters of the fixed effet:} \ \ & & \alpha_1,\alpha_2,\ldots\\ 
+\mbox{the mixture characteristic:}\ \  \Psi &= &(\{\pi_p\},{\mu_p}, \{s_p^2\}). 
+\end{eqnarray*}
+\item<3-> \textcolor{blue}{Matricial formulation} 
+\begin{eqnarray*}
+\Ybf = \Tbf \Cbf\mubf + \Xbf \thetabf  + \Ebf,
+\end{eqnarray*}
+with $\Cbf$ is a random classification matrix which indicates the biological status of each segment.
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Implementations strategies}
+\begin{enumerate}
+\item<1-> \textcolor{blue}{First strategy (``True'' EM)}: 
+\begin{eqnarray*}
+(\Tbf\mubf,\thetabf,\Psi)^{[h+1]} =\argmax_{\Tbf\mubf,\thetabf,\Psi}Q^{[h]}(Y;\Tbf\mubf,\thetabf,\Psi)
+\end{eqnarray*}
+\uncover<2->{$\Rightarrow$ Segmentation in the EM step.}
+\item <3->\textcolor{blue}{Second strategy:}\\
+\vspace{0.3cm}
+$\bullet$ \textcolor{blue}{DP:} $\Tbf\mubf^{[h+1]}=\argmax_{\Tbf\mubf}\log\mathcal{L}(Y;\Tbf\mubf,(\thetabf,\Psi)^{[h+1]})$/\\
+\vspace{0.2cm}
+$\bullet$ \textcolor{blue}{EM:} $(\thetabf,\Psi)^{[h+1]}=\argmax_{\thetabf,\Psi}\log\mathcal{L}(Y;\Tbf\mubf^{[h]},\thetabf,\Psi)$.\\
+
+\uncover<4->{$\Rightarrow$ No segmentation is in the EM step.}
+\item<5-> \textcolor{blue}{Third strategy:}\\
+\vspace{0.3cm}
+$\bullet$ $\thetabf^{[h+1]}=\argmax_{\thetabf}\log\mathcal{L}(Y;\Tbf\mubf^{[h+1]},\thetabf,\Psi^{[h+1]})$/\\
+\vspace{0.2cm}
+$\bullet$ \textcolor{blue}{DP:} $\Tbf\mubf^{[h+1]}=\argmax_{\Tbf\mubf}\log\mathcal{L}(Y;\Tbf\mubf,\thetabf^{[h]},\Psi^{[h]})$.\\
+\vspace{0.2cm}
+$\bullet$ \textcolor{blue}{EM:} $\Psi^{[h+1]}=\argmax_{\Psi}\log\mathcal{L}(Y;\Tbf\mubf^{[h+1]},\thetabf^{[h]},\Psi)$. 
+\end{enumerate}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation: third strategy}
+\begin{itemize}
+\item $P=3$
+\item $\mu_1=1$, $\mu_2=0$, $\mu_3=-1$
+\item $M=20$
+\item $n_m=200$
+\item $Km=5/\mbox{patient}$ $\Rightarrow K=100$
+\item $\alpha_t\leadsto\mathcal{N}(0,0.5)$
+\end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Simulation: third strategy}
+
+\begin{figure}
+\caption{Top: Simulated fixed effect. Bottom: Predicted fixed effect}
+\begin{center}
+\includegraphics[scale=0.36]{effetfixesimul.png}
+\end{center}
+\end{figure}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%ICI%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Simulation: third strategy}
+\begin{figure}
+\caption{1 Segmented profil}
+\begin{tabular}{cc}
+\includegraphics[scale=0.19]{patientsansclassif19.png}&
+\includegraphics[scale=0.19]{patient19simul.png}
+\end{tabular}
+\end{figure}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation: third strategy}
+\begin{figure}
+\caption{1 Segmented profil}
+\begin{tabular}{cc}
+\includegraphics[scale=0.19]{patientsansclassif6.png}&
+\includegraphics[scale=0.19]{pat6simul.png}
+\end{tabular}
+\end{figure}
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Conclusion}
+\begin{itemize}
+\item Applications of this method.
+\item The results are very close to those obtained with the random effect model.
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\begin{center}
+\textcolor{blue}{\bf THANKS FOR YOUR ATTENTION!}
+\end{center}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

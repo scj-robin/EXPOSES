@@ -1,0 +1,525 @@
+\documentclass[11pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+% Commands
+\input{TikZcommands.tex}
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+% \newcommand{\emphase}[1]{{#1}}
+\newcommand{\paragraph}[1]{\textcolor{darkred}{#1}}
+\newcommand{\refer}[1]{{\small{\textcolor{gray}{{[\cite{#1}]}}}}}
+% \newcommand{\Refer}[1]{{\small{\textcolor{gray}{{[#1]}}}}}
+\renewcommand{\newblock}{}
+
+% Symbols
+\newcommand{\Abf}{{\bf A}}
+\newcommand{\Beta}{\text{B}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\BIC}{\text{BIC}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\dd}{\text{~d}}
+\newcommand{\dbf}{{\bf d}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Ebf}{{\bf E}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Gam}{\mathcal{G}\text{am}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Ibb}{\mathbb{I}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\ICL}{\text{ICL}}
+\newcommand{\Cov}{\mathbb{C}\text{ov}}
+\newcommand{\Corr}{\mathbb{C}\text{orr}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\Vsf}{\mathsf{V}}
+\newcommand{\pen}{\text{pen}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Jcal}{\mathcal{J}}
+\newcommand{\Kbf}{{\bf K}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\mum}{\mu(\mbf)}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Nbf}{{\bf N}}
+\newcommand{\Nm}{N(\mbf)}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\Obf}{{\bf 0}}
+\newcommand{\Omegas}{\underset{s}{\Omega}}
+\newcommand{\Pbf}{{\bf P}}
+\newcommand{\pt}{\widetilde{p}}
+\newcommand{\Pt}{\widetilde{P}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\BP}{\text{BP}}
+\newcommand{\EM}{\text{EM}}
+\newcommand{\VEM}{\text{VEM}}
+\newcommand{\VBEM}{\text{VBEM}}
+\newcommand{\cst}{\text{cst}}
+\newcommand{\obs}{\text{obs}}
+\newcommand{\ra}{\emphase{\mathversion{bold}{$\rightarrow$}~}}
+%\newcommand{\transp}{\text{{\tiny $\top$}}}
+\newcommand{\transp}{\text{{\tiny \mathversion{bold}{$\top$}}}}
+\newcommand{\logit}{\text{logit}\xspace}
+
+% Directory
+\newcommand{\fignet}{/home/robin/Bureau/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figchp}{/home/robin/Bureau/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title[LBM for metagenomics]{Latent Block Model for Overdispersed Count Data
+Application in Microbial Ecology}
+
+\author[S. Robin]{S. Robin \\ ~\\
+  \begin{tabular}{ll}
+    Joint work with \underline{J. Aubert}, S. Schbath
+  \end{tabular}
+  }
+
+\institute[INRA / AgroParisTech]{~ \\%INRA / AgroParisTech \\
+  \vspace{-.1\textwidth}
+  \begin{tabular}{ccc}
+    \includegraphics[height=.25\textheight]{\fignet/LogoINRA-Couleur} & 
+    \hspace{.02\textheight} &
+    \includegraphics[height=.06\textheight]{\fignet/logagroptechsolo} % & 
+%     \hspace{.02\textheight} &
+%     \includegraphics[height=.09\textheight]{\fignet/logo-ssb}
+    \\ 
+  \end{tabular} \\
+  \bigskip
+  }
+
+\date[Mar. 2017, AgroParisTech]{ABS4NGS, Mar. 2017, AgroParisTech}
+
+%====================================================================
+%====================================================================
+\maketitle
+%====================================================================
+
+%====================================================================
+%====================================================================
+\section{Bi-clustering for metagenomics}
+%====================================================================
+% \frame{\frametitle{}}
+
+%====================================================================
+\subsection{Metagnomics experiment}
+%====================================================================
+\frame{\frametitle{A typical metagenomic experiment}
+
+  \paragraph{Amplicon-based sampling.} Consider 
+  \begin{itemize}
+   \item $n$ different (bacterial, fungal, ...) species / OTU and
+   \item $m$ different samples / patients / media / conditions.
+  \end{itemize}
+
+  \bigskip \bigskip 
+  NGS provides
+  \begin{eqnarray*}
+     Y_{ij} & = & \text{number of reads from species $i$ in sample $j$} \\
+	 & \propto & \text{abundance of species $i$ in sample $j$}
+  \end{eqnarray*}
+
+  \bigskip \bigskip 
+  \paragraph{Question.} 
+  Can we exhibit some patterns in the distribution of the species abundances across samples?
+}
+
+%====================================================================
+\subsection{Need for dedicated bi-clustering methods}
+%====================================================================
+\frame{\frametitle{Bi-clustering problem}
+
+  \paragraph{Rephrased problem:} Find 
+  \begin{itemize}
+   \item groups of species having similar abundance profile across the samples and 
+   \item groups of samples histing the different species in similar proportions.
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Bi-clustering problem:} Simultaneously determine
+  \begin{itemize}
+   \item row clusters and
+   \item column clusters
+  \end{itemize}
+  in a $n \times m$ matrix of counts.
+}
+
+%====================================================================
+\frame{\frametitle{Approach}
+
+  \paragraph{Model-based clustering:}
+  $$
+  \rightarrow \text{LBM = Latent Block-Model \refer{GoN05,BrM15}}
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Specificities of NGS data:}
+  \begin{itemize}
+   \item count data,
+   \item over dispersed (wrt Poisson),
+   \item with heterogeneous sampling effort (= sequencing depth), 
+   \item with high variation among the species abundances,
+   \item \textcolor{gray}{possibly with replicates}.
+  \end{itemize}
+}
+
+%====================================================================
+%====================================================================
+\section{Model and inference}
+%====================================================================
+
+%====================================================================
+\subsection{Model}
+%====================================================================
+\frame{\frametitle{Latent Block Model}
+
+  \paragraph{Bi-clustering.} $K$ species groups, $G$ sample groups
+  \begin{itemize}
+   \item $Z_i =$ group to which species $i$ belongs to ($\in \{1, ... K\}$);
+   \item $W_j =$ group to which sample $j$ belongs to ($\in \{1, ... G\}$)
+  \end{itemize}
+  both latent = hidden = unobserved.
+  
+  \bigskip
+  \ra Incomplete data model
+
+  \bigskip \bigskip \pause
+  \paragraph{Ex: Poisson LBM.}
+  \begin{eqnarray*}
+   (Z_i) \text{ iid} & \sim & \pi \qquad \qquad (\text{species prop.}) \\
+   (W_j) \text{ iid} & \sim & \rho \qquad \qquad (\text{sample prop.}) \\
+   (Y_{ij}) \text{ indep } | (Z_i); (W_j) & \sim & \Pcal(\lambda_{Z_iW_j}) 
+  \end{eqnarray*}
+  Does not accommodate for NGS data specificities.
+}
+
+%====================================================================
+\frame{\frametitle{Over-dispersion}
+
+  \paragraph{Negative-binomial.} Most popular distribution of NGS counts:
+  $$
+  Y \sim \Ncal\Bcal(\lambda, \phi) 
+  \qquad \quad 
+  \Esp Y = \lambda, 
+  \qquad
+  \Var Y = \lambda (1 + \phi \lambda) \geq \lambda.   
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Gamma-Poisson representation.} Take $a = 1/\phi$ and draw
+  $$
+  U \sim \Gam(a, a), 
+  \quad
+  Y \; | \; U \sim \Pcal(\lambda U)
+  \qquad \Rightarrow \qquad 
+  Y \sim \Ncal\Bcal(\lambda, \phi).
+  $$
+  Negative binomial = Poisson with latent Gamma
+  
+  \bigskip \bigskip 
+  \ra Incomplete data model ($Y$ is observed, $U$ is not) \refer{BPR15}.
+}
+
+%====================================================================
+\frame{\frametitle{LBM for metagenomic data}
+
+  \paragraph{Hidden layer:}
+  \begin{eqnarray*}
+   (Z_i) \text{ iid} & \sim & \pi \qquad \qquad (\text{species prop.}) \\
+   (W_j) \text{ iid} & \sim & \rho \qquad \qquad (\text{sample prop.}) \\
+   (U_{ij}) \text{ iid} & \sim & \Gam(a, a) 
+  \end{eqnarray*}
+  
+  \bigskip \pause
+  \paragraph{Observed counts:} (interest of model-based approaches)
+  $$
+  Y_{ij} \; | \; Z, W, U \sim \Pcal\left(\mu_i \; \nu_j \; \alpha_{Z_i W_j} \; U_{ij} \right)
+  $$
+  where
+  \begin{itemize}
+   \item $\mu_i:$ mean abundance of species $i$
+   \item $\nu_j:$ sequencing depth in sample $j$ (fixed)
+   \item \emphase{$\alpha_{k\ell}:$ interaction term between group species $k$ and sample group $\ell$.}
+  \end{itemize}
+}
+
+%====================================================================
+\subsection{Variational inference}
+%====================================================================
+\frame{\frametitle{Inference}
+
+  \paragraph{Aim:} Retrieve 
+  \begin{itemize}
+   \item $Z_i =$ species group, or at least $P(i \in k | Y)$;
+   \item $W_j =$ sample group, or at least $P(j \in \ell | Y)$;
+  \end{itemize}
+  and estimate the interaction parameter $\alpha = (\alpha_{k\ell})$.
+
+  \bigskip \bigskip \pause
+  \paragraph{Which means} (maximum-likelihood approach)
+  \begin{itemize}
+   \item Compute $p(Z, W, U |Y)$;
+   \item Maximize $\log p_\theta(Y)$, where $\theta = (\alpha, \mu)$.
+  \end{itemize}
+  
+  \bigskip \bigskip 
+  Most popular algorithm: EM \refer{DLR77}.
+
+}
+
+%====================================================================
+\frame{\frametitle{Variational approximation}
+
+  Species group $Z_i$ and sample group $W_j$ are not independent given $Y_{ij}$
+  $$
+  \text{\ra $p(Z, W, U \; | \; Y)$ intractable}
+  $$
+  
+  \bigskip 
+  \paragraph{Variational approximation \refer{WaJ08,Jaa00}.} Find
+  \begin{eqnarray*}
+  \pt(Z, W, U) & \simeq & p(Z, W, U |Y) \\ 
+  \text{such that} \qquad
+  \pt(Z, W, U) & = & \pt_1(Z) \; \pt_2(W) \; \pt_3(U)
+  \end{eqnarray*}
+  (mean-field approximation).
+
+%   $$
+%   \pt(Z, W, U) \simeq p(Z, W, U |Y)
+%   $$
+%   such that
+%   $$
+%   \pt(Z, W, U) = \pt_1(Z) \; \pt_2(W) \; \pt_3(U).
+%   $$
+%   (mean-field approximation)
+  
+  \bigskip \bigskip 
+  \ra Variational EM (VEM) algorithm provide a lower bound 
+  $$
+  J(Y, \pt, \widehat{\theta}) \leq \log p_{\widehat{\theta}}(Y).
+  $$
+
+}
+
+%====================================================================
+\subsection{Model selection}
+%====================================================================
+\frame{\frametitle{Penalized 'likelihood' criteria}
+
+  \paragraph{Penalized criterion.} $\log p_{\widehat{\theta}}(Y)$ intractable
+  $$
+  \log p_{\widehat{\theta}}(Y) - \text{pen}(p_{\widehat{\theta}})
+  \qquad \rightarrow \qquad
+  J(Y, \pt, \widehat{\theta}) - \text{pen}(p_{\widehat{\theta}})
+  $$
+  
+  \bigskip \bigskip 
+  \paragraph{BIC \& ICL.} $\Hcal =$ entropy
+  \begin{eqnarray*}
+   \text{pen}_{BIC} & = & \left[ (K-1) \log n - (G-1) \log m - KG \log (nm) \right] / 2\\
+   ~ \\
+   \text{pen}_{ICL_1} & = & \text{pen}_{BIC} + \Hcal(\pt_Z)  + \Hcal(\pt_W) \qquad (\text{classif. entropy}) \\
+   ~ \\
+   \text{pen}_{ICL_2} & = & \text{pen}_{ICL_1} + \Hcal(\pt_U) \qquad \qquad \quad (\text{dispersion entropy})
+  \end{eqnarray*}
+}
+
+%====================================================================
+%====================================================================
+\section{Illustrations}
+%====================================================================
+\frame{\frametitle{Global patterns}
+
+  \paragraph{Dataset:} \refer{McH13}
+  \begin{itemize}
+   \item $n = 215$ OTU
+   \item $m = 26$ samples (ocean, soil, human body, ..., several of each)
+  \end{itemize}
+
+  \bigskip \bigskip 
+  \paragraph{Results:}
+  \begin{itemize}
+   \item $\widehat{K} = 22$ groups of bacteria
+   \item $\widehat{G} = 16$ groups of plants
+  \end{itemize}
+
+  \bigskip \bigskip 
+  \paragraph{Comments:} 
+  \begin{itemize}
+   \item Sample group retrieve the sample types
+   \item Clear interaction pattern
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Global patterns}
+  \vspace{-.05\textheight}
+  $$
+  \includegraphics[height=.9\textheight]{../FIGURES/ARS17-GlobalPatterns}
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{Meta-rhizo}
+
+  \paragraph{Dataset:}
+  \begin{itemize}
+   \item $n = 288$ bacteria (genus)
+   \item $m = 483$ samples = rhizosphere of different plants (genotypes)
+   \item $Y_{+j} \simeq 32000$
+  \end{itemize}
+
+  \bigskip \bigskip 
+  \paragraph{Results:}
+  \begin{itemize}
+   \item $\widehat{K} = 13$ groups of bacteria
+   \item $\widehat{G} = 12$ groups of samples
+  \end{itemize}
+
+  \bigskip \bigskip 
+  \paragraph{Extension:} 
+  \begin{itemize}
+   \item Despite $\nu_j$, bacteria groups correspond to abundance groups
+   \item Plant groups corresponds to diversity levels (Shannon index)
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Meta-rhizo}
+  \vspace{-.05\textheight}
+  $$
+  \includegraphics[height=.9\textheight]{../FIGURES/ARS17-MetaRhizo}
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{Oak mildew pathobiome}
+
+  \paragraph{Dataset:}
+  \begin{itemize}
+   \item $n = 114 = 48$ fungi $+ 66$ bacteria
+   \item $m = 116$ leaves collected from 3 trees (resistant, intermediate, susceptible)
+  \end{itemize}
+
+  \bigskip \bigskip 
+  \paragraph{Results:} 
+  \begin{itemize}
+   \item $\widehat{K} = 13$ groups of OTU, 
+   \item $\widehat{G} = 2$ groups of leafs
+  \end{itemize}
+ 
+  \bigskip \bigskip 
+  \paragraph{Results:} 
+  \begin{itemize}
+   \item Heterogeneous over-dispersion parameters ($a_{kg}$),
+   \item Groups reveal the abundance of {\sl E. alphitoides} (pathogene)
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Meta-rhizo}
+
+%   $$
+%   \begin{tabular}{cc}
+%     & {\sl E. alphitoides} \\
+%     $\log (\alpha_{k1} / \alpha_{k2})$ & abundance in sample groups \\
+%     \includegraphics[height=.6\textheight]{../FIGURES/ARS17-TreeB}   
+%     &
+% %     \vspace{.15\textheight}
+%     \includegraphics[height=.5\textheight]{../FIGURES/ARS17-TreeA}
+%   \end{tabular}
+%   $$
+
+  $$
+  \begin{tabular}{c}
+    $\log (\alpha_{k1} / \alpha_{k2})$ \\
+    \includegraphics[height=.6\textheight]{../FIGURES/ARS17-TreeB}   
+  \end{tabular}
+  \begin{tabular}{c}
+    {\sl E. alphitoides} \\
+    abundance in sample groups \\ ~\\ 
+    \includegraphics[height=.5\textheight]{../FIGURES/ARS17-TreeA}
+  \end{tabular}
+  $$
+}
+
+% %====================================================================
+% %====================================================================
+% \section{Conclusion}
+% %====================================================================
+% \frame{\frametitle{Conclusion}
+% 
+%   \paragraph{Comments:} 
+%   \begin{itemize}
+%    \item Over-dispersion parameter depending on the group
+%   \end{itemize}
+% }
+
+
+%====================================================================
+\frame{ \frametitle{References}
+{\tiny
+  \bibliography{/home/robin/Biblio/BibGene}
+%   \bibliographystyle{/home/robin/LATEX/Biblio/astats}
+  \bibliographystyle{alpha}
+  }
+}
+
+
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

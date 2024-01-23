@@ -1,0 +1,97 @@
+\documentclass[10pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+\usetheme{CambridgeUS}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+\beamertemplatenavigationsymbolsempty
+
+% Packages
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{xspace}
+
+% Commands
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+\newcommand{\paragraph}[1]{\textcolor{darkred}{#1}}
+\newcommand{\refer}[1]{{{\textcolor{blue}{{\cite{#1}}}}}}
+\newcommand{\Refer}[1]{{{\textcolor{blue}{{\sl #1}}}}}
+%\newcommand{\newblock}{}
+
+% Symbols
+% Symboles
+\newcommand{\dd}{\text{d}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Espt}{\widetilde{\Esp}}
+\newcommand{\Hcal}{\mathcal{H}}
+\renewcommand{\Pr}{{\mathbb{P}}}
+\newcommand{\Prt}{\widetilde{\Pr}}
+\newcommand{\pt}{\widetilde{p}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\ra}{\textcolor{darkred}{$\longrightarrow$}\xspace}
+
+\newcommand{\beginbackup}{
+   \newcounter{framenumbervorappendix}
+   \setcounter{framenumbervorappendix}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+   \addtocounter{framenumbervorappendix}{-\value{framenumber}}
+   \addtocounter{framenumber}{\value{framenumbervorappendix}} 
+}
+
+
+%--------------------------------------------------------------------
+\title{Statistical analysis of network topology}
+  
+% Bayesian model averaging of stochastic block models to estimate the graphon function 
+% Averaging Stochastic Block Models to estimate the graphon function of a W-graph
+
+\author{S. Donnet \& S. Robin}
+
+\institute{INRA / AgroParisTech}
+
+\date{Paris, January 2015}
+
+%--------------------------------------------------------------------
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\begin{document}
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+
+\frame{\titlepage}
+% \frame{\frametitle{Content} \tableofcontents}
+
+% donnet@ceremade.dauphine.fr
+
+% SD
+\input{TopoMIA518-Intro.tex}
+%\input{TopoMIA518-Algo.tex}
+\input{TopoMIA518-Indep.tex}
+
+% SR
+\input{TopoMIA518-CondIndep.tex}
+\input{TopoMIA518-Extensions.tex}
+
+%--------------------------------------------------------------------
+\tiny{
+  \bibliography{TopoMIA518-Biblio.bib}
+  \bibliographystyle{plain}
+  }
+%--------------------------------------------------------------------
+\beginbackup
+
+%--------------------------------------------------------------------
+\backupend
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\end{document}
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+

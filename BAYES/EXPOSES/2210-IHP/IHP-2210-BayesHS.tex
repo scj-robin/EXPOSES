@@ -1,0 +1,617 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+% \usepackage[dvipsnames]{xcolor}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd, mathabx}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+
+% Directory
+\newcommand{\ts}{{\theta^{*}}}
+\newcommand{\kl}{{(k\ell)}}
+\newcommand{\figCMR}{/home/robin/Bureau/RECHERCHE/ECOLOGIE/CountPCA/sparsepca/Article/Network_JCGS/trunk/figs}
+\newcommand{\fignet}{/home/robin/Bureau/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figchp}{/home/robin/Bureau/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+\newcommand{\figtree}{/home/robin/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Data/Tree/Fig}
+\newcommand{\figzebra}{/home/robin/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Data/Zebra/Fig}
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title[Tree-based mixtures]{Tree-based mixtures: Application in epidemiology}
+
+\author[S. Robin]{St\'ephane Robin \\ ~ \\
+joint work with P. Barbillon, L. Schwaller}
+
+\institute{Sorbonne Universit\'e / LPSM}
+
+\date[IHP, Oct. 2022]{Bayesian Methods for the Social Sciences, IHP, Oct. 2022}
+
+%====================================================================
+%====================================================================
+\maketitle
+%====================================================================
+
+%====================================================================
+%====================================================================
+\section*{Introduction}
+%====================================================================
+%====================================================================
+\frame{\frametitle{Spred of an 'epidemics' \refer{BSR19}} 
+
+  \paragraph{Data:} $n$ times, $p$ individuals,
+  \begin{align*}
+     Y_{tj} & = \text{status ('sick' / 'healthy') of individual $j$ at time $t$}
+  \end{align*}
+  
+  $$
+  \includegraphics[width=.6\textwidth]{\fignet/BSR18-Fig1}
+  $$
+  
+  \bigskip \pause
+  \paragraph{Assumption:} 'Contamination' spreads according to some 'social' network (not anybody can be 'contaminated' by anybody)
+  
+  \bigskip \pause
+  \paragraph{Final aim:} Learn something about this network.
+  
+  \bigskip 
+  \paragraph{For now:} Observe that the path of the 'epidemics' is a tree.
+}
+
+% %====================================================================
+% \frame{\frametitle{Outline} \tableofcontents}
+% 
+%====================================================================
+%====================================================================
+\section{Reminder on graphical models and trees}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+%====================================================================
+\frame{\frametitle{Graphical models} 
+
+  \paragraph{Undirected graphical model \refer{Lau96}:} the multivariate distribution $p$ is {\em faithful} to the graph $G$ iff
+  $$
+  p(Y) \; \propto \; \prod_{C \in \Ccal(G)} \psi_C(Y^C)
+  $$
+  (i.e., iff $p$ can be factorized according to the set  $\Ccal(G)$ of maximal cliques of $G$)
+%   \ra Markov property: $G$ encodes the conditional independences of $p$:
+%   $$
+%   j \nsim k \qquad \Leftrightarrow \qquad Y_j \perp Y_k \mid Y_{\setminus \{j, k\}}
+%   $$
+%   $$
+%   j \sim k \qquad \Leftrightarrow \qquad Y_j \notperp Y_k \mid Y_{\setminus \{j, k\}}
+%   $$
+  
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Example:} ~ \\ ~ \\
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.3\textwidth}}
+	 \input{\fignet/SimpleGraphModelY}
+    \end{tabular}
+    & 
+    \begin{tabular}{p{.65\textwidth}}
+    $p(Y) \; \propto \; \psi_1(Y_1, Y_2, Y_3) \; \psi_2(Y_3, Y_4)$ \\~
+	 \begin{itemize}
+	 \item Connected graph: all variables are dependent \\~
+	 \item $Y_3 =$ separator: $\left(Y_4 \perp (Y_1, Y_2)\right) \mid Y_3$ 
+	 \end{itemize}
+    \end{tabular}
+  \end{tabular} 
+
+}
+
+%====================================================================
+\frame{\frametitle{Tree-shaped graphical model} 
+
+  \paragraph{Spanning tree =} acyclic graph connecting all the nodes
+  
+  \medskip
+  \begin{centering}
+    \begin{tabular}{cc|c|c}
+      \multicolumn{2}{c|}{spanning trees} & not spanning & not a tree \\
+      & & & \\
+      \begin{tabular}{p{.18\textwidth}}
+        \input{\fignet/SpanningTree1}
+      \end{tabular}
+      & 
+      \begin{tabular}{p{.18\textwidth}}
+        \input{\fignet/SpanningTree2}
+      \end{tabular}
+      & \begin{tabular}{p{.18\textwidth}}
+        \input{\fignet/NotSpanning} 
+      \end{tabular}
+      & \begin{tabular}{p{.18\textwidth}}
+        \input{\fignet/NotTree}
+      \end{tabular}
+    \end{tabular} 
+  \end{centering}
+
+  \bigskip \bigskip \pause
+  \paragraph{Tree-shaped graphical model:} $p$ faithful to the spanning tree $T$
+  $$
+  \Leftrightarrow \qquad 
+  p(Y) \; \propto \; \prod_{(j, k) \in T} \psi_{jk}(Y_j, Y_k)
+  $$
+  (cliques are only edges) 
+  
+  \bigskip
+  \ra All variables are dependent ({\sl spanning}) but few are conditionnaly dependent ({\sl tree})
+}
+
+%====================================================================
+\frame{\frametitle{Maximum likelihood inference} 
+
+  \paragraph{Consider} $Y \sim p$, faithful to $T$:
+  $$
+  \log p_T(Y) = \sum_{(j, k) \in T} \log \psi_{jk}(Y_j, Y_k) + \cst
+  $$
+  
+  \bigskip \pause
+  Suppose each $\psi_{jk}$ has a parametric form and that MLEs $\widehat{\psi}_{jk}$ is available.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Tree MLE.} Finding 
+  $$
+  \widehat{T} = \argmax_{T \in \Tcal} \; \log p_T(Y)
+  $$
+  amounts to solve a \emphase{maximum spanning tree} problem, where edge $(j, k)$ has weight
+  $$
+  \log \widehat{\psi}_{jk}(Y_j, Y_k)
+  $$
+  (Chow \& Liu algorithm\footnote{Actually $\psi_{jk}(Y_j, Y_k) = p(Y_j, Y_k) / \left(p(Y_j) p(Y_k)\right)$, so edge weight = mutual information}: \refer{ChL68})
+}
+
+%====================================================================
+%====================================================================
+\section{Tree shaped distributions and mixtures}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Tree-based mixture} 
+
+  \paragraph{Mixture of tree-shaped distributions \refer{MeJ06,Kir07}.}
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item {Tree marginal distribution:} product form
+    $$
+    p(T) = B^{-1} \prod_{(j, k) \in T} \beta_{jk}, 
+    \qquad 
+    B = \emphase{\sum_{T \in \Tcal}} \prod_{(j, k) \in T} \beta_{jk}.
+    $$
+    \item \pause {Data conditional distribution (likelihood):} 
+    $$
+    p(Y \mid T) \; \propto \prod_{(j, k) \in T} \psi_{jk}(Y_j, Y_k).
+    $$ 
+    \item \pause {Data marginal distribution:} 
+    \begin{align*}
+    p(Y) 
+    = \emphase{\sum_{T \in \Tcal}} p(T) p(Y \mid T) 
+    \; \propto \; \emphase{\sum_{T \in \Tcal}} \prod_{(j, k) \in T} \underset{w_{jk}(Y)}{\underbrace{\beta_{jk} \psi_{jk}(Y_j, Y_k)}}.
+    \end{align*} 
+    \item \pause {Tree conditional distribution:} product form
+    $$
+    p(T \mid Y) = C^{-1} \prod_{(j, k) \in T} w_{jk}(Y), 
+    \qquad
+    C = \emphase{\sum_{T \in \Tcal}} \prod_{(j, k) \in T} w_{jk}(Y).    
+    $$
+  \end{itemize} 
+}
+
+%====================================================================
+\frame{\frametitle{Summing over trees} 
+
+  We need to sum over the set $\Tcal$ of spanning trees, but
+  $$
+  \card{\Tcal} = p^{p-2}
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Matrix-Tree Theorem (Kirchhoff) \refer{Cha82}.} Let $W = [w_{jk}]$ be a symmetric matrix with null diagonal and $\Delta(W)$, its Laplacian:
+  $$
+  \Delta(W)_{jk} = \left\{
+    \begin{array}{rl}
+      \sum_k w_{jk} & \text{if } j = k \\
+      -w_{jk} & \text{otherwise}
+    \end{array}
+  \right.
+  $$
+  then 
+  \begin{enumerate}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item \pause all the cofactors $[\Delta(W)]^{uv}$ of $\Delta(W)$ are equal 
+    \item \pause and
+    $$
+    [\Delta(W)]^{uv} = \emphase{\sum_{T \in \Tcal}} \prod_{(j, k) \in T} w_{jk}
+    $$
+    (i.e.: $\sum_{T \in \Tcal}$ can be computed at the price of a determinant: \emphase{$O(p^3)$})
+  \end{enumerate}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Edge probability} 
+
+  We may not be interested in the whole (conditional) distribution of $T$, but rather on edge probabilities:
+  $$
+  \Pr\{(j, k) \in T\} 
+  \qquad \text{or} \qquad 
+  \Pr\{(j, k) \in T \mid Y\}.
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Theorem \refer{Kir07}.} Denote $W^{ab}$ the same matrix as $W$ but setting $w_{ab} = w_{ba} = 0$, then
+  $$
+  [\Delta(W^{ab})]^{ab} = \sum_{\emphase{T \in \Tcal: (a, b) \notin T}} \prod_{(j, k) \in T} w_{jk}
+  $$
+  
+  \bigskip \pause
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item Gives access to $\Pr\{(j, k) \notin T\}$ or $\Pr\{(j, k) \notin T\}$
+    \item All $[\Delta(W^{ab})]^{ab}$ can be computed at the price of one matrix inversion: \emphase{$O(p^3)$}
+  \end{itemize}
+}
+
+%====================================================================
+%====================================================================
+\section{Spread of an epidemics}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Susceptible-Infected-Susceptible (SIS) model} 
+
+  \paragraph{Data.} $n$ times, $p$ individuals
+  $$
+  Y_{tj} = 
+  \left\{ \begin{array}{rl}
+  1 & \text{if individual $j$ is infected at time $t$} \\
+  0 & \text{otherwise}
+    \end{array} \right.
+  $$
+  \ra Complete observations
+  
+  \bigskip \bigskip \pause 
+  \paragraph{Model.} At each time $t$, each node $k$ 
+  \begin{itemize}
+    \item picks up a parent $j$ at time $t-1$ with probability $\propto \; \beta_{jk}$ and, 
+    \item denoting $\psi_{jk}^t = \Pr\{Y_{t+1, k} \mid Y_{t, k}, Y_{t, j}\}$, it evolves according to
+    $$
+    \begin{array}{cc|cc}
+      \multicolumn{2}{c|}{\psi_{jk}^t} & Y_{t+1, k} = 0 & Y_{t+1, k} = 1 \\
+      \hline
+      Y_{t, k} = 1 & Y_{t, j} = 1 & e & \textcolor{gray}{1-e} \\
+      Y_{t, k} = 1 & Y_{t, j} = 0 & e & \textcolor{gray}{1-e} \\
+      Y_{t, k} = 0 & Y_{t, j} = 1 & \textcolor{gray}{1-c} & c \\
+      Y_{t, k} = 0 & Y_{t, j} = 0 & \textcolor{gray}{1} & 0 
+    \end{array}
+    $$ 
+  \end{itemize}
+  \begin{itemize}
+   \item $c =$ contamination rate
+   \item $e =$ extinction rate (become susceptible again)
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{A tree-shaped path} 
+
+  Adding a fictitious root $\Delta$ (at time 0), a path is a tree $T = (T^1, \dots, T^{n-1})$:
+  $$
+  \includegraphics[width=.6\textwidth]{\fignet/BSR19-Fig1}
+  $$
+  
+  \bigskip \pause
+  Define $\Tcal_\Delta$ the set of oriented spanning tree
+  \begin{itemize}
+   \item over the nodes $\Delta \cup \{(t, k): 1 \leq t \leq n, 1 \leq k \leq p\}$,
+   \item rooted in $\Delta$,
+   \item with edges connecting only time-adjacent nodes $(j \neq k)$
+  \end{itemize}
+  
+  \bigskip
+  \ra $\Tcal_\Delta =$ set of spanning trees going 'forward' in time ($|\Tcal_\Delta| = (p-1)^{p(n-1)}$)
+}
+
+%====================================================================
+\frame{\frametitle{Inference} 
+
+  \paragraph{EM algorithm.} Denote 
+  $$\theta = (\beta = [\beta_{jk}], e, c)$$
+  \begin{description}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item[E Step:] \pause Compute the conditional distribution
+    $$
+    p(T_\Delta = (T^1, \dots T^{n-1}) \mid Y)
+%     =
+%     \frac{\prod_{t=1}^{n-1} \prod_{(j, k) \in T^t} \beta_{jk} \psi_{jk}^t}{\sum_{T \in \Tcal_\Delta} \prod_{t=1}^{n-1} \prod_{(j, k) \in T^t} \underset{w^t_{jk}}{\underbrace{\beta_{jk} \psi_{jk}^t}}}
+    =
+    \frac{\prod_{t=1}^{n-1} \prod_{(j, k) \in T^t} w^t_{jk}}{\emphase{\sum_{T \in \Tcal_\Delta}} \prod_{t=1}^{n-1} \prod_{(j, k) \in T^t} w^t_{jk}}, 
+    \qquad
+    w^t_{jk} = \beta_{jk} \psi_{jk}^t
+    $$
+    \item[M Step:] \pause Update the parameters as
+    $$
+    \widehat{\theta} = \argmax \Esp\left[\log p_\theta(Y, T) \mid Y\right]
+    $$
+  \end{description}
+
+  \bigskip \bigskip \pause
+  \paragraph{Critical step = E step.} \\
+  \medskip
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item We now need to sum over the (huge) set of rooted oriented trees $\Tcal_\Delta$.
+    \item Hopefully, a alternative version of the matrix-tree theorem enables to sum over all {\sl directed} trees ($W$ asymmetric) with given root \refer{Cha82}.
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{An easy situation} 
+
+  \begin{tabular}{lll}
+   \hspace{-.05\textwidth}
+    \begin{tabular}{p{.015\textwidth}}
+      $W =$
+    \end{tabular}
+    &
+    \begin{tabular}{l}
+      \includegraphics[width=.5\textwidth]{\fignet/BSR19-Fig2p}
+    \end{tabular}
+   &
+   \hspace{-.05\textwidth}
+   \begin{tabular}{p{.45\textwidth}}
+    \paragraph{$W = [w^t_{jk}]$} where $w^t_{jk} = \beta_{jk} \psi_{jk}^t$: \\
+    Edges connect only time-adjacent \\
+    nodes
+    
+    \bigskip \bigskip \pause
+    \paragraph{\ra Laplacian $\Delta(W)$} \\ is upper triangular 
+    
+    \bigskip \bigskip 
+    \paragraph{\ra Matrix-tree theorem:}
+    $$
+    \Delta(W)^{00} = \prod_{t, j} \left(\sum_k \beta_{jk} \psi_{jk}^t\right)
+    $$
+    \ra computable in $O(np^2)$
+
+   \end{tabular}
+  \end{tabular}
+}
+
+%====================================================================
+\frame{\frametitle{In practice} 
+
+  \paragraph{Edge probabilities:}
+  \begin{align*}
+    \text{At a given time $t$:} & \qquad \Pr\{(j, k) \in T^t \mid Y\} \\
+    \text{At least in one time:} & \qquad \Pr\{\exists t: (j, k) \in T^t \mid Y\}
+  \end{align*}
+
+  \bigskip \bigskip \pause
+  \paragraph{Alternatives.}
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item Bayesian inference can be carried out for $e$ an $c$
+    \item Iterating the EM steps does not improve the performances very much
+    \item Observing multiple waves of the epidemics (even over a shortest time-range) improves the accuracy (see next)
+  \end{itemize} 
+}
+
+%====================================================================
+\frame{\frametitle{Simulation study} 
+
+  \paragraph{Design:} Consider a graph $G$ and launch the 'epidemics' along its edges.
+  
+  \bigskip 
+  \paragraph{Method:} Predict if $(j, k) \in G$ based on edge probability $\Pr\{\exists t: (j, k) \in T^t \mid Y\}$.
+  
+  \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Parameters:} $p = 20$ nodes \\
+      ~ \\ \pause
+      $G =$ ER: Erd\"os, \\
+      $G =$ PA: preferential attachment \\
+      ~\\ \pause
+      $d =$ network density \\
+      $e = .05$ \\
+      ~\\ \pause
+      \emphase{uW:} one wave ($n = 200$) \\
+      \emphase{mW:} 10 waves ($n = 20$) \\
+      ~ \\ \pause
+      \emphase{s}: forcing edge probabilities to be symmetric \\
+      ~ \\ ~ \\ 
+    \end{tabular} \pause
+    &
+    \hspace{-.05\textwidth}
+    \begin{tabular}{l}
+      \paragraph{AUC:} \\
+      \includegraphics[width=.35\textwidth, trim=0 0 255 300, clip=]{\fignet/BSR19-Fig3}
+    \end{tabular}   
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Illustration: Seed exchange network} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Question:} decipher the social structure underlying seed exchanges between farmers 
+      
+      \bigskip
+      \paragraph{Telangana region (India) data:}
+      \begin{itemize}
+        \item  $p = 127$ farmers
+        \item  $n = 3$ years
+        \item  14 seed varieties (waves) 
+      \end{itemize}
+%       $p = 127$ farmers \\
+%       $n = 3$ years \\
+%       14 seed varieties (waves) 
+      
+      \bigskip
+      $Y_{ti}^h =1$ if farmer $i$ holds variety $h$ at time $t$.
+      
+      \bigskip
+      No symmetry assumption.
+      
+      \bigskip
+      \paragraph{More exchanges}
+      \begin{itemize}
+        \item within the same caste
+        \item within the same village
+        \item from younger to older
+      \end{itemize}
+%       \ra within the same caste \\
+%       \ra within the same village \\
+%       \ra from younger to older
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{c}
+      \includegraphics[width=.45\textwidth]{\fignet/BSR19-Fig4} \\
+      Most probable donor for each farmer
+    \end{tabular}
+  \end{tabular}
+}
+
+%====================================================================
+%====================================================================
+\section*{Concluding remarks}
+%====================================================================
+\frame{\frametitle{Conclusion} 
+
+  \paragraph{Tree shaped mixtures}
+  \begin{itemize}
+   \item Flexible model for multivariate distributions
+   \item Base on a mixture with exponentially many components ($p^{p-2}$)
+   \item But giving access to edge probabilities at a low computational cost
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Extensions}
+  \begin{itemize}    
+    \item 'Network' inference (= structure inference) \refer{SRS19}
+    \item Network comparison or network changes along time \refer{ScR17}
+    \item Accounting for missing nodes ('actors') \refer{RAR18,MRA20,MRA21}
+    \item S-I-S model can be extended to more that two states (e.g. S-I-R models)
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Some questions}
+  \begin{itemize}
+    \item Theoretical guaranties (e.g.: consistency of the estimated graph)?
+%     \item Which distributions are well approximated by tree-shaped mixtures?
+    \item Numerical issues arising for large $p$ or $n$ (use tempering?)
+  \end{itemize}
+}
+
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References}
+  {%\footnotesize
+   \tiny
+   \bibliography{/home/robin/Biblio/BibGene}
+%    \bibliographystyle{/home/robin/LATEX/Biblio/astats}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+\backupbegin
+%====================================================================
+%====================================================================
+\frame{\frametitle{'Tree-averaging' principle} 
+
+%   \renewcommand{\nodesize}{2em}
+  \renewcommand{\nodesize}{1.5em}
+  
+  \hspace{-.025\textwidth}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Tree conditional distribution.} $p(T | Y)$ \\
+      ~ \\
+      \begin{tabular}{cc}
+%         \multicolumn{2}{c}{$p(T_1 | Y)$} \\
+%         \hline
+        $2.1\%$ & $3.5\%$ \\
+        \input{\fignet/FigTreeAveraging-p4-tree1-seed2} &
+        \input{\fignet/FigTreeAveraging-p4-tree2-seed2} \\
+        \hline
+        $34.1\%$ & $15.6\%$ \\
+        \input{\fignet/FigTreeAveraging-p4-tree3-seed2} &
+        \input{\fignet/FigTreeAveraging-p4-tree4-seed2} \\
+        \hline
+        $ < .1\%$ & \\ 
+        \input{\fignet/FigTreeAveraging-p4-tree5-seed2} &
+        \dots \\
+      \end{tabular}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \pause
+      \paragraph{Edge probabilities.} $\Pr\{(j, k) \in T \mid Y\}$ 
+      \begin{center}
+      \input{\fignet/FigTreeAveraging-p4-avgtree-seed2} 
+      \end{center}
+      
+      \bigskip \bigskip \bigskip \pause
+      \paragraph{Most probable edges.} 
+      \begin{center}
+      \input{\fignet/FigTreeAveraging-p4-graph-seed2}
+      \end{center}
+      (not a tree) \refer{SRS19}
+   \end{tabular}
+  \end{tabular}
+}
+
+%====================================================================
+\backupend
+%====================================================================
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+  
+  \hspace{-.025\textwidth}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

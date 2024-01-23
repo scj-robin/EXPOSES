@@ -1,0 +1,67 @@
+\documentclass[12pt]{report}
+
+% Mise en page
+\textwidth 16cm
+\textheight 23cm 
+\topmargin -2 cm 
+\oddsidemargin 0cm 
+\evensidemargin 0cm
+\renewcommand{\baselinestretch}{1.1}  
+
+% Packages
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd}
+\usepackage{color, xcolor, epsfig, tikz, float}
+\usepackage{xspace, url, multicol}
+% \usepackage{dsfont, stmaryrd}
+\usepackage{/home/robin/LATEX/Biblio/astats, natbib}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/TextCommands}
+\renewcommand{\chaptername}{Lecture}
+
+\newcommand{\figdir}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
+
+%******************************************************************************%******************************************************************************
+\begin{document}
+%******************************************************************************
+%******************************************************************************
+\title{Some statistical models for the analysis of ecological networks}
+
+\author{S. Robin}
+
+\date{\today}
+
+\maketitle
+
+\abstract{\input{abstract}}
+
+\tableofcontents
+
+%******************************************************************************%******************************************************************************
+\chapter{Network inference}
+\section{Introduction} \input{NetInf-Intro}
+\section{A brief introduction to graphical models} \input{NetInf-GraphMod}
+\section{Network inference} \input{NetInf-Inference}
+\section{Temporal data} \input{NetInf-TimeSeries}
+
+%******************************************************************************%******************************************************************************
+\chapter{Network topology}
+\section{Introduction} \input{NetTopo-Intro}
+\section{Some models} \input{NetTopo-Models}
+\section{Block-models} \input{NetTopo-Block}
+\section{Network motifs} \input{NetTopo-Motifs}
+
+%******************************************************************************%******************************************************************************
+\newpage
+{\footnotesize
+% \begin{multicols}{2}
+\bibliographystyle{/home/robin/LATEX/Biblio/astats}
+% \bibliographystyle{plain}
+\bibliography{/home/robin/Biblio/BibGene}
+% \end{multicols}
+}
+  
+%******************************************************************************
+%******************************************************************************
+\end{document}
+%******************************************************************************
+%******************************************************************************

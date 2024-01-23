@@ -1,0 +1,71 @@
+%====================================================================
+%====================================================================
+\section{Latent-variable models}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Two latent variable models} 
+
+  \begin{tabular}{p{.15\textwidth}cp{.325\textwidth}cp{.325\textwidth}}
+   & & \emphase{Species distribution (PLN)} & & \emphase{Network structure (SBM)} \\ & \\
+   \hline \\
+   \paragraph{Observed} 
+   & & species abundances: & & species network: \\ 
+   \paragraph{($Y$)} 
+   & & $Y_{ij} =$ abundance of species $j$ in site $i$ 
+   & & $Y_{ij} =$ link intensity between species $i$ and species $j$\\
+%    & & in site $i$ 
+%    & & species $i$ and species $j$ \\
+   \\
+   \hline \\
+   \paragraph{Covariates} 
+   & & environnemental conditions: $x_i$ 
+   & & similarities between species: $x_{ij}$ \\
+   \paragraph{($X$)} 
+   & & \textcolor{gray}{species traits $x'_j$}
+   & & \textcolor{gray}{species traits $x'_i$} \\
+   \\
+   \hline \\
+   \paragraph{Latent} 
+   & &  latent 'position': 
+   & &  group membership: \\ 
+   \paragraph{($Z$)} 
+   & &  $Z_{ij}$ latent variable for species $j$ in site $i$ 
+   & &  $Z_i =$ group of species $i$ \\
+   \\
+   \hline \\
+   \paragraph{Parameters} 
+   & &  latent covariance ($\Sigma$) 
+   & &  group proportions ($\pi$) \\ 
+   \paragraph{($\theta$)} 
+   & &  regression coefficients ($\beta$) 
+   & &  interactions ($\alpha$) \\
+   & & & & regression coefficients ($\beta$) \\
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Some differences} 
+
+  \paragraph{Nature of the latent variables:}
+  \begin{description}
+   \item[PLN] continuous, multivariate: $Z_i \sim \Ncal$
+   \item[SBM] univariate, discrete: $Z_i \sim \Mcal$
+  \end{description}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Modeling function of the latent variables:}
+  \begin{description}
+   \item[PLN] \bigskip instrumental: comfortable multivariate Gaussian setting \\
+   \ra no precise ecological interpretation of the $Z_i$ \\
+   \ra focus on the inference of the parameter $\theta = (\beta, \Sigma)$
+   \item[SBM] \pause \bigskip 'mechanistic': hopefully, species groups have an ecological meaning \\
+   \ra easier interpretation of the $Z_i$ \\
+   \ra focus on unsupervised classification
+  \end{description}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Emission distribution:} mostly Poisson in these lectures (a lot of count data in ecology) \\ ~\\ 
+  \ra Poisson log-normal and block-models are amendable to any (parametric) distribution
+
+}

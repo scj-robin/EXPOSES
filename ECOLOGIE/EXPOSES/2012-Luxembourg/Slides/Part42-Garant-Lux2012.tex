@@ -1,0 +1,66 @@
+%====================================================================
+%====================================================================
+\section{Guaranties about variational estimates}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Statistical guarantees: \emphase{\sl no big picture}} 
+
+  \bigskip 
+  \paragraph{Accuracy of variational estimates.}
+  \begin{itemize}
+  \item Most often assessed empirically (numerical simulations) \textcolor{gray}{see e.g. \#\ref{goto:vbemSBM}} \label{back:vbemSBM}
+%   \item Theoretical guarantees: 
+  \end{itemize}
+
+  \pause \bigskip \bigskip 
+  \paragraph{'Negative' results.}
+  \begin{itemize}
+  \item VEM estimates $\neq$ stationary point of the likelihood function \refer{GuB05}
+  \item Too small posterior variance provided by variational Bayes \refer{WaT05,McT07,CoM07}
+  \end{itemize}
+
+  \pause \bigskip \bigskip 
+  \paragraph{Balanced results.}
+  \begin{itemize}
+  \item Mean-field approximation provides consistent estimates (binary SBM affiliation: \refer{ZhZ20})
+  \item Naive implementation may yield instabilities \refer{GJM19,ZhZ20}
+  \end{itemize}
+
+  \pause \bigskip \bigskip 
+  \paragraph{Positive results.}
+  \begin{itemize}
+  \item Some results for specific models \refer{HOW11}
+  \item Some attempts for a general theory via $M$-estimation \refer{WeM19}
+  \item Most studied case: mean-field VEM binary stochastic block-model (see next)
+  \end{itemize}
+
+%  Model selection
+
+}
+  
+%====================================================================
+\frame{\frametitle{Binary stochastic block-model} 
+
+  \paragraph{A series of results:} \refer{CDP12,BCC13,MaM15,ZhZ20} 
+  \begin{itemize}
+  \item Consistency of variational estimates
+  \item Asymptotic normality of variational estimates
+  \item Class recovery (node classification, including LBM)
+  \end{itemize}
+
+  \pause \bigskip \bigskip 
+  \paragraph{Why does it work?} Theorem 3.1 in \refer{CDP12} states that
+  $$
+  P\left(\sum_{z \neq z^*} \frac{p_\theta(Z=z \mid Y)}{p_\theta(Z=z^* \mid Y)} > t \right) = O\left(n e^{-\kappa n t}\right)
+  $$
+  uniformly in $z^*$, with $\kappa = \kappa(\theta)$.
+
+  \pause \bigskip \bigskip 
+  \begin{itemize}
+  \item Intuition: $p_\theta(Z \mid Y)$ is asymptotically Dirac, which belongs to $\Qcal = \Qcal_{fact}$.
+  \item The 'largest gap' algorithm \refer{CDR12} takes advantage of a similar concentration \textcolor{gray}{\#\ref{goto:largestGap}} \label{back:largestGap}
+  \item The proofs do not easily adapt to other VEM
+  \end{itemize}
+
+}
+  

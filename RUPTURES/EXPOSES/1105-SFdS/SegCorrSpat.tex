@@ -1,0 +1,390 @@
+\documentclass[11pt,a4paper,english]{article}
+
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{enumerate}
+\usepackage{epsfig}
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\def\1{1\!{\rm l}}
+\def\0{0\!{\rm 0}}
+\textwidth 16cm
+\textheight 22cm
+\topmargin 0cm
+\oddsidemargin 0cm
+\evensidemargin 0cm
+
+%\title{Segmentation et modèle linéaire}
+
+\newcommand{\ymt}{y_{mt}}
+\newcommand{\Ymt}{Y_{mt}}
+\newcommand{\ec}[1]{\mathbb{E}_{\phi^{(h)}}\left\{#1 |\mathbf{Y} \right\}}
+\newcommand{\vc}[1]{\mathbb{V}_{\phi^{(h)}}\left\{#1 |\mathbf{Y} \right\}}
+
+\newcommand{\alphabf}{\text{\mathversion{bold}{$\alpha$}}}
+\newcommand{\thetabf}{\text{\mathversion{bold}{$\theta$}}}
+\newcommand{\mubf}{\text{\mathversion{bold}{$\mu$}}}
+\newcommand{\xbf}{\mathbf{x}}
+\newcommand{\Xbf}{\mathbf{X}}
+\newcommand{\Ybf}{\mathbf{Y}}
+\newcommand{\Zbf}{\mathbf{Z}}
+\newcommand{\Bbf}{\mathbf{B}}
+\newcommand{\Bbfp}{\mathbf{B}^{\prime}}
+\newcommand{\Zbfp}{\mathbf{Z}^{\prime}}
+\newcommand{\Wbf}{\mathbf{W}}
+\newcommand{\ZA}{\mathbf{Z}_A}
+\newcommand{\ZB}{\mathbf{Z}_B}
+\newcommand{\WB}{\mathbf{W}_B}
+\newcommand{\WA}{\mathbf{W}_A}
+\newcommand{\WAB}{\mathbf{W}_{AB}}
+\newcommand{\UA}{\mathbf{U}_A}
+\newcommand{\UB}{\mathbf{U}_B}
+\newcommand{\Vbf}{\mathbf{V}}
+\newcommand{\Rbf}{\mathbf{R}}
+\newcommand{\Ubf}{\mathbf{U}}
+\newcommand{\Ebf}{\mathbf{E}}
+\newcommand{\Gbf}{\mathbf{G}}
+\newcommand{\Tbf}{\mathbf{T}}
+\newcommand{\Ibf}{\mathbf{I}}
+\newcommand{\RMSE}{\mbox{RMSE}}
+\newcommand{\FPR}{\mbox{FNR}}
+\newcommand{\FNR}{\mbox{FNR}}
+\newcommand{\LogL}{\mathcal{L}}
+\def\1{1\!{\rm l}}
+\newtheorem{prop}{Proposition}
+%\newproof{pf}{Proof}
+
+
+\def\argmin{\mathop{\mathrm{argmin}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Data, notations and model}
+
+\paragraph{Data and notations.} We have $M$ climatic series with $n_m$ points
+each. We note $y_{tm}$ the observed temperature of the station $m$
+at time $t$. The total number of observations is $N=\sum_{m=1}^M
+n_m$. In the following, we consider that $n_m=n$ whatever the
+station. The data $y$ are modeled by a random Gaussian process $Y$
+with size $[n \times M]$. In general we note $A_t$ to be the row
+vector with size $M$ of the matrix $A$ and $A^m$ its column vector
+with size $n$. Thus $Y^m$ represents the temperature series of the
+station $m$ (so for each time $t$) and $Y_t$ the temperatures of the
+$M$ series at a fixed time $t$. \\
+
+
+\paragraph{Segmentation.} We consider here that each series has its
+own segmentation: the mean of the series $\{Y_{tm}\}_t$ is subject
+to $K_{m}-1$ abrupt changes at breakpoints $\{t_{k}^{m}\}$ for
+series $m$, (with convention $t^m_0=0$ and $t^m_{K_m}=n_{\max}$) and
+is constant between two breakpoints within the interval $I_{k}^{m} =
+]t_{k-1}^{m}, t_{k}^{m}]$. In the following we denote by
+$K=\sum_{m}^M K_{m}$ the total number of segments and $n_k^{m} =
+t_{k}^{m}- t_{k-1}^{m}$ the length of the segment $k$ for series $m$
+($k=1,\ldots,K_m$). The segmentation model is written as follows:
+\begin{equation} \label{eq:model1}
+Y_{tm}=\mu_{km} +F_{tm} \ \  \forall t \in I_k^{m}
+\end{equation}
+where the error vectors $\{F_t\}_t$ follows a centered Gaussian with
+a covariance matrix to be specified. Denote $\Sigma$ this matrix:
+\begin{equation*}
+\mathbb{V}(F_t)=\Sigma.
+\end{equation*}
+
+\paragraph{Spatial correlations between series.} We want to take
+into account spatial correlations that can exit between series. As
+example, the corresponding correlation matrix can be of the form
+$e^{-d(m,m^{\prime})}$ where $d(m,m^{\prime})$ is the distance
+between the series $m$ and $m^{\prime}$. However this correlation
+structure (or otherwise structure) hampers the use of the DP
+algorithm to obtain the best
+segmentation. \\
+We propose here to consider the factor analysis model framework.
+That consists in identifying a linear space of $Q$ (to be fixed)
+random vectors that captures the dependence among the data, here the
+series (ref). In others words, we set
+$$
+\Sigma=\Bbf \mathbb{V}(\Zbf) \Bbfp+\psi,
+$$
+where $\Zbf$ corresponds to the $Q$ random vectors and $B$ the
+associated coefficients. The dependence between series is then free
+from any spatial structure. In the above decomposition, $\Bbf
+\mathbb{V}(\Zbf) \Bbfp$ referred to the shared variance and $\psi$
+to the specific one. Remark that in this case $Q$ can not be equal
+to the number of series $M$.\\
+
+
+
+
+\paragraph{Model.} With the previous decomposition of the variability, the model (\ref{eq:model1}) can be rewritten
+using a mixed linear model as follows:
+\begin{equation*}
+Y_{tm}=\mu_{km} + \sum_{q=1}^{M} Z_{tq} b_{qm}+E_{tm} \ \  \forall t
+\in I_k^{m}
+\end{equation*}
+with $E_{t}$ a centered Gaussian noise with variance matrix $\psi$
+and with $Z_{t}$ a centered Gaussian with variance $I_Q$. Here
+$\psi$ is supposed to be diagonal $\psi=\sigma^2 I_M$ (otherwise we
+can not use the DP algorithm for the segmentation parameter
+estimation). Using the matricial formulation of linear models, we
+have
+\begin{equation*}
+\Ybf=\Tbf \mubf +\Zbf \Bbfp+\Ebf
+\end{equation*}
+where
+\begin{itemize}
+\item $\Ybf$, with size $[n \times M]$, stands for the observed data,
+\item $\Tbf$ is the incidence matrix of breakpoints with size $[n\times
+K]$,
+\begin{eqnarray*}
+{T^m} & = & \text{Bloc} \left[ \1_{n_{K_m}^{m}} \right],
+\end{eqnarray*}
+and
+\begin{eqnarray*}
+{\Tbf} & = &\left[ T^1 \ T^2 \ \ldots \ T^M \right].
+\end{eqnarray*}
+\item $\mubf$ the means with size $[K\times M]$ (and $\mu_{k}^m$ the mean of the segment $k$ for series $m$) such that
+\begin{eqnarray*}
+{\mu^{m}} & = & \text{Bloc} \left[ \mu_{K_m}^m \right],
+\end{eqnarray*}
+and
+\begin{eqnarray*}
+{\mubf} & = &\left[ \mu^1  \ \mu^2  \ \ldots  \ \mu^M \right].
+\end{eqnarray*}
+\item $\Zbf$ with size $[n\times Q]$ and $\Bbf$
+with size $[M \times Q]$,
+\item $\Ebf$ with size $[n\times M]$. \\
+\end{itemize}
+So we have that $\Sigma$ is structured as follows:
+\begin{eqnarray} \label{eq:variance_decomposition}
+\Sigma=\Bbf \Bbfp+\psi.
+\end{eqnarray}
+Moreover, as in a classical mixed linear model, $Z^q$ and $E^m$ are
+supposed to be independent. The main difference between this model
+and a classical mixed linear model is that both the incidence
+matrices $\Tbf$ and $\Bbf$ are unknown. \\
+
+
+
+\section{Estimation using the EM algorithm.}
+
+
+In order to get the MLE in the EM framework, $\Zbf$ represents the
+missing data (hidden and unobserved), and parameters of the model
+are $\phi=(\Tbf,\mubf,\sigma^2,\Bbf)$. In this setting, the
+complete-data log-likelihood is:
+\begin{eqnarray*}
+\log \mathcal{L}(\Ybf,\Zbf; \phi) = \log \mathcal{L}_0(\Ybf|\Zbf;
+\phi) + \log \mathcal{L}_1(\Zbf).
+\end{eqnarray*}
+Since the distribution of $Z$ does not depend on the parameters
+$\phi$, only the first term will be considered which is written:
+\begin{eqnarray*}
+-2 \log \mathcal{L}_0(\Ybf|\Zbf; \phi)=N  \log{(2 \pi)}+ n
+\log{(|\psi|)}+\sum_{t=1}^n \|Y_t - \mu_{k(t)} - Z_t
+\Bbfp\|^2_{\psi^{-1}},
+\end{eqnarray*}
+then its conditional expectation, $Q_0(\phi; \phi^{(h)})=\ec{\log
+\mathcal{L}_0(\Ybf|\Zbf; \phi)}$ where $\mathbb{E}_{\phi}\{\cdot\}$
+the expectation operator using $\phi$ as the parameter value and
+$\mathbb{V}_{\phi}\{\cdot\}$ the corresponding variance, is
+\begin{eqnarray*}
+-2 Q_0(\phi; \phi^{(h)}) &=& N  \log{(2 \pi)}+ n
+\log{(|\psi|)}+\sum_{t=1}^n \left [ \|Y_t - \mu_{k(t)} -
+\widehat{\Zbf}_t^{(h)} \Bbfp\|^2_{\psi^{-1}} +\text{Tr} \left( \Bbfp
+  \psi^{-1} \Bbf \Wbf_t^{(h)} \right) \right ],
+\end{eqnarray*}
+where $\widehat{\Zbf}_t^{(h)} = \ec{\Zbf_t}$, $\text{Tr}(A)$ for the
+trace of matrix $A$, $|A|$ for its determinant and where
+$\Wbf_t^{(h)}=\vc{\Zbf_t}$. \\
+%The second $\log$-likelihood is written:
+%\begin{eqnarray*}
+%-2 \log \mathcal{L}_1(\Zbf)=N  \log{(2 \pi)}+ \sum_{t=1}^n \|Z_t
+%\|^2,
+%\end{eqnarray*}
+%then its conditional version is
+%\begin{eqnarray*} -2 Q_1(\phi; \phi^{(h)}) &=& N  \log{(2 \pi)}+
+%\sum_{t=1}^n \left [ \widehat{\Zbf}_t^{(h)} \widehat{\Zbfp}_t^{(h)}
+%+\text{Tr} \left( \Wbf_t^{(h)} \right) \right ].
+%\end{eqnarray*}
+
+\paragraph{E-step} This step consists in the calculation of the
+conditional expectation which only requires the calculation of
+$\widehat{\Zbf}$ and $\Wbf$: at iteration $(h+1)$, we get\\
+%$$
+%\begin{cases}
+%\widehat{\Zbf}_t^{(h+1)} = E_t^{(h)} \psi^{-1,(h)} \Bbf^{(h)}
+%\Wbf_t^{(h)}/{\sigma^{2,(h)}}, \\
+%\Wbf_t^{(h+1)}  = \left (I_M+ \Bbf'^{(h)} \psi^{-1,(h)} \Bbf^{(h)}
+%\right )^{-1}.
+%\end{cases}
+%$$
+$$
+\begin{cases}
+\widehat{\Zbf}_t^{(h+1)} = \tilde{Y}_t^{(h)} \Bbf^{(h)}
+\Wbf_t^{(h)}/{\sigma^{2,(h)}}, \\
+\Wbf_t^{(h+1)}  = \left (I_M+ \Bbf'^{(h)} \Bbf^{(h)} /\sigma^{2,(h)}
+\right )^{-1}.
+\end{cases}
+$$
+where $\tilde{Y}_t^{(h)}=Y_t-\mu_{k(t)}^{(h)}$.
+\paragraph{M-step} This step consists in the estimation of the
+parameters by maximizing the obtained conditional expectation.
+\begin{itemize}
+\item Estimation of the variance component $\sigma^{2}$:
+%\begin{eqnarray*}
+%\psi^{(h+1)}&=&\arg \max_{\psi} Q_0,\\
+%&=& \frac{1}{n} \sum_{t=1}^n (Y_t-\mu_{k(t)}^{(h)})'
+%(Y_t-\mu_{k(t)}^{(h)})- \frac{1}{n} \sum_{t=1}^n
+%(Y_t-\mu_{k(t)}^{(h)})' \widehat{\Zbf}_t^{(h+1)}  \Bbf'^{(h)}
+%\end{eqnarray*}
+%In the case where $\psi=\sigma^2 I_M$, we get
+\begin{eqnarray*}
+\sigma^{2,(h+1)} &=& \frac{1}{N} \sum_{t=1}^n \left [ E_t^{(h)}
+E_t'^{(h)}+ \text{Tr} \left( \Bbf'^{(h)}
+ \Bbf^{(h)}  \Wbf_t^{(h+1)} \right)\right ],
+\end{eqnarray*}
+where $E_t^{(h)}=Y_t-\mu_{k(t)}^{(h)}-\widehat{\Zbf}_t^{(h)}
+\Bbf'^{(h)}$.
+
+\item Estimation of $\Bbf$.
+\begin{eqnarray*}
+\Bbf^{(h+1)}= \sum_{t=1}^n (Y_t-\mu_{k(t)}^{(h)})'
+\widehat{\Zbf}_t^{(h+1)} \ \left [ \sum_{t=1}^n
+(\widehat{Z}_t'^{(h+1)} \widehat{Z}_t^{(h+1)}+ W_t^{(h+1)})\right
+]^{-1}.
+\end{eqnarray*}
+
+\item Estimation of the segmentation parameters $\Tbf \mubf$.
+\begin{eqnarray*}
+\left\{ \Tbf^{(h+1)},\mubf^{(h+1)} \right\} & = & \arg
+\max_{\Tbf,\mubf} Q_0, \\
+&=& \arg \max_{\Tbf,\mubf} \sum_{t=1}^n \| Y_t- (\Tbf \mubf)_t-
+\widehat{\Zbf}^{(h+1)}_t \Bbf'^{(h+1)}\|^2_{\psi^{-1,(h+1)}}, \\
+&=& \arg \max_{\Tbf,\mubf} \sum_{t=1}^n \| \tilde{\tilde{Y}}_t-
+(\Tbf \mubf)_t\|^2_{\psi^{-1,(h+1)}}.
+\end{eqnarray*}
+where $\tilde{\tilde{Y}}_t=Y_t- \widehat{\Zbf}_t^{(h+1)}
+\Bbf'^{(h+1)}$. Since $\psi$ is diagonal the DP (in particular the
+two-stages DP) can be used to obtain the segmentation parameter
+estimations. \\
+
+%\max_{\Tbf,\mubf} \sum_{m=1}^M \sum_{k=1}^{K_m} \sum_{t \in I^k_m}
+%\left (\tilde{Y}_{tm}-\mu_{km} \right )^2,
+
+
+
+
+It is well known that the EM algorithm depends strongly on the
+initial parameters which is here the segmentation one. This
+phenomenon often leads to erratic behavior of the likelihood and
+consequently hampers the use of model selection criteria based on
+this likelihood. \\
+In the application of the procedure on the real data, this
+phenomenon is almost often observed on the likelihood with respect
+to $q$ for each considered value of $K$. To solve this problem, for
+the values of $q$ for which the likelihood does not increase, we
+propose to perform the EM algorithm by considering as initial
+parameters the obtained segmentation ones of their neighbors. \\
+
+\end{itemize}
+
+\section{Model selection}
+
+Here either the number of factors $q$ and the number of segments $K$
+should be estimated. The joint estimation of two parameters is not
+classical. We propose here an heuristic to select both these two
+parameters. First, for each $K$, $q$ is selected by using the BIC
+criterion:
+\begin{eqnarray*}
+\hat{q}_K&=&\argmin_{q \in \{1,\ldots,M-1\}} BIC(q_K),\\
+&=& \argmin_{q \in \{1,\ldots,M-1\}}-2 \LogL(\widehat{\Tbf \mubf}_K,
+\hat{\Sigma}_q)+Dq \log{(n)},
+\end{eqnarray*}
+where $\LogL(\widehat{\Tbf \mubf}_K, \hat{\Sigma}_q)$ is the
+$\log$-likelihood calculated at its maximum for a fixed $K$ and a
+fixed $q$, and $D_q$ is the number of parameters in a model with $q$
+factors, $D_q=\frac{q}{2}(2 M -q+1)+1$. Indeed for the variance
+components, according to the variance decomposition (cf equation
+(\ref{eq:variance_decomposition})), the number of parameters are $M
+\times q$ for $B$ and one for $\sigma^2$. Moreover, with the
+orthogonality condition on $B$, only $M q -q(q-1)/2$ need to be
+estimated. Remark that the number of segments is not be considered
+since does not affected
+the selection.\\
+To select the number of segments, we use the modified BIC proposed
+by \cite{ZhS07} adapted to the joint segmentation by \cite{PLBR11}
+\begin{eqnarray*}
+mBIC_{\text{JointSeg}}(K)&= &\left ( \frac{N+1}{2} \right
+)\log{SS_{\text{all}}} -\left ( \frac{N-K+1}{2} \right )
+\log{SS_{\text{wg}}(\hat{t})} + \log{\left [\Gamma \left
+(\frac{N-K+1}{2} \right)\right ]}
+\\
+&&   -\frac{1}{2} \sum_{m=1}^M \sum_{k=1}^{k_m} \log
+{\hat{n}^m_k}+\left ( \frac{1}{2}-(K-M) \right ) \log{(N)},
+\end{eqnarray*}
+where
+\begin{eqnarray*}
+&&SS_{\text{wg}}(\hat{t})=\sum_{t=1}^n (\Ybf_t-\hat{\mu}_{k(t)})
+\hat{\Sigma}_q^{-1}(\Ybf_t-\hat{\mu}_{k(t)})', \\
+&& SS_{\text{all}}=\sum_{t=1}^n (\Ybf_t-\bar{Y})
+\hat{\Sigma}_q^{-1}(\Ybf_t-\bar{Y})',
+\end{eqnarray*}
+with $\hat{n}^m_k$ is the length of segment $k$ in profile $m$
+($\hat{n}^m_k=\hat{t}^m_k-\hat{t}^m_{k-1}+1$), and $\hat{mu}_{k(t)}$
+is a vector of size $M$ with the component $m$ is
+$\bar{y}_{mk}=\frac{1}{\hat{n}^m_k}
+\sum_{t=\hat{t}^m_{k-1}+1}^{\hat{t}^m_{k}} y_m(t)$ if $t \in
+\hat{I}^m_k$.
+
+
+
+
+
+
+%We use two criteria: the ones developed by \cite{Lav05} and
+%\cite{L05} which the penalty depends on the number of parameters in
+%a model with $K$ segments, denoted by $D_K$. Here
+%$$
+%D_K=K+\frac{Q}{2}(2 M -Q+1)+1.
+%$$
+%Indeed, for the mean parameters, we have $K$ means to estimate and
+%for the variance components, according to the variance decomposition
+%(cf equation (\ref{eq:variance_decomposition})), the number of
+%parameters are $M \times Q$ for $B$ and one for $\sigma^2$.
+%Moreover, with the orthogonality condition on $B$, only $M Q
+%-Q(Q-1)/2$ need to be estimated. \\
+
+
+%The criterion proposed by \cite{Lav05} is
+%begin{equation*} Crit_{\text{Lav}}(K)= -2 \log {\mathcal{L}_K(\Ybf;
+%\widehat{\phi})}+\beta D_K
+%\end{equation*}
+%where $\log { \mathcal{L}_K(\Ybf; \widehat{\phi})}$ stands for the
+%log-likelihood calculated at its maximum. The constant $\beta$ is
+%chosen using an adaptative method which involves a threshold $s$. As
+%Lavielle suggests $s \in [0.5, 0.75]$, we used $s=0.7$ throughout
+%the simulation study. \\
+
+%The one proposed by \cite{L05} is
+%\begin{equation*}
+%Crit_{\text{Leb}}(K)=-2 \log {\mathcal{L}_K(\Ybf;
+%\widehat{\phi})}+\alpha \left[ 5 D_K +2 (K-M) \log \left
+%(\frac{N-M}{K-M} \right) \right]
+%\end{equation*}
+%This penalty also depends on a constant $\alpha$ which can be
+%calibrated in practice (cf \cite{BM04}).
+
+
+
+\section{Simulation study}
+
+
+\section{Application to temperature data series}
+
+\bibliography{modlin}
+\bibliographystyle{amsplain}
+
+
+\end{document}

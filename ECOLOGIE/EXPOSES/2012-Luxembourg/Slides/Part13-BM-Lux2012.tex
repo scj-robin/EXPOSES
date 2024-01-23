@@ -1,0 +1,241 @@
+%====================================================================
+%====================================================================
+\section{Models for ecological networks}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Species networks} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Tree network \refer{VPD08}:} 
+      \begin{itemize}
+       \item $n = 51$ tree species
+       \item $Y_{ij} =$ number of fungal parasites shared by species $i$ and $j$
+       \item $x_{ij} =$ vector of covariates between species $i$ and $j$ 
+       (taxonomic, geographic, genetic distance)
+      \end{itemize}
+      
+      \onslide+<2->{\bigskip \bigskip
+      \paragraph{Questions:} 
+      \begin{itemize}
+       \item Is the network 'organized' in some way? \\~
+       \item Do the covariates contribute to explain the existence or intensity of the links?
+      \end{itemize}}
+
+      
+%       \bigskip \bigskip 
+%       \paragraph{Other types of network.} 
+%       \begin{itemize}
+%       \item plant-pollinator: mutualistic network (bipartite) 
+%       \item predator-prey: trophic network (multipartite)
+%       \end{itemize}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Network (weighted):} \\
+%       \includegraphics[height=.25\textwidth,width=.25\textwidth,trim=30 30 30 30]     
+      \includegraphics[height=.3\textwidth,width=.3\textwidth]{\fignet/Tree-netCircle}
+ \\
+      \paragraph{Adjacency matrix (counts):} \\
+      \includegraphics[height=.3\textwidth,width=.3\textwidth]{\fignet/Tree-adjMat}
+    \end{tabular}
+  \end{tabular}
+      
+}
+
+%====================================================================
+\frame{\frametitle{Modelling ecological networks} 
+
+  \paragraph{Models for (weighted) random graphs:} 
+  \begin{itemize}
+   \item Need to model the joint distribution $p(\{Y_{ij}\})$ accounting for the network structure
+   \item Latent variable models enable to induce a row-column structure \refer{MaR14}
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Stochastic block-model (SBM):} \refer{HoL79,NoS01}
+  \begin{itemize}
+   \item \pause \bigskip $Z_i=$ latent class to which node $i$ belongs: $\{Z_i\}_{1\leq i \leq n}$ iid
+   $$
+   Z_i \sim \Mcal(1, \pi = (\pi_1 ,\dots, \pi_K))
+   $$
+   \item \pause \bigskip $Y_{ij} =$ observed value (weight) of edge $(i ,j)$: $\{Y_{ij}\}_{1 \leq i, j \leq n} \text{ independent} \mid \{Z_i\}$
+   $$
+   Y_{ij} \sim \Pcal(\exp(x_{ij}^\intercal \beta + \alpha_{Z_iZ_j}))
+   $$
+   \item \pause \bigskip Unknown parameters
+   $$
+   \theta = (\pi, \beta, \alpha) \qquad + K
+   $$
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Directed graphical model} 
+
+  \paragraph{Graphical model for SBM:} Independent clusters + conditionally independent edges\footnote{again: no node for the covariates in $X$, which are fixed}  
+  $$
+  p_\theta\left(\{Z_i\}, \{Y_{ij}\}\right) = \prod_i p_\pi(Z_i) \times \prod_{i, j} p_{\alpha, \beta}(Y_{ij} \mid Z_i, Z_j\textcolor{gray}{; x_{ij}})
+  $$
+  \pause
+  $$
+  \input{\figlux/GG-SBM}
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{SBM for the tree network} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Data:} 
+      \begin{itemize}
+       \item $n = 51$ species
+       \item \bigskip Weighted adjacency matrix: ${Y} = [Y_{ij}]$
+       \item \bigskip No covariate (for the time being)
+      \end{itemize}
+      \bigskip \bigskip 
+      \onslide+<2->{\paragraph{Interpretation:} 
+      \begin{itemize}
+       \item $\pi =$ group proportions
+       \item \bigskip $\alpha =$ matrix of between-groups intensities
+      \end{itemize}}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Observed adjacency matrix:} \\
+      \includegraphics[height=.3\textwidth,width=.3\textwidth]{\fignet/Tree-adjMat} \\
+      \onslide+<2->{\paragraph{Clustered matrix:} \\
+      \includegraphics[height=.3\textwidth,width=.3\textwidth]{\fignet/Tree-adjMat-SBMnull}}
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Many types of block-models} 
+
+  \paragraph{Emission distribution:} Edges can be
+  \begin{itemize}
+   \item Binary (presence/absence): Bernoulli
+   \item Weighted: normal, Poisson, ...
+   \item Multivariate (multiplex): multivariate normal, mixed multivariate distribution
+   \item Dynamic (see Part 3)
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Node structure:}
+  \begin{itemize}
+   \item One type of nodes: symmetric or asymmetric SBM
+   \item Two types of nodes: bipartite (see next)
+   \item Several types of nodes: multi-layer network \refer{BBD19}
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Bipartite networks} 
+
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Antagonist network \refer{BOA13}:} ~\\ 
+      host $\times$ parasites interactions:
+      \begin{itemize}
+      \item 98 hosts (fish species)
+      \item 52 parasites
+      \end{itemize}
+      \bigskip \bigskip 
+      \paragraph{Question:} ~\\ 
+      Specialized interactions ? \\
+      \bigskip \bigskip
+
+      \paragraph{That is (?)} ~\\ 
+      Could we determine groups of hosts and parasites that preferentially interacts (or avoid to interact)?
+      \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Network:} \\
+      \includegraphics[height=.25\textwidth,width=.35\textwidth]{\fignet/belay24-network.pdf} \\
+      ~\\
+      \paragraph{Adjacency matrix:} \\
+      \includegraphics[height=.25\textwidth,width=.35\textwidth]{\fignet/belay24-adjMat.pdf} \\
+    \end{tabular}
+  \end{tabular}
+    
+}
+
+%====================================================================
+\frame{\frametitle{A block-model for bipartite networks} 
+
+  \paragraph{Latent block-model (LBM):} \refer{GoN05}
+  \begin{itemize}
+   \item \pause \bigskip $Z_i=$ latent class to which row node $i$ belongs: $\{Z_i\}_{1\leq i \leq n}$ iid
+   $$
+   Z_i \sim \Mcal(1, \pi = (\pi_1 ,\dots, \pi_K))
+   $$
+   \item \pause \bigskip $W_j=$ latent class to which row node $j$ belongs: $\{Z_j\}_{1\leq j \leq m}$ iid
+   $$
+   W_j \sim \Mcal(1, \rho = (\rho_1 ,\dots, \rho_L))
+   $$
+   \item \pause \bigskip $Y_{ij} =$ observed value (weight) of edge $(i ,j)$: $\{Y_{ij}\}_{1 \leq i, j \leq n} \text{ independent} \mid \{Z_i\},  \{W_j\}$
+   $$
+   Y_{ij} \sim \Bcal(\gamma_{Z_iW_j}))
+   $$
+   \item \pause \bigskip Unknown parameters
+   $$
+   \theta = (\pi, \rho, \gamma) + (K, L)
+   $$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Graphical model} 
+  
+  \paragraph{Graphical model for SBM:} Independent clusters + conditionally independent edges
+  $$
+  p_\theta\left(\{Z_i\}, \{W_j\}, \{Y_{ij}\}\right) = \prod_i p_\pi(Z_i) \times \prod_j p_\rho(W_j) \times \prod_{i, j} p_{\gamma}(Y_{ij} \mid Z_i, W_j)
+  $$
+  \pause
+  $$
+  \input{\figlux/GG-LBM}
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Latent block-model for the host-parasite network} 
+
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Antagonist network \refer{BOA13}:} ~\\ 
+      host $\times$ parasites interactions:
+      \begin{itemize}
+      \item $m = 98$ hosts (fish species)
+      \item $n = 52$ parasites
+      \item Adjacency matrix: $Y = [Y_{ij}]$
+      \item No covariate
+      \end{itemize}
+
+      \bigskip \bigskip 
+      \onslide+<2->{\paragraph{Interpretation:} 
+      \begin{itemize}
+      \item $\pi$ proportions of the parasite groups
+      \item \bigskip $\rho$ proportions of the host groups
+      \item \bigskip $\gamma$ connectivities between groups of hosts and parasites
+      \end{itemize}}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<2->{\paragraph{Network:} \\
+      \includegraphics[height=.25\textwidth,width=.35\textwidth]{\fignet/belay24-network-LBM.pdf} 
+      ~\\
+      \paragraph{Adjacency matrix:} \\
+      \includegraphics[height=.25\textwidth,width=.35\textwidth]{\fignet/belay24-adjMat-LBM.pdf} \\}
+    \end{tabular}
+  \end{tabular}
+}

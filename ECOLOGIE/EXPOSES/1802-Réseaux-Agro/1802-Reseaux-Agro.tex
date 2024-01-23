@@ -1,0 +1,301 @@
+\documentclass[a4paper, 12pt]{article}
+
+% Mise en page
+\textwidth 18cm
+\textheight 24cm 
+\topmargin -1 cm 
+\oddsidemargin -1cm 
+\evensidemargin -1cm
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathabx}
+\usepackage{xcolor}
+\usepackage{xspace}
+\usepackage{natbib}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+\newcommand{\dd}{\text{d}}
+\newcommand{\kl}{{k\ell}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Espt}{\widetilde{\Esp}}
+\newcommand{\Ibb}{\mathbb{I}}
+\newcommand{\pt}{\widetilde{p}}
+\newcommand{\Pt}{\widetilde{P}}
+\newcommand{\phit}{\widetilde{\phi}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Zf}{Z^{\text{full}}}
+\newcommand{\ra}{$\rightarrow$\xspace}
+
+\newtheorem{lemma}{Lemma}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{A continuous time stochastic block model for time-stamped interactions}
+\author{M. Ludkin, C. Matias, S.R.} 
+\date{2 Feb. 2018}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Motivation:} Interaction process, e.g.
+\begin{itemize}
+ \item Interactions between individuals along time
+ \item Mails exchanges
+ \item Bikes moves from one station to another
+\end{itemize}
+\ra Directed formulation (can be adapted to undirected contacts).
+
+\paragraph{Questions.}
+\begin{itemize}
+ \item Is it possible to clusters the nodes into groups with different roles?
+ \item Do the node change role along time?
+\end{itemize}
+
+\nocite{MaM16}
+
+\paragraph{Notations.}
+\begin{itemize}
+ \item $n$ nodes $1 \leq i ,j \leq n$
+ \item Observation time: $0 < t < T$
+ \item Data: $\{(t_m, i_m, j_m)\}_{1 \leq m \leq M}$:
+  $$
+  (t_m, i_m, j_m) = \{\text{node $i_m$ sends an interaction to node $j_m$ at time $t_m$}\}
+  $$
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Model}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Group membership.} $\{Z_i(t)\}_t =$ hidden group membership of node $i$ at time $t$:
+$$
+\{Z_i\}_i \text{ iid}, 
+\qquad 
+Z_i \sim \text{homogeneous Markov jump process with generator } Q
+$$
+
+\paragraph{Interaction process.} $\{Y_{ij}(t)\}_t$ observed interaction process from node $i$ to node $j$.
+\begin{align*}
+  \{Y_{ij}\}_{ij} & \text{ independent conditional on the } \{Z_i\}_i, \\
+  Y_{ij} | Z_i ,Z_j & \sim \text{heterogeneous Poisson process rate } \gamma_{Z_i(t), Z_j(t)}
+\end{align*}
+
+\paragraph{Parameters.}
+\begin{itemize}
+ \item $q_\kl =$ rate for jumps from group $k$ to group $\ell$.
+ \item $\gamma_\kl =$ intensity of of the interaction from group $k$ to group $\ell$.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Simplifying assumptions}
+
+\paragraph{Group membership.} 
+$$
+\pi_\kl(\delta) := P(Z_i(t+\delta) = \ell | Z_i(t) = k) = \left[ \exp(\delta Q) \right]_\kl
+: \text{ hard to evaluate / optimize}
+$$
+Take 
+$$
+q_\kl = \lambda \nu_\ell
+\qquad \Rightarrow \qquad
+\pi_\kl(\delta) = \left\{
+  \begin{array}{ll}
+   \nu_\ell (1 - e^{-\lambda \delta}) & \text{if } k \neq \ell \\
+   e^{-\lambda \delta} + \nu_k (1 - e^{-\lambda \delta}) & \text{if } k = \ell \\
+  \end{array}
+\right.
+$$ 
+where
+\begin{itemize}
+ \item $\nu = [\nu_k]_k:$ distribution of the next state, when changing
+ \item $\lambda:$ jump rate
+ \item Actual change rate $= \lambda (1 - \nu' \nu)$
+\end{itemize}
+
+\paragraph{Interaction process.} Letting $t_0 = 0$ and $t_{M+1} = T$
+\begin{align*}
+ \log p_\theta(Y_{ij} | Z_i, Z_j)
+ & = \sum_{m: i_m=i, j_m=j} \log \gamma_{Z_i(t_m) Z_j(t_m)} 
+ - \int_0^T \gamma_{Z_i(t) Z_j(t)} \dd t \\
+ & = \sum_{m: i_m=i, j_m=j} \log \gamma_{Z_i(t_m) Z_j(t_m)} 
+ - \sum_{m=1}^{M+1} \int_{t_{m-1}}^{t_m} \gamma_{Z_i(t) Z_j(t)} \dd t
+ : \text{ hard to evaluate / optimize}
+\end{align*}
+Assuming that all $\delta_m = t_m - t_{m-1}$ are small, denoting $Z_i^m = Z_i(t_m)$,
+$$
+\int_{t_{m-1}}^{t_m} \gamma_{Z_i(t) Z_j(t)} \dd t
+\simeq \delta_m (Z_i^{m-1} Z_j^{m-1} + Z_i^m Z_j^m) / 2.
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Inference}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Aim.}
+\begin{itemize}
+ \item Estimate $\theta = (\lambda, \nu, \gamma)$
+ \item Retrieve the hidden paths $Z_i(t)$ or, at least, the $Z_i^m$.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Maximum likelihood}
+
+\paragraph{EM principle.} Let $Y = \{Y_{ij}(t)\}_{i, j ,t}$ and $\Zf = \{Z_i(t)\}_{i, t}$,
+$$
+\log p_\theta(Y) = \Esp[\log p_\theta(Y, \Zf) | Y] - \Esp[\log p_\theta(\Zf|Y) | Y]
+$$
+Denoting $Z = \{Z^m_i\}_{i, m}$, the approximation of the integral leads to
+$$
+p_\theta(Y|\Zf) \simeq p_\theta(Y|Z)
+$$
+so we use
+$$
+\log p_\theta(Y) = \Esp[\log p_\theta(Y, Z) | Y] - \Esp[\log p_\theta(Z|Y) | Y].
+$$
+Furthermore, denoting $Z^m = \{Z_i^m\}_i$
+$$
+Y^m = \{Y_{ij}(t)\}_{i, j, (t_{m-1}+t_m)/2 < t < (t_m+t_{m+1})/2}
+$$
+we get
+$$
+p_\theta(Y, Z) 
+= p_\theta(Z) \times p_\theta(Y|Z)
+= p_\theta(Z^0) \prod_{m=1}^{M+1} p_\theta(Z^m|Z^{m-1}) \times \prod_{m=0}^{M+1} p_\theta(Y^m | Z^m)
+$$
+\ra Regular (multivariate) hidden Markov model (HMM)
+
+\paragraph{Conditional distribution.} Still, letting $Z_{ik}^m = \Ibb\{Z_i^m = k\}$, EM requires to evaluate 
+$$
+\Esp(Z_{ik}^m | Y), \qquad
+\Esp(Z_{ik}^{m-1} Z_{i\ell}^m | Y), \qquad
+\Esp(Z_{ik}^m Z_{j\ell}^m | Y),
+$$
+where $Z^m$ has $K^n$ states.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Variational approximation}
+
+\paragraph{General principle.} Replace $p_\theta(Z|Y)$ with some distribution $\pt(Z)$, $\pt \in \Qcal$  and maximize
+$$
+J(\theta ,\pt) 
+= \log p_\theta(Y) - KL[\pt(Z)|p_\theta(Z|Y)] \\
+= \Espt[\log p_\theta(Y, Z)] - \Espt[\log \pt(Z)].
+$$
+We choose
+$$
+\pt(Z) = \prod_i \pt_i(Z_i)
+\qquad \Rightarrow \qquad
+\Espt(Z_{ik}^m Z_{j\ell}^m) = \Espt(Z_{ik}^m) \Espt(Z_{j\ell}^m)
+$$
+which leads to a mean field approximation \cite{BKM17}:
+$$
+\log \pt_i(Z_i) = \Espt_{- i} \log p_\theta(Y, Z) + \text{cst}.
+$$
+
+\paragraph{Variational E step.} Letting 
+\begin{itemize}
+ \item $Y_i^m = \{Y_{ij}(t), Y_{ji}(t)\}_{j, (t_{m-1}+t_m)/2 < t < (t_m+t_{m+1})/2}$,
+ \item $\log \phit_k^m(Y_i^m) = \Espt_{Z_{-i}} \log p_\theta(Y_i^m | Z_i^m = k)$
+\end{itemize}
+we get
+$$
+\log \pt(Z_i)
+= \sum_k Z_{ik}^0 \log \nu_k 
++ \sum_{m=1}^{M+1} Z_{ik}^{m-1} Z_{i\ell}^m \log \pi_\kl(\delta_m)
++ \sum_{m, k} Z_{ik}^m \log \phit_k^m(Y_i^m)
++ c_i
+$$
+\ra $\Pt(Z_i^m=k)$, $\Pt(Z_i^{m-1}=k, Z_i^m=\ell)$ computable via forward-backward recursion.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Parameter estimates}
+
+Maximize $J(\theta, \pt)$ wrt $\theta$: nothing special.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Some issues}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Identifiability}
+
+\paragraph{First idea.} Use \cite{AMR09} like for HMM
+
+\ra Not able to accommodate for continuous time.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Initialization}
+
+\begin{enumerate}
+ \item Split $[0, T]$ into $B$ bins ($1 \leq b \leq B$)containing equal number of events;
+ \item Fit a Poisson SBM for each bin and get the $\tau_{ik}^b$;
+ \item Initialize $\Pt(Z_i(t) = k)$ with $\tau_{ik}^b$ if $t$ is in bin $b$.
+\end{enumerate}
+\ra Gives reasonable starting guesses for $\nu$ and $\gamma$.
+
+\paragraph{Problems.}
+\begin{itemize}
+ \item Choosing $B$: large to have small bins so that few individual move within each bin, small to have enough events with each bins.
+ \item $B$ has to be consistent with lambda, typically, for a bin with width $\Delta^b$,
+ $$
+ N \Delta^b \lambda (1-\nu'\nu) < 1.
+ $$
+\end{itemize}
+\ra Initialize $\lambda$ by hand? E.g. $\lambda^0 = 1/T$ or $B/T$?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Model selection}
+
+\paragraph{Heuristic.} $\{Y^m\}_m \sim HMM$:
+$$
+\log p_\theta(Y, Z) = \log p_\theta(Z) + \log p_\theta(Y | Z)
+$$
+where
+\begin{align*}
+  \log p_\theta(Z)
+  & = \sum_i \log \nu_{Z_i^0} + \sum_{m \geq 1, i} \log \pi_{Z_i^{m-1}Z_i^m}(\delta_m) 
+  & \text{$NM$ terms, $K$ parameters} \\
+  \log p_\theta(Y | Z)
+  & = \sum_{m \geq 0, i, j} \log \phi(Y_{ij}^m | Z^m)
+  & \text{$N^2M$ terms, $K^2$ parameters} \\
+  \log p_\theta(Y | Z)
+  & = \sum_{m \geq 0} \log \phi(Y_{i_m j_m}[t_{\text{prec}_{ij}(m)}; t_m] | Z^{\text{prec}_{ij}(m)}, Z^m)
+  & \text{$M$ terms, $K^2$ parameters}
+\end{align*}
+where $t_{\text{prec}_{ij}(m)}$ is the last interaction time between $i$ and $j$ before $t_m$:
+$$
+\text{prec}_{ij}(m)= \max\{0 \leq u < m: i_u = i, j_u = j\}.
+$$
+
+\paragraph{Criteria.} 
+\begin{align*}
+ vBIC & = {J(\widehat{\theta}, \pt) - \frac{K}2 \log(NM) - \frac{K^2}2 \log(\textcolor{blue}{N^2}M)} \\
+ vICL & = vBIC + \Espt\log \pt(Z) = vBIC + \sum_i \Espt_i\log \pt_i(Z_i) 
+\end{align*}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\nocite{MaM16}
+\bibliography{/home/robin/Biblio/BibGene}
+\bibliographystyle{plain}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+

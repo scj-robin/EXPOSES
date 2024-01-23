@@ -1,0 +1,768 @@
+\documentclass{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+\usetheme{CambridgeUS}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+%\usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{stmaryrd}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{url}
+\usepackage{/Latex/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+% Commands
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+\newcommand{\ppause}{}
+%\newcommand{\emphase}[1]{{#1}}
+\newcommand{\paragraph}[1]{\textcolor{darkred}{#1}}
+\newcommand{\refer}[1]{\textcolor{blue}{\sl \cite{#1}}}
+\newcommand{\Refer}[1]{\textcolor{blue}{\sl #1}}
+\newcommand{\newblock}{}
+
+% Symbols
+\newcommand{\Abf}{{\bf A}}
+\newcommand{\Bias}{\mathbb{B}}
+\newcommand{\Bbf}{{\bf B}}
+\newcommand{\Beta}{\text{B}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\BIC}{\text{BIC}}
+\newcommand{\dd}{\text{d}}
+\newcommand{\dbf}{{\bf d}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Ebf}{{\bf E}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Fbf}{{\bf F}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Gbf}{{\bf G}}
+\newcommand{\Gam}{\mathcal{G}\mbox{am}}
+\newcommand{\Ibb}{\mathbb{I}}
+\newcommand{\Ibf}{{\bf I}}
+\newcommand{\ICL}{\text{ICL}}
+\newcommand{\Jbf}{{\bf J}}
+\newcommand{\Cov}{\mathbb{C}\text{ov}}
+\newcommand{\Corr}{\mathbb{C}\text{orr}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\Vsf}{\mathsf{V}}
+\newcommand{\pen}{\text{pen}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Jcal}{\mathcal{J}}
+\newcommand{\Kbf}{{\bf K}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\mum}{\mu(\mbf)}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Nbf}{{\bf N}}
+\newcommand{\Nm}{N(\mbf)}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\Obf}{{\bf 0}}
+\newcommand{\Omegas}{\underset{s}{\Omega}}
+\newcommand{\Pbf}{{\bf P}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\sbf}{{\bf s}}
+\newcommand{\Sbf}{{\bf S}}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\Tbf}{{\bf T}}
+\newcommand{\ubf}{{\bf u}}
+\newcommand{\Ubf}{{\bf U}}
+\newcommand{\Vbf}{{\bf V}}
+\newcommand{\Wbf}{{\bf W}}
+\newcommand{\xbf}{{\bf x}}
+\newcommand{\Xbf}{{\bf X}}
+\newcommand{\ybf}{{\bf y}}
+\newcommand{\Ybf}{{\bf Y}}
+\newcommand{\zbf}{{\bf z}}
+\newcommand{\Zbf}{{\bf Z}}
+\newcommand{\betabf}{\mbox{\mathversion{bold}{$\beta$}}}
+\newcommand{\pibf}{\mbox{\mathversion{bold}{$\pi$}}}
+\newcommand{\Sigmabf}{\mbox{\mathversion{bold}{$\Sigma$}}}
+\newcommand{\gammabf}{\mbox{\mathversion{bold}{$\gamma$}}}
+\newcommand{\mubf}{\mbox{\mathversion{bold}{$\mu$}}}
+\newcommand{\nubf}{\mbox{\mathversion{bold}{$\nu$}}}
+\newcommand{\Thetabf}{\mbox{\mathversion{bold}{$\Theta$}}}
+\newcommand{\thetabf}{\mbox{\mathversion{bold}{$\theta$}}}
+\newcommand{\BP}{\text{BP}}
+\newcommand{\EM}{\text{EM}}
+\newcommand{\VEM}{\text{VEM}}
+\newcommand{\VBEM}{\text{VB}}
+\newcommand{\cst}{\text{cst}}
+\newcommand{\obs}{\text{obs}}
+\newcommand{\ra}{\emphase{\mathversion{bold}{$\rightarrow$}~}}
+\newcommand{\QZ}{Q_{\Zbf}}
+\newcommand{\Qt}{Q_{\thetabf}}
+
+%====================================================================
+\title[Factor model for segmentation]{A factor model
+  approach for the joint segmentation of correlated series}
+
+\author[Lebarbier \& Robin]{E. Lebarbier \& S. Robin}
+
+\institute[INRA/AgroParisTech]{INRA / AgroParisTech \\
+  \bigskip
+  \begin{tabular}{ccccc}
+    \epsfig{file=/RECHERCHE/RESEAUX/Exposes/Figures/LogoINRA-Couleur.ps,
+      width=2.5cm} & 
+    \hspace{.5cm} &
+    \epsfig{file=/RECHERCHE/RESEAUX/Exposes/Figures/logagroptechsolo.eps,
+      width=3.75cm} & 
+    \hspace{.5cm} &
+    \epsfig{file=/RECHERCHE/RESEAUX/Exposes/Figures/Logo-SSB.eps,
+      width=2.5cm} \\ 
+  \end{tabular} \\
+  \bigskip
+  }
+
+\date[JDS 2011]{Journées de Statistique, Mai 2011, Tunis}
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\section {Introduction}
+%====================================================================
+\frame{\titlepage}
+
+%====================================================================
+\frame{ \frametitle{Segmentation of multiple series}
+  \paragraph{Aim:} 
+  \begin{itemize}
+  \item Find abrupt change-points in the distribution of a signal,
+  \item Within multiple series of measurements,
+  \item In presence of correlation between the series.
+  \end{itemize}
+
+  \pause\bigskip
+%   \begin{tabular}{lccc}
+  \begin{tabular}{p{.2\textwidth}
+      >{\centering\arraybackslash}m{.22\textwidth}
+    >{\centering\arraybackslash}m{.22\textwidth}
+    >{\centering\arraybackslash}m{.22\textwidth}} 
+    \emphase{Examples:} & \emphase{Genomics} &
+    \emphase{Meteorology} & \emphase{Geology} \\
+    \hline    
+    \emphase{Series $m$} & Patients & Station & Station \\
+    \hline    
+    \emphase{Time $t$} & Position along & Time & Time \\
+    & the genome &  &  \\
+    \hline    
+    \emphase{Signal $Y_{tm}$} & Micro-array & Temperature & GPS
+    location \pause \\ 
+    \hline    
+    \emphase{Breakpoints} & Endpoints of & Change of &
+    Earth's crust \\ 
+    \emphase{$\{t_k^m\}$} & altered regions & instrument & shifts
+    \pause \\
+    \hline    
+    \emphase{Correlation $\Sigmabf$} & Probe effect & Spatial & Spatial \\
+  \end{tabular}
+  }
+
+%====================================================================
+\frame{ \frametitle{Basic segmentation model}
+
+  \paragraph{For one single series:} \\
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \emphase{$Y_t =$} signal at time $t$,\\
+      \\
+      \emphase{$t_k=$} $k$-th breakpoints ($k=1..K-1$), \\
+      \\
+      \emphase{$I_k =$} $]t_{k-1}; t_k]:$ $k$-th interval, 
+      $$
+      \forall t \in I_k, \qquad Y_{t}=\mu_{k} +F_{t}
+      $$
+      where the $\{F_t\}$ are i.i.d. $\Ncal(0, \sigma^2)$.
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{A genomic example:} \\
+      \\
+      \epsfig{file=../Figures/bt474_c1_seg_homo_K10.eps, clip=,
+      width=.45\textwidth} 
+    \end{tabular}
+  \end{tabular}
+  }
+
+%====================================================================
+\frame{ \frametitle{Computational issue}
+
+  \paragraph{One series.} There are ${{n-1}\choose{K-1}}$ possible
+  ways to divide a series with length $n$ into $K$ segments.
+
+  \bigskip\bigskip\pause
+  \paragraph{Dynamic programming (DP)} allows to recover the \emphase{optimal
+  segmentation} with $\Ocal(Kn^2)$ complexity, provided that the
+  contrast to be optimized is additive, e.g.
+  $$
+  \log p (\Ybf) = \sum_k \log p (\Ybf^k)
+  $$
+  \ra Assumption: Independence between the segments.
+  
+  \bigskip\bigskip\pause
+  \paragraph{2-stage dynamic programming.} A 2-stage algorithm can be
+  derived to recover the optimal segmentation of $M$
+  \emphase{independent series}, under the same assumption
+  (\refer{PLH11}).  
+
+  }
+
+%====================================================================
+%====================================================================
+\section {Joint segmentation of multiple series}
+%====================================================================
+\frame{ \frametitle{Segmentation of multiple series}
+  \paragraph{Simultaneous segmentation} refers to the case where the
+  breakpoints are the \emphase{same in all series} $m = 1..M$:
+  $$
+  \forall t \in I_k, \qquad Y_{tm}=\mu_{km} +
+  F_{tm}, 
+  $$
+  where the residual vectors $\Fbf_t = (F_{tm})_m$ are
+  i.i.d. $\Ncal_M(\Obf, \Sigmabf)$.
+  
+  \bigskip\bigskip\pause
+  \paragraph{Joint segmentation} refers to the case where the
+  breakpoints are \emphase{specific to each series}:
+  $$
+  \forall t \in I_k^{\emphase{m}}, \qquad Y_{tm}=\mu_{km} +
+  F_{tm}, 
+  \qquad
+  \{\Fbf_t\}_t \text{ i.i.d. } \Ncal_M(\Obf, \Sigmabf).
+  $$
+
+  \bigskip\pause
+  \begin{itemize}
+  \item We \emphase{allow between series} correlation (e.g. spatial) :
+    $\Sigmabf$. 
+  \item We \emphase{forbid within series} correlation: $\{\Fbf_t\}_t$ i.i.d..
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{ \frametitle{Graphical model perspective}
+  
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.4\textwidth}}
+      \vspace{-1cm}      
+      \onslide+<1->{\paragraph{One series:} OK with
+        classical DP. \\}
+      \onslide+<2->{\medskip
+        \paragraph{Independent series:}
+        OK with 2-stage DP ($\Sigmabf = \sigma^2 \Ibf$). \\}
+      \onslide+<3->{\medskip
+        \paragraph{Simultaneous segmentation:} Same complexity as for
+      one series \ra classical DP. \\} 
+      \onslide+<4->{\medskip
+        \paragraph{Joint segmentation:} Non-additivity
+          of the likelihood\\ \ra DP cannot apply as such.} 
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      %\vspace{1cm}      
+      \begin{overprint}
+        \onslide<1>
+        \epsfig{file=../Figures/SegFA-ModGraph-X1.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<2>
+        \epsfig{file=../Figures/SegFA-ModGraph-X1m.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<3>
+        \epsfig{file=../Figures/SegFA-ModGraph-XcovSimult.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<4>
+        \epsfig{file=../Figures/SegFA-ModGraph-Xcov.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<5>
+        \epsfig{file=../Figures/SegFA-ModGraph-Xcov.eps, clip=,
+          width=0.7\textwidth}
+      \end{overprint}
+      \onslide+<5>{
+        \vspace{-1.25cm}
+        \paragraph{Previous work:} Random effect model
+        $$
+        \Sigmabf = \sigma_U^2 \Jbf + \sigma_E^2 \Ibf
+        $$
+        (\refer{PLB11}).
+        }
+    \end{tabular}
+  \end{tabular}  
+  }
+
+%====================================================================
+%====================================================================
+\section {Factor model for correlated series}
+%====================================================================
+\frame{ \frametitle{Factor model}
+
+  \paragraph{Joint segmentation model.}
+  $$
+  Y_{tm} = \mu_{km} + F_{tm},   
+  \qquad \forall t \in I_k^{\emphase{m}}
+  \qquad \Fbf_t \text{ \emphase{i.i.d.} } \sim \Ncal_M(\Obf,
+  \emphase{\Sigmabf}). 
+  $$
+
+  \bigskip\pause
+  \paragraph{Factor model:} If $\Sigmabf$ can be written as
+   $$
+   \emphase{\Sigmabf = \Bbf \Bbf' + \sigma^2 \Ibf}, 
+   \qquad \text{with } \Bbf = [b_{qm}]: M \times Q, 
+   \qquad Q < M
+   $$ \pause
+   (always true for $Q = M-1$), then the model can be rewritten as
+   $$
+   Y_{tm} = \mu_{km} + \sum_{q=1}^Q Z_{tq} b_{qm} + E_{tm},   
+   \qquad \forall t \in I_k^{m}
+   $$
+   where
+   $
+   \Zbf_t \text{ \emphase{i.i.d.} } \sim \Ncal_Q(\Obf, \emphase{\Ibf}), 
+   \quad
+   \Ebf_t \text{ \emphase{i.i.d.} } \sim \Ncal_M(\Obf,
+   \emphase{\sigma^2 \Ibf}), 
+   \quad
+   (\{\Zbf_t\}, \{\Ebf_t\}) \text{ indep.}
+   $
+
+   \bigskip\bigskip
+   The same trick is used in \refer{FKC09} in a different context.
+  }
+
+%====================================================================
+\frame{ \frametitle{Breaking down dependency}
+
+      \vspace{-1cm}      
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.4\textwidth}}
+      \onslide+<1->{\paragraph{Marginal likelihood:} \\ $\log p(\Ybf)$ is
+      not additive w.r.t. the segments $I_k^m$. \\}
+      \onslide+<2->{\medskip
+        \paragraph{Joint likelihood:} $\log p(\Ybf, \Zbf)$ is
+      still not additive. \\}
+      \onslide+<3->{\medskip
+        \paragraph{Conditional likelihood:} \\
+        $\log p(\Ybf|\Zbf)$ is additive w.r.t. the segments. \\} 
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \vspace{1cm}      
+      \begin{overprint}
+        \onslide<1>
+        \epsfig{file=../Figures/SegFA-ModGraph-Xcov.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<2>
+        \epsfig{file=../Figures/SegFA-ModGraph-XZ.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<3>
+        \epsfig{file=../Figures/SegFA-ModGraph-XcondZ.eps, clip=,
+          width=0.7\textwidth}
+        \onslide<4>
+        \epsfig{file=../Figures/SegFA-ModGraph-XcondZ.eps, clip=,
+          width=0.7\textwidth}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  
+  \onslide+<4>{
+    \vspace{-1.25cm}
+    \paragraph{E-M algorithm:} Dynamic programming can be applied
+    within the M step, when maximizing
+    $$
+    \Esp[\log p(\Ybf | \Zbf) | \Ybf].
+    $$
+    }
+  
+  }
+
+%====================================================================
+%====================================================================
+\section {Inference}
+%====================================================================
+\frame{ \frametitle{EM algorithm (1/2)}
+
+  \paragraph{Matrix form.} The model can be written as
+  $$
+  \Ybf = \Tbf \mubf + \Zbf \Bbf' + \Ebf
+  $$
+  where $\Tbf$ provides the breakpoint locations and $\mubf$
+  contains the segment means.  \\
+  \ra We need to estimate $\thetabf = (\Tbf, \mubf, \Bbf, \sigma^2)$.
+
+  \bigskip\bigskip\ppause
+  \paragraph{E-M strategy.} In presence of a latent variable $\Zbf$, it
+  aims at maximizing
+  $$
+  \log p(\Ybf; \thetabf) = \Esp[\log p(\Ybf, \Zbf; \thetabf) | \Ybf] +
+  \Hcal_{\thetabf}[p(\Zbf|\Ybf)]. 
+  $$
+  }
+
+%====================================================================
+\frame{ \frametitle{EM algorithm (2/2)}
+
+  \paragraph{E-step:} Calculate the conditional distribution 
+  $$
+  p(\Zbf | \Ybf; \thetabf^h)
+  $$
+  e.g. the moments $\Esp_{\thetabf^h}(\Zbf_t | \Ybf)$ and
+  $\Var_{\thetabf^h}(\Zbf_t | \Ybf)$. 
+
+  \bigskip\bigskip\pause
+  \paragraph{M-step:} Update the parameter value as
+  $$
+  \thetabf^{h+1} = \arg\max_{\thetabf} \Esp[\log p(\Ybf, \Zbf;
+  \thetabf) | \Ybf]
+  $$
+  where 2 maximizations can be achieved separately:
+  $$ \pause
+  \begin{array}{rclcl}
+    \Esp[\log p(\Ybf, \Zbf; \thetabf) | \Ybf] 
+    & = & \Esp[\log p(\Ybf| \Zbf; \thetabf) | \Ybf] & + & \Esp[\log
+    p(\Zbf; \thetabf) | \Ybf] \\ 
+    \\
+    & = & \Esp[\log p(\Ybf| \Zbf; \emphase{\Tbf, \mubf, \sigma^2}) |
+    \Ybf] & + &
+    \Esp[\log p(\Zbf; \emphase{\Bbf}) | \Ybf] \\
+    \\
+    & & 
+    \text{(2 stage) dynamic}
+    & & 
+    \simeq \text{ diagonalization}
+    \\
+    & & 
+    \text{programming,}
+    & & 
+    \text{problem.}
+  \end{array}
+   $$
+  }
+
+%====================================================================
+\frame{ \frametitle{Model selection: a heuristic}
+
+  \begin{description}
+  \item[$Q$:] dimension of the latent vectors $\{\Zbf_t\}$.
+  \item[$K = \sum_m K_m$:] total number of segment.
+  \end{description}
+
+  \bigskip\pause
+  \paragraph{Factor model.} For a fixed given $K$:
+  $$
+  BIC_K(Q) = -2 \log p(\Ybf; \widehat{\Tbf\mubf}_K,
+  \widehat{\Sigmabf}) + [1 + Q(2M-Q+1)/2] \log n.
+  $$
+
+  \bigskip\pause
+  \paragraph{Segmentation.} \refer{ZhS07} proposed a modified BIC
+  ($mBIC$) for one series. We use an extension similar to this of
+  \refer{PLB11}:
+  $$
+  mBIC_Q(K)= f(K, \widehat{\Sigmabf}_Q, \{n_k^m\}).
+  $$
+
+  \bigskip
+  \paragraph{Heuristic.}
+  $$
+  \widehat{Q}_K = \arg\max_Q BIC_K(Q), 
+  \qquad \widehat{K} = \arg\max_K mBIC_{\widehat{Q}_K}(K), 
+  \qquad \widehat{Q} = \widehat{Q}_{\widehat{K}}.
+  $$
+  }
+
+%====================================================================
+%====================================================================
+\section {Simulation study}
+%====================================================================
+\frame{ \frametitle{Simulations: an example}
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      $M = 5$ stations, $n = 50$ times; \\
+      $\mu_k^m \in \{-2, -1, 0, 1, 2\}$ %\\
+      %$d(m, m') = $ distance from $m$ to $m'$; 
+      \begin{eqnarray*}
+        \Sigma(m, m') & = & (1-\lambda) \rho^{d(m, m')} \\
+        & + & \lambda \sigma^2 \Ibb\{m = m'\}
+      \end{eqnarray*}
+      \\
+      \onslide+<2->{
+        \paragraph{Relative fit} as compared to $(K_0, Q_0)$: 
+        $$
+        \text{e.g.} \qquad \frac{RMSE(K, Q)}{RMSE(K_0,
+          Q_0)} - 1 
+        $$
+      %\vspace{-.25cm}
+        $$
+        \begin{array}{lccc}
+          \onslide+<3->{
+            (\%) & (K_0, \widehat{Q}) & 
+            (\widehat{K}, Q_0) & (\widehat{K}, \widehat{Q}) \\
+            \hline
+%         \emphase{\Tbf\mubf} & \emphase{-0.15} & -0.06  & 0.10 \\
+%         \emphase{\Sigmabf} & 23.9 & \emphase{3.0} & 78.7 \\
+            \emphase{\Tbf\mubf} & -16 & -8 & -17 \\
+            }
+          \onslide+<4->{
+            \emphase{\Sigmabf} & -0.8 & -1.8 & -0.7
+            }
+        \end{array}
+        $$
+        }
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<3->{
+        \vspace{-2cm}
+        \epsfig{file=../Figures/FaSegSimEx.n49.M5kmean3FitTmu.ps,
+          clip=, angle=270, width=.48\textwidth}  \\
+        $\qquad \quad K_0 = 17, \qquad \widehat{K} = 16$ \\ 
+        }
+      \onslide+<4->{
+      \vspace{-.5cm}
+      \epsfig{file=../Figures/FaSegSimEx.n49.M5kmean3FitSigma.ps,
+        clip=, angle=270, width=.48\textwidth} \\
+      \vspace{-.5cm}
+      $\quad Q_0 = M-1 = 4, \qquad \widehat{Q} = 1$
+      }
+%       \begin{overprint}
+%       \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+  }
+
+%====================================================================
+\frame{ \frametitle{Estimation of $K$ and $Q$}
+
+  \vspace{-.25cm}
+  {2 conditions:} \textcolor{red}{$M=5, n=50$},
+  \textcolor{green}{$M=10, n=100$}, $Q_0 = M-1$, increasing $\sigma^2$
+  \\
+  \pause
+  \begin{tabular}{cc}
+%     $\widehat{K}-K_0$ for $Q = \widehat{Q}$ &
+%     $\widehat{K}-K_0$ for $Q = Q_0$ \\
+    \epsfig{file=../Figures/FaSegSimJDS-EstimK-Qest.ps,
+      clip=, angle=270, width=.45\textwidth} &
+    \epsfig{file=../Figures/FaSegSimJDS-EstimK-Q0.ps,
+      clip=, angle=270, width=.45\textwidth} 
+  \end{tabular}\\
+  \vspace{-.5cm} \pause
+  \begin{tabular}{cc}
+%     $\widehat{Q}-Q_0$ for $K = \widehat{K}$ &
+%     $\widehat{Q}-Q_0$ for $K = K_0$ \\
+    \epsfig{file=../Figures/FaSegSimJDS-EstimQ-Kest.ps,
+      clip=, angle=270, width=.45\textwidth} &
+    \epsfig{file=../Figures/FaSegSimJDS-EstimQ-K0.ps,
+      clip=, angle=270, width=.45\textwidth} 
+  \end{tabular}
+  }
+
+%====================================================================
+\frame{ \frametitle{Fit of the segmentation $\Tbf\mubf$}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.6\textwidth}}
+      \paragraph{Fit of the segmentation.} Measured in terms of RMSE:
+      $$
+      RMSE = \|\widehat{\Tbf\mubf} - \Tbf\mubf \|
+      $$
+      relatively to the reference case: $(K_0, Q_0)$. \\
+      \\
+      \onslide+<2->{
+        \paragraph{Results} are overall quite good:
+        \begin{itemize}
+        \item Results are competitive when using $(\widehat{K},
+          \widehat{Q})$;          
+          \onslide+<3->{
+          \item Using the true $Q_0$ does not improve much;
+            }
+          \onslide+<4->{
+          \item Using the right number of segments $K_0$ does improve the
+            fit.
+            }
+        \end{itemize}
+        }
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.3\textwidth}}
+      \vspace{-1.5cm}
+        \onslide+<2->{
+          \epsfig{file=../Figures/FaSegSimJDS-EstimTmu-KeQe.ps,
+            clip=, angle=270, width=.37\textwidth} \\
+          }
+        \onslide+<3->{
+          \vspace{-.75cm}
+          \epsfig{file=../Figures/FaSegSimJDS-EstimTmu-KeQo.ps,
+            clip=, angle=270, width=.37\textwidth} \\
+          }
+        \onslide+<4->{
+          \vspace{-.75cm}
+          \epsfig{file=../Figures/FaSegSimJDS-EstimTmu-KoQe.ps,
+            clip=, angle=270, width=.37\textwidth} 
+          }
+%       \begin{overprint}
+%       \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%====================================================================
+\frame{ \frametitle{Fit of the variance structure $\Sigmabf$}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.6\textwidth}}
+      \paragraph{Fit of the variance.} Also measured in terms of RMSE
+      relatively to the reference case: $(K_0, Q_0)$. \\
+      \\
+      \onslide+<2->{
+        \paragraph{Results} are overall not that good:
+        \begin{itemize}
+        \item Results are bad when using $(\widehat{K},
+          \widehat{Q})$;          
+          \onslide+<3->{
+          \item Using the \emphase{true $Q_0$ does not improve much
+              (...!)}; 
+            }
+          \onslide+<4->{
+          \item Using the right number of segments $K_0$ really does
+            improve the fit.
+            }
+        \end{itemize}
+        }
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.3\textwidth}}
+      \vspace{-1.5cm}
+        \onslide+<2->{
+          \epsfig{file=../Figures/FaSegSimJDS-EstimSigma-KeQe.ps,
+            clip=, angle=270, width=.37\textwidth} \\
+          }
+        \onslide+<3->{
+          \vspace{-.75cm}
+          \epsfig{file=../Figures/FaSegSimJDS-EstimSigma-KeQo.ps,
+            clip=, angle=270, width=.37\textwidth} \\
+          }
+        \onslide+<4->{
+          \vspace{-.75cm}
+          \epsfig{file=../Figures/FaSegSimJDS-EstimSigma-KoQe.ps,
+            clip=, angle=270, width=.37\textwidth} 
+          }
+%       \begin{overprint}
+%       \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%====================================================================
+%====================================================================
+\section {Comments \& future works}
+%====================================================================
+\frame{ \frametitle{Some practical limitations}
+  \paragraph{(Practical) identifiability.} Although the model is
+  theoretical identifiable, simultaneous breakpoints in a large
+  fraction of series can be \emphase{confounded with the 'random
+    effect'} $\Zbf_t$ (see \refer{PLH11}). \\
+  \ra Observed in French temperature series.
+
+  \bigskip\bigskip
+  \paragraph{Missing data.} Calculations can be made ... but formulas
+  are much uglier.
+
+  \bigskip\bigskip
+  \paragraph{Exploration of the $(K, Q)$ space.} The 2 BIC
+  criteria \emphase{cannot be combined into a single one}, as they do
+  not rely on the same contrast (likelihood vs within/between sum of
+  squares). \\ 
+  \ra Time consuming exploration over a grid for $(K, Q)$.
+
+  }
+
+%====================================================================
+\frame{ \frametitle{Some theoretical issues}
+
+  \paragraph{Model selection.} The proposed strategy is only
+  heuristic. No criterion with theoretical guaranty exist at this time
+  for such a dependency structure.
+
+
+  \bigskip\bigskip
+  \paragraph{Within series correlation.} 
+  \begin{itemize}
+  \item To which extent does it matter as for the segmentation?
+  \item Can we manage it computationally? 
+  \item Doable for heterogeneous autoregressive models $AR(\mu_k,
+    \phi_k, \sigma_k^2)$.
+  \item Ongoing work with S. Chakar for autoregressive models.
+  \end{itemize}
+
+  \bigskip\bigskip
+  \paragraph{Post-doc position.} \\
+  ANR project CNV-Maize: Determination of genetic variant in maize
+  varieties. \\
+  }
+
+%====================================================================
+\frame{ \frametitle{}
+  \tiny{
+    \bibliography{/Biblio/AST,/Biblio/ARC}
+    \bibliographystyle{/Latex/astats}
+    }
+  }
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+

@@ -1,0 +1,26 @@
+* Segmentation: $P(m)$
+* Echelle : $P(\phi)$
+* Moyenne: $P(\thetabf | K) = \prod_r P(\theta_r)$
+* Observation $P(\Ybf | m, \thetabf, \phi) = \prod_{r \in m} P(Y^r | \theta_r, \phi)$
+On sait calculer directement $P(\Ybf | m, \phi) = \prod_{r \in m} P(Y^r | \phi)$
+
+ML (par DP)
+$(\widehat{m}, \widehat{\thetabf}, \widehat{\phi}) = \arg\max P(\Ybf | m, \thetabf, \phi)$
+ou simplement
+$(\widehat{m}, \widehat{\phi}) = \arg\max P(\Ybf | m, \phi)$
+ou
+$(\widehat{m}(\phi) = \arg\max P(\Ybf | m, \thetabf, \phi)$
+
+Bayesien
+on sait calculer en $O(n^2)$
+$P(m | \Ybf, \phi)$
+
+HMM : $\Sbf$ remplace $m$
+on remarque l'identité des forme de $P(\Sbf, \Ybf, \thetabf)$ et $P(m, \Ybf, \thetabf)$
+
+on sait calculer en $O(n)$
+$P(\Sbf | \Ybf, \thetabf, \phi)$
+en pratique
+$P(\Sbf | \Ybf, \widehat{\thetabf}, \phi)$
+
+

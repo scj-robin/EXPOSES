@@ -1,0 +1,988 @@
+\documentclass[dvips, lscape]{foils}
+%\documentclass[dvips, french]{slides}
+\textwidth 18.5cm
+\textheight 25cm 
+\topmargin -1cm 
+\oddsidemargin  -1cm 
+\evensidemargin  -1cm
+
+% Maths
+\usepackage{amsfonts, amsmath, amssymb}
+
+\newcommand{\coefbin}[2]{\left( 
+    \begin{array}{c} #1 \\ #2 \end{array} 
+  \right)}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Hbf}{{\bf H}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\alphabf}{\mbox{\mathversion{bold}{$\alpha$}}}
+\newcommand{\betabf}{\mbox{\mathversion{bold}{$\beta$}}}
+\newcommand{\gammabf}{\mbox{\mathversion{bold}{$\gamma$}}}
+\newcommand{\psibf}{\mbox{\mathversion{bold}{$\psi$}}}
+\newcommand{\taubf}{\mbox{\mathversion{bold}{$\tau$}}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Sbf}{{\bf S}}
+% \newcommand{\bps}{\mbox{bps}}
+\newcommand{\ubf}{{\bf u}}
+\newcommand{\vbf}{{\bf v}}
+\newcommand{\Esp}{{\mathbb E}}
+% \newcommand{\Var}{{\mathbb V}}
+\newcommand{\Ibb}{{\mathbb I}}
+%\newcommand{\liste}{$\bullet \quad$}
+\newcommand{\lFDR}{\ell FDR}
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+% Texte
+\usepackage{lscape}
+\usepackage{../../../../Latex/fancyheadings, rotating, enumerate}
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.5}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\definecolor{jaune}{cmyk}{0, 0.5, 0.5, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\textred}[1]{\textcolor{red}{#1}}
+\newcommand{\textgreen}[1]{\textcolor{green}{ #1}}
+\newcommand{\textlightgreen}[1]{\textcolor{green}{#1}}
+\newcommand{\textdarkgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{#1}}
+\newcommand{\textyellow}[1]{\textcolor{yellow}{#1}}
+\newcommand{\refer}[2]{{\sl #1}}
+\newcommand{\emphase}[1]{\textblue{#1}}
+
+% Sections
+%\newcommand{\chapter}[1]{\centerline{\LARGE \textblue{#1}}}
+% \newcommand{\section}[1]{\centerline{\Large \textblue{#1}}}
+% \newcommand{\subsection}[1]{\noindent{\Large \textblue{#1}}}
+% \newcommand{\subsubsection}[1]{\noindent{\large \textblue{#1}}}
+% \newcommand{\paragraph}[1]{\noindent {\textblue{#1}}}
+% Sectionsred
+\newcommand{\chapter}[1]{
+  \addtocounter{chapter}{1}
+  \setcounter{section}{0}
+  \setcounter{subsection}{0}
+%   {\centerline{\LARGE \textblue{\arabic{chapter} - #1}}}
+  {\centerline{\LARGE \textblue{#1}}}
+  }
+\newcommand{\section}[1]{
+  \addtocounter{section}{1}
+  \setcounter{subsection}{0}
+%   {\centerline{\Large \textblue{\arabic{chapter}.\arabic{section} - #1}}}
+  {\centerline{\Large \textblue{#1}}}
+  }
+\newcommand{\subsection}[1]{
+  \addtocounter{subsection}{1}
+%   {\noindent{\large \textblue{\arabic{chapter}.\arabic{section}.\arabic{subsection} - #1}}}
+  {\noindent{\large \textblue{#1}}}
+  }
+\newcommand{\paragraph}[1]{\noindent{\textblue{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\landscape
+\newcounter{chapter}
+\newcounter{section}
+\newcounter{subsection}
+\setcounter{chapter}{0}
+\headrulewidth 0pt 
+\pagestyle{fancy} 
+\cfoot{}
+\rfoot{\begin{rotate}{90}{
+      \hspace{1cm} \tiny S. Robin: Multiple Testing
+      }\end{rotate}}
+\rhead{\begin{rotate}{90}{
+      \hspace{-.5cm} \tiny \thepage
+      }\end{rotate}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+  \textblue{\LARGE Multiple Testing}
+
+  \textblue{\LARGE in High Throughput Data Analysis} 
+
+   \vspace{1cm}
+   {\large S. {Robin}} \\
+   robin@agroparistech.fr
+
+   {UMR 518 AgroParisTech / INRA MIA} \\
+   {Statistics for Systems Biology group}
+   
+    \vspace{1cm}
+    {Journée 'Protéome Vert'} \\
+    {Paris, 16 Janvier, 2008, AgroParisTech}
+\end{center}
+
+\vspace{1cm}
+\paragraph{Outline}
+$$
+\begin{tabular}{lcl}
+  1 - High Throughput Data & \qquad \qquad \qquad & 3 - False Discovery Rate \\
+  \\
+  2 - Multiple Testing & & 4 - Local FDR
+\end{tabular}
+$$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{High Throughput Data} 
+\bigskip
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Proteomic, transcriptomic approaches:} Measure the
+expression level of a large number (typically hundreds or thousands)
+of proteins or genes, simultaneously.
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{2cm}
+\section{Some Typical Questions} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{A - Effect of a condition change.} \\ 
+%\paragraph{Question.}
+Which proteins/genes are differentially expressed between
+condition $A$ (treatment) and condition $B$ (control)? \\
+% \paragraph{Experiment.} Measure the abundance of each protein/gene on
+% several replicates in each condition.
+
+\paragraph{B - Comparing several conditions.} \\
+%\paragraph{Question.}
+Which genes are involved in the early response to hydric stress?
+(Condition = Time)\\
+
+\paragraph{C- Finding proteins/genes associated to a given trait.} \\
+Which proteins explains (is correlated with) the value of a given
+phenotypic trait.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Statistical Significance (1/2)} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Data.} Replicate measurements of the abundance of each
+protein in each condition, at each time, or in several individuals. \\
+
+\paragraph{Test statistic.} For each protein $g$, calculate some
+criterion that is supposed to measure its implication in the biological
+process: \\ \\
+\emphase{2 conditions:} Student $T_g$, Mean rank of treated samples
+$M_g$; \\ \\
+\emphase{Time course:} Fisher $F_g$, Kruskall-Wallis $W_g$; \\ \\
+\emphase{Quantitative trait:} Correlation coefficient $R_g$ \\ \\
+
+\paragraph{Null distribution =} distribution of the test statistic
+under the null hypothesis:
+$$
+\mbox{\emphase{$\Hbf_0$ = `the protein is not involved'}.}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Statistical Significance (2/2)} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{$p$-value.} The significance of each gene is given by
+$$
+P_g = \Pr_{\Hbf_0}\{|\Tcal| > |T_g|\} 
+\quad \mbox{or} \quad
+P_g = \Pr_{\Hbf_0}\{\Fcal > F_g\}
+\quad \mbox{or ...}
+$$
+
+\hspace{-1.8cm} \begin{tabular}{lcrcl}
+  \paragraph{Decision rule:} 
+  & \hspace{3cm} & Accept $\Hbf_0$ & & if $P_g \leq \alpha$ \qquad
+  (e.g. $\alpha = 1\%, 5\%$) \\
+  \\
+  & & Reject $\Hbf_0$ & & otherwise
+\end{tabular} \\
+
+\paragraph{Risks:} \\
+\centerline{
+  \begin{tabular}{cc|cc}
+    \multicolumn{2}{c|}{risk} & \multicolumn{2}{c}{decision} \\
+    & & accept $\Hbf_0$ & reject $\Hbf_0$ \\
+    \hline
+    & $\Hbf_0$ true & $1-\alpha$ & $\alpha$ \\
+    truth & \\
+    & $\Hbf_0$ false & $\beta$ & $1-\beta$ \\
+  \end{tabular}
+}
+
+\paragraph{Conservative approach} aims to control the risk $\alpha$ first.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Power study}
+%\bigskip
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The power of a test is the probability for a given difference $\delta$
+\emphase{to be actually detected}. It can be
+studied when the distribution of $T_g$ is known (e.g. $t$-test) \\
+\centerline{
+  \begin{pspicture}(25, 15)
+    \rput[br](24, 13){unpaired data, $R = $ number of replicates
+    $\rightarrow 2R$ data}
+    \rput[bl](0, 0){ 
+      \epsfig{figure=../Figures/PowerT.ps, height=15cm, width=25cm, clip=}    
+      }
+    \rput[B](12.5, 1){$\delta = (\mu_A - \mu_B)/\sigma$}
+    \rput[B](16.25, 8){$R = 2$}
+    \rput[B](10.75, 9){$4$}
+    \rput[B](8.5, 9.5){$8$}
+    \rput[B](4.75, 10){$64$}
+  \end{pspicture}
+}
+% $$
+% \begin{array}{c}
+%   1 - \beta = \Pr\{\mbox{gene declared significant} \;|\; \delta\} \\
+%   \epsfig{figure=../Figures/PowerT.ps, height=15cm, width=25cm, clip=} \\
+%   \vspace{-2.5cm}
+%   \\
+%   \delta = (\mu_A - \mu_B)/\sigma
+% \end{array}
+% $$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Typical Results: Golub data}
+
+$R_A = 27$ patients with AML, $R_B = 11$ with ALL, 7070 genes.
+
+\paragraph{Gene ranking}
+$$
+\begin{tabular}{crrrrrr}
+  & \quad~ & \multicolumn{2}{c}{student test } & \quad~ & \multicolumn{2}{c}{Welch
+  test} \\
+  rank & & $T_1$ & $p$-value & & $T_1$ & $p$-value \\
+  \hline
+  1  & & -8.32 &    $< 10^{-16}$  & & -8.09 & 6.66\;$10^{-16}$ \\
+  2  & &  5.16 & 2.37\;$10^{-7}$  & &  7.90 & 2.66\;$10^{-15}$ \\
+  3  & &  4.57 & 4.81\;$10^{-6}$  & &  6.80 & 1.02\;$10^{-11}$ \\
+  4  & & -8.86 &    $< 10^{-16}$  & & -6.43 & 1.22\;$10^{-10}$ \\
+  5  & &  4.45 & 8.37\;$10^{-6}$  & &  6.29 & 3.09\;$10^{-10}$ \\
+  6  & &  4.37 & 1.20\;$10^{-5}$  & &  6.28 & 3.35\;$10^{-10}$ \\
+  7  & & -6.74 & 1.55\;$10^{-11}$ & & -6.26 & 3.65\;$10^{-10}$ \\
+  8  & &  4.10 & 4.11\;$10^{-5}$  & &  6.21 & 5.05\;$10^{-10}$ \\
+  9  & &  3.94 & 7.97\;$10^{-5}$  & &  6.18 & 6.34\;$10^{-10}$ \\
+  10 & & -5.79 & 6.86\;$10^{-9}$  & & -6.14 & 7.93\;$10^{-10}$ \\
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{tabular}{l}
+  \paragraph{Comparison} ($\alpha = 5 \%$) \\
+  \\
+  \\
+  \begin{tabular}{c|cc|c}
+    & $N_2$ & $P_2$ & \\
+    & & & \\
+    \hline
+    & & & \\
+    $N_1$ & 4974 &  345 & 5319 \\
+    & & & \\
+    $P_1$  &  209 & 1542 & 1751 \\
+    & & & \\
+    \hline
+    & & & \\
+    &    5183 & 1887 & 7070
+  \end{tabular} \\
+  \\
+  $P = $ positive  (significant) \\
+  \\
+  $N = $ negative \\
+\end{tabular}
+\begin{tabular}{l}
+  \epsfig{figure=../Figures/Golub-pval.eps, height=15cm, width=15cm,
+    bbllx=64, bblly=209, bburx=542, bbury=585, clip}
+\end{tabular}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage
+% \subsection{Non-parametric approach} 
+
+% \vspace{-0.5cm}
+% \paragraph{Permutation tests / bootstrap:} 
+% avoid parametric assumption (e.g. Gaussian distribution)
+
+% The distribution of $T_g$ under $\Hbf_0$ is estimated assigning ``a
+% large number of times'' (denoted $S$) the $(R_A + R_B)$ values
+% ($X_{A1}$, \dots, $X_{AR_A}$, $X_{B1}$, \dots, $X_{BR_B}$) randomly to
+% conditions $A$ or $B$.
+
+% Each permutation $s$ provides a pseudo value $\tilde{T}^s_g$.
+
+% The $p$-value associated to $T_g$ is estimated by the proportion of
+% pseudo values $T_g^s$ exceeding $T_g$: 
+% $$
+% \hat{p} = \frac{\mbox{number of permutations where }|T^s_g| >
+%   |T_g|}{\mbox{total number of permutations }(S)}.
+% $$
+% $(R_A+R_B)$ has to be large enough to estimate small $p$-values: $S \leq
+% \coefbin{R_A+R_B}{R_B}$:
+% $$
+% \coefbin{8}{4} = 70, \qquad\coefbin{10}{5} = 252.
+% $$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Multiple testing} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\section{Testing simultaneously $G$ genes} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$$
+\begin{tabular}{c|cc}
+  truth & \begin{tabular}{c}declared\\ non diff. exp.\end{tabular} 
+  & \begin{tabular}{c}declared\\ diff. exp.\end{tabular} \\
+  & & \\
+  \hline
+  & & \\
+  $G_0$ \begin{tabular}{c}non differentially\\ expressed genes\end{tabular}
+  & $TN$ \begin{tabular}{c}true\\ negatives\end{tabular}
+  & $FP$ \begin{tabular}{c}false\\ positives\end{tabular} \\
+  & & \\
+  & & \\
+  $G_1$ \begin{tabular}{c}differentially\\ expressed genes\end{tabular}
+  & $FN$ \begin{tabular}{c}false\\ negatives\end{tabular} 
+  & $TP$ \begin{tabular}{c}true\\ positives\end{tabular} \\
+  & & \\
+  \hline
+  & & \\
+  $G$ genes & $N$ negatives  & $P$ positives 
+\end{tabular}
+$$
+\refer{Dudoit \& al (03)}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Basic problem:} 
+If
+\begin{itemize}
+\item all the genes are non differentially expressed ($G_0 =
+  G$),
+\item all tests are made with level $\alpha$
+\end{itemize}
+then
+$$
+\Esp(FP) = G \alpha.
+$$
+$G=10\;000, \alpha = 5\% \Longrightarrow \Esp(FP) = 500$ genes to be
+studied for nothing.
+
+\paragraph{Global risk $\alpha^*$:} 
+\begin{itemize}
+\item Family-Wise Error Rate:
+$$
+FWER = \Pr\{FP > 0\}
+$$
+\item False Discovery Rate:
+  $$
+  \begin{array}{rcll}
+    FDR & = & \Esp(FP / P) & \qquad \mbox{if } P > 0, \\
+    & =& 1 & \qquad \mbox{otherwise.}
+  \end{array}
+  $$
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Family-Wise Error Rate (FWER)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Sidak:} 
+If tests are independent and if $G_0 = m$, we have
+$$
+FWER = 1 - \Pr\{FP = 0\} = 1 - (1-\alpha)^G.
+$$
+that insures $FWER = \alpha^*$ if each test is performed at level
+$$
+\emphase{\alpha = 1 - (1-\alpha^*)^{1/G}}.
+$$
+But proteins abundances or genes expressions (and tests) are
+\textblue{not independent}.
+
+\paragraph{Bonferroni correction}
+is based on the inequality
+$$
+\Pr\left\{\bigcup_i A_i\right\} \leq \sum_i \Pr\{A_i\}
+$$
+and implies that performing each test at level \emphase{$\alpha =
+  \alpha^*/G$} insures $FWER \leq \alpha^*$.
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage
+% \subsection{Adaptive procedure for FWER}
+
+% \paragraph{Idea:} \\
+% One step procedure are designed for the smallest $p$-value \\
+% \centerline{$\Longrightarrow$ they are too conservative}
+
+% \paragraph{Principle:} \\
+% Order the $G$ $p$-values
+% $$
+% p_{(1)} < p_{(2)} < \dots < p_{(G)}.
+% $$
+% \begin{enumerate}
+% \item[1.] Apply Sidak or Bonferroni correction to $p_{(1)}$, 
+% \item[2.] Apply the same correction to $p_{(2)}$, 
+% replacing $G$ by $G-1$ 
+% \item[$\vdots$]
+% \item[$k.$] Apply the same correction to $p_{(k)}$, replacing $G$ by
+%   $G-k+1$.
+% \end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Thresholds for Golub data}   (Welch test)
+
+\begin{tabular}{l}
+  \epsfig{figure=../Figures/Golub-seuil.eps, height=15cm, width=20cm,
+    bbllx=64, bblly=209, bburx=542, bbury=585, clip}
+\end{tabular}
+\begin{tabular}{l}
+  $\bullet$ $p$-value \\
+  {\bf --} $5\%$ \\
+  \textred{--} Bonferroni \\
+  \textred{\dots} Holm \\
+  \textlightgreen{--} Sidak \\
+  \textlightgreen{\dots} Sidak ad.
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\hspace{-1.8cm}\begin{tabular}{ll}
+  \begin{tabular}{p{8cm}}
+    \paragraph{Adjusted $p$-values} can be directly
+    compared to the desired FWER $\alpha^*$. \\ \\
+    Bonferroni: \\
+    $p_g \leq \alpha^* / G$ \\
+    $\Rightarrow \tilde{p}_g = G p_g \leq \alpha^*$ \\ \\
+    Sidak: \\
+    $p_g \leq 1 - (1 - \alpha^*)^{1/G}$ \\
+    $\Rightarrow \tilde{p}_g = 1-(1-p_g)^G  \leq \alpha^*$ \\ \\ 
+    \paragraph{Right plot.}\\
+    $\bullet$ $p$-value, \\
+    {\bf --} $5\%$, \\
+    \textred{--} Bonferroni, \\
+    \textlightgreen{--} Sidak
+  \end{tabular}
+  &
+  \begin{tabular}{p{15cm}}    
+    \paragraph{Golub data} \\ \\
+    \epsfig{figure=../Figures/Golub-adjp.eps, height=15cm, width=16cm,
+      bbllx=64, bblly=209, bburx=542, bbury=585, clip} 
+  \end{tabular}
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Accounting for dependency} \\
+The Westfall \& Young procedure preserves the correlation between
+genes using permutation tests and applying the \textblue{same
+  permutations} to all the genes.
+
+Adjusted $p$-values are estimated by
+$$
+\begin{array}{rll}
+  \hat{\tilde{p}} =
+    &
+    \displaystyle{\frac1S \sum_s \Ibb\{p^s_{(g)} < p_g\}}
+    & 
+    \qquad\mbox{"minP'' procedure} \\
+    \\
+    &
+    \displaystyle{\frac1S \sum_s \Ibb\{|T^s_{(g)}| > |T_g|\}}
+    & 
+    \qquad \mbox{"maxT'' procedure}
+  \end{array}
+$$
+
+The number of replicates in each condition is, again, a limitation of
+this estimation procedure.
+
+\refer{Westfall \& Young (93)}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{False Discovery Rate (FDR)} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Idea:} Not to control the risk of one error, but the
+proportion of errors $\Rightarrow$ \textblue{less conservative} than
+controlling FWER. 
+
+\paragraph{Principle:} The number of declared positive genes $P$ is
+given by the largest $g$ such as
+$$
+p_{(g)} \leq g \alpha^* / G.
+$$
+
+\paragraph{Property:} \\
+If tests are independent, this guarantees that
+$$
+FDR \leq (G_0 / G) \alpha^* \leq \alpha^*.
+$$
+
+\refer{Benjamini \& Hochberg (95)}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage 
+\paragraph{Central idea:}
+The $p$-values of null genes are uniformly distributed: 
+$$
+g \mbox{ null} \qquad \Longrightarrow \qquad p_g \sim \Ucal[0, 1].
+$$
+
+The histogram of the $p$-values must look like this: \\
+%$$
+\centerline{
+  \epsfig{figure=../Figures/HistoPvalRef.ps, height=14cm, width=22cm,
+    clip=}%, bbllx=25.3, bblly=16, bburx=243, bbury=185}   
+}
+%$$
+
+\newpage 
+$$
+\begin{tabular}{cc}
+  not like this: & nor like this: \\
+  \epsfig{figure=../Figures/TDdiff.eps, height=10cm, width=12cm,
+    clip=, bbllx=25, bblly=28, bburx=176, bbury=131} & 
+  \epsfig{figure=../Figures/CompExcepLRT.eps, height=10cm, width=12cm,
+    clip=, bbllx=108, bblly=663, bburx=509, bbury=730.5} 
+\end{tabular}
+$$
+
+The absence of a 'large' uniform part (on the right) reveals a
+\textblue{lack of fit} for the null distribution of test statistic.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage 
+\paragraph{Remarks:} 
+\begin{itemize}
+\item Estimating $G_0$ improves the procedure.
+\item The Benjamini \& Yekutieli (01) criterion: \qquad
+  $p_{(g)} \leq g \alpha^* \left/ \left( G \sum_j 1/j\right) \right.$ \\
+  controls the FDR for some positive correlations between tests.
+\end{itemize}
+
+\paragraph{Adjusted $p$-value:} \\
+For the Benjamini \& Hochberg procedure:
+$$
+\tilde{p}_{(g)} = \min_{j \geq g}\{\min[G p_{(j)} / j, 1]\}.
+$$
+
+\paragraph{Statistical Analysis of Microarray  (SAM):} \\
+Proposed by Tusher \& al. (01) aims to control FDR using a Westfall \&
+Young estimates of the adjusted $p$-value.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Adjusted $p$-values for Golub data} 
+
+\begin{tabular}{l}
+  \epsfig{figure=../Figures/Golub-adjp.eps, height=15cm, width=20cm,
+    bbllx=64, bblly=209, bburx=542, bbury=585, clip}
+\end{tabular}
+\begin{tabular}{l}
+  $\bullet$ $p$-value \\
+  {\bf --} $5\%$ \\
+  \textred{--} Bonferroni \\
+  \textred{\dots} Holm \\
+  \textlightgreen{--} Sidak \\
+  \textlightgreen{\dots} Sidak ad. \\
+  \textblue{\dots} FDR
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Number of positive genes} 
+
+\begin{tabular}{l}
+  $p$-value: \\
+  \qquad 1887 \\
+  \\
+  Bonferroni: \\
+  \qquad 111 \\
+  \\
+  Sidak: \\
+  \qquad 113 \\
+  \\
+%   Holm: \\\\
+%   \qquad 112 \\
+%   \\
+%   Sidak adp.: \\
+%   \qquad 113 \\
+%   \\
+  FDR: \\
+  \qquad  903 \\
+\end{tabular}
+\begin{tabular}{l}
+  \epsfig{figure=../Figures/Golub-adjp-zoom.eps, height=15cm, width=20cm,
+    bbllx=64, bblly=209, bburx=542, bbury=585, clip}
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Estimation of the proportion of 'null' genes $\pi_0$}
+
+\noindent
+\begin{tabular}{p{12cm}p{12cm}}
+  \paragraph{Empirical proportion.} Storey \& al propose an estimate
+  of $a$ based on this approximation:  
+  &
+  \paragraph{Linear regression.}
+  $\pi_0$ can also be estimated by the coefficient of the linear
+  regression of the empirical cdf  for $p > \lambda$: \\
+  \qquad $\widehat{\pi}_0 = \left.[R(\lambda)/G] \right/ (1-\lambda)$ 
+  & \qquad $\widehat{F}(p) \simeq \widehat{\pi}_0 p + \mbox{cst}$ 
+\\
+  \epsfig{file=../Figures/RegGenoWas.eps, width=12cm, height=12cm,
+  clip=, angle=90, bbllx=66, bblly=424, bburx=555, bbury=694}
+  & \epsfig{file=../Figures/RegGenoWas.eps, width=12cm, height=12cm,
+    clip=, angle=90, bbllx=66, bblly=85, bburx=555, bbury=353} 
+\end{tabular} \\
+Both method provide upwardly biased estimates $\Rightarrow$
+conservative estimates of FDR.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Local False Discovery Rate} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent FDR provides a general information about the risk of the whole
+procedure (up to step $i$). But we are actually interested in a
+specific risk, associated to each gene.
+
+
+\paragraph{Local FDR ($\lFDR$).} First defined by Efron \&
+al. (JASA, 2001) in a mixture model framework:
+$$
+\lFDR_g := \Pr\{\Hbf_0(g) \mbox{ is false} \;|\; T_g\}.
+$$
+
+\vspace{1cm}
+\hspace{-1.8cm}
+\begin{tabular}{cc}
+  \begin{tabular}{p{13.5cm}}
+    \paragraph{Under $\Hbf_0(g)$,} 
+    $P_g$ is uniformly distributed over $[0, 1]$: 
+    $$
+    P_g \underset{\Hbf_0(g)}{\sim} \Ucal_{[0, 1]}
+    $$ 
+    ~\\
+    \paragraph{Mixture model.} 
+    The $P_g$'s are distributed according to density 
+    $$
+    g(p) = \textred{(1-\pi_0) f(p)} + \textdarkgreen{\pi_0} 
+    $$
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+  \epsfig{figure=../Figures/HistoPvalRef.ps, height=8cm, width=8cm,
+    clip=, bbllx=26, bblly=40, bburx=176, bbury=130}   
+%     \epsfig{
+%       file=../Figures/HistoPval.ps,
+%       height=8cm, width=8cm, bbllx=82, bblly=304, bburx=277,
+%       bbury=460, angle=90, clip=} 
+  \end{tabular}
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Mixture for transformed $p$-values}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{The probit transform}
+$$
+\begin{tabular}{cc}
+    \begin{tabular}{p{7cm}}
+      $p$-value are distributed between 0 and 1. \\
+      \\
+      One may use the \textblue{inverse Gaussian cdf (probit)} to get
+      transformed 
+      $p$-value: 
+      $$
+      X = \Phi^{-1}(P)
+      $$
+      The probit transform 'zooms' on the tails of the
+      distributions and provides a \textblue{better separation} of the two
+      populations.       
+  \end{tabular}
+  &
+  \begin{tabular}{cc}
+    \begin{tabular}{c}
+      \epsfig{file = ../Figures/ProbitTransform-P.eps, width=7cm,
+        height=7cm, angle=90}
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+      \epsfig{file = ../Figures/ProbitTransform-Phi.eps, width=7cm, height=7cm}
+    \end{tabular}
+    \\
+    & 
+    \begin{tabular}{c}
+      \epsfig{file = ../Figures/ProbitTransform-X.eps, width=7cm, height=7cm}
+    \end{tabular}
+  \end{tabular}
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\paragraph{Effect of the Probit transform}
+
+%Instead of modeling the distribution of the $P_g$', we consider the
+%$$
+\begin{tabular}{lcr}
+  $P_g \in [0, 1]$
+  &   
+  \qquad 
+  &
+  $X_g = \Phi^{-1}(P_g) \in \Rbb$ 
+  \\
+  \multicolumn{3}{c}{(Efron, JASA, 2005)}
+  \\
+  \textdarkgreen{$\phi = \Ucal_{[0; 1]}$}
+  & 
+  & 
+  \textdarkgreen{$\phi = \Ncal(0, 1)$}
+  \\
+  \\
+  \\
+  \epsfig{figure=../Figures/HistoPval.ps, height=8cm, width=11.5cm,
+    clip=, bbllx=26, bblly=40, bburx=176, bbury=130}   
+  &
+  &
+%  \vspace{-2cm}
+  \epsfig{figure=../Figures/HistoProbit.ps, height=8cm, width=11.5cm,
+    clip=, bbllx=26, bblly=39, bburx=176, bbury=130}   
+\end{tabular}
+%$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Prior and posterior probability}
+$$
+  \begin{tabular}{cc}
+    \textblue{Model:} & \textblue{Posterior probability:} \\
+    \\
+    $f(x) = \textred{\pi_1 f_1(x)} + \textgreen{\pi_2 f_2(x)} +
+    \textblue{\pi_3 f_3(x)}$ & $\tau_{gk} = \Pr\{g \in f_k \;|\; x_g\}
+    = \pi_k f_k(x_g) / f(x_g)$\\
+    \\
+    \epsfig{file=../Figures/Melange-densite.ps, height=6cm,
+      width=12cm, bbllx=77, bblly=328, bburx=549, bbury=528, clip=}
+    &
+    \epsfig{file=../Figures/Melange-posteriori.ps, height=6cm, width=12cm,
+      bbllx=83, bblly=320, bburx=549, bbury=537, clip=} 
+  \end{tabular}
+$$
+$$  
+\begin{array}{cccc}
+  \quad \tau_{gk}~~(\%) \quad & \qquad g=1 \qquad & \qquad g=2 \qquad &
+  \qquad g=3 \qquad \\
+  \hline
+  k = 1 & 65.8 & 0.7 & 0.0 \\
+  k = 2 & 34.2 & 47.8 & 0.0 \\
+  k = 3 & 0.0 & 51.5 & 1.0
+\end{array}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Gaussian mixture for transformed $p$-values}
+
+$$
+\begin{tabular}{cc}
+    \begin{tabular}{p{10cm}}
+      McLachlan et al. (05) suggest to use a \textblue{Gaussian}
+      mixture to separate null genes from differentially expressed ones:
+      $$
+      \Phi^{-1}(P) \sim \textred{\pi_1 \Ncal(\mu, \sigma^2)} +
+      \textgreen{\pi_0 \Ncal(0, 1)} 
+      $$
+      Posterior probabilities provide estimates of the local FDR.
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+      \epsfig{file = ../Figures/Mix2Gauss.eps, width=12cm,
+        height=10cm}
+    \end{tabular}
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Semi-parametric mixture model}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bigskip
+\paragraph{Property of the test statistic.} The standard hypotheses
+testing theory implies that, under $\Hbf_0(g)$, $P_g$ is uniformly
+distributed over $[0, 1]$: \\
+\begin{tabular}{cc}
+  \begin{tabular}{p{13.5cm}}
+    $$
+    P_g \underset{\Hbf_0(g)}{\sim} \Ucal_{[0, 1]}
+    $$
+    \\
+    ~\\
+    The $P_g$'s are distributed according to a mixture distribution
+    with density 
+    $$
+    g(p) = (1-\pi_0) f(p) + \pi_0 
+    $$
+    \\
+    The problem is then to estimate
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+  \epsfig{figure=../Figures/HistoPvalRef.ps, height=8cm, width=8cm,
+    clip=, bbllx=26, bblly=40, bburx=176, bbury=130}   
+%     \epsfig{
+%       file=../Figures/HistoPval.ps,
+%       height=8cm, width=8cm, bbllx=82, bblly=304, bburx=277,
+%       bbury=460, angle=90, clip=} 
+  \end{tabular}
+\end{tabular}
+$$
+\begin{tabular}{ll}
+  \textblue{$\pi_0$:} & the proportion of non-differentially expressed genes
+  \\
+  \textblue{$f$:} & the alternative density \\
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Density estimation}
+
+\hspace{-2cm}
+\begin{tabular}{ll}
+  \begin{tabular}{p{10cm}}
+  \paragraph{Kernel estimate.} A natural non-parametric estimate of $f$
+  is \\
+  $\displaystyle{\widehat{f}(x) = \frac1{\sum_g Z_g} \sum_g Z_g k_g(x)}$ \\
+  where \\
+  $\displaystyle{k_g(x) = \frac1h k\left(\frac{x-x_g}h\right)}$  \\
+  \\
+  $k$ being a kernel, i.e. a symmetric density function with mean
+  0. \\
+  \\
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \epsfig{file=../Figures/FigKernelEstim.eps, width=9cm, height=13cm,
+    angle=90, clip=, bbllx=77, bblly=61, bburx=552, bbury=676}
+  \end{tabular}
+\end{tabular}
+
+\vspace{-0.5cm}
+\paragraph{Weighted kernel estimate.} Since the $Z_g$'s are unknown,
+we propose to replace them by their conditional expectations:
+$$
+\widehat{f}(x) = \frac1{\sum_g \tau_g}\sum_g \tau_g k_g(x)
+$$
+$\tau_g$ is the weight of observation $i$ in the estimation of $f$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Application to Hedenfalk data}
+
+\paragraph{Student t-test} with variance modeling ($K = 5$ groups of
+variances). 
+
+\hspace{-2cm}
+\begin{tabular}{cc} 
+  \begin{tabular}{c}
+    $\widehat{\pi_0} = 69.5 \%$ \\
+    $\textblue{\widehat{g}(x)}  = \textred{(1-\pi_0) \widehat{f}(x)} +
+    \textgreen{\pi_0 \widehat{f}(x)}$ \\ 
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Ainit/Asup-1.0/Varmixt-Gaus.eps,
+      height=12cm, width=9cm, bbllx=66, bblly=510, bburx=283,
+      bbury=691, clip=, angle=90} 
+  \end{tabular}
+  &
+  \begin{tabular}{c} 
+    $\textred{\widehat{FDR}_g}, \textblue{\widehat{\tau}_g} \times
+    \Phi^{-1}(P_g)$ \\ 
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Ainit/Asup-1.0/Varmixt-Gaus.eps,
+      height=12cm, width=4.5cm, bbllx=66, bblly=295, bburx=283,
+      bbury=480, clip=, angle=90} 
+    \\
+    $\textred{\widehat{FDR}_g}, \textblue{\widehat{\tau}_g} \times
+    P_g$ \\ 
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Ainit/Asup-1.0/Varmixt-Gaus.eps,
+      height=12cm, width=4.5cm, bbllx=66, bblly=85, bburx=283,
+      bbury=265, clip=, angle=90} 
+  \end{tabular}
+\end{tabular}
+
+\centerline{$
+  \begin{array}{ccccc}
+    \quad \widehat{FDR}_{(g)} \quad & \qquad i \qquad & \quad P_{(g)}
+    \quad & \quad \widehat{\tau}_{(g)} \quad & \quad
+    \widehat{FNR}_{(g)} \quad \\  
+    \hline
+    1\% & 4 & 2.5\;10^{-5} & 0.988 & 31.5 \% \\
+    5\% & 142 & 3.1\;10^{-3} & 0.914 & 28.7 \% \\
+    10\% & 296 & 1.3\;10^{-2} & 0.798 & 25.7 \% \\
+  \end{array}
+$}
+% \vspace{-0.5cm}
+% $\widehat{FDR}_{(g)} = \widehat{FNR}_{(g)} = 19.7 \%$ for $(g) = 633,
+% P_{(g)} = 5.4 \%, \widehat{\tau}_{(g)} = 43.5 \%$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{R package {\tt kerFDR}.} 
+
+Provides semi-parametric estimates of the local FDR. \\
+\centerline{    
+  \epsfig{file=../FIGURES/mgeni_fdr_pv.eps, clip=, width=15cm,
+    height=20cm, angle=270}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,789 @@
+\documentclass[pdf,mia,noFooter,slideColor,colorBG]{prosper}
+%\documentclass[mia,noFooter]{prosper}
+
+\usepackage{amsmath, amssymb}
+\usepackage{epsfig}
+\usepackage{color}
+
+\definecolor{orange}{rgb}{.98,.3,.03}
+\newcommand{\orange}[1]{{\textcolor{orange}{{#1}}}}
+\newcommand{\emphase}[1]{{\textcolor{blue}{{#1}}}}
+\newcommand{\publi}[1]{{\textcolor{blue}{{\bf #1}}}}
+\renewcommand{\paragraph}[1]{{\large \bf  #1}}
+
+%====================================
+%====================================
+\begin{document}
+%====================================
+%====================================
+\title{Title}
+\subtitle{Subtitles}
+\author{Smurf}
+\email{smurf@inra.fr}
+\institution{INRA}
+
+%\maketitle
+
+%====================================
+\begin{slide}{}
+  \psline[linewidth=50pt,linecolor=white](-2,1.4)(10.3,1.4)
+  \rput[lb](2.5cm,0.4cm){\includegraphics[width=5cm]{Page1_top.eps}}
+  \rput[lb](-0.3cm,-1.4cm){\includegraphics[width=10.5cm]{logoMIA19x2.eps}}
+  \rput[lb](0.8cm,-4.8cm){Evaluation of the MIA Department -- October 2006}
+  \rput[lb](-1.8cm,-5.2cm){\rotatebox[origin=c]{0}{\includegraphics[width=2cm]{butterfly.eps}}}   
+  \rput[lb](-2cm,-7.35cm){\includegraphics[width=13.7cm]{Page1_bottom.eps}}
+ 
+  \rput[lb](0.5cm,-2.1cm){\Large\textbf{Statistics for Systems Biology}}
+\end{slide}
+%====================================
+
+% %====================================
+% \begin{slide}{SSB group}
+% \begin{itemize}
+% \item 3 MIA units: Jouy, Paris, Evry
+% \item 30 scientists
+% \item Regular meetings
+% \end{itemize}
+% \end{slide}
+% %====================================
+
+% %====================================
+% \begin{slide}{3 Major Research fields}
+% \vspace{0.5cm}
+% \begin{description}
+% \item[\paragraph{Sequence analysis:}] ~\\
+%   \emphase{Motifs} (discrete
+%   math., large deviation, Poisson approximation, scan statistics) \\
+%   \emphase{Local and alignment scores} (CUSUM processes, random walks,
+%   paired
+%   HMM) \\
+%   \emphase{Gene, motif and 2D structure prediction} (HMM, semi-Markov
+%   hidden models)
+% \end{description}
+% \end{slide}
+% %====================================
+
+% %====================================
+% \begin{slide}{}%3 Major Research Fields (2)}
+% \vspace{-0.75cm}
+% \begin{description}
+% \item[\paragraph{Microarray data:}] ~\\
+%   \emphase{Experimental design} (linear model) \\ 
+%   \emphase{Differential analysis} (multiple testing, mixture model) \\
+%   \emphase{Diagnostic} (supervised classification, dimension reduction, model
+%   selection) \\ 
+%   \emphase{Comparative Genomic Hybridisation} (breakpoints
+%   detection, mixed model)\\
+%   ~\\
+% \item[\paragraph{Biological networks:}] ~\\
+%   \emphase{Random graph models}
+%   (mixture models, variational methods, discrete math.), \\
+%   \emphase{Motifs} (Combinatorics, Poisson approximation), 
+%   \emphase{Network inference} (Graphical models, multiple testing)
+% \end{description}
+% \end{slide}
+% %====================================
+
+% %====================================
+% \begin{slide}{Two illustrations}
+% \begin{itemize}
+% \item Biological sequence analysis via HMM
+  
+% \item Statistical analysis of biological networks
+% \end{itemize}
+% \end{slide}
+% %====================================
+
+%====================================
+\begin{slide}{SSB group}
+\begin{itemize}
+\item 24 scientists (+ 6 PhD).
+\item 3 MIA units: Evry, Jouy (MIG), Paris.
+\item Existence from 10 years.
+\item Strong interactions.
+\item Regular meetings (1 day per month).
+\item \url{www.genome.jouy.inra.fr/ssb/}
+\end{itemize}
+
+% MIG : SS, FR, PN, CH, [ER, AG]
+
+% Evry : BP, FM, AST, GN, CM, EB, MH, VM, CC, CA [FP, SL, MG]
+
+% Paris : SR, JJD, EL, TMH, JA, MLM, AB, NC, [MM, AC, MK]
+\end{slide}
+%====================================
+
+%====================================
+\overlays{2}{%
+\begin{slide}{3 Major Research fields}
+\vspace{0.5cm}
+\begin{description}
+\item[\paragraph{Sequence analysis:}] ~\\
+  \emphase{Motifs} (discrete
+  math., large deviation, Poisson approximation, scan statistics). \\
+  \emphase{Local and alignment scores} (CUSUM processes, random walks,
+  paired HMM). \\
+\onlySlide*{1}{
+\emphase{Gene, motif and 2D structure prediction} (HMM,
+  semi-Markov hidden models).
+}
+\onlySlide{2}{
+\orange{Gene, motif and 2D structure prediction} (HMM,
+  semi-Markov hidden models).
+}
+\end{description}
+\end{slide}
+}
+%====================================
+
+%====================================
+\overlays{3}{%
+\begin{slide}{}%3 Major Research Fields (2)}
+\vspace{-0.75cm}
+\begin{description}
+\FromSlide{1}
+\item[\paragraph{Microarray data:}] ~\\
+  \emphase{Experimental design} (linear model). \\ 
+  \emphase{Differential analysis} (multiple testing, mixture model). \\
+  \emphase{Diagnostic} (supervised classification, dimension reduction, model
+  selection). \\ 
+  \emphase{Comparative Genomic Hybridisation} (breakpoint
+  detection, mixed model).\\
+  ~\\
+\FromSlide{2}
+\item[\paragraph{Biological networks:}] ~\\
+\onlySlide*{2}{  
+  \emphase{Network inference} (Graphical models, multiple testing).
+  \emphase{Random graph models}
+  (mixture models, variational methods, discrete math.). \\
+  \emphase{Motifs} (Combinatorics, Poisson approximation). 
+}
+\onlySlide*{3}{
+  \emphase{Network inference} (Graphical models, multiple testing).
+ \orange{Random graph models}
+  (mixture models, variational methods, discrete math.). \\
+  \orange{Motifs} (Combinatorics, Poisson approximation).
+}
+\end{description}
+\end{slide}
+}
+
+%====================================
+\begin{slide}{Sequence Analysis via HMM}
+  \hspace{-1cm}{The oldest theme of SSB is sequence analysis ($1^\text{st}$ paper 1995)}\\
+  {\bf Markov} M$m$: $\qquad \qquad \qquad \qquad X_t \in {\cal A},
+  \quad |{\cal A}| = k$
+\begin{eqnarray*}
+{\mathbb P}(X_t \ | \ (X_j)_{1 \leqslant j \leqslant  t-1}) &=& {\mathbb P}(X_t \ | \ (X_j)_{t-m \leqslant j \leqslant  t-1})\\
+&=& \pi(X_{t-m}\dots X_{t-1} \ ; \ X_t)
+\end{eqnarray*}
+{\bf Hidden Markov} M$1$M$m$: $\qquad \qquad S_t \in [1, 2, \dots, r]$
+\begin{eqnarray*}
+{\mathbb P}(S_t \ | \ (S_j)_{1 \leqslant j \leqslant  t-1}) &=& {\mathbb P}(S_t \ | \ S_{t-1}) \\ 
+&=&  \color{red}\pi_0 \color{black} (S_{t-1} \ ; S_t)\\
+{\mathbb P}(X_t \ | \ (X_j)_{1 \leqslant j \leqslant  t-1} \  \ (S_j)_{1 
+\leqslant j \leqslant  t}) &=& {\mathbb P}(X_t \ | \ (X_j)_{t-m 
+\leqslant j \leqslant  t-1}, S_t)\\
+&=&  \color{red} \pi_{S_t} \color{black}   (X_{t-m}\dots X_{t-1} \ ; X_t)
+\end{eqnarray*}
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{Markov : ``exceptional motifs''}
+$\qquad$ Markov models are essentialy used to measure the ``exceptionality'' of a given word $w$ or of a given motif $W$\\
+\color{orange} {\it Gaussian and compound Poisson approximations were known in 2001.} \color{black}\\
+{\bf New} :
+\begin{itemize}
+\item Exact distribution \color{blue} {\bf (JRSS C 02, JCB 05)} \color{black}
+\item Approach based on Large Deviations \color{blue} {\bf (JCB 04)} \color{black}
+\item Waiting times for structured motifs based on generative
+  functions \color{blue}{\bf (JCB 02, Disc.App.Math 06)} \color{black}
+\item Efficient implementation of all methods \color{blue} {\bf (R'MES, SPatt)} \color{black}
+\item Numerical comparison of methods \color{blue} {\bf (JCB 01, SAGMB 06) } \color{black}
+\end{itemize}
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{}
+\vspace{-1.2cm}
+\begin{itemize}
+\item Unified approach through Deterministic Finite Automata \color{blue}{\bf (JAP 06) }  \color{black}
+\end{itemize}
+Consider the motif $W = $  a-x(1;2)-a ; the graph below detects the occurrences of $W$ on a sequence (passage in the red circle).
+\vspace{-.4cm}
+\begin{tabular}{cc}
+\begin{minipage}{0.4\textwidth}
+\begin{figure}
+\includegraphics[width=\textwidth]{FDA.eps}
+\end{figure}
+\end{minipage}
+\begin{minipage}{0.6\textwidth}
+{\tiny
+$$
+\left(
+\begin{array}{rrrrr}
+\pi(a,a) & \pi(a,b) & 0 & 0 & 0\\
+\pi(b,a) & 0 & 0 & \pi(b,b) & 0\\
+0 & 0 & \pi(b,b) & 0 & \pi(b,a)\\
+\pi(b,a) & 0 & \pi(b,b) & 0 & 0\\
+\pi(a,a) & \pi(a,b) & 0 & 0 & 0
+\end{array}
+\right)
+$$
+}
+\end{minipage}
+\end{tabular}
+If $X_t$ is a Markov chain, the position on this graph is also a MC (whose transition is indicated).\\
+This methods overcomes the curse of the motif cardinality (ex : Prosite)
+
+
+%\color{blue} \underline{Example of application} : Genomic distribution of motifs involved in DNA repair (E. coli)
+%\color{black}
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{Hidden Markov Models}
+\begin{center}
+Theoretical results
+\end{center}
+\begin{itemize}
+\item Theoretical properties of the MLE
+\item Estimation by Monte Carlo MC (MCMC)
+\item Estimation of Semi Markovian Hidden Model (SHMM)  \color{blue} {\bf (Signal proc. 01) } \color{black}
+\item Choice of models,
+\begin{itemize}
+\item using penalization of likelihood,
+\item using Reversible Jump MC. \color{blue} {\bf (JCB 06)} \color{black}
+\end{itemize}
+\end{itemize}
+\begin{center}
++ \color{blue} {\bf (3 books : Belin 03, CUP 05, Hermes 07) } \color{black}
+\end{center}
+\end{slide}
+%====================================
+%        \color{blue} {\bf ( ) } \color{black}
+
+%====================================
+\begin{slide}{Hidden Markov Models}
+The modelisation by HMM turns to be a tool for the analysis of heterogeneity. In the ssb group of MIA, we used them for
+\begin{itemize}
+\item Alignments (pair HMM) \color{blue} {\bf (Scand. J. S 06) } \color{black}
+\item Annotation 
+\begin{itemize}
+\item localisation of genes  \color{blue} {\bf (NAR 02) } \color{black}
+\item localisation of motifs (ex : promotors) \color{blue} {\bf (JCB 06) } \color{black}
+\end{itemize}
+\item Secondary structure of proteins  \color{blue} {\bf (IEEE Int.Syst. 05 ) } \color{black}
+\item Localisation of nucleosomes \color{blue} {\bf (submitted Science 06)} \color{black}
+\end{itemize}
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{Alignment : pair HMM}
+A model for a pair of sequences consists in :
+\begin{tabular}{cc}
+\begin{minipage}{0.5\textwidth}
+\noindent $\bullet$ an (hidden) MC $S_t$ taking values in $\{ \, \longrightarrow \, , \, \uparrow \, , \, \nearrow  \}$\\
+\noindent $\bullet$ when $S_t = \longrightarrow$, we observe\\
+\indent $\quad (X_t,-) \quad ; \quad X_t \sim P_1$\\
+$\bullet$  when $S_t = \uparrow$, we observe\\
+\indent $\quad (-,Y_t) \quad \, ; \quad Y_t \sim P_2$\\
+$\bullet$  when $S_t = \nearrow$, we observe\\ 
+\indent $\quad (X_t,Y_t) \sim P_{12}$
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\begin{figure}
+\centering
+\includegraphics[width=.8\textwidth]{pairHMM.eps}
+\end{figure}
+\end{minipage}
+\end{tabular}
+
+\vspace{0,5cm}
+
+The alignment of two observed sequences can be done using the usual HMM tools.
+
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{HMM : SHOW}
+A very efficient (ssb) software implements these methods\\
+ \color{blue} {\bf (NAR 06, PNAS 06 ) } \color{black}
+\begin{figure}
+\centering
+\includegraphics[width=.8\textwidth]{papillon.eps}
+\end{figure}
+SHOW is part of the ``plate-forme'' AGMIAL in the INRA and is widely used (ex: Médigue's team in genopole).
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{Annotation}
+On $200\, 000$ bp of {\it B. subtilis}, SHOW gives the following annotation (curves), to be compared to the true one (colored arrows)
+\begin{figure}
+\centering
+\includegraphics[width=.9\textwidth]{bsub_34.eps}
+\end{figure}
+\end{slide}
+%====================================
+%{bsub_1-200000_6etats.eps}
+
+%====================================
+\begin{slide}{SHMM}
+HMM $\Rightarrow$ the length of each region follows an exponential distribution -- this hypothesis is false in the reality !\\
+\color{blue} {\bf Example : Modelization of the promotors of genes} \color{black}
+\vspace{-0.3cm}
+\begin{figure}
+\centering
+\includegraphics[width=.8\textwidth]{figure1.eps}
+\end{figure}
+\vspace{-1.1cm}
+\begin{figure}
+\includegraphics[width=.8\textwidth]{figure2.eps}
+\end{figure}
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{The promotor model : result}
+\vspace{-.5cm}
+\begin{figure}
+\centering
+\includegraphics[width=.7\textwidth]{figure4.eps}
+\end{figure}
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{II$^{\text{ary}}$ structure of proteins}
+The hidden chain is written in a ``structural alphabet'' describing angles in the skeleton of the protein.
+\begin{tabular}{cc}
+\begin{minipage}{0.4\textwidth}
+\begin{figure}
+\includegraphics[width=\textwidth]{diedre.eps}
+\end{figure}
+\begin{figure}
+\includegraphics[width=\textwidth]{complex2.eps}
+\end{figure}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+A learning set indicates how  the ``words'' of 5 a.a. can be grouped according to their spatial configuration in (here) 14 groups : the ``letters'' of the structural alphabet. The frequencies of each a.a. in each ``letter'' is estimated.\\
+Given a sequence of a.a., HMM tools allows the attribution of ``letters'', and therefore a spatial reconstruction.
+\end{minipage}
+\end{tabular}
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{Searching nucleosomes}
+In eukaryotes, an important part of the chromosomes forms chromatine, a state where the double helix winds rounds beads, forming a ``collar''.
+\begin{figure}
+\centering
+\includegraphics[width=.8\textwidth]{defnucleo.eps}
+\end{figure}
+Is it possible to give a \color{red} prediction of the positions \color{black} of these nucleosomes ?
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{}
+\begin{tabular}{cc}
+\begin{minipage}{0.4\textwidth}
+We will take advantage from the fact that the curvature of the DNA
+differs where it  touchs the ``core'' and in the parts far from the core.
+Therefore the necessary energy differs.
+\end{minipage}
+\begin{minipage}{0.6\textwidth}
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{defnucleo2.eps}
+\end{figure}
+\end{minipage}
+\end{tabular}
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{}
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{longsegment.eps}
+\end{figure}
+Using only the primary sequence ({\bf taccgtatcag...}),\\
+ we have computed the energy which is locally necesary to bend the DNA (blue curve).\\
+This is our ``observed sequence'' $X_t \in {\mathbb R}$
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{}
+$\qquad \qquad \quad$ \color{red} ``Nuc''-states ($\neq$ distributions in each position) 
+\begin{figure}
+\centering
+\includegraphics[width=.8\textwidth]{hmmnucleo.eps}
+\end{figure}
+\color{black}
+A HMM is ajusted to these data.\\
+The hidden chain will be $S_t =$ Nuc $\quad$ or $\quad S_t =$ No-Nuc
+\end{slide}
+%====================================
+
+
+%====================================
+\begin{slide}{}
+\begin{figure}
+\centering
+\includegraphics[width=.3\textwidth]{segmentafterHMM_2.eps}
+\hspace{1cm}
+\includegraphics[width=.4\textwidth]{segmentafterHMM_1.eps}
+\end{figure}
+The predicted positions of the nucleosomes (red dots) ``fairly'' coincide with the experimental data (red curve -- Rando et al.)
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{\hspace{-6cm}Network Statistics }
+  \vspace{-1cm}
+  \begin{tabular}{cc}
+    \hspace{-1cm}
+    \begin{tabular}{p{3cm}}
+      \\ \\ \\ \\ \\ \\ \\
+      Yeast protein interaction network. \\
+      {\small \sl Barabasi, Nat. Genet., 04} \\ \\ \\
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+      \epsfig{file = ../Figures/Barabasi6.ps, clip=, bbllx=39, bblly=466,
+        bburx=351, bbury=754, width=8cm}
+    \end{tabular}
+  \end{tabular}
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{Complex Systems}
+Molecular biologists more and more face data with a network
+structure:
+\begin{enumerate}
+\item protein interaction networks
+\item gene regulation networks
+\item metabolic networks
+\end{enumerate}
+
+Statistical tools are needed
+\begin{description}
+\item[$(i)$] to understand and to lay out the global topology
+of the graph \\
+\item[$(ii)$] and to detect unexpected local structures.
+\end{description}
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{Our Contributions}
+\begin{description}
+\item[$(i)$] \paragraph{Models for random graphs} \\
+  Random graphs are natural to describe such networks. \\
+  Lack of models fitting the observed networks well. \\
+  ~\\
+\item[$(ii)$] \paragraph{Significant structures in a biological
+    network} \\
+  The search for unexpected patterns or characteristics (i.e.
+  diameter) is the standard way to point out key features.
+\end{description}
+This field involves about \emphase{10 people} from Evry, Jouy and
+Paris.
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{A New Random Graph Model}
+  \paragraph{Erd\"os Model.} All pairs of vertices have the \emphase{same
+    probability} to be connected; All edges are independent. \\
+  ~\\
+  $\rightarrow$ Poor fit, probably due to some heterogeneity between
+  the vertices (i.e. proteins, reactions, genes). \\
+  ~\\
+  \paragraph{Mixture Model.} Vertices are spread among \emphase{$Q$ groups}
+  (with proportions $\alpha_q$); Vertices from groups $q$ and $\ell$
+  are connected with probability $\pi_{q\ell}$. \\
+  ~\\
+  This includes the preferential attachment model: the groups
+  correspond to the time when the vertices joined the network.
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{Mixture Topologies}
+%\vspace{-1cm}
+\begin{tabular}{cc}
+  \hspace{-1cm} 
+  \begin{tabular}{c}
+    Clusters (affiliation) \\
+    \epsfig{file = ../figures/FigNetworks-Clusters-Col.eps,
+      height=5cm, width=2.5cm, clip=, angle=270}    \\
+    Stars (hubs) \\
+    \epsfig{file = ../figures/FigNetworks-Star-Col.eps,
+      height=5cm, width=2.5cm, clip=, angle=270}
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+      Preferential \\ attachment \\
+      \epsfig{file = ../figures/FigNetworks-PrefAtt-Col.eps, 
+        height=5cm, width=5cm, clip=,}% angle=270}
+    \end{tabular} 
+  \end{tabular} 
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{Parameter Estimation}
+  \vspace{0.5cm}
+  \paragraph{Standard strategy for mixture model: E-M.} \\
+  The maximisation of the log-likelihood $\log P(X)$ of the observed
+  edges $X$ involves the calculation of the conditional distribution
+  of the unobserved vertex labels $Z$: $P(Z\;|\;X)$. \\
+  ~\\
+  \paragraph{E-M fails for random graphs.} \\
+  All vertices are potentially connected so there is no local
+  dependency: \\
+  $\rightarrow$ The \emphase{neighbourhood of a vertex is the whole graph} \\
+  $\rightarrow$ $P(Z\;|\;X)$ can  not be  computed \\
+  $\rightarrow$ A new strategy is needed.
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{Variational Approach}
+  \paragraph{Lower bound for the likelihood.} \\
+  We actually optimise
+  $$
+  \log P(X) - KL[P(Z\;|\;X), Q_R(Z)]
+  $$
+  where $Q_R$ is the \emphase{best approximation} of $P(Z\;|\;X)$
+  within a class of 'nice' distributions:
+  $$
+  Q_R(Z) = \prod_i q(Z_i; \tau_i(X)).
+  $$
+  The multinomial parameters $\tau_i(X)$ can be interpreted as
+  \emphase{posterior probabilities} for vertew $i$ to belong to each
+  group.
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{Estimation Algorithm}
+  \begin{description}
+  \item[\paragraph{Optimisation of $Q_R$.}] ~\\
+    The optimal $\widehat{Q}_X$ is obtained with
+    $\widehat{\tau}_i(X)$'s satisfying an explicit
+    fix-point relation. \\
+  \item[\paragraph{Parameter estimates.}] ~\\
+    Given the $\widehat{\tau}_i(X)$, analytical expressions of
+    $\widehat{\alpha}_q$ and $\widehat{\pi}_{q\ell}$ can be easily derived. \\
+  \item[\paragraph{Model selection.}] ~\\
+    A BIC-like criterion has been derived to choose the number of
+    groups. \\ 
+  \end{description}
+  A \emphase{software} is available for both oriented and non-oriented
+  graphs + \publi{under review at Stat. \& Comput. and PNAS}
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{E. coli reaction network}
+%\vspace{-1cm}
+\hspace{-1.5cm}
+\begin{tabular}{cc}
+  \begin{tabular}{p{5cm}}
+                                %\paragraph{Zoom (bottom left).} \\ 
+                                %\\
+    Submatrix of $\widehat{\pi}$:
+    {\tiny      
+      $$
+      \begin{tabular}{c|cccc}
+        $q, \ell$ & 1 & 7 & 10 & 16 \\
+        \hline 
+        1 & {\bf 1.0} \\ 
+        7 & {\sl .11} & .65 \\ 
+        10 & {\sl .43} & & .67  \\ 
+        16 & {\bf 1.0} & {\sl .01} & & {\bf 1.0} \\
+      \end{tabular}
+      $$
+      }
+    Groups 1 and 16 both involve pyruvate; \\
+    Only group 1 involves also
+    CO2 (group 7) and acetylCoA (group 10).
+                                %     \\ \\ 
+  \end{tabular}
+  &
+  %\hspace{-1cm}
+  \begin{tabular}{l}
+    \epsfig{file = ../figures/Ecoli-Complet-ERMG-Ward-Q21_class.eps,
+      height=5.5cm, width=5.5cm, clip=,bbllx=90, bblly=485, bburx=277,
+      bbury=605.5} \\
+    \publi{SSB + INRIA Helix: JOBIM 06}
+  \end{tabular}  
+%   \vspace{-2cm}
+%   \\ \\ \\
+%   \begin{tabular}{p{9cm}}
+%     \paragraph{Vertices degree $K_i$.}  \\ \\ 
+%     Mean degree in the last group:\\ 
+%     $\overline{K}_{21} = 2.6$ \\ \\ \\
+%   \end{tabular}
+%   & 
+%   \begin{tabular}{l}
+%     \epsfig{file = ../figures/Ecoli-Complet-ERMG-Ward-Q21_class.eps,
+%     width=8.5cm, height=3cm, clip=, bbllx=70, bblly=105, bburx=277,
+%     bbury=245}   
+%   \end{tabular}
+\end{tabular}
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{Network Motifs}
+\begin{description}
+\item[\paragraph{Regulatory motifs.}] ~\\
+  $\begin{array}{ccc}
+  \end{array}$
+  Motifs may perform specific regulatory functions.
+\item[\paragraph{Exceptional motifs.}] ~\\
+  Motifs which occur more frequently than expected reflect functional
+  or computational units which combine to regulate the cellular
+  behaviour. \\
+\item[\paragraph{Statistical significance.}] ~\\
+  Need to evaluate 
+  $
+  \Pr\{N({\bf m}) \geq n_{obs}\}
+  $
+  where $N({\bf m}) = $ count of the motif ${\bf m}$ in a given
+  network.
+\end{description}
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{State of the Art}
+  \paragraph{Degree distribution fitting.} ~\\
+  Consider a graph with random edges but where the degree of each
+  vertex is fixed (and equal to the observed network). \\
+  \begin{itemize}
+  \item Shen-Orr \& al. (Nat. Genet. 01) estimate the distribution
+    of $N({\bf m})$ using \emphase{simulations} \\
+    $\longrightarrow$ heavy computational time.
+  \item \publi{RevStat, 05} proposes \emphase{analytic formulas} for
+    the moments \\
+    $\longrightarrow$ difficult to implement because of the
+    combinatorial complexity.
+  \end{itemize}
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{Stationary Models}
+  \begin{tabular}{cc}
+    \hspace{-1cm}
+    \begin{tabular}{p{6cm}}
+      Assume that the probability $\mu({\bf m})$ for motif ${\bf m}$ to occur
+      \emphase{does not depend on the position} in the graph. \\
+      \\
+                                %\paragraph{Calculating the moments.}
+      We can calculate the expected count \emphase{$\mathbb{E}
+        N({\bf m})$} and variance of the count \emphase{$\mathbb{V}
+        N({\bf m})$}. \\ \\ 
+      $\mathbb{V} N({\bf m})$ depends on the expected count of
+      {all possible overlaps} of the motif ${\bf m}$.\\ 
+      (ex: ${\bf m} = {\Huge \times}$)
+    \end{tabular}
+    & 
+    \hspace{-0.5cm}
+    \begin{tabular}{c}
+      \epsfig{file=
+        /RECHERCHE/RESEAUX/Motifs/FIGURES/MotifStar4-Recouv3.eps,
+        clip, width=4.6cm, height=6.5cm}
+    \end{tabular}
+  \end{tabular}
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{Compound Poisson approx.}
+  \paragraph{Approximate distribution of $N({\bf m})$.} ~\\
+  The exact distribution of $N({\bf m})$ is still unknown. \\
+  We look for an approximation involving only 2 parameters
+  (corresponding to the 2 moments). \\
+  ~\\
+  \paragraph{Analogy with sequence motifs.} ~\\
+  The compound (geometric) Poisson approximation outperforms other
+  approximations for motif counts in sequences (e.g. DNA). \\ ~\\
+  It assumes that the motif occurs in clumps, the number of clumps
+  being Poisson and the clump size being Geometric.
+  
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{Examples}
+  \begin{tabular}{cc}
+    \hspace{-1cm}
+    \begin{tabular}{p{5cm}}
+      \paragraph{Geometric Poisson.}~\\
+      Simulations show that it outperforms the Poisson and Gaussian
+      approximations. \\ \\
+      Although the geometric clump size is questionable for network
+      motifs, the approximate $p$-values are accurate.
+    \end{tabular}
+    &
+    \hspace{-0.5cm}
+    \begin{tabular}{c}
+      \epsfig{file=/RECHERCHE/RESEAUX/Motifs/FIGJJD-150506/fig11_200.eps, 
+        bbllx=332, bblly=211, bburx=515, bbury=304, width=6cm,
+        height=3.5cm, clip=} \\
+      \textcolor{red}{\bf --} Gaussian, \textcolor{green}{\bf --}
+        Compound Poisson \\
+        \\
+        \publi{submitted to Recomb 07}
+    \end{tabular}
+  \end{tabular}  
+\end{slide}
+%====================================
+
+%====================================
+\begin{slide}{Bipartite Graph}
+  \begin{description}
+  \item[\paragraph{Metabolic networks.}] Metabolic network involves 2
+    different kinds of vertices: reactions and compounds. \\
+    ~\\
+  \item[\paragraph{Model.}] A stochastic model for such bipartite
+    graph explains the properties of the projected graphs
+    (\publi{submitted to Discr. Appl. Math.}). \\
+    ~\\
+  \item[\paragraph{Coloured motifs.}] Reaction motifs are connected
+    sub-graphs involving reactions of a certain type (colour).
+  \end{description}
+\end{slide}
+%====================================
+
+
+%====================================
+%====================================
+\end{document}
+%====================================
+%====================================
+

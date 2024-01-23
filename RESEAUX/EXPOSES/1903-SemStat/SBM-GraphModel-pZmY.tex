@@ -1,0 +1,25 @@
+  \begin{tikzpicture}
+  \node[hidden] (Z1) at (0, \edgeunit) {$Z_1$};
+  \node[hidden] (Z2) at (\edgeunit, \edgeunit) {$Z_2$};
+  \node[hidden] (Z3) at (0, 0) {$Z_3$};
+  \node[hidden] (Z4) at (\edgeunit, 0) {$Z_4$};
+
+  \node[observed] (Y12) at (.5*\edgeunit, 1.75*\edgeunit) {$Y_{12}$};
+  \node[observed] (Y13) at (-.75*\edgeunit, .5*\edgeunit) {$Y_{13}$};
+  \node[observed] (Y14) at (1.75*\edgeunit, 1.75*\edgeunit) {$Y_{14}$};
+  \node[observed] (Y23) at (-.75*\edgeunit, 1.75*\edgeunit) {$Y_{23}$};
+  \node[observed] (Y24) at (1.75*\edgeunit, .5*\edgeunit) {$Y_{24}$};
+  \node[observed] (Y34) at (.5*\edgeunit, -.75*\edgeunit) {$Y_{34}$};
+  
+  \draw[lightarrow] (Z1) to (Y12);  \draw[lightarrow] (Z2) to (Y12);
+  \draw[lightarrow] (Z1) to (Y13);  \draw[lightarrow] (Z3) to (Y13);
+  \draw[lightarrow] (Z1) to (Y14);  \draw[lightarrow] (Z4) to (Y14);
+  \draw[lightarrow] (Z2) to (Y23);  \draw[lightarrow] (Z3) to (Y23);
+  \draw[lightarrow] (Z2) to (Y24);  \draw[lightarrow] (Z4) to (Y24);
+  \draw[lightarrow] (Z3) to (Y34);  \draw[lightarrow] (Z4) to (Y34);
+  
+  \draw[dashededge] (Z1) to (Z2);  \draw[dashededge] (Z1) to (Z3);
+  \draw[dashededge] (Z1) to (Z4);  \draw[dashededge] (Z2) to (Z3);
+  \draw[dashededge] (Z2) to (Z4);  \draw[dashededge] (Z3) to (Z4);
+  \end{tikzpicture}
+

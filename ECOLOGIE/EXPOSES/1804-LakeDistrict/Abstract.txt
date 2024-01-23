@@ -1,0 +1,18 @@
+Inference of Adaptive Shifts for Multivariate Correlated Traits
+
+Paul Bastide, Cécile Ané, Stéphane Robin & Mahendra Mariadassou
+
+
+Comparative and evolutive ecologists are interested in the distribution of quantitative traits between related species. The classical framework for these distributions consists of a (multivariate) random process running along the branches of a phylogenetic tree relating the species. We are interested in the detection of change-points in the past history of extent species, typically changes of ecological niches. We model these change-points as shifts in the process parameters, as they reveal fast adaptation to ecological changes. 
+
+The Ornstein-Uhlenbeck (OU) process is sometimes preferred to the simple Brownian Motion (BM) as it models stabilizing selection toward an optimum. The optimum for each trait is likely to be changing over the long periods of time spanned by large modern phylogenies. Our goal is to automatically detect the position of these shifts on a phylogenetic tree, while accounting for correlations between traits, which might exist because of structural or evolutionary constraints. We also aim at providing an efficient inference algorithm capable of dealing with increasingly large sets of species and/or traits.
+
+We first show that models with shifts are not identifiable in general. Constraining the models to be parsimonious in the number of shifts partially alleviates the problem but several evolutionary scenarios can still provide the same joint distribution for the extant species. In such cases, we are able to list such scenarios that can not be distinguished based on the available data.
+
+To infer the parameter of the process and the shift locations, we introduce a simplification of the full multivariate OU model, named scalar OU (scOU), which allows for noncausal correlations and is still computationally tractable. We describe an Expectation Maximization (EM) algorithm that allows for a maximum likelihood estimation of the shift positions. We extend the equivalence between the OU and a BM on a re-scaled tree to the multivariate framework, making the M step fully explicit. We also derive a new model selection criterion, accounting for the identifiability issues for the shift localization on the tree. In the univariate case, we prove that this model selection procedure satisfies an oracle inequality.
+
+The method, freely available as an R-package (PhylogeneticEM) is fast, and can deal with missing values. We demonstrate its efficiency and accuracy compared to another state-of-the-art method (l1ou) on a wide range of simulated scenarios, and use this new framework to re-analyze recently published datasets.
+
+References:
+* Bastide, P., Mariadassou, M., & Robin, S. (2017). Detection of adaptive shifts on phylogenies by using shifted stochastic processes on a tree. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 79(4), 1067-1093.
+* Bastide, P., Ané, C., Robin, S., & Mariadassou, M. (201). Inference of Adaptive Shifts for Multivariate Correlated Traits. Systematic Biology. https://doi.org/10.1093/sysbio/syy005.

@@ -1,0 +1,217 @@
+%====================================================================
+\subsection*{Problem}
+%====================================================================
+\frame{\frametitle{SBM model} 
+
+  \paragraph{Data.}
+  \begin{itemize}
+   \item $Y = (Y_{ij}):$ observed weighted network (e.g. $Y_{ij} =$ interaction count between species $i$ and $j$)
+   \item $(x_{ij}):$ vectors of edge covariates (e.g. genetic distance between species $i$ and $j$)
+  \end{itemize}
+  
+  \pause\bigskip\bigskip
+  \paragraph{SBM model with covariates.} 
+  \begin{itemize}
+   \item $Z_i=$ group of node $i$: $\{Z_i\}_i$ iid, $\pi_k = \Pr\{Z_i = k\}$
+   \item Interactions $\{Y_{ij}\}_{i, j}$ are conditionally independent:
+   $$
+   Y_{ij} \gv Z_i, Z_j \sim \Pcal\left(\exp(\emphase{\alpha_{Z_i, Z_j} + x_{ij} \beta})\right)
+   $$
+   where $\beta =$ regression coefficients, $(\alpha_{k\ell}) =$ between-group effect
+   \item Parameter $\theta = (\pi, \alpha, \beta)$
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{\frametitle{Variational inference for weighted SBM} 
+
+  \paragraph{Inference.} Maximum likelihood not tractable because $p(Z_i | Y_i)$ has no close form \\
+  
+  \bigskip
+  \ra Variational EM \refer{MRV10}: maximize the lower bound
+  \begin{align*}
+   J(\theta, q) 
+   = \log p_\theta(Y) - KL\left(q(Z) \;||\; p_\theta(Z \gv Y)\right) 
+  \end{align*}
+  taking
+  $$
+  q \in \Qcal := \left\{q: q(z) = \prod_i q_i(z_i)\right\}
+  $$
+  (\ra mean-field approximation)
+
+  \pause\bigskip\bigskip
+  \paragraph{Remarks.}
+  \begin{itemize}
+   \item {\tt blockmodels} R package \refer{Leg16}
+   \item no available variational Bayes EM (as opposed to \refer{LRO18})
+   \item no statistical guaranty (as opposed to binary SBM: \refer{CDP12,BCC13,MaM15})
+   \end{itemize}
+  
+  }
+
+%====================================================================
+\subsection*{Bridge sampling}
+%====================================================================
+\frame{\frametitle{Bayesian inference} 
+
+  \paragraph{Aim:} Perform inference on $\theta$, in a Bayesian setting
+  
+  \pause\bigskip\bigskip
+  \paragraph{Model.}
+  \begin{itemize}
+   \item Prior $p(\theta)$: $\pi \sim$ Dirichlet, $(\alpha, \beta) \sim$ Gaussian
+   \item Same (conditional) distribution for $Z$ and $Y$: $p(Y, Z \gv \theta)$
+  \end{itemize}
+  \ra Goal: estimate (or sample from) the posterior $p(\theta \gv Y)$
+
+  \pause\bigskip\bigskip
+  \paragraph{Aim:} use VEM to get a proxy for $p(\theta \gv Y)$
+  \begin{itemize}
+  \item Choose $\pt$ to be Gaussian:
+   \item $\Espt(\theta) = \widehat{\theta}_{VEM}$
+   \item $\Vart(\theta)$ computed using (approximate) Louis' formula \refer{Lou82}
+  \end{itemize}
+  }
+
+  
+%====================================================================
+\frame{\frametitle{Importance sampling} 
+
+  \paragraph{Importance sampling:} provided that $\pt(\theta) \gg p(\theta \gv Y)$, take $\{\theta^b\}_b$ iid from from $\pt$ and
+  $$
+  \widehat{\Esp}\left( f(\theta) \gv Y\right) 
+  = \frac1B \sum_b w(\theta^b) f(\theta^b), 
+  \qquad w(\theta) = \frac{p(\theta \gv Y)}{\pt(\theta)} 
+  $$
+  \ra Variance of the estimate related to the effective sample size (ESS):
+  $$
+  ESS^{-1} = \sum_b w^2(\theta^b)
+  $$
+  \ra Large when $\pt$ is too far from the target $p(\cdot \gv Y)$.
+
+  \pause\bigskip\bigskip
+  \paragraph{Bridge sampling:} 
+  Iteratively sample from a sequence of distributions $\{q_\rho: 0 \leq \rho \leq 1\}$:
+   $$
+   q_0(\theta) = \pt(\theta), \qquad q_1(\rho) = p(\theta \gv Y)
+   $$
+  }
+
+%====================================================================
+\frame{\frametitle{Bridge sampling} 
+
+  \paragraph{Define $\pt$.} Choose $\pt$ to be Gaussian:
+  \begin{itemize}
+   \item $\Espt(\theta) = \widehat{\theta}_{VEM}$
+   \item $\Vart(\theta)$ computed using (approximate) Louis' formula \refer{Lou82}
+  \end{itemize}
+
+  \pause\bigskip\bigskip
+  \paragraph{Distribution sequence.} For $0 \leq \rho \leq 1$
+  \begin{align*}
+  q_\rho(\theta) 
+  \propto \pt(\theta)^{1-\rho} p(\theta \gv Y)^\rho 
+  = \pt(\theta) \emphase{r(\theta)}^\rho, 
+  \qquad r(\theta) := \frac{p(\theta) p(Y \gv \theta)}{\pt(\theta)}
+  \end{align*}
+  
+  \pause\bigskip\bigskip
+  \paragraph{Aim of the algorithm.} For each $0 = \rho_0 < \dots < \rho_h < \dots < \rho_H = 1$, get
+  $$
+  \Ecal_h = \{(\theta_h^m, w_h^m)\}_m = \text{ weighted sample from } q_{\rho_h}
+  $$
+  i.e. $\sum_m w_h^m f(\theta_h^m)$ is an (almost) unbiased estimate of $\Esp_{{\rho_h}}\left(f(\theta)\right)$
+  }
+
+%====================================================================
+\frame{\frametitle{Bridge sampling algorithm} 
+
+  \refer{DoR17}, based on \refer{DDJ06}'s construction
+
+  \bigskip
+  \begin{description}
+   \item[Init.:] Sample $(\theta_0^m)_m$ iid $\sim \pt$, $w_0^m = 1$ \\ ~
+   \pause
+   \item[Step $h$:] Using the previous sample $\Ecal_{h-1} = \{(\theta_{h-1}^m, w_{h-1}^m)\}$ \\ ~
+   \pause
+   \begin{enumerate}
+    \item set $\rho_h$ such that $\emphase{cESS}(\Ecal_{h-1}; q_{\rho_{h-1}}, q_{\rho_h}) = \emphase{\tau_1}$ \\ ~
+    \pause
+    \item compute $w_h^m = w_{h-1}^m \times r(\theta_h^m)^{\rho_h - \rho_{h-1}}$ \\ ~
+    \pause
+    \item if $ESS_h = \overline{w}_h^2 / \overline{w_h^2} < \emphase{\tau_2}$, resample the particles \\ ~
+    \pause
+    \item propagate the particles $\theta_h^m \sim \emphase{K_h}(\theta_h^m | \theta_{h-1}^m)$
+   \end{enumerate} ~ 
+   \pause
+   \item[Stop:] When $\rho_h$ reaches 1.
+  \end{description}
+  }
+  
+%====================================================================
+\subsection*{Illustration}
+%====================================================================
+\frame{\frametitle{Of tree and fungi (1/2)} 
+
+  \paragraph{Dataset}
+  \begin{itemize}
+   \item $m = 51$ tree species
+   \item $Y_{ij} =$ number of fugal parasites common to species $i$ and $j$
+   \item $x_{ij} =$ covariates for pair species $(i, j)$ (taxonomic, genetic and geographic distances)
+  \end{itemize}
+  
+  \pause\bigskip\bigskip
+  \paragraph{Questions.}
+  \begin{itemize}
+   \item Do the covariates contribute to explain the network topology?
+   \item If so, are they sufficient to explain the network topology?
+  \end{itemize}
+
+  \pause\bigskip\bigskip
+  \paragraph{Specificity.}
+  \begin{itemize}
+   \item The target distribution is $p(\theta, Z \gv Y)$ (and not $p(\theta \gv Y)$)
+  \end{itemize}
+
+
+  }
+
+%====================================================================
+\frame{\frametitle{Of tree and fungi (2/2)} 
+
+  \begin{overprint}
+    \onslide<1>
+    \paragraph{Sampling path \& model selection.} 
+    \begin{center}
+	 \begin{tabular}{ccc}
+	   $\rho_h$ & & $\log p(Y \gv K)$ 
+	   \vspace{-0.025\textheight} \\
+	   \includegraphics[width=.3\textwidth]{\figDoR/Tree-all-V1000-rho} & &
+	   \includegraphics[width=.3\textwidth]{\figDoR/Tree-all-V1000-logpY}
+	  \end{tabular}
+    \end{center}
+    \onslide<2>
+    \paragraph{Posterior distributions.}     
+    \textcolor{blue}{$\pt(\theta)$}, \textcolor{red}{$p(\theta \gv Y)$}, \textcolor{black}{$p_{BMA}(\theta \gv Y)$}
+    \begin{center}
+	 \begin{tabular}{ccc}
+	   $\beta_{\text{taxo}}$ & $\beta_{\text{geo}}$ & $\beta_{\text{gene}}$ 
+	   \vspace{-0.025\textheight} \\
+	   \includegraphics[width=.3\textwidth]{\figDoR/Tree-all-V1000-beta1} &
+	   \includegraphics[width=.3\textwidth]{\figDoR/Tree-all-V1000-beta2} &
+	   \includegraphics[width=.3\textwidth]{\figDoR/Tree-all-V1000-beta3} 
+	  \end{tabular}
+    \end{center}
+    
+    \begin{center}
+	 \begin{tabular}{lrrr}
+	  Correlation & $(\beta_1, \beta_2)$ & $(\beta_1, \beta_3)$ & $(\beta_2, \beta_3)$ \\
+	  \hline
+	  \textcolor{blue}{$\pt(\beta)$} & --0.012 & 0.021 & 0.318 \\
+	  \textcolor{red}{$p(\beta \gv Y)$} & --0.245 & --0.079 & --0.121
+	 \end{tabular}
+    \end{center}
+
+  \end{overprint}
+  }
+

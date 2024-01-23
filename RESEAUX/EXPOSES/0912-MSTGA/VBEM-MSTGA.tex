@@ -1,0 +1,557 @@
+\documentclass{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+\usetheme{CambridgeUS}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+%\usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{stmaryrd}
+\usepackage{epsfig}
+\usepackage{/Latex/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+% Commands
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+\newcommand{\refer}[1]{\textcolor{blue}{\sl \cite{#1}}}
+
+% Symbols
+\newcommand{\Abf}{{\bf A}}
+\newcommand{\Beta}{\text{B}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\BIC}{\text{BIC}}
+\newcommand{\dd}{\text{d}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Ebf}{{\bf E}}
+\newcommand{\Ibb}{\mathbb{I}}
+\newcommand{\ICL}{\text{ICL}}
+\newcommand{\Cov}{\mathbb{C}\text{ov}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\pen}{\text{pen}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Jcal}{\mathcal{J}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\Pbf}{{\bf P}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\Tbf}{{\bf T}}
+\newcommand{\Ubf}{{\bf U}}
+\newcommand{\Ybf}{{\bf Y}}
+\newcommand{\Zbf}{{\bf Z}}
+\newcommand{\Pibf}{\mbox{\mathversion{bold}{$\Pi$}}}
+\newcommand{\mubf}{\mbox{\mathversion{bold}{$\mu$}}}
+\newcommand{\thetabf}{\mbox{\mathversion{bold}{$\theta$}}}
+\newcommand{\BP}{\text{BP}}
+\newcommand{\EM}{\text{EM}}
+\newcommand{\VEM}{\text{VEM}}
+\newcommand{\VBEM}{\text{VB}}
+
+
+%====================================================================
+\title[Variational estimates]{Accuracy of Variational Estimates for
+  Random Graph Mixture Models}
+
+\author[S. Robin]{S. Gazal, J.-J. Daudin, S. Robin}
+
+\institute[AgroParisTech / INRA]{AgroParisTech / INRA \\
+  \bigskip
+  \begin{tabular}{ccccc}
+    \epsfig{file=../Figures/LogoINRA-Couleur.ps, width=2.5cm} &
+    \hspace{.5cm} &
+    \epsfig{file=../Figures/logagroptechsolo.eps, width=3.75cm} &
+    \hspace{.5cm} &
+    \epsfig{file=../Figures/Logo-SSB.eps, width=2.5cm} \\
+  \end{tabular} \\
+  \bigskip
+  }
+
+\date{MSTGA, Toulouse, Dec. 2009}
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\frame{\titlepage}
+%====================================================================
+
+%====================================================================
+%====================================================================
+\section{Mixture Model for Random Graphs}
+%\subsection{Model}
+\frame{ \frametitle{Mixture model (MixNet)}
+%==================================================================== 
+  We consider an undirected graph with $n$ nodes ($i, j = 1
+  \dots n$) and binary edges:
+  $$
+  X_{ij} = \Ibb\{i \sim j\}.
+  $$
+  The nodes are spread into $Q$ groups ($q, \ell = 1 \dots Q$) with
+  proportions
+  $$
+  (\alpha_1,\dots, \alpha_Q) =: \alpha.
+  $$
+  The groups to which each node belongs are independent:
+  $$
+  \{Z_i\} \text{ i.i.d } \sim \Mcal(1; \alpha).
+  $$
+  The edges are independent conditionally to the node's groups
+  (\refer{DPR}):
+  $$
+  \{X_{ij}\} \text{ independent},
+  \qquad
+  X_{ij} | Z_{iq} Z_{j\ell} \sim \Bcal(\pi_{q\ell}).
+  $$
+  }
+
+% %====================================================================
+% %====================================================================
+% \subsection{Examples}
+% \frame{ \frametitle{Examples}
+% %====================================================================
+%   \includegraphics[width=1\textwidth]{../Figures/FigNetwork-Global.jpg} \\
+%   }
+
+%====================================================================
+%\subsection{Likelihoods}
+\frame{ \frametitle{Likelihoods}
+%==================================================================== 
+  The log-likelihood of the complete data is
+  $$
+  \log P(X,Z)=\frac{1}{2}\sum_{i, j \neq i}
+  \sum_{q,l}  Z_{iq}Z_{j\ell}\log b_{ijq\ell}+\sum_i \sum_q
+  Z_{iq}\log\alpha_q    
+  $$
+  where $b_{ijq\ell}=\pi_{q\ell}^{X_{ij}} (1-\pi_{q\ell})^{1-X_{ij}}$.
+
+  \bigskip
+  Its conditional expectation denoted by $\Qcal$ in the EM literature
+  is
+  \begin{eqnarray*} 
+    \Qcal(X) & = & \Esp [\log P(Z,X) | X] \nonumber \\
+    & = & \frac{1}{2} \sum_{i, j \neq i} \sum_{q,l} \Delta_{ijq\ell}
+    \log b_{ijq\ell} + \sum_i \sum_q \tau_{iq} \log\alpha_q  
+  \end{eqnarray*}  
+  where $\tau_{iq}=\Esp(Z_{iq}| X )$ and $\Delta_{ijq\ell} =
+  \Esp(Z_{iq}Z_{j\ell}| X )$.   
+  }
+
+%====================================================================
+%====================================================================
+\section{Inference}
+%\subsection{EM}
+\frame{ \frametitle{Regular EM}
+%==================================================================== 
+  \emphase{M-step.} Parameter estimates are straightforward and
+  similar for all inference methods
+  $$
+  { \pi}^{\EM}_{q\ell}=\frac{ \sum_{i \neq j} X_{ij} \Delta_{ijq\ell}^{\EM}  }
+  { \sum_{i \neq j}  \Delta_{ijq\ell}^{\EM}}  
+  \qquad \text {and} \qquad
+  { \alpha}^{\EM}_{q}= \frac{1}{n} \sum_{i} \tau_{iq}^{\EM}.
+  $$
+
+  \bigskip
+  \emphase{E-step.} It aims at computing the conditional
+  distribution of the unobserved data $Z$:
+  $$
+  \tau_{iq}^{\EM} = \sum_z z_{iq} P(Z=z|X)
+  \qquad \text {and} \qquad
+  \Delta_{ijq\ell}^{\EM} =  \sum_z z_{iq}z_{j\ell} P(Z=z|X)\enspace .
+  $$
+  Except for small datasets, $\sum_z$ can not be computed.
+
+  \bigskip
+  The methods presented hereafter provide \emphase{approximations of
+  $\tau_{iq}$ and $\Delta_{ijq\ell}$}.  
+  }
+
+%====================================================================
+%\subsection{Variational EM}
+\frame{ \frametitle{Variational EM (VEM)}
+%==================================================================== 
+  The variational strategy (\refer{TSJ}) aims at maximizing a lower
+  bound of $\log P(X)$
+  \begin{eqnarray*} 
+    \Jcal(X) & =
+    & \log P(X)-KL(\Rcal_X(Z),P(Z|X)) \nonumber \\
+    & = & \left[\frac12 \sum_{i \neq j} \sum_{q,l} \Delta^\VEM_{ijq\ell}
+      \log b_{ijq\ell} + \sum_i \sum_q \tau^\VEM_{iq} \log\alpha_q  \right] 
+  \end{eqnarray*}
+  $\Rcal_X$ is chosen in a set of manageable distributions:
+  $$
+  \Rcal_X(Z)=\prod_i \prod_q \left(\tau_{iq}\right)^{Z_{iq}}
+  $$
+  which implies $\Delta^\VEM_{ijq\ell} =
+  \tau^\VEM_{iq}\tau^\VEM_{j\ell}$.  
+  
+  \bigskip 
+  $\tau^\VEM_{iq}$ satisfy a fix-point equation:
+  $$
+  {\tau}_{iq}^{\VEM} \propto {\alpha}_q^{\VEM} \prod_{j\neq i}
+  \prod_{l} ({b}_{ijq\ell})^{{\tau}_{j\ell}^{\VEM}}.
+  $$
+  }
+
+%====================================================================
+%\subsection{Belief Propagation}
+\frame{ \frametitle{Belief Propagation (BP)}
+%==================================================================== 
+  Based on a message passing principle (\refer{messagepassing}), we
+  get a similar ${\tau}_{iq}$, but a new version of
+  $\Delta_{ijq\ell}$:
+  \begin{eqnarray*}
+%     {\tau}_{iq}^{\BP} & \propto & {\alpha}_q \prod_{j\neq i}
+%     \prod_{l} ({b}_{ijq\ell})^{{\tau}_{j\ell}^{\BP}},  \\
+    \Delta_{ijq\ell}^{\BP}& \propto & \alpha_q \alpha_\ell b_{ijq\ell} 
+    \prod_{k\neq i, j} \prod_{r}
+    \left(b_{ikqr}\right)^{\tau_{kl}^{\BP}} 
+    \left(b_{kjqr}\right)^{\tau_{kr}^{\BP}}.
+  \end{eqnarray*}
+
+  \bigskip
+  It can be seen as a slight modification of the $\VEM$ approximation:
+  $$
+  \Delta_{ijq\ell}^{\BP} \propto \tau_{iq}^{\BP} \tau_{j\ell}^{\BP}
+  \frac{b_{ijq\ell}}{ \prod_{r} \left[
+      \left(b_{ijqr}\right)^{\tau_{jr}^{\BP}}
+      \left(b_{ijrl}\right)^{\tau_{ir}^{\BP}} \right] }.
+  $$
+  }
+
+%====================================================================
+%\subsection{Variational Bayes EM}
+\frame{ \frametitle{Variational Bayes EM ({\VBEM})}
+%==================================================================== 
+  The variational approximation can be applied to Bayesian inference;
+  the parameter $\theta = (\alpha, \pi)$ is also viewed as an
+  unobserved variable (\refer{BG}).
+  
+  \biqkip
+  We aim at finding
+  $$
+  \Rcal^*_X = \arg\min KL(\Rcal_X(\theta, Z),P(\theta, Z|X))
+  $$
+
+  \bigskip
+  If conjugate priors are used:
+  $$
+  P(X, \theta, Z) \propto \exp\{\phi(\theta)' [u^0 + u(X, Z)]\}, 
+  $$
+  close-form approximate conditional distributions of the form
+  $$
+  \Rcal_X(\theta, Z) = \Rcal_{X, \theta}(\theta) \Rcal_{X, Z}(Z)
+  $$
+  can be derived:
+  \begin{eqnarray*}
+    \Rcal_{X, \theta}(\theta) & \propto & \exp\{\phi(\theta)'
+    \tilde{u}(X)\}, \qquad \tilde{u}(X) = u^0 + \overline{u}(X)\\  
+    \Rcal_{X, Z}(Z) & \propto & \exp\{\overline{\phi}' u(X, Z)\}
+  \end{eqnarray*}
+  }
+
+%====================================================================
+%\subsection{Variational Bayes EM}
+\frame{ \frametitle{{\VBEM} for MixNet}
+%==================================================================== 
+  For Dirichlet and Beta priors, we get:
+%   $$
+%   \alpha \sim \Dcal(n^0), \qquad   
+%   \pi_{q\ell} \sim \Beta(\eta_{q\ell}^0, \zeta_{q\ell}^0).
+%   $$
+%   where $n^0 = (n_1^0, \dots, n_Q^0)$.
+
+  \emphase{$\Rcal_{X, Z}(Z)$.}
+  \begin{eqnarray*}
+    \tau_{iq}^{\VBEM} &\propto&
+    e^{\psi(\widetilde{n_q})-\psi\left(\sum_{l=1}^Q
+        \widetilde{n}_\ell\right)} \prod_{j \neq i}^n \prod_{l=1}^Q
+    e^{\tau_{j\ell}^{\VBEM} \left\{\psi(\widetilde{\zeta}_{q\ell}) -
+        \psi(\widetilde{\eta}_{q\ell} + \widetilde{\zeta}_{q\ell}) +
+        X_{ij}
+        [\psi(\widetilde{\eta}_{q\ell})-\psi(\widetilde{\zeta}_{q\ell})]
+      \right\})}    
+  \end{eqnarray*}
+  where $\psi$ is the first derivative of the $\Gamma$ function.
+
+  \bigskip
+  \emphase{$\Rcal_{X, \theta}(\theta)$.}
+  $$
+  (\alpha | X) \approx  \Dcal(\widetilde{n}), \qquad 
+  (\pi_{q\ell} | X) \approx \Beta(\widetilde{\eta}_{q\ell},
+  \widetilde{\zeta}_{q\ell}) 
+  $$
+  where
+  $$
+  \begin{array}{rcl}
+  %\begin{eqnarray*}
+    \widetilde{n}_q&=&n^0_q+\sum_i \tau^\VBEM_{iq}, \\
+    \widetilde{\eta}_{q\ell} & = & \eta^0_{q\ell}+ \left(1 -
+      \frac12 \mathds{1}_{q=l} \right) \sum_{i \neq j}
+    X_{ij}\tau^\VBEM_{iq} \tau^\VBEM_{j\ell},  \\  
+    \widetilde{\zeta}_{q\ell} & = & \zeta^0_{q\ell}+\left(1 -
+      \frac12 \mathds{1}_{q= l} \right) \sum_{i \neq j}
+    (1-X_{ij})\tau^\VBEM_{iq}\tau^\VBEM_{j\ell}. 
+  %\end{eqnarray*}  
+  \end{array}  
+  $$
+  }
+
+%====================================================================
+\section{Simulation Study}
+%\subsection{Design}
+\frame{ \frametitle{Simulation Design}
+%==================================================================== 
+  2-group MixNet model with parameters:
+  \begin{description}
+  \item[Case 1:] $\alpha=\left(\begin{array}{cc}0.6 &
+        0.4\end{array}\right)$,  $\pi=\left(\begin{array}{cc}0.8 & 0.2
+        \\0.2 & 0.5\end{array}\right)$;
+  \item[Case 2:] $\alpha=\left(\begin{array}{cc}0.6 &
+        0.4\end{array}\right)$, $\pi=\left(\begin{array}{cc}0.8 & 0.2
+        \\0.2 & 0.3\end{array}\right)$.
+  \end{description}
+  500 graphs are simulated for each case and each graph size. 
+  
+  \bigskip \bigskip 
+  The complete comparison of the 4 methods is only made on
+  small graphs ($n = 18$) because of the computation time required by
+  for EM.  }
+
+%====================================================================
+%\subsection{Bias, standard deviation and likelihood}
+\frame{ \frametitle{Estimates, standard deviation and likelihood}
+%==================================================================== 
+  {\small
+    \begin{tabular}{ccccccccc} 
+      $n=18$ & $\alpha_1$ & $\pi_{11}$ & $\pi_{12}$ & $\pi_{22}$ &
+      $\log P(X)$ \\   
+      \hline
+      True value & 60\% & 80\% & 20\% & 50\% & \\ 
+      \hline 
+      EM & 59.1 (13.1) & 78.5 (13.5) & 20.9 (8.4) & 50.9 (15.4) & -90.68 \\  
+      {\VEM} & 57.7 (16.6) & 78.8 (12.4) & 22.4 (10.7) & 50.3 (14.6) & -90.87\\  
+      BP & 57.9 (16.2) & 78.9 (12.3) & 22.2 (10.5) & 50.3 (14.5) & -90.85 \\  
+      {\VBEM} & 58.1 (13.3) & 78.2 (9.7) & 21.6 (7.7) & 50.8 (13.3) & -90.71 \\ 
+      \hline \hline
+      True value & 60\% & 80\% & 20\% & 30\% & - \\ 
+      \hline
+      EM & 59.5 (14.1) & 78.7 (15.6) & 21.2 (8.7) & 30.3 (14.3) & -88.18 \\  
+      {\VEM} & 55.6 (19.0) & 80.1 (14.0) & 24.0 (11.8) & 30.8 (13.8) & -88.54 \\  
+      BP & 56.6 (17.8) & 80.0 (13.6) & 23.2 (11.0) & 30.8 (13.8) & -88.40 \\  
+      {\VBEM} & 58.4 (14.6) & 77.9 (12.0) & 22.3 (9.3) & 32.1 (12.3) & -88.26 \\  
+    \end{tabular} 
+    }
+  \bigskip
+  \begin{itemize}
+  \item All methods provide similar results.
+  \item {\EM} achieves the best ones.
+  \item {\BP} does not significantly improve {\VEM}.
+  \end{itemize}
+  }
+
+%====================================================================
+%\subsection{Influence of the graph size}
+\frame{ \frametitle{Influence of the graph size}
+%==================================================================== 
+  Comparison of \textcolor{red}{{\VEM}: $\bullet$} and
+  \textcolor{blue}{{\VBEM}: $+$} in case 2 (difficult). \\
+  Left to right: $\alpha_1$, $\pi_{11}$, $\pi_{12}$, $\pi_{22}$.
+
+  \bigskip
+  \emphase{Means.} \\
+  \includegraphics[width=1\textwidth]{../Figures/im-etudnVB1} \\
+
+  \emphase{Standard deviations.} \\
+  \includegraphics[width=1\textwidth]{../Figures/im-etudnVB2}
+  
+  \begin{itemize}
+  \item {\VBEM} estimates converge more rapidly than {\VEM} ones.
+  \item Their precision is also better.
+  \end{itemize}
+  }
+
+%====================================================================
+%\subsection{{\VBEM} Credibility intervals}
+\frame{ \frametitle{{\VBEM} Credibility intervals}
+%==================================================================== 
+  \emphase{Actual level as a function of $n$.}\\
+  \includegraphics[width=1\textwidth]{../Figures/im-ICQ2-2-new} \\
+  $\alpha_1$: $+$, $\pi_{11}$: \textcolor{red}{$\triangle$},
+  $\pi_{12}$: \textcolor{blue}{$\circ$}, $\pi_{22}$:
+  \textcolor{green}{$\bullet$}
+
+  \begin{itemize}
+  \item For all parameters, {\VBEM} posterior credibility intervals
+    achieve the nominal level (90\%), as soon as $n \geq 25$.
+  \item \emphase{$\rightarrow$ the {\VBEM} approximation seems to work well}.
+%   \item These may be due to the concentration of $P(Z|X)$ around the
+%     true value of $Z$ (work in progress).
+  \end{itemize}
+  }
+
+%====================================================================
+%\subsection{Convergence rate of the {\VBEM} estimates}
+\frame{ \frametitle{Convergence rate of the {\VBEM} estimates}
+%==================================================================== 
+  \emphase{Width of the posterior credibility intervals.}
+  {$\alpha_1$}, \textcolor{red}{$\pi_{11}$},
+  \textcolor{blue}{$\pi_{12}$}, \textcolor{green}{$\pi_{22}$}
+  \\
+  \includegraphics[width=1\textwidth]{../Figures/im-ICQ2-3} \\
+
+  \begin{itemize}
+  \item The width decreases as $1/\sqrt{n}$ for $\alpha_1$.
+  \item It decreases as $1/n$ for $\pi_{11}$, $\pi_{12}$ and
+    $\pi_{22}$.
+  \item Consistent with the penalty of the ICL criterion
+    of \refer{DPR}: 
+    $$
+    (Q-1)\log n + Q^2 \log[n(n-1)/2].
+    $$
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{ \frametitle{Why does {\VBEM} work so well? (off the record)}
+%==================================================================== 
+  \emphase{Work in progress:} Daudin \& Celisse are about to prove the 
+  concentration of $P(Z|X)$ around the true value $z^*$, i.e.
+  $$
+  P(Z|X) \underset{n \rightarrow \infty}{\longrightarrow} \delta_{z^*}(Z)
+  $$
+  \bigskip
+  \emphase{Intuition:} If this holds, 
+  \begin{enumerate}[($i$)]
+  \item The limit distribution $\delta_{z^*}(Z)$ belongs to the
+    distribution class over which {\VBEM} approximation achieves
+    maximisation, so it is reached;
+  \item The joint conditional distribution $P(\theta, Z|X) =
+    P(\theta|Z, X) P(Z|X)$ tends to $P(\theta|Z, X) \delta_{z^*}(Z)$.
+    Again $P(\theta|Z, X)$ belongs to the distribution class of
+    {\VBEM}, so it is also reached;
+  \end{enumerate}
+  And the variational approximation tends to be ... exact.
+  }
+
+%====================================================================
+%====================================================================
+\section{{\sl E. Coli} Regulatory Network}
+\subsection{Comparison of {\VEM} and {\VBEM}}
+\frame{ \frametitle{Comparison of {\VEM} and {\VBEM}}
+%==================================================================== 
+  Network are n = 338 operons, linked if one encodes a
+  transcription factor that directly regulates the other one.  \\
+  {\small
+    \begin{tabular}{cccccc}
+      $\pi_{ql}$ & 1 & 2 & 3 & 4 & 5 \\
+      \hline 
+      1 & 0.03 & 0.00 & 0.03 & 0.00 & 0.00 \\
+      2 & 6.40 & 1.50 & 1.34 & 0.44 & 0.00 \\
+      3 & 1.21 & 0.89 & 0.58 & 0.00 & 0.00 \\
+      4 & 0.00 & 0.09 & 0.00 & 0.95 & 0.00 \\
+      5 & 8.64 & 17.65 & 0.05 & 72.87 & 11.01 \\
+      \hline
+      $\alpha$ & 65.49 & 5.18 & 7.92 & 21.10 & 0.30 \\
+      \hline \hline
+      1  &  [0.02;0.04] &  [0.00;0.10] &  [0.01;0.08] &   [0.00;0.03] &  [0.02;1.34] \\
+      2  &  [6.14;7.60] &  [0.61;3.68] &  [1.07;3.50] &   [0.05;0.54] &  [0.33;17.62] \\
+      3  &  [1.20;1.72] &  [0.35;2.02] &  [0.56;1.92] &   [0.03;0.30] &  [0.19;10.57] \\
+      4  &  [0.01;0.07] &  [0.04;0.51] &  [0.01;0.20] &   [0.76;1.27] &  [0.08;4.43] \\
+      5  &  [6.35;12.70] &  [4.60;33.36] &  [4.28;24.37] &  [63.56;81.28] &  [5.00;95.00] \\
+      \hline
+      $\alpha$ & [59.65;74.38]&  [2.88;6.74] & [5.68;10.77] & [16.02;24.04] & [0.11;1.42]
+%       \hline \hline
+%       1  &  0.03  [0.02;0.04] &  0.03  [0.00;0.10] &  0.03  [0.01;0.08
+%       ] &  0.01  [0.00;0.03] &  0.45  [0.02;1.34] \\
+%       2  &  6.85  [6.14;7.60] &  1.87  [0.61;3.68] &  2.14  [1.07;3.50
+%       ] &  0.23  [0.05;0.54] &  6.08  [0.33;17.62] \\
+%       3  &  1.45  [1.20;1.72] &  1.04  [0.35;2.02] &  1.15  [0.56;1.92
+%       ] &  0.13  [0.03;0.30] &  3.59  [0.19;10.57] \\
+%       4  &  0.04  [0.01;0.07] &  0.22  [0.04;0.51] &  0.07  [0.01;0.20
+%       ] &  1  [0.76;1.27] &  1.49  [0.08;4.43] \\
+%       5  &  9.32  [6.35;12.70] &  16.64  [4.60;33.36] &  12.79  [4.28 ;
+%       24.37] &  72.81  [63.56;81.28] &  50.00  [5.00;95.00] \\
+%       \hline
+%       $\alpha$ & 66.85 [59.65;74.38]&  4.64 [2.88;6.74] & 8.06 [5.68;10.77]
+%       & 19.86 [16.02;24.04] & 0.60 [0.11;1.42]
+    \end{tabular} 
+    }
+    
+  {\VEM} and {\VBEM} estimates for the $Q=5$ group model (approximate
+  90\% credibility intervals).
+
+  }
+
+%====================================================================
+%\subsection{}
+\frame{ \frametitle{Approximate posterior distribution}
+%==================================================================== 
+  \begin{centering}
+%   \begin{tabular}{ll}
+%     \begin{tabular}{p{5cm}}
+%       Posterior distributions of the connexion probabilities
+%       $\{\pi_{q\ell}\}$ (five first rows) and proportions $\{\alpha_q\}$
+%       (last row) using {\VBEM} for the operon network of {\it E . Coli}.
+%     \end{tabular}
+%     &
+%     \begin{tabular}{l}
+      \includegraphics[width=.7\textwidth]{../Figures/im-pi1BVEM}\\        
+      \includegraphics[width=.7\textwidth]{../Figures/im-pi2BVEM}\\
+      \includegraphics[width=.7\textwidth]{../Figures/im-pi3BVEM}\\
+      \includegraphics[width=.7\textwidth]{../Figures/im-pi4BVEM}\\
+      \includegraphics[width=.7\textwidth]{../Figures/im-pi5BVEM}\\
+      \hline \\
+      \includegraphics[width=.7\textwidth]{../Figures/im-alphaBVEM}\\
+%     \end{tabular}
+%   \end{tabular}
+    \end{centering}
+  }
+
+%====================================================================
+%\subsection{}
+\frame{ \frametitle{Comparison of {\VEM} and {\VBEM} classifications}
+%==================================================================== 
+  \begin{tabular}{cc}
+  \includegraphics[width=.45\textwidth]{../Figures/im_EcoliVEM}
+  &
+  \includegraphics[width=.45\textwidth]{../Figures/im_EcoliBVEM} \\
+  {\VEM} & {\VBEM}
+  \end{tabular}
+
+  \begin{itemize}
+  \item Only 4 nodes have different classifications.
+  \end{itemize}
+  }
+
+%====================================================================
+%====================================================================
+\bibliographystyle{/Latex/astats}
+%\bibliographystyle{elsarticle-harv}
+\bibliography{biblio}
+%====================================================================
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================

@@ -1,0 +1,151 @@
+%====================================================================
+%====================================================================
+\section{Variational inference for the stochastic block model}
+\subsection*{Model}
+\frame{\frametitle{Outline} \tableofcontents}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Binary SBM} 
+
+  \paragraph{Data at hand.}
+  \begin{itemize}
+   \item $Y = (Y_{ij})_{1 \leq i, j, \leq n}= n \times n$ matrix: 
+   $$
+   Y_{ij} =  \text{link between individual $i$ and $j$}
+   $$
+  \end{itemize}
+  
+  \bigskip \pause
+  \paragraph{Model.} $K$ groups
+  \begin{itemize}
+  \item $(Z_i)_{1 \leq i \leq n} = $ iid node memberships (with proportion $\pi$)
+  \item $(Y_{ij})_{1 \leq i, j \leq n} =$ conditionally independant : $P(Y_{ij} = 1 \mid Z_i, Z_j ) = p_{k\ell}$
+  \end{itemize}
+
+  $$
+  \includegraphics[width=.4\textwidth]{../FIGURES/SBM-CMatias}
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{General SBM} 
+
+  \paragraph{Data at hand.}
+  \begin{itemize}
+   \item $Y = (Y_{ij})_{1 \leq i, j, \leq n}= n \times n$ matrix: 
+   $$
+   Y_{ij} =  \text{interaction strength between individual $i$ and $j$}
+   $$
+   \item $x_{ij} =$ vector of covariates\footnote{In many applications, clustering nodes without accounting for known effects is often useless} for the pair $(i, j)$
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Model.} $K$ groups
+  \begin{itemize}
+  \item Same $(Z_i)$ as before
+  \item $(Y_{ij})_{1 \leq i, j \leq n} =$ conditionally independant : $Y_{ij} \mid Z_i, Z_j \sim f(\cdot; \gamma_{Z_i Z_j}, x_{ij}) $
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Example.} GLM framework:
+  \begin{align*}
+  \log f(Y_{ij}; \gamma_{kl}, x_{ij}) & = (\eta_{ij}^{k\ell})^\intercal t(Y_{ij}) - a(Y_{ij}) - b(\eta_{ij}^{k\ell}) \\
+  \eta_{ij}^{k\ell} & = \alpha_{kl} + \emphase{x_{ij}^\intercal \beta}
+, 
+  \qquad \gamma_{kl} = (\alpha_{kl}, \beta), 
+  \quad \theta = (\pi, \alpha, \beta)
+  \end{align*}
+}
+
+%====================================================================
+\subsection*{Inference}
+%====================================================================
+\frame{\frametitle{Inference} 
+
+  \paragraph{Maximum likelihood inference via EM:} requires to evaluate $p(Z \mid Y)$
+  
+  \bigskip \bigskip 
+  \begin{overprint}
+  \onslide<1> \paragraph{Graphical model point of view.} $p(Z)$
+  \onslide<2> \paragraph{Graphical model point of view.} $p(Z) p(Y \mid Z)$
+  \onslide<3> \paragraph{Graphical model point of view.} Moralization
+  \onslide<4> \paragraph{Graphical model point of view.} $p(Z \mid Y)$
+  \end{overprint}
+  ~\\ ~\
+    
+  \begin{overprint}
+  \onslide<1>
+  \begin{centering}
+  \input{SBM-GraphModel-pZ} 
+  \end{centering}
+  \onslide<2>
+  \begin{centering}
+  \input{SBM-GraphModel-pZY} 
+  \end{centering}
+  \onslide<3>
+  \begin{centering}
+  \input{SBM-GraphModel-pZmY} 
+  \end{centering}
+  \onslide<4>
+  \begin{centering}
+  \input{SBM-GraphModel-pZcY} 
+  \end{centering}
+  \end{overprint}
+
+}
+
+%====================================================================
+\frame{\frametitle{Variational inference} 
+
+  \paragraph{Variational approximation.} Choose
+  \begin{itemize}
+   \item a divergence measure $D(q \mid\mid p)$
+   \item a class of distributions $\Qcal$
+  \end{itemize}
+  and maximize wrt $\theta$ and $q \in \Qcal$ the lower bound \refer{WaJ08,BKM17}
+  $$
+  \log p_\theta(Y) - D(q(Z) \mid\mid p_\theta(Z \mid Y)) \leq \log p_\theta(Y)
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Popular choice for SBMs \refer{DPR08,Leg16,MaM16}.} $D = KL$ so
+  \begin{align*}
+    J(\theta, q) 
+    & := \log p_\theta(Y) - KL(q(Z) \mid\mid p_\theta(Z \mid Y)) \\
+    & = \Esp_q \left( \log p_\theta(Y, Z) \right) - \Esp_q\left( q(Z) \right)
+  \end{align*}
+  and $q$ factorizable: 
+  $
+  \Qcal = \left\{q(Z): q(Z) = \prod_i q_i(Z_i)\right\}.
+  $
+  
+}
+
+%====================================================================
+\frame{\frametitle{Extensions and properties} 
+
+  \paragraph{Variational Bayes (VBEM).} Variational approximations can be designed in a Bayesian framework \refer{LBA12,LaR16} to get
+  $$
+  q(\theta, Z) \approx p(\theta, Z \mid Y), 
+  \qquad q \in \Qcal
+  $$
+  \ra Easier with conjugate priors.
+
+  \bigskip \bigskip \pause
+  \paragraph{Practical advantages:} 
+  \begin{itemize}
+   \item Easy to implement
+   \item Converges reasonably fast, 
+   \item Works well in practice (simulations)
+  \end{itemize}
+ 
+
+  \bigskip \bigskip \pause
+  \paragraph{Theoretical guaranties.} Very few
+  \begin{itemize}
+   \item except in the binary case, without covariates \refer{CDP12,BCC13,MaM15}
+  \end{itemize}
+
+}
+
+

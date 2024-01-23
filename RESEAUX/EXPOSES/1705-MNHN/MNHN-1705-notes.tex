@@ -1,0 +1,320 @@
+\documentclass[french, 12pt]{article}
+
+% Packages
+\usepackage{amsfonts,amsmath,amssymb,epsfig,epsf,psfrag}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+\usepackage[latin1]{inputenc}
+% \usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{xspace}
+\usepackage{color}
+\usepackage{url}
+\RequirePackage{natbib}
+
+% Margins
+\textwidth  18cm 
+\textheight 22cm
+\topmargin -1 cm
+\oddsidemargin -1 cm
+\evensidemargin -1 cm
+
+% Commands
+\newtheorem{theorem}{Theorem}
+\newcommand{\proofbegin}{\noindent{\sl Proof.}\sim}
+\newcommand{\proofend}{$\blacksquare$\bigskip}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+
+% Symboles
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\dd}{\text{d}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Espt}{\widetilde{\Esp}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\logit}{\text{logit}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Jcal}{\mathcal{J}}
+\renewcommand{\Pr}{{\mathbb{P}}}
+\newcommand{\Prt}{\widetilde{\Pr}}
+\newcommand{\pt}{\widetilde{p}}
+\newcommand{\ra}{$\mathbf{\rightarrow}$\xspace}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Vcal}{\mathcal{V}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Modèles pour l'analyse de la topologie de réseaux}
+
+\author{SR}
+
+\date{\today}
+
+\maketitle
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Différents problème d'analyse de réseaux}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Cadre général} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Réseau.} Description des interaction entre un ensemble d'entités. Ex: espèces.
+
+\paragraph{Réseau = graphe.}
+$$
+\Gcal = (\Vcal, \Ecal)
+$$
+\begin{itemize}
+ \item $\Vcal$: ensemble des noeuds = $\{1, ... n\}$.
+ \item $\Ecal$: ensemble des arêtes, $\Ecal \subset \Vcal \times \Vcal$. 
+ \item $Y = (Y_{ij})$: matrice d'adjacence  $(n \times n)$
+ $$
+ Y_{ij} = 1 \text{ si } (i, j) \in \Ecal, \qquad 0 \text{ sinon}.
+ $$
+\end{itemize}
+
+
+\paragraph{Généralisations possibles.}
+\begin{itemize}
+ \item orientés, 
+ \item valués,
+ \item dynamiques,
+ \item ...
+\end{itemize}
+
+\paragraph{Exemples typique.}
+$$
+i = \text{espèce}.
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Problèmes typiques}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Inférence de réseau.} $\Gcal$ non observé 
+\begin{itemize}
+ \item Noeuds = variables (par ex: $A_i =$ abondance de l'espèce $i$)
+ \item On observe des répétitions conjointes de toutes les variables (ex: différents sites, milieux, ... : $(A_{is})$)
+ \item On suppose que les variables $A_i$ on une structure de dépendance représentable sous forme d'un graphe $\Gcal$ (modèle graphique)
+ \item On veut inférer $\Gcal$ à partir des $(A_{ij})$.
+\end{itemize}
+
+\paragraph{Topologie de réseau (cas qui nous intéresse).} $\Gcal$ non observé 
+\begin{itemize}
+ \item On observe $Y$
+ \item On souhaite analyser la topologie de $\Gcal$, i.e. inférer le processus qui préside à sa constitution.
+\end{itemize}
+
+\paragraph{Autres.}
+\begin{itemize}
+ \item $\Gcal$ observé : on étudie la diffusion d'une épidémie le long des arêtes de $\Gcal$,
+ \item etc...
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Modèles de graphe aléatoire pour l'analyse de la topologie}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Cadre général}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Notations.}
+\begin{itemize}
+\item $Y \sim P(\theta)$
+\item $Z_i =$ variable cachée associée au noeud $i$
+\item $\pi =$ paramètre de la loi des $Z_i$
+\item $K$ le nombre de groupes ($k,\ell$ les indices de groupes)
+\item $\gamma =$ paramètre de la loi des $Y_{ij} | Z$
+\item $x_i =$ vecteur des covariable pour le noeud $i$ dans $\mathbb{R}^p$
+\item $x_{ij} =$ vecteur des covariable pour l'arête $ij$
+\item $\beta =$ effet des covariables
+\item $\theta = (\pi, \gamma, \beta) =$ ensemble des paramètres
+\end{itemize}
+
+\paragraph{Graphe aléatoire.}
+$$
+\Vcal \text{ fixe}, \qquad \Ecal \text{ aléatoire}.
+$$
+\ra loi de $\Gcal$ = loi jointe de toutes les arêtes $(Y_{ij})$:
+$$
+Y \sim P_\theta
+$$
+
+\paragraph{Point de vue statistique.}
+\begin{itemize}
+ \item Réseau observé = réalisation d'un graphe aléatoire
+ \item Comprendre la topologie du réseau = inférer (le paramètre $\theta$ de) la loi du graphe aléatoire
+\end{itemize}
+
+\paragraph{Pourquoi un modèle ?}
+Fournit un cadre général pour 
+\begin{itemize}
+ \item formuler des hypothèses et les confronter à l'observation
+ \item prendre en compte des effets confondants,
+ \item ...
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Modèles à variables latentes pour graphes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Principe général.} Graphe non-orienté, binaire, sans dynamique \citep{BJR07,MaR14}. 
+\begin{eqnarray*}
+n \text{ noeuds} \quad i & = & 1, \dots n \\
+  (Z_i) \text{ i.i.d.} & \sim & \pi \\
+  (Y_{ij}) \text{ indépendants } | (Z_i) & \sim & \mathcal{B}(\gamma_{Z_i, Z_j})
+\end{eqnarray*}
+
+
+\paragraph{SBM :} \cite{NoS01}
+$$
+\pi = \mathcal{M}
+$$
+\paragraph{Latent position model :} \cite{HRH02}
+$$
+\pi = \mathcal{N}, \qquad \logit(\gamma_{Z_i, Z_j}) = a - b|Z_i-Z_j|
+$$
+\paragraph{Model-based clustering :} \cite{HRT07}
+$$
+\pi = \sum_k w_k \mathcal{N}(\mu_k, \Sigma)
+$$
+\paragraph{$W$-graph :} \cite{LoS06,DiJ08}
+$$
+\pi = \mathcal{U}[0, 1], \qquad \gamma_{Z_i, Z_j} = \gamma(Z_i, Z_j),
+$$ 
+$W$ = fonction graphon.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Cas du SBM}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Modèles à variables latentes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{itemize}
+ \item $Y =$ graphe observé;
+ \item $Z =$ variables latentes (cachées);
+ \item $\theta = (\pi, \gamma)$ paramètre à estimer.
+\end{itemize}
+
+\paragraph{Limite de l'approche traditionnelle} 
+\begin{itemize}
+ \item Objectif : inférer $\theta$ à partir de données incomplètes ($Z$ non observé)
+ \item Approches classiques : prédire $Z$ pour faciliter l'estimation de $\theta$ (algo EM et avatars).
+ \item Prédiction de $Z$: suppose de connaître la loi $p_\theta(Z|Y)$
+ \item Loi pas calculable ici (cf modèle graphique).
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Quelques méthodes d'inférence}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Remarque.} SBM agnostique sur les relations intra- et inter-groupes \\
+\ra $\gamma_{kk}$ pas nécessairement supérieur aux autres $\gamma_{k\ell}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{EM variationnel}
+
+\paragraph{Approche variationnelle.} $p_\theta(Z|Y)$ pas calculable, donc on cherche
+$$
+\pt(Z) \approx p_\theta(Z | Y)
+$$
+qu'on utilise à sa place. Revient à maximiser une borne inférieure de la log-vraisemblance:
+$$
+\Jcal(Y; \theta; \pt) = \Esp_{\pt} \log p_\theta(Y, Z) + \Hcal(\pt)  \leq p_\theta(Y).
+$$
+
+\paragraph{Algo VEM.} Itérativement
+\begin{itemize}
+ \item Etape VE: déterminer l'approximation optimale 
+ $$
+ \pt^{h+1}(Z) \approx p_{\theta^h}(Z | Y)
+ $$ 
+ \item Etape M: mettre à jour 
+ $$
+ \theta^{h+1} = \arg\max_\theta \Esp_{\pt^{h+1}} \log p_\theta(Y, Z).
+ $$
+ \end{itemize}
+Bonne performance pratique + garanties théoriques.
+
+\paragraph{Sélection de modèle.} 
+Critères classiques:
+\begin{align*}
+  BIC & = \log p_{\widehat{\theta}}(Y) - \text{pen}(K, n) \qquad\text{\citep{Sch78}} \\
+  ICL & = BIC - \Hcal(p_{\widehat{\theta}}(Z|Y)) \qquad\text{\citep{BCG00}}
+\end{align*}
+ICL pénalise en plus pour l'incertitude de classification \citep{BCG00}.
+
+\bigskip
+Spécificité pour VEM \& SBM:
+\begin{itemize}
+ \item $\log p_{\widehat{\theta}}(Y) $ pas calculable \ra remplacée par $\Jcal(Y; \widehat{\theta}; \pt)$;
+ \item pas le même nombre de ``données'' pour les différents paramètres: $n$ noeuds pour $\pi$, $n(n-1)/2$ arêtes pour $\gamma$:
+ $$
+ \text{pen}(K, n) = \frac12 \left[(K-1) \log n + \frac{K(K-1)}2 \log \frac{n(n-1)}2 \right]
+ $$
+\end{itemize}
+\ra Critères pour SBM \citep{DPR08}
+\begin{align*}
+ vBIC & = \Jcal(Y; \widehat{\theta}; \pt) - \text{pen}(K, n), \\
+ vICL & = BIC - \Hcal(\pt).
+\end{align*}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Autres approches}
+
+\paragraph{Complétion de matrice.} On a, avec $Z: (n\times K)$ et $\pi: (K \times K)$, 
+$$
+\Esp(Y | Z) = Z \gamma Z^\intercal
+$$
+\ra $Y$ doit être proche d'une matrice de rang $K$. Garanties théoriques \citep{Cha15}.
+
+\paragraph{Clustering spectral.} Fondé sur l'analyse d'une marche aléatoire du le graphe de matrice de transition 
+$$
+L = I - D^{-1/2} Y D^{-1/2}, \qquad D \text{ diagonale}, D_{ii} = \sum_j Y_{ij}.
+$$
+Si $\Gcal$ n'est pas connexe, $L$ admet autant de vecteurs propres  associées à 1 que de composantes.
+\begin{itemize}
+ \item Modèle d'affiliation ($\gamma_{kk} > \gamma_{k\ell}$): étude de $L$
+ \item SBM général: étude de $L^2$
+\end{itemize}
+
+\medskip
+Algo + garanties théoriques \citep{RCY11}:
+\begin{itemize}
+ \item Déterminer les $K$ plus grandes valeurs propre de $L$ ou $L^2$;
+ \item Effectuer un $K$-means sur les projetés dans l'espace engendré par les $K$ premiers vecteurs propres.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\bibliography{/home/robin/Biblio/BibGene}
+\bibliographystyle{/home/robin/LATEX/Biblio/astats}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

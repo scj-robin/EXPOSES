@@ -1,0 +1,586 @@
+\documentclass[dvips]{slides}
+\usepackage{lscape}
+\textwidth 19cm
+\textheight 23cm 
+\topmargin 0 cm 
+\oddsidemargin  -1cm 
+\evensidemargin  -1cm
+
+% Maths
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\newcommand{\Acal}{\mathcal{A}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Wcal}{\mathcal{W}}
+\newcommand{\D}{\mbox{d}}
+\newcommand{\Ctilde}{\widetilde{C}}
+\newcommand{\elltilde}{\tilde{\ell}}
+\newcommand{\Ytilde}{\widetilde{Y}}
+\newcommand{\Ztilde}{\widetilde{Z}}
+\newcommand{\att}{{\tt a}}
+\newcommand{\ctt}{{\tt c}}
+\newcommand{\gtt}{{\tt g}}
+\newcommand{\ttt}{{\tt t}}
+\newcommand{\mbf}{{\bf m}}
+\newcommand{\Phibf}{\mbox{\mathversion{bold}{$\Phi$}}}
+\newcommand{\Sbf}{{\bf S}}
+\newcommand{\bps}{\mbox{bps}}
+\newcommand{\vbf}{{\bf v}}
+\newcommand{\wbf}{{\bf w}}
+\newcommand{\Esp}{{\mathbb E}}
+\newcommand{\Var}{{\mathbb V}}
+\newcommand{\Indic}{{\mathbb I}}
+
+% Couleur et graphiques
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+% Texte
+\usepackage{lscape, ../../../fancyheadings, rotating, enumerate}
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.5}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\definecolor{jaune}{cmyk}{0, 0.5, 0.5, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{\bf #1}}
+\newcommand{\textred}[1]{\textcolor{red}{\bf #1}}
+\newcommand{\textgreen}[1]{\textcolor{darkgreen}{\bf #1}}
+%\newcommand{\textgreen}[1]{\textcolor{green}{\bf #1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{\bf #1}}
+\newcommand{\textyellow}[1]{\textcolor{yellow}{\bf #1}}
+
+% Sections
+\newcommand{\chapter}[1]{\centerline{\LARGE \bf \textred{#1}}}
+\newcommand{\section}[1]{\centerline{\Large \bf \textblue{#1}}}
+\newcommand{\subsection}[1]{\noindent{\large \bf \textblue{#1}}}
+\newcommand{\paragraph}[1]{{\textgreen{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\landscape
+\headrulewidth 0pt 
+\pagestyle{fancy} 
+\cfoot{}
+\rfoot{\begin{rotate}{90}{
+      \vspace{0.5cm}
+      \hspace{-1.5cm} \tiny S. Ledent \& S. Robin (RECOMB 2004)
+      }\end{rotate}}
+\rhead{\begin{rotate}{90}{
+      \hspace{1.5cm} \tiny \thepage
+      }\end{rotate}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+  \textblue{\Large CHECKING HOMOGENEITY}
+
+  \textblue{\Large OF MOTIFS' DISTRIBUTION }
+
+  \textblue{\Large IN HETEROGENOUS SEQUENCES}
+
+   {\large Sabrina LEDENT$^1$ \& Stéphane ROBIN$^{1, 2}$} \\
+%   robin@inapg.inra.fr
+\end{center}
+{\small
+  {$(^1)$ INRA Mathématique, Informatique et Génome, Jouy-en-Josas, FRANCE} \\
+  {$(^2)$ INA-PG / INRA Mathématique et Informatique Appliquées,
+    Paris, FRANCE} }
+
+\centerline{\large RECOMB 2004, San Diego}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\chapter{Contents}
+
+\subsection{Modeling motifs' occurrences}
+
+\subsection{Homogenous compound Poisson model}
+
+\subsection{Heterogenous compound Poisson model}
+
+\subsection{Checking homogeneity distribution}
+
+\subsection{Applications} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Modeling motifs' occurrences}
+
+\paragraph{Motif statistics} aim at detecting words with unexpected
+frequency, regions where a motif is unexpectedly frequent or rare,
+etc.
+
+\paragraph{A model is needed} because {\em to decide whether something
+  is unexpected or not, we first need to know what to expect.}
+
+\paragraph{Model = Reference}\\
+To avoid artifacts, the model should account for 
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item the frequencies of nucleotides, or di-, or tri-nucleotides in
+  the sequence,
+\item the overlapping structure of the word,
+\item eventually, the overall frequency of the word in the sequence,
+\item the potential heterogeneity of the sequence.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Markov chains (M$m$) = Discrete modeling}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$\Sbf = (S_1, \dots, S_{\ell})$ is an homogenous stationary Markov
+chain \vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item of order $m$ (M$m$ model) over the alphabet $\Acal =
+  \{\att, \ctt, \gtt, \ttt\}$
+\item with transition probabilities $\pi(s_1, \dots,
+  s_m; s_{m+1}) =$
+  $$
+  \Pr\{S_x = s_{m+1} | S_{x-m}=s_1, \dots, S_{x-1} = s_m\} 
+  $$
+\end{enumerate}
+M$m$ model is fitted to the frequencies of all the words of length
+$(m+1)$
+$$
+\widehat{\pi}(s_1, \dots, s_m; s_{m+1}) = \frac{N(s_1 \dots s_m
+  s_{m+1})}{N(s_1 \dots s_m)}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Compound Poisson process (CP)}
+\section{= Continuous modeling} 
+
+For rare words, the sequence $\Sbf$ can be viewed as a
+continuous line $[0; \ell]$ 
+$$
+\hspace{-2cm}
+\begin{tabular}{c}
+  Real occurrences  \\
+                                %FigPoissonComp.ps
+  \colorbox{white}{      
+    \psfig{file = ../FIGURES/FigPoissonComp.ps,
+      height=2cm, width=25cm, bbllx=80 , bblly=370 , bburx=525 ,
+      bbury=405, clip=}
+    }  \\
+  \\
+  Compound Poisson modeling \\
+                                %FigPoissonComp.ps
+  \colorbox{white}{
+    \psfig{file = ../FIGURES/FigPoissonComp.ps,
+      height=3.9cm, width=25cm, bbllx=80 , bblly=260 , bburx=525 ,
+      bbury=330, clip=}
+    }  \\
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Homogenous compound Poisson model}
+\vspace{-2cm} \begin{flushright} {\em R., 02} \end{flushright}
+\vspace{-1cm}
+
+\paragraph{Clump process} $\{C(x)\} =$ Poisson process
+with intensity $\equiv \lambda$
+
+\paragraph{Clump sizes} $\{K_1, K_2, \dots\}$ are iid: $\Pr\{K = k\} =
+g(k)$
+
+\paragraph{Counting process} of the occurrences $\{N(x)\} = $
+compound Poisson process:
+$$
+N(x) = \sum_{c = 1}^{C(x)} K_c
+$$
+\paragraph{Remarks:}
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item Poisson modeling implies that the clumps are
+  {\em uniformly distributed} along the genome: 
+  $\longrightarrow$ {\em Null hypothesis} of the
+  analysis
+\item The simple Poisson process ({\em Karlin \& Macken, 91; Churchill
+    \& al., 89}) is the special case where $K_c \equiv 1$.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{P\'olya-Aeppli model} \\
+When considering one single word, the clump size has a geometric
+distribution with parameter $(1-a)$
+$$
+p(k) = a^{k-1} (1-a) \quad \Longrightarrow
+\quad \Esp(K) = 1 / (1-a)
+$$
+where $a$ is the overlapping probability of the word
+
+\paragraph{Parameter estimates:} In a sequence of length $\ell$ 
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item $\widehat{\lambda}$ is the empirical frequency of the
+  clumps: $ \widehat{\lambda} = C(\ell) / \ell $
+\item $\widehat{a}$ is the proportion of overlapped occurrences:
+  $\widehat{a} = 1 - C(\ell) / N(\ell)$
+\end{enumerate}
+
+\paragraph{Properties}
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item P\'olya-Aeppli is the best approximation of the distribution of
+  the word count in the Markov model ({\em R. \& Schbath, 01})
+\item $\Esp[N(\ell)] = \ell \times \lambda \times \Esp(K) \quad
+  \Longrightarrow \quad \widehat{\Esp}N(\ell) = \ell
+  \widehat{\lambda} / (1-\widehat{a}) = N(\ell)$ \\
+  \centerline{$\Longrightarrow \quad$ {\em no word has an
+      ``unexpected'' count}}
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Heterogenous compound Poisson model}
+\section{~}
+\section{Exogenous information}
+
+\vspace{-0.5 cm}
+\paragraph{Assumptions:}
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item The heterogeneity of the sequence can be described in
+  terms of $S$ underlying states;
+\item We know functions $\pi_s(x) \in [0; 1]$, {\em independently from
+    the occurrences of the motif}, that relates position $x$ to state
+  $s$.
+\end{enumerate}
+\paragraph{Example:} States = $\{$CDS+, CDS-, inter-genic$\}$, \
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item genome annotation provides a segmentation
+  \begin{eqnarray*}
+    \pi_s(x) & = & 1 \qquad \mbox{if position $x$ belongs to state
+      $s$} \\
+    & = & 0 \qquad \mbox{otherwise}
+    \end{eqnarray*}
+  \item HMM modeling provides
+    $$\pi_s(x) = \Pr\{\mbox{position $x$ belongs
+      to state $s$}\}
+    $$
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Heterogeneity modeling}
+
+\paragraph{Intensity of the clump process:}
+$\lambda(x)$ is a mixture of $S$ constant intensities $\lambda_1,
+\dots \lambda_S$
+$$
+\lambda(x) = \sum_s \lambda_s \pi_s(x).
+$$
+
+\paragraph{Distribution of the clump size:}
+$p(k \;|\; x)$ is a mixture of $S$ distributions $p_1(k), \dots,
+p_S(k)$:
+$$
+p(k \;|\; x) = \sum_s p_s(k) \lambda_s \pi_s(x) \left/ \sum_s
+\lambda_s \pi_s(x) \right..
+$$
+If all the $p_s$'s are geometric with respective parameters
+$(1-a_s)$:
+$$
+p(k \;|\; x) = \sum_s a_s^{k-1} (1-a_s) \lambda_s
+  \pi_s(x) \left/ \sum_s \lambda_s \pi_s(x) \right..
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Parameter estimates}
+
+\paragraph{Strict segmentation:} $\pi_s(x) = 0$ or 1 (genome
+annotation) \\
+Parameters ($\lambda_s$, $p_s$ or $a_s$) are estimated state by state,
+as in the homogenous CP model
+
+\paragraph{General case:} $\pi_s(x) \in [0; 1]$ (HMM) \\
+Maximum likelihood estimates can be obtained, using the
+Newton-Raphston algorithm.
+
+The estimates of the segmentation can be adapted to provide good
+starting values for the algorithm.
+
+\paragraph{Semi-heterogenous models:} \\
+For some of them, explicit estimates can be derived.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Semi-heterogenous models} 
+$\begin{array}{l|rl|rl}
+  \mbox{model: \# param.} 
+  & \multicolumn{2}{c|}{\lambda(x) \equiv \lambda} & 
+  \multicolumn{2}{c}{\lambda(x) = \sum_s \pi_s(x) \lambda_s} \\
+  & & & \\
+  \hline 
+  & & & \\
+  a^{k-1} (1-a)                     & P_0A_0: & 2       & PA_0: & S+1 \\
+  & & & \\
+  \sum_s \pi_s(x) a_s^{k-1} (1-a_s) & P_0A: & S+1       & PA: & 2S \\
+  & & & \\
+  p(k)                              & P_0G_0: & k_{\max}     & PG_0: & S+k_{\max}-1 \\
+  & & & \\
+  \sum_s \pi_s(x) p_s(k)            & P_0G: & S(k_{\max}-1)+1  & PG: & Sk_{\max} \\
+\end{array}$
+
+\paragraph{The fits of these different models} can be compared with AIC
+
+\paragraph{Restrictive hypotheses} can be tested with the likelihood
+ratio test (LRT), or with the chi square test
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Checking homogeneity distribution}
+\section{~}
+\section{Two statistics} 
+We are looking for poor or rich regions in terms of occurrences of a
+given motif. \\
+A natural criterion for a given region is the ratio
+$$
+\frac{\mbox{number of occurrences in the
+    region}}{\mbox{size of the region}}
+$$
+$$
+\hspace{-1.5cm}
+\psfig{file = ../FIGURES/FigHomogene.ps, height=7.6cm,
+  width=25cm, bbllx=70 , bblly=590 , bburx=515 , bbury=725 , clip=}  
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{$Y^r = $ cumulated distances} of order $r$:
+$$
+\frac{\mbox{fixed numerator $r$}}{\mbox{random
+    denominator $Y^r$}}
+$$
+where
+$$
+Y_i^r = \sum_{j=i}^{i+r-1} Y_j  
+= \left( 
+  \mbox{\begin{tabular}{c}
+      distance between occurrence number $i$ \\
+      and occurrence number $i+r$
+    \end{tabular}}
+\right)
+$$
+  ({\em Karlin \& Macken, 91}: $r$-scans).
+
+\paragraph{Distribution under homogenous PC:} if the simple distances are iid
+(P\'olya-Aeppli) 
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item the distribution of $Y^r$ is known: {\em R. (02)};
+\item $\Pr\{\min_i Y_i^r \leq y\} \simeq e^{-[N(\ell)-r] \Pr\{Y^r
+  \leq y\}}$ \\
+  + Chen-Stein bound for the error : {\em Arratia \& al (89), Dembo \&
+    Karlin (92), R. (02)}.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{$\Delta N =$ local count} in a window of width $y$: 
+$$
+\frac{\mbox{random numerator $\Delta N$}}{\mbox{fixed denominator
+    $y$}} 
+$$
+where
+$$
+\Delta N(x) = N(x) -  N(x-y)
+= \left( 
+  \mbox{\begin{tabular}{c}
+      number of occurrences  \\
+       between $x-y$ and $x$
+    \end{tabular}}
+\right)
+$$
+
+\paragraph{Distribution under homogenous PC:} 
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item the distribution of $\Delta N(x)$ is known: {\em Barbour \& al. (92)};
+\item the approximation
+  $$
+  \Pr\{\max_x \Delta N(x) \geq n\} \simeq e^{-[\ell - y]
+    \Pr\{\Delta N \geq n\}}
+  $$
+  is optimal but no bound is known : {\em Barbour \& al. (92), R.
+    (02)}.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Homogenization technique} 
+
+Once the $\lambda_s$'s have been estimated, the heterogenous Poisson
+clump process $C(x)$ can be homogenized into a {\em fictitious
+  homogenous} Poisson process $\Ctilde(x)$.
+
+Denoting $Z_c$ the true positions of clump number $c$ ($Z_0 = 0$), its
+`homogenized' position $\Ztilde_c$ is defined by
+$$
+\Ztilde_c = \sum_s \widehat{\lambda}_s \int_0^{Z_c} \pi_s(x) \D x.
+$$
+
+\paragraph{Properties:}
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item This procedure does not homogenize the clump size.
+\item If the clump size distribution is homogenous ($PA_0$ and $PG_0$
+  models), techniques developed for the homogenous PC model can be
+  applied to the homogenized process.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsection{Illustration} \\
+Occurrences of $\att\att\ttt\ttt$ in the genome of phage {\em Lambda}
+($\ell
+= 48\;500$ bps) \\
+\begin{tabular}{rl}
+  \hspace{-1cm}
+  \epsfig{file = ../FIGURES/lambda-aatt-hetero.ps, height = 9cm, width =
+    12cm} 
+  & 
+  \hspace{-1cm}
+  \epsfig{file = ../FIGURES/lambda-aatt-homo.ps, height = 9cm, width =
+    12cm} 
+\end{tabular}
+\paragraph{3 steps:} 
+\vspace{-1cm}
+\begin{enumerate}
+\item Estimate the intensity $\lambda(x)$ (left: green line)
+\item ``Homogenize'' the clump process and calculate thresholds
+  (right: red line + blue lines for the bounds)
+\item come back to the original process (left)
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Applications} 
+\section{~}
+\section{CHI motif of {\em H. influenzae}}
+
+$\gtt{\tt N}\ttt\gtt\gtt\ttt\gtt\gtt$ occurs $N(\ell) = 223$ times, in
+$C(\ell) = 215$ clumps, in the genome ($\ell = 1\;830\;140$ bps). 
+
+\paragraph{Heterogeneity} is modeled through posterior probabilities
+of an HMM with 3 hidden states corresponding to CDS-, CDS+ and
+inter-genic regions ({\em source: P. Nicolas}).
+
+\paragraph{Model $PA_0$} provides the best fit (LRT + AIC): 
+$\widehat{a} = 3.59 \; 10^{-2} $, $
+\widehat{\lambda}_{\mbox{\footnotesize CDS-}} = 0.51 \; 10^{-4}$,
+$\widehat{\lambda}_{\mbox{\footnotesize CDS+}} = 2.14 \; 10^{-4}$,
+$\widehat{\lambda}_{\mbox{\footnotesize inter}} = 0.05 \; 10^{-4}$.
+
+\paragraph{The shortest $Y^3$} is 625 bps long. \\
+The corresponding homogenized distance, $\Ytilde^3 = 0.132$, is non
+significant.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Palindromes in {\em E. coli}'s genome}
+
+The 64 palindromes of length 6 occur 54\;724 times, in 50\;941 clumps,
+in the genome ($\ell = 4\;638\;868$ bps).
+
+\paragraph{Heterogeneity} is modeled in the same way as in {\em
+  H. influenzae}.
+
+\paragraph{Model $PG_0$} appears to be the most parsimonious (best
+AIC), although the LR test $PG$ / $PG_0$ is significant (p-value = 2\%).
+
+\paragraph{The richest windows} of width $y = 10\;000$ bps contains
+185 occurrences and is significantly rich in the $P_0G_0$ model.
+
+The richest homogenized window contains 171 occurrences:
+$$
+\begin{array}{rclcl}
+  \Pr\{\Delta N(x) \geq 171 \} & = & 4.5 \; 10^{-5} 
+  & \Rightarrow & \mbox{significant} \\
+  \mbox{but} \quad   \Pr\{\sup_x \Delta N(x) \geq 171 \} & \gg & 5 \; 10^{-2} 
+  & \Rightarrow & \mbox{non significant}
+\end{array}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{CHI motif of {\em E. coli}}
+
+The Chi motif occurs 761 in the genome of {\em E. coli} K12. \\
+This genome can be segmented between backbone and loops ({\em El
+  Karoui \& al., 03)}
+
+
+\paragraph{Homogenous Poisson model:}
+According to cumulated distances of order 4, 2 regions are found
+significantly rich \vspace{-1cm}
+\begin{enumerate}[($a$)]
+\item $Y^4 = 1495$ bps, around position 366\;123 ($p$-value =
+  $1.24\;10^{-4}$),
+\item $Y^4 = 1204$ bps, around position 4\;264\;495 ($p$-value =
+  $0.51\;10^{-4}$).
+\end{enumerate}
+
+\paragraph{Heterogenous Poisson model:} Chi is more abundant in
+backbone regions than in loops
+($\widehat{\lambda}_{\mbox{\footnotesize backbone}} = 1.8\;10^{-4},
+\widehat{\lambda}_{\mbox{\footnotesize loop}} = 0.9\;10^{-4}$)
+    
+Only region ($b$) is still significantly rich, with $p$-value =
+$0.8\;10^{-4}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Conclusions} 
+
+\paragraph{The heterogenous compound Poisson model}
+accounts for critical informations such as 
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item the frequency and overlapping probability of the motif,
+\item the heterogeneity of the sequence.
+\end{enumerate}
+\vspace{-0.5cm}
+\paragraph{The homogenization technique}
+\vspace{-1cm}
+\begin{enumerate}[$\bullet$]
+\item provides an adaptive threshold for both cumulated distances and
+  local counts
+\item but is not really efficient for heterogeneity of the clump size.
+\end{enumerate}
+\vspace{-0.5cm}
+\paragraph{Results seem to become less significant} when going from
+homogenous to heterogenous modeling. \\
+Further theoretical statistical properties or simulations are needed
+to know if this loss of power is a general property of this approach.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

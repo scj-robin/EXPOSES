@@ -1,0 +1,304 @@
+\documentclass[handout]{beamer}
+
+\usepackage[latin1]{inputenc}
+\usepackage{bbm}
+\usepackage{amsmath}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\usepackage{graphicx}
+\usepackage{multicol}
+
+
+% numérote les pages :
+\setbeamertemplate{footline}[frame number]
+
+% enlève "Figure" de caption :
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+
+% fait apparaître le sommaire :
+\AtBeginSection[]
+{
+  \begin{frame}
+  \frametitle{Sommaire}
+  \tableofcontents[currentsection, hideothersubsections, pausesubsections]
+  \end{frame} 
+}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{thm}{Théorème}
+
+\begin{document}
+
+
+%\title{\Large{\textbf{Motifs in bipartite ecological networks: uncovering indirect
+%interactions} }  }
+%
+%\author{{\large{Benno I. Simmons, Alyssa R. Cirtwill, Nick J. Baker, Hannah S. Wauchope, Lynn V. Dicks,
+%Daniel B. Stouffer and William J. Sutherland}} }
+ \title{ \begin{center}
+\includegraphics[width=9cm]{im1}
+  \end{center}
+ 
+ \small{Journal Club EcoNet, 29 novembre 2019}\\
+ \vskip5pt
+ 
+  \scriptsize{Sarah Ouadah}\\
+}
+
+
+
+
+
+
+\frame{\titlepage} 
+
+%\frame{\frametitle{Plan}\tableofcontents} 
+
+%\section{Introduction}
+%\subsection{Graphes aléatoires}
+
+%\frame{
+%\frametitle{Résumé}
+%\begin{block}{}
+%\begin{itemize}
+%\item intéractions entre deux groupes d'espèces représentées par des réseaux bipartites
+%\item classique d'utiliser des indices tels que le degré des espèces, i.e leur nombre de liens et la connectance du réseau, i.e la distribution des degrés
+%\item perte d'information sur les relations indirectes avec ces indices. exemple : 2 espèces d'abeilles peuvent avoir des interactions directes similaires mais peuvent avoir des compétitrices (les abeilles qui vont sur la même fleur qu'elles) avec différents niveaux de spécialisation.
+%\item les motifs donnent plus d'information sur la structure du réseau que les indices.
+%\end{itemize}
+%\end{block}
+%}
+
+\frame{
+\frametitle{Introduction}
+%\begin{block}{}
+\begin{itemize}
+\item \textcolor{purple}{Représentation des communautés écologiques} : réseaux bipartites 
+\item \textcolor{purple}{Structure du réseau et rôles des espèces} caractérisés par des indices à l'échelle du réseau ou de l'espèce (densité, nestedness, degré, etc.)
+\item \textcolor{purple}{Perte d'information} : 
+%\begin{itemize}
+%\item dans une communauté la plante i est pollinisée par une espèce j, dans la seconde i est toujours pollinisée seulement par j mais j pollinise aussi les plantes k,l et m.  pas suffisant d?examiner le degré de i car il cache les infos sur les relations indirectes : on sait que i a une interaction directe avec j mais on ne sait pas si j est un spécialiste de i ou un généraliste visitant d?autres plantes
+%
+%communauté 1 : plante i $\sim$ espèce j
+%communauté 2 : plante i $\sim$ espèce j et espèce j $\sim$ plantes k,l, m 
+%Degré de i cache les infos sur les relations indirectes : on sait que i a une interaction directe avec j mais on ne sait pas si j est un spécialiste de i ou un généraliste visitant d'autres plantes\\
+%
+%Une plante $i$ a un même unique pollinisateur $j$ dans deux communauté différentes, dans l'une d'elles $j$ pollinise aussi $k,\ell,m$. Regarder le degré de $i$ cache ces interactions indirectes, on ne sait pas si $j$ est spécialistes ou généraliste.
+lorsque l'on regarde le degré d'une plante, on a aucune information sur le degré de spécialisation de ses pollinisateurs, i.e. le degré traduit les relations directes mais ne dit rien sur les interactions indirectes
+%\item 
+%2 espèces d'abeilles peuvent avoir des interactions directes similaires mais peuvent avoir des compétitrices avec différents niveaux de spécialisation
+%\end{itemize}
+\item \textcolor{purple}{Message} : combiner indices et motifs pour décrire la structure des réseaux bipartites
+\end{itemize}
+\begin{block}{Motifs} Sous-graphes représentants des configurations d'interactions entre un petit nombre d'espèces.
+\end{block}
+}
+
+\frame{
+\frametitle{
+Interactions indirectes et paradigme des indices (1)}
+\begin{block}{Interaction indirecte}
+ Impact d'une espèce sur l'autre via des espèces intermédiaires
+\end{block}
+
+ \begin{itemize}
+\item \textcolor{purple}{Chaîne d'interaction} : le changement d'abondance d'une espèce donatrice peut influencer celle d'une receveuse en affectant celle d'une intermédiaire interagissant avec les deux
+\item \textcolor{purple}{Interaction de modification} : un prédateur pourrait ne pas se nourrir dans un patch à cause de la présence d'une plante défendue et donc réduit la consommation d'une autre espèce qui elle est consommable
+\end{itemize} Ici focus sur les chaînes d'interactions capturées par les motifs. 
+%food webs : apparent competition, exploitative compet, omnivory, tr-trophic chains
+}
+
+\frame{
+\frametitle{
+Interactions indirectes et paradigme des indices (2)}
+\begin{itemize}
+\item \textcolor{purple}{Rôle de B} : relations directes identiques dans I, II et III, mais nombre de compétiteurs et spécialisation des compétiteurs diffèrent
+\item \textcolor{purple}{Indices à l'échelle de l'espèce B et du réseau} : degré valué ou non, z-score, c-score, betweeness, closeness, densité, nestedness et modularité identiques pour I, II et III. %Ces indices sont identiques dans I, II et III pour B : l'unidimensionnel ne peut capturer que des aspects spécifiques à l'espèce et non comment celle-ci se structure au sein de la communauté tout entière
+\end{itemize}
+\begin{center}
+\includegraphics[width=6cm]{im2}
+  \end{center}
+}
+
+
+\frame{
+\frametitle{
+Un cadre pour les interactions indirectes (1)}
+\begin{center}
+\includegraphics[width=10cm]{im3}
+  \end{center} 
+}
+
+\frame{
+\frametitle{
+Un cadre pour les interactions indirectes  (2)}
+%\begin{tabular}{cc}
+\includegraphics[width=5cm]{fig2}%&
+\includegraphics[width=6cm]{fig2legend}
+\begin{itemize}
+\item \textcolor{purple}{Motifs unipartites classiques} dans les food webs : chaîne tri-trophique, \textit{omnivory }, compétitions \textit{apparent} et opportuniste \textcolor{purple}{$\rightarrow$} pendant bipartite
+\item Interactions indirectes spécifiques à certains motifs 
+\begin{itemize}
+\item \textcolor{purple}{Motifs étoilés} : les spécialistes s'affectent les uns les autres via leur effet sur le généraliste
+\item \textcolor{purple}{Motifs complets} : fortes interactions indirectes et parfois complexes, e.g. diminution de l'abondance d'un pollinisateur $\Rightarrow$ diminution de celle des plantes ainsi que la compétition 
+\item \textcolor{purple}{Motifs complets asymétriques} : les généralistes affectent plus fortement les spécialistes que la réciproque
+\end{itemize}
+\end{itemize}  
+ % \end{tabular}
+  }
+  
+  \frame{
+\frametitle{Un cadre pour les interactions indirectes 
+%A framework for indirect interactions
+ (3)}
+\begin{itemize}
+\item Motifs à 6 espèces : capture de chaînes avec 4 intermédiaires possibles.
+\end{itemize} 
+\begin{block}{Signatures}
+\begin{itemize}
+\item \textcolor{purple}{Signature m-dimensionnelle} : liste de fréquence d'occurrence des $m$ motifs
+\item \textcolor{purple}{Signature p-dimensionnelle} : liste de fréquence d'occurrence d'une espèce dans les $p$ positions présentes dans les $m$  motifs
+\end{itemize}  
+\end{block}  
+  }
+
+  
+\frame{
+\frametitle{
+Comparaison indices - motifs (1)
+%Comparing network- and species-level indices to motifs (1)
+}
+\begin{itemize}
+\item Simulation de 20 000 réseaux bipartites de diverses densité avec 6 à 50 espèces (par niveau), via le modèle dit de coopération
+\end{itemize}
+\begin{block}{\'Echelles} 
+\begin{itemize}
+\item \textcolor{purple}{Réseau} = \textcolor{purple}{échelle macro}
+\begin{itemize}
+\item Indices : densité, nestedness et modularité
+\end{itemize}
+\item \textcolor{purple}{Espèce} = \textcolor{purple}{échelle micro}
+\begin{itemize}
+\item Indices : degré, closeness, betweeness, c-score et z-score
+\end{itemize}
+\item \textcolor{purple}{Signatures} = \textcolor{purple}{échelle meso}
+\begin{itemize}
+\item Motifs : fréquences d'occurrences des motifs et des positions
+\end{itemize}
+\end{itemize}
+\end{block}  
+
+}
+
+\frame{
+\frametitle{
+Comparaison indices - motifs (2)}
+\begin{block}{Macro vs meso : densité, nestedness, modularité vs fréquences des motifs} 
+\begin{itemize}
+\item sous-ensembles de 50 réseaux rangés selon l'indice considéré et pour chaque réseau
+\begin{itemize}
+\item vecteur macro : nombre d'espèces dans les deux premiers sous-ensembles et les deux autres indices
+\item vecteur meso : fréquences d'occurrences des motifs
+\end{itemize}
+\item pour chaque sous-ensemble calcul de la distance moyenne entre les vecteurs et leur centre
+%\item A l'échelle du réseau : les motifs capturent plus la variation de structure de réseau que les indices de densité, nestedness et modularité (comparaison des distances selon les échelles meso et macro pour chaque sous-ensemble ($R^2$, indice beta) via les vecteurs caractérisant les sous-ensembles) avec test de Wilcoxon  : pb de se focaliser uniquement sur l'échelle macro car la meso capture bien plus la variation.
+\end{itemize}
+\end{block}  
+\begin{center}
+\includegraphics[width=7cm]{im4}
+  \end{center}
+    \textcolor{purple}{$\rightarrow$} Plus de variation capturée par l'échelle meso
+}
+
+
+\frame{
+\frametitle{
+Comparaison indices - motifs (3)}
+\begin{block}{Micro vs meso : degré, closeness, betweeness, c-score et z-score vs positions au sein des motifs} 
+%\begin{itemize}
+%\item sous-ensembles de 50 réseaux rangés selon l'indice considéré
+%\begin{itemize}
+%\item vecteur macro : nombre d'espèces dans les deux premiers sous-ensembles et les deux autres indices
+%\item vecteur meso : fréquences d'occurrences des motifs
+%\end{itemize}
+%\item pour chaque sous-ensemble calcul des distances entre les vecteurs et leur centre
+%\item A l'échelle de l'espèce : les positions dans les motifs capturent plus la variation de structure de réseau que les indices de degré, closeness, betweeness, c-score et z-score  : pb de se focaliser uniquement sur l'échelle micro (plutot qque meso).
+%\end{itemize}
+\begin{center}
+\includegraphics[width=6cm]{fig7}
+  \end{center}
+\end{block}  
+
+      \textcolor{purple}{$\rightarrow$} Plus de variation capturée par l'échelle meso
+}
+
+
+\frame{
+\frametitle{
+Robustesse à l'effort d'échantillonnage}
+\begin{itemize}
+%\item Indices sensibles à lau niveau de l'espèce sensibles à l'échantillonnage, simulations pour évaluer celle des motifs
+\item 40 réseaux empiriques : pollinisation et dispersion des graines
+\item différents niveaux d'effort d'échantillonnage :
+variation de $p$ la proportion d'espèces de plantes et de $q$ la proportion des interactions (entre 0.5 et 1) (1000 randomisations pour chaque combinaisons $p-q$)
+%\item les signaturess de rôle des espèce et de structure de réseaux sont robustes (mesurées via un R carré)
+\end{itemize}
+\begin{center}
+\includegraphics[width=10cm]{fig8}
+  \end{center}
+  
+      \textcolor{purple}{$\rightarrow$} Signatures robustes
+}
+
+\frame{
+\frametitle{
+Interactions indirectes - réseau plante-pollinisateur}
+\begin{itemize}
+\item Communauté plante-pollinisateur aux Seychelles
+\item Retrait de plantes exotiques $\Rightarrow$ espèces pollinisatrices plus généralistes
+\item 2 espèces abondantes et très généralistes : \emph{Lasioglossum mahense} (native) et \emph{Apis mellifera} (non native)
+\item Ont-elles les mêmes stratégies de sélection et rôles dans la communauté ?
+\begin{itemize}
+\item via la métrique $d^{\prime}$ à l'échelle de l'espèce  : ces espèces sont des super généralistes
+\item via la signature des positions dans les motifs : \emph{Lasioglossum mahense} en grande compétition avec les autres généralistes et \emph{Apis mellifera} visite les plantes spécialistes et en compétition avec les autres pollinisateurs spécialistes
+\end{itemize}
+\end{itemize}
+}
+
+\frame{
+\frametitle{
+Applications potentielles -- Limitations et défis}
+\begin{block}{Exemples de questions auxquelles on pourrait répondre via l'étude des motifs}
+\begin{itemize}
+\item \'Etude à l'échelle des espèces
+\item Focus sur le changement de structure dans le temps et l'espace
+\item Performances prédictives 
+\item Compréhension des conséquences fonctionnelles de la structure des communautés
+\end{itemize}
+\end{block}
+
+\begin{block}{Limitations et défis}
+\begin{itemize}
+\item Motifs uniquement à partir de réseaux non valués 
+\item Relation non bijective entre signatures à partir du motif et le réseau
+\end{itemize}
+\end{block}
+}
+
+
+
+\frame{
+\frametitle{
+Conclusion}
+\begin{block}{Leur conclusion} 
+\begin{itemize}
+\item \'Etude des relations indirectes essentielle pour comprendre le rôle des espèces et la structure des interactions biotiques
+\item L'utilisation des motifs doit devenir aussi courante que celle des indices usuels dans l'analyse des réseaux bipartites
+\end{itemize}
+\end{block}
+\textcolor{purple}{Votre conclusion ?}
+      
+      }
+      
+      
+\end{document}
+

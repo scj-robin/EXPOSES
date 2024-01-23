@@ -1,0 +1,390 @@
+\documentclass{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+\usetheme{CambridgeUS}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+%\usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{stmaryrd}
+\usepackage{epsfig}
+\usepackage{/Latex/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+% Commands
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+\newcommand{\refer}[1]{\textcolor{blue}{\sl \cite{#1}}}
+
+% Symbols
+\newcommand{\Abf}{{\bf A}}
+\newcommand{\BIC}{\text{BIC}}
+\newcommand{\dd}{\text{d}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\Ebf}{{\bf E}}
+\newcommand{\ICL}{\text{ICL}}
+\newcommand{\Cov}{\mathbb{C}\text{ov}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\pen}{\text{pen}}
+\newcommand{\Hcal}{\text{H}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\Pbf}{{\bf P}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\Tbf}{{\bf T}}
+\newcommand{\Ubf}{{\bf U}}
+\newcommand{\Ybf}{{\bf Y}}
+\newcommand{\Zbf}{{\bf Z}}
+\newcommand{\Pibf}{\mbox{\mathversion{bold}{$\Pi$}}}
+\newcommand{\mubf}{\mbox{\mathversion{bold}{$\mu$}}}
+\newcommand{\thetabf}{\mbox{\mathversion{bold}{$\theta$}}}
+
+
+%====================================================================
+\title{Sequence classification \& Mixture model}
+
+\author[S. Robin]{Ph. Randrianomenjanahary, E. Lebarbier, S. Robin, F.
+  Picard}
+
+\institute[AgroParisTech / INRA]{AgroParisTech / INRA \\
+  \bigskip
+  \begin{tabular}{ccccc}
+    \epsfig{file=../Figures/LogoINRA-Couleur.ps, width=2.5cm} &
+    \hspace{.5cm} &
+    \epsfig{file=../Figures/logagroptechsolo.eps, width=3.75cm} &
+    \hspace{.5cm} &
+    \epsfig{file=../Figures/Logo-SSB.eps, width=2.5cm} \\
+  \end{tabular} \\
+  \bigskip
+  }
+
+\date{MetaSoil, Evry, October 2009}
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\frame{\titlepage}
+%====================================================================
+
+% %====================================================================
+% \frame{ \frametitle{Outline}
+% %====================================================================
+  
+%   \setcounter{tocdepth}{1}
+%   \tableofcontents
+% %  \tableofcontents[pausesections]
+%   }
+
+%====================================================================
+\section{Sequence classification}
+\subsection{Problem}
+\frame{ \frametitle{Sequence classification}
+%==================================================================== 
+  \emphase{Original problem: Comparatic genomics.}
+  \begin{itemize}
+  \item Alignment of 3 {\sl E. coli} strain genome \\
+    $\rightarrow$ definition of 'backbone' (common) and 'loop'
+    (specific) sequences.
+  \item Classification of loop sequences to trace back their origins 
+  \end{itemize}
+
+  \bigskip
+  \emphase{Metagenomics \& next generation sequencing.}
+  \begin{itemize}
+  \item Determine a typology of unaligned reads
+  \end{itemize}
+
+  \bigskip
+  \emphase{2 families of classification methods.}
+  \begin{itemize}
+  \item Distance based: define a distance between sequence and gather
+    'closest' distance into groups ($K$-means, hierarchical
+    clustering)
+  \item Model based: suppose that each sequence is generated according
+    to a model with parameter specific to its group 
+  \end{itemize}
+  }
+
+%====================================================================
+\subsection{Mixture model}
+\frame{ \frametitle{Mixture model}
+%==================================================================== 
+  \emphase{Data.} Sample of $n$ sequences $\{S_1, \dots, S_n\}$:
+  $$
+  S_i = (S_{i1}, \dots, S_{it}, \dots, S_{i\ell_i}), 
+  \qquad \ell_i = \text{length of } S_i.
+  $$
+
+  \emphase{Mixture of Markov chains.}
+  \begin{itemize}
+  \item The $n$ sequences are spread into $K$ groups:
+    $$
+    Z_{ik} = 1 \text{ if } i \in k, \quad 0 \text{ otherwise}.
+    $$
+  \item Each sequence $i$ belongs to group $k$ ($k = 1, \dots K$) with
+    probability $\pi_k$:
+    $$
+    \Pr\{i \in k\} = \Pr\{Z_{ik} = 1\} = \pi_k
+    $$
+    interpreted as the \emphase{prior probability} to belong to
+    group $k$.
+  \item Provided sequence $i$ belongs to group $k$, it is generated
+    according to a Markov chain with parameter $\phi^k$:
+    $$
+    (S_i | Z_{ik}=1) \sim \text{MC}(\phi^k)
+    $$
+  \end{itemize}
+  }
+
+%====================================================================
+\subsection{Mixture model}
+\frame{ \frametitle{Mixture model}
+%==================================================================== 
+  \emphase{Markov chains.} Sequence $S$ is generated according to
+  MC($\phi$) iff
+  $$
+  \Pr\{S_t = s_t | S_{t-m}=s_{t-m}, \dots, S_{t-1}=s_{t-1}\} =
+    \phi(s_{y-m}, \dots s_{t-1}; s_t).
+  $$
+  \begin{itemize}
+  \item $m$ is the \emphase{order} of the Markov chain.
+  \item $\phi(\cdot; \cdot)$ are the \emphase{transition
+      probabilities}. They fit the frequencies of the ($m+1$)-mers:
+    $$
+    \widehat{\phi}({\tt gc}; {\tt a}) = \frac{N({\tt gca})}{N({\tt gc})}.
+    $$
+  \end{itemize}
+
+  \bigskip
+  \emphase{Interpretation.} Markov chains of order $m$ account for the
+  \emphase{sequence contents in ($m+1$)-mers}, e.g
+  \begin{itemize}
+  \item M0 is fitted to the nucleotide frequencies;
+  \item M2 is fitted to the codon frequencies;
+  \item M5 is fitted to the di-codon frequencies.
+  \end{itemize}
+  }
+
+%====================================================================
+\section{Statistical inference}
+\subsection{E-M algorithm}
+\frame{ \frametitle{Statistical inference}
+%==================================================================== 
+  {Mixture models} are \emphase{incomplete data models} since we miss
+  the group to which each sequence belongs.
+
+  \bigskip
+  \emphase{E-M algorithm:} provides maximum likelihood estimates.
+  \begin{itemize}
+  \item \emphase{E-step:} calculates the probability for eahc sequence
+    to belong to each class:
+    $$
+    \tau_{ik} = \Pr\{Z_{ik} = 1 | S_i\}
+    $$
+    interpreted as the \emphase{posterior probability} to belong to
+    group $k$.
+  \item \emphase{M-step:} using the $\tau_{ik}$'s as estimates of the
+    $Z_{ik}$'s, estimates $\widehat{\pi}_k$ and $\widehat{\phi}^k$ can
+    easily be derived.
+  \end{itemize}
+
+  \bigskip
+  \emphase{Classification.} The $\tau_{ik}$ can be used to perform
+  'fuzzy' classification, or 'maximum a posteriori' (MAP)
+  classification:
+  $$
+  MAP_i = \arg\max_k \tau_{ik}.
+  $$
+  }
+
+%====================================================================
+\subsection{Some issues}
+\frame{ \frametitle{Some issues}
+%==================================================================== 
+  \emphase{Model selection.} The order $m$ of the Markov chain and the
+  number of group $K$ have to be chosen in some way.
+  \begin{itemize}
+  \item The order $m$ can be fixed according to biological
+    considerations (see M0, M2, M5).
+  \item The likelihood of the model $\widehat{P}(S|K)$ necessarily increases
+    with $K$ (so the optimum would be $K = n$...). \\
+    $\rightarrow$ Penalized criterion can be used:
+    $$
+    BIC(K) = \log \widehat{P}(S|K) - \frac12 \log(\text{\# data}) \times
+    (\text{\# parameters}).
+    $$
+  \item \emphase{Number of data =} number of sequences or number of
+    nucleotides?
+  \item \emphase{Number of parameters =} total number of parms, or
+    some number of efficient parms?
+  \end{itemize}
+  }
+
+%====================================================================
+\section{Some results}
+\subsection{Sequence classification}
+\frame{ \frametitle{Some results}
+%==================================================================== 
+  \emphase{Sequence classification for comparative genomics.} Cross
+  classification according the length (L) and the di-codon content
+  (MC).
+  
+  {\small
+    \begin{center}
+      \begin{tabular}{lc|ccccc|c}
+        & length (bp) & MC1 & MC2 & MC3   & MC4  & MC5 & \\
+        \hline
+        L1 & $[2417;40120]$ & 2 (IS3) & 5 (rhs) & 0   & 34  & 36  & 77\\
+        L2 & $[335:2270]$   & 5 (IS) & 1 (near rhs) & 13  & 47  &
+        90  & 156\\ 
+        L3 & $[43;323]$     & 0 & 4 & 116 & 106 & 139 & 365\\
+        L4 & $[20;42]$      & 4 & 3 & 58  & 96  & 128 & 289\\
+        \hline & & 11 & 13 & 187 & 283 & 393
+      \end{tabular}
+    \end{center}
+    }
+  
+  \emphase{Ex.:} BIME's (repeated elements) are clustered in MC3. The
+  transition matrix $\phi^3$ reveals characteristics 6-mers that
+  corresponds to palindromic units.
+  }
+
+%====================================================================
+\subsection{Comparison to reference sequence}
+\frame{ \frametitle{Comparison to reference sequence (1/2)}
+%==================================================================== 
+  \emphase{Problem.} Identify sequences similar to a given one
+  ($S^*$).
+  
+  \bigskip 
+  \emphase{Similarity measure.}
+  \begin{itemize}
+  \item \emphase{Distance-based:} $d(S_i, S^*)$ should be small when
+    $S_i$ is similar to $S^*$.
+  \item \emphase{Mixture:} Assuming that $S^*$ belongs to group 0. The
+    similarity can be measured with $d(S_i, S^*) = 1 - \tau_{i0}$. \\
+    (Could be averaged to avoid the choice of the number of groups.)
+  \end{itemize}
+
+  \bigskip 
+  \emphase{Comparative study.}
+  \begin{itemize}
+  \item For a given threshold $d^*$, one can predict if each sequence
+    is similar ($d(S_i, S^*) < d^*$) to the reference or not.
+  \item For each  threshold $d^*$, one can then compute False Positive
+    (FP) and False Negative (FN) rates.
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{ \frametitle{Comparison to reference sequence (2/2)}
+%==================================================================== 
+  \emphase{Data from Wu \& al., 01.}
+  \begin{itemize}
+  \item 20 sequences similar to the reference (HSLIPAS)
+  \item 19 heterogenous sequences, different from HSLIPAS
+  \end{itemize}
+  $$
+  \begin{tabular}{cc}
+    \begin{tabular}{c}
+      \epsfig{file=../FIGURES/Rapport-Fig41.ps, width=4.5cm, height=4.5cm,
+        clip=} 
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+      \begin{tabular}{ll}
+        Distance & Surface \\
+        \hline
+        MC(2) & 1.0000 \\
+        rre32 & 0.7316 \\
+        wre32 & 0.8395 \\
+        S132 & 0.7289 \\
+        euclid3 & 0.7394 \\
+        cos3 & 0.7211 \\
+        S232 & 0.7342 \\
+        KL3 & 0.7473 \\
+      \end{tabular}
+    \end{tabular}
+  \end{tabular}
+  $$
+  \emphase{Important remark:} No cross-validation for distance based
+  methods.  
+  }
+
+%====================================================================
+\section{Connexion with other projects/actions}
+\subsection{ANR CBME: Estimation of abundance}
+\frame{ \frametitle{ANR CBME: Estimation of abundance}
+%==================================================================== 
+  \emphase{New topic:}
+  \begin{itemize}
+  \item Post-doc of S. Li-Thiao-Té recently started (ANR CBME);
+  \item Invitation of J. Bunge in Paris last week.
+  \end{itemize}
+
+  \bigskip
+  \emphase{General problem.}
+  \begin{itemize}
+  \item Data: In a given place, we observe the frequencies (i.e.
+    number of individuals) of $c$ species: $X_1, X_2, \dots, X_c$.
+  \item Question: How many species actually live in this place?
+  \end{itemize}
+
+  \bigskip
+  \emphase{Statistical problem: .}
+  \begin{itemize}
+  \item How to infer the number of unobserved species $N_0$ from the
+    distribution of $X_1, X_2, \dots, X_c$?
+  \item What is the precision of the estimated total number of
+    species:
+    $$
+    C = c + \widehat{N}_0.
+    $$
+  \end{itemize}
+  }
+
+%====================================================================
+\subsection{COST Action: StatSeq}
+\frame{ \frametitle{COST Action: StatSeq} 
+%==================================================================== 
+  \emphase{Objectif}
+  \begin{itemize}
+  \item Statistical challenges on the 1000E genome sequences in
+    \emphase{plants}
+  \item E.U. action to gather and promote interaction between E.U. labs
+  \end{itemize}
+
+  \bigskip
+  \emphase{Addressed issues}
+  \begin{itemize}
+  \item Data normalization, sequencing biases
+  \item Expérimental designs
+  \item Alignment
+  \item Genome re-sequencing
+  \item Transcriptome, SNP, ChIPseq, RNAseq
+  \end{itemize}
+  }
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+

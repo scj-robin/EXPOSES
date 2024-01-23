@@ -1,0 +1,376 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+\usepackage{xspace}
+\usepackage{pifont}
+\usepackage{marvosym}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\renewcommand{\chaptername}{Lecture}
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
+\newcommand{\fignoisynetdata}{/home/robin/Bureau/Souhila/NoisyNetworkInference/Data21-10-19}
+\newcommand{\fignoisynetsimul}{/home/robin/Bureau/Souhila/NoisyNetworkInference/FigsOld}
+\newcommand{\figCMR}{/home/robin/Bureau/RECHERCHE/ECOLOGIE/CountPCA/sparsepca/Article/Network_JCGS/trunk/figs}
+\newcommand{\figeconet}{/home/robin/Bureau/RECHERCHE/ECOLOGIE/EXPOSES/1904-EcoNet-Lyon/Figs}
+% \newcommand{\figbarents}{/home/robin/Bureau/CountPCA/sparsepca/Pgm/PLNnetwork/barent_fish/output_barents}
+% \newcommand{\figbordeaux}{/home/robin/Bureau/RECHERCHE/EXPOSES/RESEAUX/1904-Bordeaux}
+% \newcommand{\nodesizeorg}{1.5em}
+% \renewcommand{\nodesize}{\nodesizeorg}
+% \newcommand{\edgeunitorg}{2.25*\nodesizeorg}
+% \renewcommand{\edgeunit}{\edgeunitorg}
+
+%==================================================================
+%==================================================================
+\begin{document}
+%==================================================================
+%==================================================================
+\title{MIA-Paris: 'Statistical inference'}
+\author[MIA-Paris]{MIA-Paris: J. Aubert, P. Barbillon, J. Chiquet, S. Donnet, R. Momal, S. Ouadah ,S. Robin}
+\date[NGB, Feb'20]{NGB, Feb 2020, CEFE, Montpellier}
+\maketitle
+
+%==================================================================
+\frame{\frametitle{Joint species distribution model (JSDM)}
+
+  \paragraph{Abundance data.} $n$ sites, $p$ species: 
+  
+  \bigskip
+  \begin{tabular}{l|l}
+    \paragraph{Abundances:} $Y = n \times p$
+    & 
+    \paragraph{Covariates:} $X = n \times d$
+    \\ \\
+    \hspace{-.02\textwidth} 
+    \begin{tabular}{p{.4\textwidth}}
+      \begin{tabular}{rrrr}
+        {\sl Hi.pl} & {\sl An.lu} & {\sl Me.ae} & ... \\
+        \hline
+        31  &   0  & 108 & ... \\
+        4  &   0  & 110 & \\
+        27  &   0  & 788 & \\
+        13  &   0  & 295 & \\
+        23  &   0  &  13 & \\
+        20  &   0  &  97 & \\
+        $\vdots$ & $\vdots$ & $\vdots$
+      \end{tabular} 
+    \end{tabular}
+    & 
+    \begin{tabular}{p{.4\textwidth}}
+      \begin{tabular}{rrr}
+        Lat. & Long. & Depth \\ \hline
+        71.10 & 22.43 & 349 \\
+        71.32 & 23.68 & 382 \\
+        71.60 & 24.90 & 294 \\
+        71.27 & 25.88 & 304 \\
+        71.52 & 28.12 & 384 \\
+        71.48 & 29.10 & 344 \\
+        $\vdots$ & $\vdots$ & $\vdots$ 
+      \end{tabular}
+    \end{tabular}
+  \end{tabular}
+  \begin{itemize}
+  \item $Y_{ij}=$ 'abundance' (e.g. read count) of species $j$ in site $i$
+  \end{itemize}
+
+  \bigskip
+  \paragraph{Aim of JSDM's.} Model th \emphase{joint} distribution of all species accounting for
+  \begin{itemize}
+   \item environmental ('abiotic' covariates) effects
+   \item interaction between species ('biotic')
+   \item sampling effort (e.g. sampling depth)
+  \end{itemize}
+
+}
+
+%==================================================================
+\frame{\frametitle{Poisson log-normal (PLN) model}
+
+  \paragraph{Model.} For each site $i$
+  \begin{itemize}
+   \item latent: \displaystyle{$Z_i \sim \Ncal_m(0, \Sigma)$}
+   \item observed: \displaystyle{$Y_{ij} \mid Z_{ij} \sim \Pcal(\exp(
+    \underset{\text{sampling effort}}{\underbrace{o_{ij}}} 
+    + \underset{\text{covariates}}{\underbrace{x_i^\intercal \beta_j}} 
+    + \underset{\text{random effect}}{\underbrace{Z_{ij}}}))$}
+  \end{itemize}
+  \begin{itemize}
+   \item $\Sigma$: dependency structure
+   \item $\beta_j$: effects of the covariates on species $j$
+  \end{itemize}
+
+  \bigskip
+  \paragraph{Results.} \url{PLNmodels} R package \\
+  \begin{tabular}{ccc}
+    abiotic effects & species correlations & 'null' species correlations \\
+    \hline
+    \includegraphics[width=.3\textwidth]{\figeco/BarentsFish-coeffAll} &
+    \includegraphics[width=.3\textwidth]{\figeco/BarentsFish-corrAll} &
+    \includegraphics[width=.3\textwidth]{\figeco/BarentsFish-corrNull}
+  \end{tabular}
+
+}
+
+%==================================================================
+\frame{\frametitle{Network inference}
+
+  \begin{tabular}{l|l|l}
+    \emphase{Abundances:} $Y = n \times p$ & 
+    \emphase{Covariates:} $X = n \times d$ & 
+    \emphase{Inferred network:} $G$ \\ 
+    \begin{tabular}{p{.28\textwidth}}
+      \begin{tabular}{rrr}
+        {\sl Hi.pl} & {\sl An.lu} & {\sl Me.ae} \\ \hline
+        31  &   0  & 108 \\
+         4  &   0  & 110 \\
+        27  &   0  & 788 \\
+        13  &   0  & 295 \\
+        23  &   0  &  13 \\
+        20  &   0  &  97 \\
+        $\vdots$ & $\vdots$ & $\vdots$ 
+      \end{tabular}
+    \end{tabular}
+    & 
+    \begin{tabular}{p{.3\textwidth}}
+      \begin{tabular}{rrr}
+        Lat. & Long. & Depth \\ \hline
+        71.10 & 22.43 & 349 \\
+        71.32 & 23.68 & 382 \\
+        71.60 & 24.90 & 294 \\
+        71.27 & 25.88 & 304 \\
+        71.52 & 28.12 & 384 \\
+        71.48 & 29.10 & 344 \\
+        $\vdots$ & $\vdots$ & $\vdots$ 
+      \end{tabular} 
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth} 
+    \begin{tabular}{p{.3\textwidth}}
+      \hspace{-.1\textwidth} 
+      \begin{tabular}{c}
+        \includegraphics[width=.35\textwidth]{\figCMR/network_BarentsFish_Gfull_full60edges}
+      \end{tabular}
+    \end{tabular}
+  \end{tabular}
+
+  \bigskip 
+  \begin{itemize}
+   \item \emphase{Approach:} $\Sigma$ should be consistent with a Gaussian graphical model (GGM), i.e. $\Sigma^{-1}$ is sparse \\ ~
+   \item \emphase{Graphical lasso:} penalizing non-zero in $\Sigma^{-1}$ (Chiquet et al., ICML, 2019, \url{PLNnetwork}) \\ ~
+   \item \emphase{Tree-based:} computes edge probabilities (Momal et al., Meth. Ecol. Evol., 2020, \url{EMtree})
+  \end{itemize}
+}
+
+%==================================================================
+\frame{\frametitle{Topological analysis (of an inferred network)}
+
+  \paragraph{M2 internship (S. Founas).} \\ ~\\
+    \begin{tabular}{c|c|c}
+    {\paragraph{Abundances $Y$:} $n \times p$}
+    & 
+    {\paragraph{Inferred network $\widehat{G}$:} $p \times p$}
+    &
+    {\paragraph{SBM analysis:} }
+    \\
+    \hspace{-.05\textwidth} 
+    \begin{tabular}{c}
+      {\footnotesize \begin{tabular}{rrrr}
+        Me.ae & Ra.ra & Mi.po & Ar.at \\
+        \hline
+        108 & 0 & 325 & 0 \\ 
+        110 & 0 & 349 & 0 \\ 
+        788 & 0 & 6 & 0 \\ 
+        295 & 0 & 2 & 0 \\ 
+        13 & 2 & 240 & 0 \\
+        \vdots 
+      \end{tabular}} 
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth} 
+    \begin{tabular}{c}
+      \includegraphics[width=.3\textwidth]{\fignoisynetdata/BarentsFish-GhatNone.pdf}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth} 
+    \begin{tabular}{c}
+      \includegraphics[width=.3\textwidth]{\fignoisynetdata/BarentsFish-GhatNoneSBM.pdf}
+    \end{tabular}
+  \end{tabular}
+
+  \bigskip 
+  \paragraph{Problem:} 
+  \begin{itemize}
+   \item The uncertainty of network inference (step 1) 
+   \item is not accounted for in the topological analysis (step 2)
+  \end{itemize}
+
+  \bigskip 
+  \paragraph{Approach:} 
+  \begin{itemize}
+   \item Most network inference methods provide a 'score' for each edge
+   \item Directly model the distribution of these scores (provided by one method of more) assuming that the network arise, say, from a stochastic blockmodel
+  \end{itemize}
+
+}
+
+%==================================================================
+\frame{\frametitle{Next}
+
+  \paragraph{R. Momal's PhD.} 
+  \begin{itemize}
+   \item Network inference including a missing actor 
+  \end{itemize}
+  
+  \bigskip \bigskip
+  \paragraph{Post-doc (A. Hisi).}
+  \begin{itemize}
+   \item Dynamic network inference based on static data
+  \end{itemize}
+  
+  \bigskip \bigskip
+  \paragraph{M2 internship (T. Le Minh).} With F. Massol
+  \begin{itemize}
+   \item Analysis and comparison of mutualistic networks (ARSENIC data)
+  \end{itemize}
+  
+}
+
+%==================================================================
+%==================================================================
+\backupbegin
+
+%====================================================================
+\frame{} 
+
+%====================================================================
+\frame{\frametitle{Network inference: Barents fish} 
+
+  \begin{center}
+  \begin{tabular}{lccc}
+    & no covariate & \textcolor{blue}{temp. \& depth} & \textcolor{red}{all covariates} \\
+    \hline
+    \rotatebox{90}{$\qquad\quad\lambda=.20$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_full60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_full60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_full60edges} 
+    \vspace{-0.05\textheight} \\ \hline
+    %
+    \rotatebox{90}{$\qquad\quad\lambda=.28$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_sel60edges} & \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_sel60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_sel60edges} 
+    \vspace{-0.05\textheight} \\ \hline
+    %
+    \rotatebox{90}{$\qquad\quad\lambda=.84$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_null60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_null60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_density} 
+%     \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_null60edges}  
+  \end{tabular}
+  \end{center}
+}
+
+%==================================================================
+\frame{\frametitle{A pictural view}
+
+  \begin{overprint}
+  \onslide<1>\paragraph{Conceptual (generative) model:} 
+  \onslide<2>\paragraph{Pipe-line:}
+  \onslide<3>\paragraph{Actual pipe-line:}
+  \onslide<4>\paragraph{Our aim:}
+  \end{overprint}
+
+  \bigskip
+  \begin{tabular}{ccc}
+    \begin{tabular}{|c|}
+      \hline
+      Node membership $Z$ \\
+      \hline
+      \includegraphics[width=.25\textwidth]{\fignet/FigNoisyNet-NodesGroup} \\
+      \hline
+    \end{tabular}
+    & \onslide+<1>{\Huge \rotatebox{0}{\color{red}\MVRightarrow}} \onslide+<2-3>{\Huge \rotatebox{180}{\color{red}\MVRightarrow}} & 
+    \begin{tabular}{|c|}
+      \hline
+      Graphical model $G$ \\
+      \hline
+      \includegraphics[width=.25\textwidth]{\fignet/FigNoisyNet-Graph} \\
+      \hline
+    \end{tabular} 
+    \\ 
+    & & \\
+    \onslide+<4>{\rotatebox{90}{\Huge \color{red}\MVRightarrow}} 
+    & \onslide+<3>{\rotatebox{45}{\Huge \color{red}\MVRightarrow}}
+    & \onslide+<1>{\Huge \rotatebox{270}{\color{red}\MVRightarrow}} \onslide+<2>{\Huge \rotatebox{90}{\color{red}\MVRightarrow}} \\
+    & & \\
+    \begin{tabular}{|c|}
+      \hline
+      Edge scores $S$ \\
+      \hline
+      \scriptsize{\tt \begin{tabular}{lrrrrr}
+        & sp1 & sp2 & sp3 & sp4 & sp5 \\ 
+        sp1 & - & 1.5 & 0.2 & 17.7 & 0.1 \\ 
+        sp3 &  & - & 26.9 & 8.9 & 1.4 \\ 
+        sp3 &  &  & - & 1.3 & 5.2 \\ 
+        sp4 &  &  &  & - & 10.6 \\ 
+        sp5 &  &  &  &  & - \\
+        \vdots 
+      \end{tabular} } \\
+      \hline
+    \end{tabular}
+    & \onslide+<1>{\rotatebox{180}{\Huge \color{red}\MVRightarrow}} \onslide+<3-4>{\rotatebox{180}{\Huge \color{red}\MVRightarrow}} & 
+    \begin{tabular}{|c|}
+      \hline
+      Observed data $Y$ \\ 
+      \hline
+      \scriptsize{\tt \begin{tabular}{lrrrrr}
+        & sp1 & sp2 & sp3 & sp4 & sp5 \\ 
+        site1 & 0 & 2 & 8 & 2 & 0 \\ 
+        site2 & 3 & 0 & 9 & 0 & 1 \\ 
+        site3 & 1 & 5 & 15 & 0 & 3 \\ 
+        site4 & 4 & 1 & 16 & 1 & 2 \\ 
+        site5 & 1 & 3 & 104 & 0 & 4 \\ 
+        site6 & 1 & 0 & 10 & 1 & 3 \\
+        \vdots
+      \end{tabular} } \\
+      \hline
+    \end{tabular} 
+  \end{tabular}
+  }
+  
+\backupend
+
+%==================================================================
+%==================================================================
+\end{document}
+%==================================================================
+%==================================================================
+
+\begin{tabular}{ll}
+  \begin{tabular}{p{.45\textwidth}}
+  \end{tabular}
+  &
+  \begin{tabular}{p{.45\textwidth}}
+  \end{tabular} 
+\end{tabular}

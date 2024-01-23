@@ -1,0 +1,113 @@
+\documentclass{llncs}
+%\usepackage{makeidx}  % allows for indexgeneration
+\usepackage{graphicx,graphics,color, epsfig}
+\usepackage{amsfonts,amssymb,amsmath}
+\usepackage{latexsym}
+\usepackage[latin1]{inputenc}  % accents 8 bits dans le source
+\usepackage[T1]{fontenc}       % accents dans le DVI
+\usepackage[english]{babel}
+
+\setlength{\textheight}{210mm} 
+\setlength{\textwidth}{125mm} 
+\setlength{\footskip}{3cm}
+
+
+\newcommand{\replace}[2]{\textcolor{red}{{#1}} \textcolor{blue}{#2}}
+
+\begin{document}
+\frontmatter          % for the preliminaries
+\pagestyle{headings}  % switches on printing of running heads
+%\addtocmark{Hamiltonian Mechanics} % additional mark in the TOC
+
+\title{ChIPmix : Mixture model of regressions for ChIP-chip experiment analysis}
+\titlerunning{ChIP-chip analysis} \author{Caroline B\'erard\inst{1,2} \and Marie-Laure 
+Martin-Magniette\inst{1,2}\and Tristan Mary-Huard\inst{1} \and St\'ephane Robin\inst{1}}
+
+\institute{UMR AgroParisTech/INRA MIA 518\\ 16 rue Claude Bernard
+75231 Paris Cedex 05, France
+\\
+\and URGV UMR INRA/CNRS/UEVE\\ 2 rue Gaston Cr\'emieux, CP5708,
+91057, Evry Cedex, France} 
+
+\maketitle              % typeset the title of the contribution
+
+
+\section{Introduction}
+
+Chromatin immunoprecipitation on chip (ChIP on chip) is a well-established procedure
+used to investigate proteins associated with DNA by hybridization to microarray. 
+In a two-color ChIP-chip experiment, two samples are compared: 
+DNA fragments crosslinked to a protein of interest (IP), and genomic DNA (Input). 
+The two samples are differentially labeled and then co-hybridized on a single array.
+The goal is then to identify actual binding targets of the protein of
+interest, i.e. probes whose IP intensity is significantly larger
+than the Input intensity. {\par}
+Recently, two strategies have been widely applied for the detection of
+enriched DNA regions. The first strategy takes advantage of the
+spatial structure of the data (probes are positioned all along
+the genome).
+Alternatively, the second strategy is to consider that the whole
+population of probes can be divided into two components: the
+population of IP-enriched genomic fragments, and the population of
+genomic DNA that is not IP enriched. \\
+In this work, we propose a new method to analyse ChIP-chip data based
+on mixture model of regressions.  This framework allows us to well
+characterize the IP-Input relationship, and to provide a statistical
+procedure to control the number of probes wrongly declared enriched.
+The program is available at : \\
+$http://www.inapg.inra.fr/ens\_rech/maths/outil.html$
+
+\section{Statistical framework}\label{methodo}
+
+
+Let $(x_i,Y_i)$ be the Input and IP intensities of probe $i$,
+respectively. The (unknown) status of the probe is characterized
+through a label $Z_i$ which is 1 if the probe is enriched and 0 if
+it is normal (not enriched). We assume the Input-IP relationship to
+be linear whatever the population, but with different slope and
+intercept. More precisely, we have:
+\begin{eqnarray}
+Y_i &=& a_0 + b_0 x_i + \epsilon_i  \qquad \text{if } Z_i=0 \text{ (normal) } \nonumber\\
+ &=& a_1 + b_1 x_i + \epsilon_i  \qquad \text{if } Z_i=1 \text{  (enriched) } \nonumber
+\end{eqnarray}
+where $\epsilon_i$ is a Gaussian random variable with mean 0 and
+variance $\sigma^2$. 
+The marginal distribution of $Y_i$ for a given level of Input $x_i$
+is
+\begin{eqnarray}
+(1-\pi) \phi_0(Y_i | x_i) + \pi \phi_1(Y_i | x_i),
+\label{Equation:Melange} %\leadsto
+\end{eqnarray}
+where $\pi$ is the proportion of enriched probes, and
+$\phi_j(\cdot|x)$ stands for the probability density function of
+a Gaussian distribution with mean $a_j+b_j x$ and variance $\sigma^2$.
+The mixture parameters (proportion, intercepts, slopes and variance)
+are estimated using the EM algorithm. 
+The mixture model is used to classify probes as normal or enriched. To do this, we calculate
+the posterior probability of a probe to be enriched given its Input and IP intensities. 
+
+% comparaison de modèles
+%The mixture model with two linear regressions is adapted if the
+%protein under study has some targets. When the protein has no
+%target, all probes belong to the normal class. In this case a simple
+%linear regression is sufficient to fit the data. For each dataset
+%the two models  (one or two classes) are fitted and the best model
+%is selected according to the BIC criterion \cite{Schwarz78}.
+
+
+Posterior probabilities are used to classify probes into the normal
+or enriched class.
+In the hypothesis test theory, the false discovery
+control is performed by controlling the probability to reject
+wrongly the null hypothesis. We propose an analoguous concept in the
+mixture model framework. Our aim is to control the probability for a
+probe to be wrongly assigned to the enriched class. Therefore we
+control $\Pr\{\tau_{i} > s \;|\; x_i, Z_i =0\} = \alpha$ for a predefined level $\alpha$.
+
+\section{Results}\label{appli}
+
+Our method can be applied to various biological questions and is convenient for any two color chip whatever its density and the nature of the probes. The method is valid when the proportion of positive probes is expected to be large or small.
+We applied the ChIPmix method on promoter DNA methylation data in the human genome, on histone modification data in \textit{Arabidopsis thaliana} using a custom genomic tiling array of chromosome 4, and also on ChIP-chip data produced on a two-color NimbleGen array with 1132140 probes.
+ChIPmix outperforms the standard approches based on the logratio and provides promising results when we compare our results to those given by NimbleGen and ChIPOTle (two methods based on the spatial structure of the data).
+
+\end{document}

@@ -1,0 +1,590 @@
+\documentclass{bioinfo}
+\copyrightyear{2005}
+\pubyear{2005}
+\usepackage{natbib}
+
+
+
+\begin{document}
+\firstpage{1}
+
+\title[ChIPmix]{ChIPmix: Mixture model of regressions for two-color ChIP-chip analysis}
+\author[Sample \textit{et~al}]{Marie-Laure Martin-Magniette\,$^{1,2}$\footnote{to whom correspondence should be addressed}, 
+Tristan Mary-Huard\,$^{1}$,  Caroline B\'erard$^{1,2}$
+and St\'ephane Robin\,$^1$}
+
+
+
+\address{$^{1}$UMR AgroParisTech/INRA MIA 518, 16 rue Claude Bernard, 75231 Paris Cedex 05, France.\\
+$^{2}$URGV UMR INRA/CNRS/UEVE, 2 rue Gaston Cr\'emieux, CP5708, 91057, Evry Cedex, France.}
+
+\history{Received on XXXXX; revised on XXXXX; accepted on XXXXX}
+
+\editor{Associate Editor: XXXXXXX}
+
+\maketitle
+
+\begin{abstract}
+
+\section{Motivation:}
+Chromatin immunoprecipitation (ChIP) is a well-established procedure
+to investigate proteins associated with DNA. We propose a
+method called ChIPmix based on a linear regression mixture model to identify
+actual binding targets of the protein under study and we are able to
+control the proportion of false-positives. 
+
+\section{Results:}
+The efficiency of ChIPmix is
+illustrated on several datasets obtained from different organisms and hybridized
+either on tiling or promoter arrays. This validation shows that
+ChIPmix is convenient for any two-color array  whatever its density and provides promising results.
+
+\section{Availability:}
+The ChIPmix method is implemented in an R package and is available at\\
+{{www.inapg.fr/ens\_rech/maths/outil.html}}  
+
+\section{Contact:} \href{marie\_laure.martin@agroparistech.fr}{marie\_laure.martin@agroparistech.fr}
+\end{abstract}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%    Introduction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Introduction}
+Chromatin immunoprecipitation (ChIP) is a well-established procedure
+used to investigate proteins associated with DNA. ChIP on chip
+involves analysis of DNA recovered from ChIP experiments by
+hybridization to microarray. In a two-color ChIP-chip experiment,
+two samples are compared: DNA fragments crosslinked to a protein of
+interest (IP), and genomic DNA (Input). The two samples are
+differentially labeled and then co-hybridized on a single array. The
+goal is then to identify actual binding targets of the protein of
+interest, i.e. probes whose IP signal is significantly larger than
+the Input signal. {\par} Many authors have already pointed out the
+need for efficient statistical procedures to detect enriched probes
+\cite{BuckLieb04,Keles07}. Recently, two strategies have been widely
+applied for the detection of enriched DNA regions. The first
+strategy takes advantage of the spatial structure of the data. Since
+probes are positioned all along the genome, if one region is
+enriched we expect several adjacent probes to obtain high ratio
+measurements, resulting in a ``peak'' of intensity. Spatial methods
+such as sliding windows \cite{Cawley04,Keles07} or Hidden Markov
+Models \cite{JiWong05,LiMeyerLiu05} have been proposed to detect
+these peaks. Alternatively, the second strategy is to consider that
+the whole population of probes can be divided into two components:
+the population of IP-enriched genomic fragments, and the population
+of genomic DNA that is not IP enriched. Different statistical
+methods have been proposed to distinguish between the two
+populations by considering the distribution of the ratios (or their
+associated rank). Assuming that a non negligible proportion of the
+fragments are enriched, the logratio distribution is bimodal, the
+highest mode corresponding to the enriched population. A probe is
+then declared enriched when its ratio exceeds a selected cutoff,
+which is fixed according to the data distribution \cite{BuckLieb04}.
+{\par} Importantly, both strategies assume that the logratio
+measurement is a pertinent statistical quantity to assess the probe
+status (enriched or not). This assumption is correct if the
+distribution of the ratio mostly depends on the status
+(normal/enriched) of the probe. Figure \ref{Figure:Histogramme}
+(left) shows the ideal situation described in \cite{BuckLieb04},
+where the distribution is bimodal. In many applications the
+distribution of the logratios is closer to Figure
+\ref{Figure:Histogramme} (center), and the performance of
+logratio-based methods may be poor.
+
+\begin{center}
+  Figure \ref{Figure:Histogramme} here.
+\end{center}
+
+From this observation, we argue that it is worth working directly
+with the two measurements of each probe (Input and IP) rather than
+on the logratio. In Figure \ref{Figure:Histogramme}(right), we
+observe that the relationship between the two measurements is almost
+linear. Working on logratio amounts to stating that the slope of the
+linear relationship is the same whatever the status of the probe. In
+many cases the slopes are different: Figure
+\ref{ComparaisonHistoTheoriques} (synthetic data) shows that even a
+slight difference between the two slopes may turn the distribution
+of the logratios into unimodal rather than bimodal, as observed for
+the Nimblegen slide in Figure \ref{Figure:Histogramme}.
+
+In this work, we propose a new statistical method that we call
+ChIPmix, based on a mixture model of regressions. This framework
+allows us to well characterize the IP-Input relationship, and to
+provide a statistical procedure to control the proportion of probes
+wrongly classified as enriched. The article is organized as follows.
+The statistical model and the procedure for false positive control
+are described in Section \ref{methodo}.  In Section \ref{appli}, we
+consider several large datasets obtained from different organisms
+and hybridized on different array types (tiling or promoter). We
+show that the method outperforms competing methods in terms of
+sensitivity. The main conclusions and some possible extensions are
+discussed in Section \ref{discu}.
+
+\begin{center}
+  Figure \ref{ComparaisonHistoTheoriques} here.
+\end{center}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%    Statistical framework
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Statistical framework}\label{methodo}
+\subsection{Model and inference}
+Let $(x_i,Y_i)$ be the Input and IP intensities of probe $i$,
+respectively. The  (unknown) status of the probe is characterized
+through a label $Z_i$ which is 1 if the probe is enriched and 0 if
+it is normal (not enriched). We assume the Input-IP relationship to
+be linear whatever the population, but with different slope and
+intercept. More precisely, we have:
+\begin{eqnarray}
+Y_i &=& a_0 + b_0 x_i + \epsilon_i  \qquad \text{if } Z_i=0 \text{ (normal) } \nonumber\\
+ &=& a_1 + b_1 x_i + \epsilon_i  \qquad \text{if } Z_i=1 \text{  (enriched) } \nonumber
+\end{eqnarray}
+where $\epsilon_i$ is a Gaussian random variable with mean 0 and
+variance $\sigma^2$. Such a model is named a mixture model of
+regressions.
+
+The marginal distribution of $Y_i$ for a given level of Input $x_i$
+is
+\begin{eqnarray}
+(1-\pi) \phi_0(Y_i | x_i) + \pi \phi_1(Y_i | x_i),
+\label{Equation:Melange} %\leadsto
+\end{eqnarray}
+where $\pi$ is the proportion of enriched probes, and
+$\phi_j(\cdot|x)$ stands for the probability density function (pdf) of
+a Gaussian distribution with mean $a_j+b_j x$ and variance $\sigma^2$.
+
+The mixture model is used to classify probes as normal or enriched. To do this, we calculate
+the probability of a probe to be enriched given its Input and IP intensities. This probability
+is called the \textit{posterior} probability and is defined from Equation
+(\ref{Equation:Melange}) by
+\begin{eqnarray}
+\tau_i = \Pr\{Z_i=1 \;|\; x_i,Y_i\}=\frac{\pi
+  \phi_1(Y_i |x_i)}{(1-\pi) \phi_0(Y_i|x_i) + \pi \phi_1(Y_i|x_i)}. \label{Equation:Posterior}
+\end{eqnarray}
+
+The mixture parameters (proportion, intercepts, slopes and variance)
+are estimated using the EM algorithm. The EM algorithm is dedicated
+to the class of incomplete data models where the status of the
+observations is unknown. In the E step, the posterior probability
+for each observation to belong to each class is calculated. In the M
+step, the parameters of each class are estimated using a weighted
+regression, in which the weights are given by the posterior
+probabilities. This algorithm is implemented in the Mixreg function
+of the Mixreg R package \cite{Turner00}.
+\\ The EM algorithm is known to be sensitive to initial values. To solve this difficulty initial
+values are derived from the first axis of the Principal Component
+Analysis (PCA) of the whole dataset (see \cite{Berard07} for
+details).
+
+The mixture model with two linear regressions is adapted if the
+protein under study has some targets. When the protein has no
+target, all probes belong to the normal class. In this case a simple
+linear regression is sufficient to fit the data. For each dataset
+the two models  (one or two classes) are fitted and the best model
+is selected according to the BIC criterion \cite{Schwarz78}.
+
+\subsection{False discovery control}  \label{fdc}
+Posterior probabilities are used to classify probes into the normal
+or enriched class, using the following classification rule
+$$
+{\tau}_{i} > s \qquad \Rightarrow \qquad \widehat{Z}_i=1 \text{ classified as enriched},
+$$
+where $s$ is an arbitrary  threshold that has to be fixed. In the
+context of mixture models, $s$ is usually fixed to 1/2 ({\it Maximum
+A Posteriori} rule) which implicitly means that misclassifications
+in population 0 or in population 1 have the same cost.
+
+In ChIP-chip experiments where false positives are of concern, it is
+important to control the false positive proportion and to fix $s$
+accordingly. In the hypothesis test theory, the false disovery
+control is performed by controlling the probability to reject
+wrongly the null hypothesis. We propose an analoguous concept in the
+mixture model framework. Our aim is to control the probability for a
+probe to be wrongly assigned to the enriched class. Therefore we
+want $\Pr\{\tau_{i} > s \;|\; x_i, Z_i =0\}$ to be equal to a
+predefined level $\alpha$ (see Appendix).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%    Statistical framework
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Results}\label{appli}
+\subsection{Promoter DNA methylation in the human genome}
+\cite{Schubeler07} measured DNA methylation using a NimbleGen
+microarray representing 15 609 promoter regions of the human genome.
+Each promoter region is covered by 15 probes and is classified into
+a category according to its CpG rate. We focus on the analysis of
+the class ICP (intermediate CpG promoter). Weber et al. based their
+classification on the mean logratio value for the 15 probes per
+promoter region. If this value was larger than 0.4 (threshold based
+on bisulfite sequencing), the promoter region was declared
+hypermethylated. Among the 2056 promoter regions under study, 460
+were declared hypermethylated. {\par} We applied ChIPmix to these
+data without averaging the 15 values per promoter region. The
+estimated proportion $\pi$ of enriched probes was 0.794. This is in
+keeping with a large proportion of targets expected in such
+experiments. The estimated regression slopes were
+$\widehat{b}_0=0.613$ for the normal class and $\widehat{b}_1=1.162$
+for the enriched one, which shows that the Input-Ip relations
+substantially differ between the two status. At the level
+$\alpha=0.01$, a total of 1706 promoter regions were found to have
+at least 1 probe enriched. Except for one region, all the promoter
+regions of the Weber's list have at least 1 enriched probes, and 403
+have 5 or more enriched probes. Besides, ChIPmix identified 38
+promoter regions with 9 probes or more classified as enriched that
+were not detected in \cite{Schubeler07}.
+
+\subsection{Histone modification in \textit{Arabidopsis thaliana}}
+\cite{Turck07} studied several histone modifications of
+\textit{Arabidopsis thaliana} using a custom genomic tiling array of
+chromosome 4. To declare a tile enriched, they developed a two-step
+method based on a Gaussian mixture model and a total of 2775 tiles
+were found to be marked by histone H3 tri-methylated at lysine 27
+(H3K27me3) according to their analysis.
+
+We analyzed the same dataset using ChIPmix. The estimated proportion
+and slopes were $\widehat{pi}=0.361$, $\widehat{b}_0=0.907$ and
+$\widehat{b}_1=1.167$. The tiles classified as enriched at risk
+$\alpha=0.01$ include all the tiles found by \cite{Turck07} plus
+2346 others: 1404 tiles extend the genomic region already found
+marked by H3K27me3 and 942 tiles form 62 new genomic regions. The
+difference between the two slopes enables us to better discriminate
+the two classes for high Input intensities. This may explain the
+higher number of enriched probes detected by ChIPmix.
+
+
+\subsection{NimbleGen high-density array (Histone modification H3K9me3)}
+In this last example we consider Chip-chip data produced on a
+two-color NimbleGen array of 1\;132\;140 probes. Each chromosome of
+the model plant \textit{Arabidopsis thaliana} is covered by about
+200\;000 probes. Such very high density arrays are more and more
+popular, so we need to assess the efficiency of ChIPmix on such a
+very large dataset.
+
+From a biological point of view, the same IP and Input samples were
+already hybridized on a custom genomic tilling array covering the
+chromosome 4 \cite{Turck07}. Regions identified in \cite{Turck07}
+were biologically validated and are used as true positives. In
+addition, the chloroplastic genome can be used as a negative
+control, since no histone modification target is expected in this
+region. We do not use the mitochondrial genome as a negative control
+since some regions have been duplicated in the nuclear genome.
+From a statistical point of view, we compare our
+results with those provided by the NimbleGen software and ChiPOTle method \cite{BuckNobelLieb05}. \\
+{\par} Two biological replicates are available, for which
+hybridizations were performed in dye-swap. We perform a
+normalization step to remove technical biases as well as dye bias.
+Since the Input and IP samples differ substantially, array-by-array
+normalization such as lowess cannot be applied.  We quantify biases
+by an ANOVA model \cite{Kerr02}, and remove them from the raw data.
+The IP and Input signals for each biological replicate are averaged
+on the dye-swap. Analyses per chromosome are performed on these
+normalized data .
+
+\begin{center}
+  Figure \ref{Figure:SignalMAP} here.
+\end{center}
+
+For a risk $\alpha=0.01$, a total of 30\;477 probes are detected in
+the first replicate and 27\;553 in the second. The intersection
+contains more than two thirds of the probes declared enriched in at
+least one replicate (23\;546 probes). Although ChIPmix does not take
+the spatial structure of the genome into account, enriched probes
+are clustered in genomic regions (see Figure
+\ref{Figure:SignalMAP}). These regions are rich in genes and
+corroborate the results of \cite{Turck07}, who have shown that
+H3K9me3 is actually a euchromatin mark. Moreover more than 80 \% of
+the probes classified as enriched in this experiment cover genomic
+regions already found in \cite{Turck07}.
+
+For the chloroplastic genome, the BIC criterion selects a single
+regression model. So, as expected, no enriched region is found by
+ChIPmix. In contrast, ChIPOTle (window=500 and step=100) finds 10
+peaks; with other parameters (window=200 and step=50), 16 peaks are
+detected. Nimblegen did not provide the analysis of the
+chloroplastic genome.
+
+We also compare ChIPmix to the results given by NimbleGen and
+ChIPTOle. NimbleGen software uses a permutation-based algorithm to
+find statistically significant peaks, using scaled logratio data. It
+is an example of an algorithm based on the spatial structure of the
+data. The probes declared enriched by ChIPmix include almost all of
+those found enriched by the NimbleGen software, but cover much
+larger genomic regions. Moreover ChIPmix identifies other genomic
+regions not found by the NimbleGen software (see Figure
+\ref{Figure:SignalMAP}), that are validated by a comparison with
+results of  \cite{Turck07}. ChIPmix detects 30\;477 enriched probes,
+including 24\;575 in common with \cite{Turck07}. ChIPOTle detects
+24\;357 probes (20\;866 common with \cite{Turck07}) and NimbleGen
+detects 19\;837 probes (16\;600 common with \cite{Turck07}). Among
+the three methods ChIPmix provides the closest results to the
+reference publication.
+
+\begin{center}
+  Figure \ref{Figure:Resultats} here.
+\end{center}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%    Discussion
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Discussion}\label{discu}
+We propose a statistical method based on mixture of regression to
+classify probes in ChIP-chip experiments. Our approach accounts for
+different relations between IP and Input intensity in the two
+classes of probes (enriched and normal). The ChIPmix method
+outperforms the standard approaches based on the logratio.
+
+We presented various applications each dedicated to one specific
+biological question (histone modification and DNA methylation on
+different organisms). ChIPmix can also be applied to the detection
+of transcription factor binding sites (TFBS, results not shown). The
+method is valid when the proportion of positive probes is expected
+to be large (e.g. histone modification), or small (e.g. TFBS).
+Through the examples we have shown that ChIPmix is convenient for
+any two color chip whatever its density (array size from thousands
+to hundreds of thousands of probes) and the nature of the probe
+(tiling and promoter arrays).
+
+ChIPmix does not account for the spatial structure of the data.
+While this could be seen as a drawback, we showed that enriched
+probes are clustered into genomic regions in the presented
+applications. Moreover, this may become perfectly relevant for
+specific experiments as well as RIP-chip, which investigates
+interactions between protein and RNA (see
+\cite{Schmitz-Linneweber05}) or ChIP-chip experiments performed on
+array where promoter are represented by only one probe (see project
+SAP at {\tt www.psb.ugent.be/SAP/})
+
+The only parameter of the ChIPmix method is the risk $\alpha$, which
+can be easily interpreted. In contrast, two parameters have to be
+tuned in the ChIPOTle method (window size and step). The tuning of
+this two parameters depends on both the experimental protocol and
+the array type. The results are very sensitive to this tuning.
+
+The proposed strategy can be extended in different ways. The
+proposed regression models allow us to correct the IP intensity with
+respect to the Input one. Other elements may influence the level of
+IP signal. \cite{Schubeler07} show that the CpG rate has to be taken
+into account to classify probes. The specificity of the probes
+(number of hits) may also alter the IP intensity. All this
+information can be considered as covariates and added in the model.
+This will lead to a mixture of multiple regression for which the
+statistical framework is almost the same as the one we propose.\\
+The proportion of false negative results can be controlled in the
+same way as the false discovery described in Section \ref{fdc}. This
+allows us to evaluate the sensitivity of the classification at each
+Input level. Moreover, the two criteria (false negative and false
+discovery) can be combined to derive a threshold $s$ that optimizes
+some trade-off between them.
+
+\section{Funding}
+This work was supported by the TAG ANR/Genoplante project.
+
+\section{Acknowledgements}
+The authors want to thank Vincent Colot, Alain Lecharny and Michel
+Caboche from the URGV unit for helpful discussions and advice.
+
+\section{Appendix}\label{append}
+We propose to control the probability for a normal probe $i$ to be
+wrongly assigned to the enriched class:
+\begin{equation}\label{equation}
+\Pr\{\tau_{i} > s \;|\; x_i, Z_i =0\}=\alpha.
+\end{equation}
+In practice, we fix $\alpha$ and we find the threshold $s$ depending
+on $\alpha$ and $x_i$. Using definition \ref{Equation:Posterior},
+$\Pr\{\tau_{i} > s \;|\; x_i, Z_i =0\}$ can be rewritten as
+\begin{equation*}
+\Pr\{ (1-\pi) \phi_0(Y_i|x_i) (1-s) - s \pi \phi_1(Y_i|x_i) > 0
+\;|\; x_i, Z_i =0\}.
+\end{equation*}
+Replacing the probability density functions $\phi_0(Y_i|x_i)$ and
+$\phi_1(Y_i|x_i)$ with their expression, we get Equation
+(\ref{equation}) equivalent to
+\begin{equation}\label{exp1}
+\Pr\left(2\frac{(a_0-a_1)+(b_0-b_1)x_i}{\sigma^{2}}Y_{i} +
+\gamma(s,x_i) > 0 \;|\; x_i,Z_i=0\right)=\alpha,
+\end{equation}
+where 
+\begin{eqnarray*}
+\gamma(s,x_i) &=& \frac{(a_0+b_0x_i)^{2}-(a_1+b_1x_i)^{2}}{\sigma^2} \\
+&&-2\log
+\{s(1-\pi)\} + 2\log \{(1-s)\pi\}.
+\end{eqnarray*}
+Since the status of probe $i$ is normal ($Z_i=0$), the distribution
+of $Y_i$ is a Gaussian with mean $a_0+b_0x_i$ and variance
+$\sigma^2$, and we deduce that Equation (\ref{exp1}) is equivalent
+to solve
+$$\gamma(s, x_i) = \frac{2(a_0-a_1+(b_0-b_1)x_i)}{\sigma} \left\{u_{1-\alpha} + \frac{(a_0+b_0x_i)}{\sigma}\right\},$$  where
+$u_{1-\alpha}$ is the  $(1-\alpha)$-quantile  of Gaussian with mean
+0 and variance 1.
+
+Using the definition of $\gamma(s, x_i)$, the expression of
+threshold $s$ is given by
+$$ s = \frac{\exp^{\lambda}}{1+\exp^{\lambda}},$$
+where
+\begin{eqnarray*}
+\lambda &=& \left(\frac{a_1-a_0+(b_1-b_0)x_i}{\sigma}\right)
+\left(u_{1-\alpha} - \frac{a_1-a_0+(b_1-b_0)x_i}{2\sigma}\right)\\ 
+&&- \log\left(\frac{1-\pi}{\pi}\right)\,\cdot
+\end{eqnarray*}
+
+\bibliographystyle{natbib}
+\begin{thebibliography}{}
+\bibitem{Berard07}
+C.~Berard.
+\newblock Analyse des donn\'ees tiling array issues de la technologie
+  nimblegen.
+\newblock Master's thesis, Universit\'e Paris-Sud 11 / AgroParisTech, 2007.
+
+\bibitem{BuckLieb04}
+M.J. Buck and J.D. Lieb.
+\newblock Chip-chip: considerations for the design, analysis, and application
+  of genome-wide chromatin immunoprecipitation experiments.
+\newblock {\em Genomics}, 83(3):349--360, 2004.
+
+\bibitem{BuckNobelLieb05}
+M.J. Buck, A.B. Nobel, and J.D. Lieb.
+\newblock Ch{IPOT}le: a user-friendly tool for the analysis of {C}h{IP}-chip
+  data.
+\newblock {\em Genome Biol.}, 6(11), 2005.
+
+\bibitem{Cawley04}
+S.~Cawley, S.~Bekiranov, H.~Ng, and et~al.
+\newblock Unbiased mapping of transcription factor binding sites along human
+  chromosomes 21 and 22 points to widespread regulation of noncoding rnas.
+\newblock {\em Cell}, 116(4):499--509, 2004.
+
+\bibitem{JiWong05}
+H.~Ji and W.H. Wong.
+\newblock Tilemap: create chromosomal map of tiling array hybridizations.
+\newblock {\em Bioinformatics}, 21(18):3629--3636, 2005.
+
+\bibitem{Keles07}
+S.~Keles.
+\newblock Mixture modeling for genome-wide localization of transcription
+  factors.
+\newblock {\em Biometrics}, 63(1):10–--21, 2007.
+
+\bibitem{Kerr02}
+M.~K. Kerr, C.~A. Afshari, L.~Bennett, P.~Bushel, J.~Martinez, N.~J. Walker,
+  and G.~A. Churchill.
+\newblock Statistical analysis of a gene expression microarray experiment with
+  replication.
+\newblock {\em Statistica Sinica}, 12:203--217, 2002.
+
+\bibitem{LiMeyerLiu05}
+W.~Li, C.A. Meyer, and X.S. Liu.
+\newblock A hidden markov model for analyzing chip-chip experiments on genome
+  tiling arrays and its application to p53 binding sequences.
+\newblock {\em Bioinformatics}, 21:i274--i282, 2005.
+
+\bibitem{Schubeler07}
+Weber M., I.~Hellmann, M.B. Stadler, Svante-P. Ramos, L., M.~Rebhan, and
+  D.~Schubeler.
+\newblock Distribution, silencing potential and evolutionary impact of promoter
+  dna methylation in the human genome.
+\newblock {\em Nature Genetics}, 39(4):457--466, 2007.
+
+\bibitem{Schmitz-Linneweber05}
+C.~Schmitz-Linneweber, R.~Williams-Carrier, and A.~Barkan.
+\newblock Rna immunoprecipitation and microarray analysis show a chloroplast
+  pentatricopeptide repeat protein to be associated with the 5' region of mrnas
+  whose translation it activates.
+\newblock {\em Plant Cell}, 17::2791--2804, 2005.
+
+\bibitem{Schwarz78}
+G.~Schwarz.
+\newblock Estimating the dimension of a model.
+\newblock 6:461--464, 1978.
+
+\bibitem{Turck07}
+F.~Turck, F.~Roudier, S.~Farrona, M.-L. Martin-Magniette, and et~al.
+\newblock Arabidopsis tfl2/lhp1 specifically associates with genes marked by
+  trimethylation of histone h3 lysine 27.
+\newblock {\em PLoS Genet.v}, 3(6), 2007.
+
+\bibitem{Turner00}
+T.~R. Turner.
+\newblock Estimating the rate of spread of a viral infection of potato plants
+  via mixtures of regressions.
+\newblock {\em Appl. Statist.}, 49(3):371--384, 2000.
+
+\end{thebibliography}
+
+\newpage
+
+\begin{figure}
+\begin{center}
+%\hspace{-2cm}
+\begin{onecolumn}
+\begin{tabular}{ccc}
+\hspace{-0.5cm}\includegraphics[scale=0.28]{BelleDistribution.ps} &
+\hspace{-0.1cm}\includegraphics[scale=0.23]{HistogrammePourriNimblegen.ps}
+& \hspace{-0.1cm}\includegraphics[scale=0.23]{Nuage.ps}
+\end{tabular}
+\end{onecolumn}
+\end{center}
+\caption{\textbf{Left:} Ideal logratio distribution with two
+distinct peaks. \textbf{Center:} Logratio distribution on a real
+example (Nimblegen array). \textbf{Right:} Associated plot of IP
+versus Input (Nimblegen array). \label{Figure:Histogramme}}
+\end{figure}
+
+%\clearpage
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.7]{ComparaisonHistoTheoriques.ps}
+\end{center}
+\caption{Synthetic data. \textbf{Top:} Two populations with linear
+relationship and equal slopes. The corresponding logratio histogram
+is bimodal. \textbf{Bottom:} Two populations with linear
+relationship but different slopes. The corresponding logratio
+histogram is unimodal. \label{ComparaisonHistoTheoriques}}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\begin{onecolumn}
+\includegraphics[scale=0.3]{8516_annotation.ps}
+\end{onecolumn}
+\end{center}
+\caption{Genomic region of chromosome 4 of \textit{Arabidopsis
+thaliana} visualized with SignalMap$^{TM}$. In the first line
+annotation is given, the purple boxes are the genes, the second line
+shows the genomic regions found by the NimbleGen software. The blue
+bars are not enriched and the others bars are colored according to a
+FDR value and are all enriched. The third line gives the probes
+declared enriched by ChIPmix with $\alpha=0.01$. The fourth line
+gives the results of ChIPOTle (window=500, step=100).
+\label{Figure:SignalMAP}}
+\end{figure}
+
+\begin{figure}
+  \begin{center}
+    \begin{tabular}{cc}
+       \includegraphics[scale=0.5]{Graph_regression_Rep1_chr4bis.ps}%, angle=90
+    \end{tabular}
+  \end{center}
+\caption{IP intensities vs Input Intensities colored according to
+the posterior probabilities $\hat{\tau}_i$. Colors change every 20
+\% (blue: $\hat{\tau}_i<20\%$, red: $\hat{\tau}_i>80\%$). The blue
+and red lines are the two estimated linear regressions of the
+mixture. \label{Figure:Resultats}}
+\end{figure}
+\end{document}
+
+
+
+

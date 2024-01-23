@@ -1,0 +1,158 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+\usepackage{xspace}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\GMSBM}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/1903-SemStat/}
+\newcommand{\figeconet}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/1904-EcoNet-Lyon/Figs}
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
+\newcommand{\figbayes}{/home/robin/RECHERCHE/BAYES/EXPOSES/FIGURES}
+\newcommand{\figCMR}{/home/robin/Bureau/RECHERCHE/ECOLOGIE/CountPCA/sparsepca/Article/Network_JCGS/trunk/figs}
+% \newcommand{\figtree}{/home/robin/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Data/Tree/Fig}
+
+\renewcommand{\nodesize}{1.75em}
+\renewcommand{\edgeunit}{2.25*\nodesize}
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+\title[NGB]{ANR NGB: MIA-Paris}
+
+\author[MIA-Paris]{Julie Aubert, Julien Chiquet, Sophie Donnet, Pierre Barbillon, Sarah Ouadah, Stéphane Robin}
+
+\date[NGB, Jun'22]{ANR NGB, meeting June 2022}
+
+\maketitle
+
+%====================================================================
+\frame{\frametitle{Outline} \tableofcontents}
+
+%====================================================================
+\section{Which offsets for network inference model? + visualisation (JA)}
+%====================================================================
+\frame{\frametitle{Which offsets for network inference model?}
+}
+
+%====================================================================
+\section{Co-clustering OTUs and Soil samples (PB)}
+%====================================================================
+\frame{\frametitle{Co-clustering OTUs and Soil samples}
+}
+
+%====================================================================
+\section{From JSDM to Lotka-Volterra (SR)}
+\frame{\frametitle{From JSDM to Lotka-Volterra (1/2)}
+
+  \paragraph{Classical deterministic Lotka-Volterra model.} 
+  $p$ species ($j = 1 \dots p$), $y_j(t) =$ abundance of species $j$ at time $t$:
+  $$
+  \dot y_k(t) = \sum_{j=1}^p a_{jk} y_j(t) y_k(t) + b_k(t) y_k(t).
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Dynamic stochastic version \refer{May72,IDC03}.} 
+  $Y_t = (Y_{t1}, \dots Y_{tp})$ abundance vector time $t$, multivariate auto-regressive (MAR) model: 
+  \begin{equation*}
+    \left\{ \begin{array}{lcl}
+      Y_{t+1, k} = \sum_j a_{jk} Y_{t, j} + E_{t+1, k} 
+      & \qquad & E \sim  \Ncal_p(0, D) \\ 
+      ~ \\
+      \emphase{Y_{t+1} = A \; Y_t + E_t}
+      & \qquad & 
+      \end{array}\right.
+  \end{equation*}
+  \emphase{$A =$ 'interaction matrix'}, $D =$ residual variance matrix (diagonal).
+
+  \bigskip \bigskip \pause
+  \paragraph{Stationary regime.}$Y_\infty =$ stationary regime
+   $$
+   \Sigma = \Var(Y_\infty )
+   \qquad \text{satisfies} \qquad 
+   \Sigma = A \Sigma A^\intercal + D
+   $$
+  
+}
+
+%====================================================================
+\frame{\frametitle{From JSDM to Lotka-Volterra (2/2)}
+
+  \paragraph{JSDM and 'static data'.} ($\neq$ 'dynamic data': \refer{BPR21})
+  \begin{itemize}
+    \item $n$ independent sites ($i = 1 \dots n$) in stationary regime
+    \item $Y_ \infty^i =$ abundance vector in site $i$ (+ covariate)
+    \item JSDM: Estimates of several parameters, including $\Sigma$.
+  \end{itemize}
+  \ra Can we retrieve $A$ and $D$ ? Or at least the support of $A$ ?
+  
+  \bigskip 
+  \paragraph{Simplified model.} 
+  $\{Y^i\}{i \leq i \leq n}$ iid $\sim \Ncal(0, \Sigma)$, with $\Sigma = A \Sigma A^\intercal + D$.
+  
+  \bigskip \bigskip \pause
+  \paragraph{What we know.}
+  \begin{itemize}
+    \item Obviously, $A$ and $-A$ yields the same $\Sigma$.
+    \item Necessary condition for identifiability: $p \geq 5$ + not more than $p(p-3)/2$ non zero off-diagonal terms (\refer{YYR19}).
+  \end{itemize}
+
+  \bigskip \pause
+  \paragraph{What we did.} Post-doc A. Hisi
+  \begin{itemize}
+    \item Penalized least-square (to enforce sparsity of $A$).
+    \item Does not recover the support of $A$, even for small $p$ and large $n$.
+    \item On-going work with colleagues from the EcoNet ANR project.
+  \end{itemize}
+
+}
+
+
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References}
+  {%\footnotesize
+   \footnotesize
+   \bibliography{/home/robin/Biblio/BibGene}
+%    \bibliographystyle{/home/robin/LATEX/Biblio/astats}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

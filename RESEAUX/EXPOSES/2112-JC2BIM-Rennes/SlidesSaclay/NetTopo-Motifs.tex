@@ -1,0 +1,87 @@
+%==================================================================
+%==================================================================
+\subsection*{Motif in bipartite networks}
+%==================================================================
+\frame{ \frametitle{Motif in bipartite networks}
+
+  \paragraph{Aim:} understanding the network organization at a local scale
+  
+  \bigskip \pause
+  \paragraph{Network motifs =} 'building block' of the network \refer{SCB18}
+  $$
+  \includegraphics[width=.6\textwidth, trim=0 0 0 190, clip]{\figeco/SCB19-Oikos-Fig3}
+  $$
+  \pause
+  \begin{itemize}
+   \item Top nodes = insects, bottom nodes = plants
+   \item Motif 38: 1 generalist insect + 1 specialist
+   \item Motif 43: 2 generalist insects, interacting with the same plants
+  \end{itemize}
+ 
+}
+
+%==================================================================
+\frame{ \frametitle{A null model}
+
+  \newcommand{\obs}{\text{obs}}
+
+  \paragraph{Question:} is motif $m$ unexpectedly frequent (or rare) in a given observed network?
+  $$
+  N_m(Y_{\obs}) = \text{ number of occurrence of $m$ in the network $Y_{\obs}$}
+  $$
+  \ra \url{bmotif} R package 
+  
+  \bigskip \bigskip \pause 
+  \paragraph{Significance:} define a null model to evaluate
+  $$
+  \text{p-value } = P_0(N_m(Y) \geq N_m(Y_{\obs}))
+  $$
+
+  \bigskip \pause 
+  \paragraph{A null model:} bipartite configuration model (keeping top and bottom degrees fixed)
+  \begin{align*}
+    \{Y^b\}_{b = 1 \dots B} \text{ iid } & \sim \text{ bipartite configuration model} \\
+    N_m(Y^b) & = \text{ number of occurrence of $m$ in $Y^b$} \\
+    \text{p-value } & = \frac1B \# \{b: N_m(Y^b) \geq N_m(Y_{\obs})\}
+  \end{align*}
+  \ra Need to \url{bmotif} $B$ times
+}
+
+%==================================================================
+\frame{ \frametitle{Another null model}
+
+  \paragraph{Bipartite EDD.} Exhaustive statistics = frequency of star motifs:
+  $$
+  \phi_1, \phi_2, \phi_3, \phi_4, \phi_7, \phi_8, \phi_{17}, ...
+  $$
+  
+  \bigskip \pause
+  \begin{tabular}{p{.45\textwidth}p{.45\textwidth}}
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Occurrence probabilities} under EDD
+      $$
+      \phi_{38} = \phi_{17} \phi_3, 
+      \qquad 
+      \phi_{43} = \frac{\phi_{17}^2 \phi_3^4}{\phi_1^8} 
+      $$
+      
+      \bigskip \pause
+      \paragraph{Null moments}
+      $$
+      \Esp_0 N_m(Y), \qquad \Var_0 N_m(Y), 
+      $$
+      \qquad \quad $\Cov_0(N_m(Y), N_{m'}(Y))$
+    \end{tabular}
+    &
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[width=.5\textwidth, trim=30 220 20 0, clip]{\figeco/SCB19-Oikos-Fig3}
+    \end{tabular} 
+  \end{tabular} 
+  
+  \bigskip \bigskip 
+  \ra No need to resample, only need to count all motifs once
+
+}
+

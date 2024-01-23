@@ -1,0 +1,16 @@
+  \begin{tikzpicture}
+  \node[observed] (y1)    at (0*\edgeunit, 0*\edgeunit) {$Y_1$};
+  \node[nocircle] (y2)       at (1*\edgeunit, 0*\edgeunit) {$\dots$};
+  \node[observed] (ytm1)  at (2*\edgeunit, 0*\edgeunit) {$Y_{t-1}$};
+  \node[observed] (yt)    at (3*\edgeunit, 0*\edgeunit) {$Y_t$};
+  \node[observed] (ytp1)  at (4*\edgeunit, 0*\edgeunit) {$Y_{t+1}$};
+  \node[nocircle] (ynm1)     at (5*\edgeunit, 0*\edgeunit) {$\dots$};
+  \node[observed] (yn)    at (6*\edgeunit, 0*\edgeunit) {$Y_n$};
+  
+  \draw[arrow] (y1)   to (y2);  
+  \draw[arrow] (y2)   to (ytm1);  
+  \draw[arrow] (ytm1) to (yt);  
+  \draw[arrow] (yt)   to (ytp1);  
+  \draw[arrow] (ytp1) to (ynm1);  
+  \draw[arrow] (ynm1) to (yn);  
+  \end{tikzpicture}

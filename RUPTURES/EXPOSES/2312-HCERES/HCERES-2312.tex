@@ -1,0 +1,505 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+% \usepackage[dvipsnames]{xcolor}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd, mathabx}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\dN}{\Delta N}
+\newcommand{\dtau}{\Delta \tau}
+
+% Directory
+\newcommand{\figcp}{/home/robin/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title[Segmentation of point processes]{Segmentation (and classification) of point processes}
+
+\author[S. Robin]{S. Robin \\ \medskip
+joint work with C. Dion-Blanc \& E. Lebarbier and A. Bonnet \& C. Matias}
+
+\institute[]{Sorbonne université}
+
+\date[HCERES]{HCERES, LPSM, Dec. 2023}
+
+%====================================================================
+%====================================================================
+\maketitle
+
+% %====================================================================
+% %====================================================================
+% \section{Change-point detection}
+%====================================================================
+\frame{\frametitle{Change-point detection} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<1->{\paragraph{Point process on $t \in [0, 1]$.} \\
+      Event times:
+      $$
+      0 < T_1 < \dots T_i < \dots T_n < 1;
+      $$ 
+      Counting process:
+      $$
+      N(t) = \sum_{i=1}^n \Ibb\{T_i \leq t\}.
+      $$}      
+      
+      \bigskip \pause
+      \onslide+<3->{\paragraph{Change-point detection.} \\
+      Look for times
+      $$
+      0 < \tau_1 < \dots < \tau_{K-1} < 1
+      $$
+      where the distribution of $N$ changes abruptly.}
+
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+          \onslide<2>
+          \paragraph{Bat cries} (night of the 17 jul. 2019)\footnote{source: Vigie-Chiro program, CESCO-MNHN} \\
+          \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/FigSegPP-Chiroptere-seq2295-day2019-07-17-Path}
+          \onslide<3>
+          \paragraph{Bat cries} (night of the 17 jul. 2019)\footnote{source: Vigie-Chiro program, CESCO-MNHN} \\
+          \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/FigSegPP-Chiroptere-seq2295-day2019-07-17-Seg}
+          \onslide<4>
+          \paragraph{Kilauea's eruptions} (from 1750 to 1984)\footnote{source: \refer{HoB17}} \\
+          \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/FigSegPP-Kilauea-Path}
+          \onslide<5>
+          \paragraph{Kilauea's eruptions} (from 1750 to 1984)\footnote{source: \refer{HoB17}}  \\
+          \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/FigSegPP-Kilauea-Seg}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Change-point detection} 
+
+  \paragraph{Three typical steps.}
+  \begin{enumerate}
+    \setlength{\itemsep}{1\baselineskip}
+    \item Propose a set of reasonably realistic models;
+    \item Design an (efficient) algorithm to get the parameter estimates;
+    \item Choose among the models.
+  \end{enumerate}
+
+  \bigskip \bigskip \pause
+  \paragraph{Example.}
+  \begin{enumerate}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item $N(t)$ is a Poisson process with piece-wise constant intensity function $\lambda$:
+    $$
+    \lambda(t) = \lambda_k \qquad \text{if} \quad \tau_{k-1} \leq t < \tau_k.
+    $$
+    Parameters: change-points $\tau =  (\tau_k)_{1 \leq k \leq K-1}$ and intensities $\lambda = (\lambda_k)_{1 \leq k \leq K}$.
+    \item For a given number of segments $K$ find 
+    $$
+    (\widehat{\lambda}, \widehat{\tau}) = \arg\min_{\tau, \lambda} C_K(N; \tau, \lambda), 
+    \qquad \text{e.g.} \quad 
+    C_K(N; \tau, \lambda) = - \log p_{K, \tau, \lambda}(N);
+    $$
+    \item Choose the number of segments $K$.
+  \end{enumerate}
+
+}
+
+%====================================================================
+\frame{\frametitle{Change-point detection} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.56\textwidth}}
+      \paragraph{Discrete-time.} 
+      \begin{itemize}
+        \setlength{\itemsep}{1\baselineskip}
+        \item Data = $\{Y_t\}_{t = 1, \dots n}$ (independent); 
+        \item Change-points: $\tau \in \Tcal \subset \llbracket n-1 \rrbracket^{K-1}$;
+        \item $\tau_{k-1} < t \leq \tau_k$: $Y_t \sim \Ncal(\mu_k, 1)$.
+      \end{itemize}
+      
+      \bigskip
+      Parameters:
+      $\mu_k$ continuous, $\tau_k$ discrete.
+      
+    \end{tabular}
+    & 
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[width=.45\textwidth, trim=0 10 0 10, clip=]{\figcp/FigSeg-HCERES-discrete-seg}
+    \end{tabular}
+  \end{tabular}
+  
+  \pause
+  $\Tcal =$ 'segmentation space':
+  $$
+  \Tcal = \{\tau \in \llbracket n-1 \rrbracket^{K-1}: 
+  1 \leq \tau_1 < \dots \tau_{K-1} < n\}, 
+  \qquad
+  \text{card}(\Tcal) = {{n-1}\choose{K-1}}.
+  $$
+  \emphase{Dynamic programming (DP)} recovers the optimal $\widehat{\tau}_k$ in $O(n^2)$ (or less), as long as the contrast (e.g. neg-log-likelihood) is additive \refer{AuL89}.
+  
+}
+
+% %====================================================================
+% %====================================================================
+% \section{Change-point detection in a Poisson process}
+%====================================================================
+\frame{\frametitle{Change-point detection in a Poisson process} 
+
+  \bigskip
+  \paragraph{Model.} Poisson process with piece-wise constant intensity.
+
+  \bigskip
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Independence of disjoint segments.} \\
+      ~ \\
+      Classical contrasts (negative log-likelihood, least squares, \dots) are additive:
+      $$
+      C_K(N; \tau, \lambda) = \sum_{k=1}^K c(N[\tau_{k-1}, \tau_k], \lambda_k).
+      $$
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/FigSegPP-Kilauea-Seg}
+    \end{tabular}
+  \end{tabular}
+
+  \pause
+  \paragraph{Segmentation space.} In continuous time, 
+  $$
+  \Tcal = \{\tau \in [0, 1]^{K-1}: 0 < \tau_1 < \dots \tau_{K-1} < 1\}
+  $$
+  so DP does not apply
+}
+
+%====================================================================
+\frame{\frametitle{Change-point detection in a Poisson process} 
+
+  \bigskip
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \refer{DLR23}: $\Tcal$ can be partitioned according to the number of events in each segment:
+      $$
+      \Tcal = \bigcup_\nu \Tcal_\nu,
+      $$
+      where
+      $$
+      \Tcal_\nu = \{\tau \in [0, 1]^{K-1}: \forall k, N(\tau_k) - N(\tau_{k-1}) = \nu_k\}
+      $$
+      
+      \pause \bigskip \bigskip 
+      \paragraph{Right:} $K = 3$, $\tau = (\tau_1, \tau_2)$, $N(T) = 10$.
+      \bigskip ~ 
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.45\textwidth, trim=0 0 20 50, clip=]{\figcp/FigSegPPP-simul-n10-K1-seed1-Contrast}
+    \end{tabular}
+  \end{tabular}
+
+  \pause 
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}
+    \item Classical contrasts are {\sl concave} wrt to $\tau$ in each $\Tcal_\nu$;
+    \item Optimal change points are located at event times:
+    $$
+    \widehat{\tau} \in \{T_1, T_2^-, T_2, \dots T_{N(T)}^-\}^{K-1};
+    $$
+    \item $\widehat{\tau}$ can be recovered by DP in $O(N(T)^2)$.
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Change-point detection in a Poisson process: Model selection} 
+
+  \paragraph{Thinning property of Poisson processes.} 
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{itemize}
+        \setlength{\itemsep}{1.1\baselineskip}
+        \item $\{N(t)\} \sim PP(\lambda(t))$
+        \item \textcolor{blue}{Sample event times} (with prob. $v$) 
+        \item \textcolor{red}{Store the remaining events}
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.4\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \includegraphics[width=.5\textwidth, trim=50 225 0 225, clip=]{\figcp/FigSegPP-ThiningOriginal.png}
+        \onslide<2->
+        \includegraphics[width=.5\textwidth, trim=50 225 0 225, clip=]{\figcp/FigSegPP-ThiningSampling.png}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  \pause
+  $
+  ~ \quad 
+  \textcolor{blue}{\{N^L(t)\}} \sim PP(v\lambda(t)), \qquad
+  \textcolor{red}{\{N^T(t)\}} \sim PP((1-v)\lambda(t)), \qquad
+  \textcolor{blue}{\{N^L(t)\}} \perp \textcolor{red}{\{N^T(t)\}}
+  $
+  
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Consequence.} If $\lambda(t)$ piece-wise constant with change-points $\tau = (\tau_k)$ and intensities $\lambda = (\lambda_k)$, then \\ 
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}
+    \item $\textcolor{blue}{\lambda^L(t)}$ piece-wise constant with change-points $(\textcolor{blue}{\tau_k})$ and intensities $(\textcolor{blue}{v \lambda_k})$, 
+    \item $\textcolor{red}{\lambda^T(t)}$ piece-wise constant with change-points $(\textcolor{red}{\tau_k})$ and intensities $(\textcolor{red}{(1-v) \lambda_k})$, 
+    \item $\{N^L(t)\}$ and $\{N^T(t)\}$ are independent.
+  \end{itemize} 
+  
+}
+
+%====================================================================
+\frame{\frametitle{Change-point detection in a Poisson process: Model selection} 
+
+  \bigskip 
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Thinning property =} \\
+      ~ \\
+      ideal setting for cross-validation, because of the independence of $\{N^L(t)\}$ and $\{N^T(t)\}$.
+
+      \bigskip \bigskip 
+      \paragraph{Model selection.} \\
+      ~ \\
+      Choose $K$ using cross-validation \refer{DLR23}.
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Kilauea's eruptions} \\
+      \includegraphics[width=.4\textwidth, trim=0 10 10 10, clip=]{\figcp/FigSegPP-Kilauea-CV-PGtrain}
+    \end{tabular}
+  \end{tabular}
+
+
+}
+
+% %====================================================================
+% %====================================================================
+% \section{Change-point detection in a Poisson process: Extensions}
+%====================================================================
+\frame{\frametitle{Change-point detection in a Poisson process: Extensions} 
+
+  \bigskip
+  \onslide+<1->{\paragraph{Marked Poisson process:} a mark $X_i$ is associated with each event time $T_i$.
+  \medskip
+  \begin{itemize}
+    \item Provided the marks are independent, with segment-dependent distributions, the whole machinery (inference + model selection) applies \refer{DLR23}.
+  \end{itemize}}
+
+  \bigskip \bigskip 
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<2->{\paragraph{Segmentation and classification.} \\
+      Cluster segments according to different underlying behaviors.}      
+
+      \bigskip 
+      \onslide+<3->{\paragraph{Reduced number $L < K$ of intensities:}
+      $$
+      \lambda_k \in \{\mu_1, \dots, \mu_L\}
+      $$
+      and $\pi_\ell = \Pr\{\lambda_k = \mu_\ell\}$.}
+      
+      \bigskip 
+      \onslide+<4>{
+      \paragraph{Estimation:} EM algorithm including DP for the estimation (M) step \refer{PRL07}.
+      ~\bigskip ~\bigskip ~\bigskip ~}
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<2>
+         \paragraph{Kilauea's eruptions}  \\
+        \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/FigSeg-HCERES-Kilauea-seg}
+        \onslide<3->
+         \paragraph{Kilauea's eruptions}  \\
+        \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/FigSeg-HCERES-Kilauea-clustSeg}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  
+}
+
+% %====================================================================
+% %====================================================================
+% \section{Segmentation and classification in a Hawkes process}
+%====================================================================
+\frame{\frametitle{Segmentation in a Hawkes process} 
+
+  \paragraph{Modeling.} Many counting processes display a self-exciting behavior (events generate --~or prevent~-- new events), which the Poisson process does not account for.
+  
+  \pause \bigskip \bigskip
+  \paragraph{Hawkes process.} Counting process $N(t)$ with intensity conditional on the past events:
+  $$
+  \lambda(t) 
+  = m + \int_0^t h(t-s) d N(s) 
+  = m + \sum_{i: T_i < t} h(t -T_i).
+  $$
+  \begin{itemize}
+    \item $m =$ baseline intensity,
+    \item $h =$ kernel, e.g. exponential: $h(u) = a e^{-bu}$.
+  \end{itemize}
+
+  \pause \bigskip \bigskip 
+  \paragraph{Change point detection in the baseline.} Change-points $0 < \tau_1 < \dots < \tau_{K-1} < 1$:
+  $$
+  \lambda(t) 
+  = m_k + \sum_{i: T_i < t} h(t -T_i), 
+  \qquad \text{if} \quad
+  \tau_{k-1} < t \leq \tau_k.
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Segmentation in a Hawkes process: Discrete time} 
+
+  \paragraph{Non-additive contrast.} Disjoint time segments are not independent, so  classical contrasts (e.g. negative log-likelihood, \dots) are not additive anymore.
+
+  \pause \bigskip \bigskip 
+  \paragraph{Discrete time Hawkes process.} Consider discrete times $t_i = i/n$ and define
+  $$
+  Y_i \sim \Pcal\left(\mu + \sum_{j \geq 1} \alpha \beta^j Y_{i-j}\right)
+  $$
+  (taking $\mu = m/n$,  $\beta = e^{-b/n}$).
+
+  \pause \bigskip \bigskip 
+  \paragraph{Makovian reformulation.} 
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}  
+    \item $\{Y_i\}_{i \geq 1}$ is not a Markov chain,
+    \item but, defining $U_1 = 0$ and
+    $$
+    U_i = \beta \left(\alpha Y_{i-1} + U_{i-1}\right),
+    \qquad \text{for} \quad i \geq 1,
+    $$
+    $\{(Y_i, U_i)\}_{i \geq 1}$ is a Markov chain.
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Segmentation and classification in a Hawkes process: Discrete time} 
+
+  \paragraph{Hidden Markov models (HMM)} provide a convenient framework for segmentation and classification.
+  
+  \pause \bigskip \bigskip
+  \paragraph{Discrete time Hawkes HMM.}   
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}  
+    \item Hidden path: $\{Z_i\}_{i \leq 1} =$ homogeneous Markov chain, with transition matrix $\pi$, 
+    \item 'Observed path': for $i \geq 1$, set $U_1 = 0$ and
+    $$
+    Y_i \sim \Pcal\left(\mu_{Z_i} + \sum_{j \geq 1} \alpha \beta^j Y_{i-j}\right), 
+    \qquad \qquad 
+    U_i = \alpha Y_{i-1} + \beta U_{i-1}.
+    $$
+  \end{itemize}
+
+  \pause \bigskip
+  \paragraph{Inference.} Regular EM algorithm for HMM.
+
+
+  \pause \bigskip \bigskip
+  \paragraph{Extensions.}
+  \begin{itemize}
+    \item Multivariate (discrete time) Hawkes process.
+    \item Applications: neuro-sciences, ecology.
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References}
+  {
+   \footnotesize
+   \bibliography{/home/robin/Biblio/BibGene}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+\backupbegin
+%====================================================================
+
+%====================================================================
+\frame{\frametitle{HMM for discrete time Hawkes process} 
+
+  \renewcommand{\nodesize}{2em}
+  \renewcommand{\edgeunit}{3*\nodesize}
+
+  \paragraph{Graphical model.} 
+  
+  \begin{center}
+  \input{DirectedGM_alpha_cst}
+  \end{center}
+}
+
+%====================================================================
+\backupend
+%====================================================================
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+  
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

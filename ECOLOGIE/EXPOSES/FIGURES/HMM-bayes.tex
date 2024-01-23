@@ -1,0 +1,23 @@
+  \begin{tikzpicture} 
+  \node[hidden] (pi) at (1.5*\edgeunit, 3*\edgeunit) {$\pi$};
+  
+  \node[hidden] (z1) at (0*\edgeunit, 2*\edgeunit) {$Z_1$};
+  \node[hidden] (z2) at (1*\edgeunit, 2*\edgeunit) {$Z_2$};
+  \node[hidden] (z3) at (2*\edgeunit, 2*\edgeunit) {$Z_3$};
+  \node[empty] (z4) at (3*\edgeunit, 2*\edgeunit) {$Z_4$};
+
+  \node[observed] (y1) at (0*\edgeunit, 1*\edgeunit) {$Y_1$};
+  \node[observed] (y2) at (1*\edgeunit, 1*\edgeunit) {$Y_2$};
+  \node[observed] (y3) at (2*\edgeunit, 1*\edgeunit) {$Y_3$};
+  \node[empty] (y4) at (3*\edgeunit, 1*\edgeunit) {$Y_4$};
+
+  \node[hidden] (mu) at (1.5*\edgeunit, 0*\edgeunit) {$\mu$};
+
+  \draw[arrow] (pi) to (z1);  \draw[arrow] (pi) to (z2);  \draw[arrow] (pi) to (z3);  
+  \draw[dashedarrow] (pi) to (z4);
+  \draw[arrow] (z1) to (z2);  \draw[arrow] (z2) to (z3);  \draw[dashedarrow] (z3) to (z4);
+  \draw[arrow] (z1) to (y1);  \draw[arrow] (z2) to (y2);  \draw[arrow] (z3) to (y3);
+  \draw[arrow] (mu) to (y1);  \draw[arrow] (mu) to (y2);  \draw[arrow] (mu) to (y3);
+  \draw[dashedarrow] (mu) to (y4);
+  \end{tikzpicture}
+  

@@ -1,0 +1,151 @@
+{document}     landscape headrulewidth 0pt pagestyle {fancy} cfoot {} rfoot {} rhead { {rotate} {90} { {-.5cm} tiny thepage } {rotate} } setcounter {page} {0} 
+
+   {Méthodes (statistiques)}  {pour l'analyse des données de microarrays} 
+
+{S. {Robin} }  robin@inapg.inra.fr 
+
+ {UMR INA-PG / ENGREF / INRA, Paris} {Mathématiques et Informatique Appliquées} 
+
+ {Journées Transcriptome & Bioinformatique, Toulouse, 30-31/03/05}  
+
+hrule 
+
+ Les données de biopuces sont chères, abondantes, variables. 
+
+ Les méthodes statistiques prennent en compte la variabilité et permettent un traitement automatisé. 
+
+ textblue {mbox {Statistique} neq mbox {Bioinformatique} }  
+
+   {Tentative de typologie des problèmes et des méthodes} 
+
+{-0.3cm} {-1.5cm} {tabular} {p {12cm} lc} {Biologique} & {Statistique} & Ici hline {Avant} & {Avant} Conception des puces & Échantillonnage & (*) Organisation des expériences & Planification & (**)  {Pendant} & {Pendant} Acquisition du signal & Analyse d'image ``Débruitage'' &   Normalisation & (**)  {Après} & {Après} Recherche de groupe de gènes & Classification non supervisée & (*) Recherche de gènes différentiellement exprimés & Tests d'hypothèses (multiples) & (**) Prédiction de classe ou de statut & Classification supervisée & (**) Prédiction d'un caractère quantitatif & Régression  {Ou encore} & {Ou encore} Puces chromosomiques & Mod. mélange, Détection de rupture  Compréhension des interactions & Inférence de réseaux {tabular} 
+
+
+
+   {Conception des puces} 
+
+ {Choix du type de séquences déposées~:} banque d'ADNc, EST, séquences synthétiques de gènes prédits, couverture ''complète'' du génome, {etc.} 
+
+ {Enjeux.}  Population des gènes visés~: puces dédiées / puces pangénomiques Spécificité du signal~: conception d'oligos spécifiques ( {sl cf. N. Raymond} ) Découverte de nouveaux gènes~: banque d'ADNc, EST / puces chromosomiques  
+
+
+
+ {Du point de vue statistique.} Problème d'échantillonnage mais  la population n'est pas bien définie (pas connue ?) le paramètre d'intérêt non plus (niveau d'expression, liste de gènes, nouveaux gènes~?)  
+
+ Pour l'instant, contribution statistique faible. 
+
+ Question cruciale pour les puces chromosomiques. 
+
+   {Organisation des expériences} 
+
+ {Objectif de la planification.} Organiser les expériences, sous contrainte des moyens disponibles, pour obtenir l'estimation la plus précise possible d'un (de quelques) paramètre(s). 
+
+Le plan d'expériences doit être conçu en fonction de la question biologique {et} du modèle statistique prévu pour l'analyse. ( {cf. M.-L. Martin-Magniette} ) 
+
+Rightarrow Il faut avoir à l'avance une idée précise du modèle statistique d'analyse. 
+
+
+
+ {Exemple~: Effet de la trisomie sur les gènes du chromosome 21} 
+
+{Objectif biologique.} Mesurer l'effet sur le niveau d'expression des gènes  de la trisomie (alpha~: prioritaire), du sexe (beta) et de l'interaction trisomie*sexe (gamma~: secondaires).  
+
+ {Moyens disponibles.}  20 patients (5 hommes trisomiques (TM), 5 femmes trisomiques F (TF), idem pour les sains)~; une quarantaine de lame de verres.  
+
+{Modèle statistique.} Pour tenir compte des corrélations entre les lames qui impliquent une même patient, on envisage une modèle linéaire mixte~:  (log)Expression = mu + A_ {patient} + alpha_ {type} + beta_ {sexe} + gamma_ {type, sexe} + E  
+
+{Hypothèse de travail.} La variance inter-patients est 2 fois supérieure à la variabilité intra-patient~: Var(A) = 2 Var(E). 
+
+{-2.2cm} {tabular} {ll} {tabular} {c} {Plan proposé.}  Var(widehat {alpha} ) parallel Var(widehat {beta} ) / 2 parallel Var(widehat {gamma} ) / 2 {tabular} & {tiny {-1cm}  {tabular} {c|ccccc|ccccc} & TM1 & TM2 & TM3 & TM4 & TM5 & TF1 & TF2 & TF3 & TF4 & TF5 hline SM1 &  + &  --&    &    &    &   +&  -- &    &    & SM2 &    &   +&  --&    &    &    &   +&  -- &    & SM3 &    &    &  + & -- &    &    &    &  + & -- & SM4 &    &    &    &  + & -- &    &    &    &  + &  -- SM5 & -- &    &    &    &  + & -- &    &    &    &   + hline SF1 &  + & -- &    &    &    &  + & -- &    &    & SF2 &    &  + & -- &    &    &    &  + & -- &    & SF3 &    &    &  + & -- &    &    &    &  + & -- & SF4 &    &    &    &  + & -- &    &    &    &  + &  -- SF5 & -- &    &    &    &  + & -- &    &    &    &   + {tabular} } {tabular} 
+
+{Rq 1~:} Les comparaisons entre individus de même type ne sont pas ``rentables''. 
+
+{Rq 2~:} Augmenter le nombre de lames n'apporterait pas grand chose, il vaudrait mieux plus de patients. 
+
+
+
+   {Normalisation} 
+
+ {Objectif curatif.} Réduire les biais (technologiques) des mesures. 
+
+ {Détection des ``biais''.}  Graphiques simples, Analyse de la variance (rightarrow quantification), Calcul d'index spécifique (biais de marquage)  
+
+ {Correction.} Quelques méthodes bien admises~:  Loess, fondée sur l'hypothèse mbox {biais de marquage} = f(mbox {intensité moyenne} ) Analyse de la variance  
+
+ {Le mieux est encore de ne pas être malade.} {Réduction {a priori} des biais.}  Les progrès technologiques, Une préparation soigneuse des échantillons (concentration, marquage,...), Une bonne pratique expérimentale (pas de réglage des PMT,...), Certains plans d'expériences (dye-swap)  contribuent efficacement à réduire la variabilités des mesures et les différents biais. 
+
+{Correction du biais de marquage par dye-swap.} La moyenne des signaux sur les 2 lames inversées élimine une bonne part du biais de marquage.  {tabular} {ccc} {tabular} {l} {-1.5cm} epsfig {figure=../MAplot-DyeSwap-ECabannes.ps, bbllx=21, bblly=19, bburx=289, bbury=140, width=12cm, height=6cm, clip=} {tabular} & {tabular} {c} {-1cm} overset {mbox {moyenne} } {longrightarrow}  {-1cm} {tabular} & {tabular} {l} epsfig {figure=../MAplot-DyeSwap-ECabannes.ps, bbllx=345, bblly=19, bburx=574, bbury=143, width=10cm, height=6cm, clip=} {tabular} {tabular}  
+
+ {Eviter que le remède ne tue le malade.} {Faut-il toujours normaliser~?} Une normalisation mal conçue peut éliminer le signal d'intérêt.  {tabular} {cc} {small avant} & {small après} epsfig {figure=/ENSEIGN/COURS/Bioinfo/Figures/PuceDeBaseLogratio.ps, bbllx=55, bblly=75, bburx=565, bbury=285, width=12cm, height=5cm, clip=} & epsfig {figure=/ENSEIGN/COURS/Bioinfo/Figures/signalpost-cy.ps, bbllx=70, bblly=310, bburx=580, bbury=520, width=12cm, height=5cm, clip=} {tabular}  
+
+   {Classification non supervisée ( {Clustering} )} 
+
+ centerline { {``Quand on n'a qu'un marteau, tous les problèmes ressemblent à un clou.''} } 
+
+{Objectif de la classification.} Définir des groupes de gènes ayant des profils d'expressions similaires. 
+
+ {Deux grands types de méthodes.} {description} [Géométriques.] Fondées sur des distances ou des similarités~: classification hiérarchique, k means, {etc.}. Ces méthodes ne prennent pas en compte la variabilité de la mesure et affectent les gènes de façon binaires aux groupes. [Modélisatrices.] Fondées sur des modèles statistiques prenant en compte la variabilité de la mesure. Ces méthodes fournissent des probabilités d'appartenance des gènes aux groupes. {description} 
+
+ {Visualisation des données.} Les méthodes de classification cherchent et trouvent une structure (arborescente) dans les données... même si elle n'existe pas. 
+
+ Les méthodes de clustering ne fournissent pas une visualisation ``objective'' des données. 
+
+   {Analyse différentielle} 
+
+{Objectif.} Trouver les gènes affectés par un changement de condition ou de traitement (comparaison de 2 conditions ou plus). 
+
+ {Méthode statistique.} Tests d'hypothèses~: paramétriques (student, Fisher) ou non paramétriques (Wilcoxon, permutation, bootstrap) centerline {longrightarrow 1 probabilité critique (``p-value'') P_g par gène.} ( {cf. M. San Cristobal & C. Robert-Granié} ) 
+
+ {Problèmes des tests multiples.} 
+
+ {Règle de décision.} Si P_g leq alpha (ex.~: alpha = 5 ), on déclare le gène ``positif'' ( {i.e} différentiellement exprimé) 
+
+Pour une expérience impliquant n=10;000 gènes, on peut craindre jusqu'à n alpha = 500 faux positifs. 
+
+{Différentes approches.} {description} [FWER.] Contrôle de la probabilité d'avoir 1 (seul !) faux positif centerline { {Bonferroni~:} widetilde {P} _g = n P_g.} [FDR.] Contrôle de la proportion de faux positifs (parmi les positifs). {description} 
+
+ {Données de Golub.} 27 patients AML / 11 patients ALL, n = 7070 gènes, alpha = 5  {tabular} {ll} {tabular} {l} Nombre de ``positifs''~:  p-value ( {--} )~: 1887  Bonferroni (textred {--} )~: 111  Sidak (textgreen {--} )~: 113  Holm (textred {--;cdot} )~:  112  Sidak adp. (textgreen {--;cdot} )~:   113  FDR (textblue {--;cdot} )~: 903  {tabular} & {tabular} {c} epsfig {figure=/ENSEIGN/COURS/Bioinfo/Figures/Golub-adjp-zoom.eps, height=12cm, width=15cm, bbllx=64, bblly=209, bburx=549, bbury=586, clip}  {-0.5cm}  {small Gènes ordonnés par probabilités critiques croissantes} {tabular} {tabular}  
+
+{Question.} Faut-il absolument fixer un seuil~? 
+
+Souvent les probabilités critiques ne servent qu'à ordonner les gènes. 
+
+   {Classification supervisée} 
+
+ {Objectif.} Prédiction du statut d'un patient à partir de données de transcriptome. 
+
+ {Méthodes extrêmement nombreuses.}  {tabular} {ll} Fondées sur un {modèle} & Analyse discriminante (linéaire/quadratique) {probabiliste} ~: & Régression logistique  Fondées sur des {algorithmes}  & Réseaux de neurones  {d'apprentissage} ~:& Arbres de classification (CART) & Forêts aléatoires ( {cf. Ph. Besse} ) & Machines à vecteurs supports (SVM) {tabular}  
+
+ {Critère de comparaison.} L'objectif étant prédictif, le critère naturel est le taux d'erreur. L'estimation de ce taux d'erreur ne doit pas conduire au sur-apprentissage (validation croisée). 
+
+ {Régression.} La prédiction d'une covariable (temps de survie, caractère quantitatif, {etc.} ) pose des problèmes similaires. 
+
+ {Sélection de variables (gènes)} 
+
+ {Réduction de dimension.} Faible rapport nombre de patients / nombre de gènes 
+
+centerline {Rightarrow nécessité de réduire la dimension des données (le nombre de gènes).} 
+
+{description} [Compression~:] définition de ``gènes synthétiques'' (ACP, AFD, etc.) [Sélection de gènes~:] détermination d'une sous liste de ``gènes discriminants'' {description} 
+
+{Corrélation entre les gènes.} La liste des gènes ``discriminants'' doit être prise dans son ensemble~:  Des gènes absents de cette liste peuvent être très discriminants. Pris isolément, des gènes présents peuvent être faiblement discriminants. La recherche des gènes discriminants peut être vue comme un problème d'analyse différentielle.  
+
+ La prédiction de classe et la recherche de gènes discriminants sont deux problèmes différents~:  textblue {mbox {Prédiction} neq mbox {Compréhension} }  
+
+   {Outils} 
+
+{Problèmes ``classiques''} 
+
+ Un logiciel proposant toutes les méthodes évoquées ci-dessus et permettant de les combiner entre elles s'appelle dots 
+
+ centerline {un logiciel statistique (SAS, R, S+, {etc.} )~!}  
+
+ {Besoin de formation.} Un biologiste ``haut débit'' peut (et doit) acquérir une culture statistique minimale et devenir un utilisateur honnête de ces logiciels ( {cf. S. Lemoine, S. Déjean, C. Dalmasso} ). 
+
+  {Problème plus originaux} 
+
+{Exemples~:} Inférence des réseaux géniques, analyse de puces chromosomiques, {it etc.} 
+
+ Nécessité de développer des méthodes (et donc des outils) spécifiques en collaboration avec des statisticiens. 
+
+    {document}     

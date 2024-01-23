@@ -1,0 +1,281 @@
+%====================================================================
+%====================================================================
+\section{Bayesian inference via sequential Monte-Carlo}
+\subsection*{Principle}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Bayesian inference} 
+
+  \paragraph{General aim.}
+  \begin{align*}
+   \text{prior:} & & \theta & \sim p_0(\theta) \\
+   \text{likelihood:} & & Y \mid \theta & \sim \ell(Y \mid \theta) \\
+   \text{posterior:} & & \theta \mid Y & \sim \emphase{p(\theta \mid Y)}
+  \end{align*}
+  \ra Latent variable model: 'posterior' $= p(\theta, Z \mid Y)$
+
+  
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Strategy for SBM.} 
+  \begin{itemize}
+  \item use VEM to get a first estimate of $\theta$ (and $Z$)
+  \item use VEM side-products to get an approximate posterior $\pt(\theta, Z)$
+  \item design an efficient stochastic algorithm to sample from $p(\theta, Z \mid Y)$ using $\pt(\theta, Z)$ as a proposal
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{VEM-based proposal}
+
+  \paragraph{VEM + Laplace approximation:}
+  \begin{itemize}
+  \item Define 
+  $$
+  (U_{VEM}, q_{VEM}) = \arg\max_{q \in \Qcal} J(U, q)
+  $$
+  \item Evaluate
+  \begin{align*}
+   \log p(U \mid Y) 
+   & = \cst + \log p_0(U) + \log \ell(Y \mid U) \\ 
+   & \onslide+<2->{\simeq \cst + \log p_0(U) + \emphase{J(U, q_{VEM})}} \\
+   & \onslide+<3->{\simeq \cst + \log p_0(U) + J(\emphase{U_{VEM}}, q_{VEM})} \\
+   & \onslide+<3->{\quad + \frac12 (U - U_{VEM})^\intercal 
+   \left(\left.\partial^2_{U^2} J(U, q_{VEM})\right|_{U = U_{VEM}}\right)
+   (U - U_{VEM})} \\
+   & \onslide+<4->{=: \cst + \log \emphase{\pt(U)}}
+  \end{align*}
+  \end{itemize}
+  
+  \bigskip \onslide+<5->{
+  \paragraph{Case of SBM.}
+  \begin{itemize}
+   \item Gaussian prior for $(\alpha, \beta) \Rightarrow$ Gaussian $\pt(\alpha, \beta)$
+   \item Similar approximation to get Dirichlet independent $\pt(\pi)$ and $\pt(Z_i)$
+  \end{itemize}
+  }
+
+}
+
+%====================================================================
+\subsection*{SMC}
+%====================================================================
+\frame{\frametitle{Monte Carlo sampling} 
+
+  \paragraph{Importance sampling.} First idea: use $\pt$ to sample directly from the posterior 
+  \begin{itemize}
+   \item Poor effective sample size (ESS): few particles with non-zero weight
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \hspace{-.03\textwidth} 
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Sequential Monte-Carlo \refer{DDJ06}.} ~ \\
+      $U = (\theta, Z)$
+      \begin{itemize}
+      \item start with an initial proposal $\pt$
+      \item define a sequence of distributions 
+      $$
+      (q_h)_{0 \leq h \leq H}: \qquad q_H(U) = p(U \mid Y)
+      $$
+      \item iteratively sample: 
+      $$
+      S^h = (U^{h, m})_{1 \leq m \leq M}
+      $$ 
+      from $q_h$ using $S^{h-1}$
+      \end{itemize}
+    \end{tabular}
+    &
+    \hspace{-.05\textwidth} 
+    \begin{tabular}{c}
+    \includegraphics[width=.4\textwidth]{../FIGURES/FigVBEM-IS-Tempering} \\
+    $\textcolor{red}{q_0}, q_1, \dots, q_H = \textcolor{blue}{p^*}$, 
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Proposed SMC sampling scheme}
+
+  \paragraph{Distribution path:} 
+    set $0 = \rho_0 < \rho_1 < \dots < \rho_{H-1} < \rho_H = 1$,
+  \begin{align*}
+     q_h(U) & \propto \pt(U)^{\emphase{{1-\rho_h}}} \; \times \; p(U | Y)^{\emphase{{\rho_h}}} \\
+%      \\
+     & \propto \pt(U) \; \times \; r(U)^{\emphase{{\rho_h}}}, 
+     & r(U) & = \frac{p_0(U) \ell(Y | U)}{\pt(U)}
+  \end{align*}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Sequential sampling.} At each step $h$, provides
+  $$
+  \Ecal_h = \{(U_h^m, w_h^m)\}_m = \text{ weighted sample of } q_h
+  $$
+
+  \bigskip \pause
+  \paragraph{Theoretical justification: \refer{DDJ06}.} 
+  At each step $h$, construct a distribution for the whole particle path with marginal $p_h$.
+
+  \bigskip \bigskip \pause
+  \paragraph{Additional aim.} 
+  Tune (adaptively) $\{\rho_h\}$ to keep each sampling step efficient.
+
+}
+  
+%====================================================================
+\frame{\frametitle{Algorithm}
+  
+%  \paragraph{Algorithm.} 
+  \begin{description}
+  \item[Init.:] Sample $(U_0^m)_m$ iid $\sim \pt$, $w_0^m = 1$ \\ ~
+  \pause
+  \item[Step $h$:] Using the previous sample $\Ecal_{h-1} = \{(U_{h-1}^m, w_{h-1}^m)\}$ \\ ~
+  \pause
+  \begin{enumerate}
+  \item set $\rho_h$ such that $cESS(\Ecal_{h-1}; q_{h-1}, q_h) = \emphase{\tau_1}$ \\ ~
+  \pause
+  \item compute $w_h^m = \emphase{w_{h-1}^m \times (r_h^m)^{\rho_h - \rho_{h-1}}}$ \\ ~
+  \pause
+  \item 
+  (\footnote{To avoid degeneracy. Weights set to 1 after it.}) 
+  if $ESS_h = \overline{w}_h^2 / \overline{w_h^2} < \emphase{\tau_2}$, resample the particles  \\ ~
+  \pause
+  \item 
+  (\footnote{$K_h$ has stationary distribution \emphase{$q_h$} (e.g. Gibbs sampler). Only propagation: no convergence needed}) 
+  propagate the particles $U_h^m \sim \emphase{K_h}(U_h^m | U_{h-1}^m)$ 
+  \end{enumerate} ~
+  \pause
+  \item[Stop:] When $\rho_h$ reaches 1.
+  \end{description}
+
+}
+
+%====================================================================
+\subsection*{Illustrations}
+%====================================================================
+\frame{\frametitle{Tree network}
+
+  \hspace{-.025\textwidth}
+  \begin{tabular}{ll}
+   \begin{tabular}{p{.35\textwidth}}
+    \paragraph{From \refer{VPD08}.} 
+    $n = 51$ tree species 
+
+    \bigskip
+    $Y_{ij} = $ number of shared fungal parasites 
+
+    \bigskip
+    3 covariates (distances): \\
+    taxonomy, geography, genetics 
+
+    \bigskip
+    \paragraph{Poisson model:} \\
+    $(Y_{ij} \mid Z_i=k, Z_j=\ell)$ \\ \smallskip
+    $\qquad \sim \Pcal\left(e^{\alpha_{k\ell} + x_{ji}^\intercal \beta}\right)$ 
+   \end{tabular}
+   &
+   \hspace{-.05\textwidth}
+   \begin{tabular}{cc}
+    \includegraphics[width=.25\textwidth]{\figtree/Tree-all-V10-M5000-net} & 
+    \includegraphics[width=.25\textwidth]{../FIGURES/FigVBEM-IS-Tree-TaxonomicDistance} \\
+    Interactions & Taxonomic dist. \\
+    \includegraphics[width=.25\textwidth]{../FIGURES/FigVBEM-IS-Tree-GeographicDistance} & 
+    \includegraphics[width=.25\textwidth]{../FIGURES/FigVBEM-IS-Tree-GeneticDistance}  \\
+    Geographic dist. & Genetic dist.
+   \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Sampling path \& choice of $K$}
+
+  \paragraph{Full model.} All covariates
+
+  \bigskip
+  \begin{center}
+    \begin{tabular}{ccc}
+    $\widehat{p}(K \mid Y)$ & & Sampling path: $\rho_h$ \\
+    \includegraphics[width=.3\textwidth]{\figtree/Tree-all-V10-M5000-logpY} &
+    \qquad &
+    \includegraphics[width=.3\textwidth]{\figtree/Tree-all-V10-M5000-rho} \\
+    \textcolor{blue}{$J_K$}, \textcolor{green}{$\widetilde{BIC}$}, \textcolor{red}{$\widetilde{ICL}$} &
+    \qquad &
+    $\widehat{K} = \arg\max_K \widehat{p}(K \mid Y)$
+    \end{tabular}
+  \end{center}
+  
+  \bigskip 
+  \paragraph{Goodness of fit.} $\widehat{P}(K = 1 \mid Y) \approx 0$ \\
+  \ra The covariates do not explain the whole network structure.
+}
+
+%====================================================================
+\frame{\frametitle{Regression coefficient}
+
+  \vspace{-.05\textheight}
+  \begin{center}
+    \begin{tabular}{ccc}
+    taxonomy & geography & genetics \\
+    \includegraphics[width=.3\textwidth]{\figtree/Tree-all-V10-M5000-beta1} & 
+    \includegraphics[width=.3\textwidth]{\figtree/Tree-all-V10-M5000-beta2} & 
+    \includegraphics[width=.3\textwidth]{\figtree/Tree-all-V10-M5000-beta3} \\
+    \multicolumn{3}{c}{\textcolor{blue}{$\pt(\beta \mid \widehat{K})$}, \quad  \textcolor{red}{$\widehat{p}(\beta \mid Y, \widehat{K})$}, \quad $\widehat{p}(\beta \mid Y) = \sum_K \widehat{p}(K \mid Y) \widehat{p}(\beta \mid Y, K)$}
+    \end{tabular}
+  \end{center}  
+
+  \bigskip \pause
+  \hspace{-.025\textwidth}
+  \begin{tabular}{rrrr}
+    \paragraph{Correlation between estimates.} 
+    & $(\beta_1, \beta_2)$ & $(\beta_1, \beta_3)$ & $(\beta_2, \beta_3)$ \\
+    $\pt(\beta)$ & $-0.037$ & $-0.010$ & $0.235$ \\
+    $\widehat{p}(\beta \mid Y)$ & $-0.139$ & $-0.017$ & $0.325$
+  \end{tabular}
+
+  \bigskip \pause
+  \paragraph{Model posterior.} 
+  (taxo., geo.)= $46.5\%$, (taxo.)= $34.5\%$ , (taxo., gene.)= $18.0\%$
+  
+%   \hspace{-.025\textwidth}
+%   \begin{tabular}{rrrr}
+%     \paragraph{Model selection.} 
+%     & (taxo., geo.) & (taxo.) & (taxo., gene.) \\ 
+%     $\widehat{P}(\text{model} \mid Y)$ & $46.5\%$ & $34.5\%$ & $18.0\%$
+%   \end{tabular}
+}
+
+%====================================================================
+\frame{\frametitle{Social network of equid species}
+
+  \paragraph{2 contact networks \refer{RSF15}.}
+  \begin{itemize}
+  \item $n = 28$ zebras, $n = 29$ onagers
+  \item sex and age (juvenile / adult) recorded
+  \end{itemize}
+  
+  \bigskip \bigskip
+  \paragraph{Question.} Are the two networks organized according to the same variables.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Model posterior.} 
+  $$
+  \begin{tabular}{rrrrr}
+    & () & (sex) & (age) & (sex, age) \\ \hline
+    Zebras & $\simeq0\%$ & $98.7\%$ & $\simeq0\%$ & $1.3\%$ \\
+    Onagers & $.4\%$ & $1.3\%$ & $98.3\%$ & $\simeq0\%$ \\
+  \end{tabular}
+  $$
+  
+  \bigskip \pause
+  \paragraph{Goodness of fit.} 
+  $$
+  \widehat{P}(K = 1 \mid Y) \simeq 0 \quad \text{for all models}
+  $$
+  \ra Individual effects remain.
+
+}
+  
+

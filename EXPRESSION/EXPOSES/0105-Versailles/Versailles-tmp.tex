@@ -1,0 +1,353 @@
+\documentclass[dvips,times,noindent]{foils}
+
+\LogoOff
+\usepackage{geometry}
+\geometry{landscape,a4paper,tmargin=1cm,bmargin=0cm,lmargin=3cm,rmargin=3cm}
+
+\usepackage{amsfonts}
+\usepackage{astats} 
+\usepackage{multirow}
+
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+%\usepackage[T1]{fontenc}
+
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\textblue}{\textcolor{blue}}
+\newcommand{\textgreen}{\textcolor{green}}
+\newcommand{\arrow}{\psline[linestyle=dotted, linewidth=.05]{->}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+
+  \vspace{1cm} 
+  
+  \centerline{\textblue{ \bf \Large ANALYSE STATISTIQUE}}
+  ~\\
+  \centerline{\textblue{ \bf \Large DES DONNÉES DE TRANSCRIPTOME}}
+
+  \vspace{2cm} 
+
+  \textgreen{\bfseries Stéphane ROBIN}
+  
+  srobin@versailles.inra.fr
+
+  \vspace{1cm}
+
+  {\bf Mathématique, Informatique  \&  Génome}
+
+  \begin{tabular}{ccc}
+    {\sl Bioinformatique} &
+    {\sl Physico-chimie} &
+    {\sl Statistique}
+  \end{tabular}
+  
+  \vspace{2cm}
+
+  {INRA Versailles, 29/05/01}
+
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\centerline{\textblue{\Large \bf Abondance d'information}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \vspace{1cm} 
+
+\centerline{$\rightarrow$ Recherche d'une stucture ou d'une organisation}
+
+\begin{itemize}
+\item {\bf Représentation / Restitution}\\
+  Comment visualiser l'information (si possible pertinente) ?\\
+\item {\bf Classification}\\
+  Peut-on regrouper des gènes (ou des tissus) par profils d'expression~?\\
+\item {\bf Analyse différentielle}\\
+  Quels sont les gènes affectés par un changement de condition~?\\
+\item{\bf Diagnostic}\\
+  Comment différencier (ou caractériser) des tissus sains et malades~?
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage 
+\centerline{\textblue{\Large \bf REPRESENTATION / RESTITUTION}}
+
+On ne dispose d'aucune autre information que celle contenue dans la
+matrice des données.
+
+\vspace{1cm}
+
+\noindent{\textgreen{\bf \large Analyse en Composante Principales (ACP)}}
+  
+Recherche de la représentation la plus fidèle i.e. celle qui préserve
+la plus grande part de l'information.
+$$
+\mbox{Information = Inertie = Variance}
+$$
+
+\noindent{\bf Vocabulaire~:} Décomposition en valeurs singulières (SVD) = ACP
+
+\vspace{1cm}
+
+\noindent{\textgreen{\bf \large Autres méthodes factorielles}}
+ 
+%SOM, PLS 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage 
+\begin{center}
+\epsfig{figure=ABB00-Fig1.ps,height=24cm,width=12cm,angle=270, clip=}
+\end{center}
+
+\noindent{\small Orly \& al. (00) {\sl Singular value decomposition (SVD) for
+  genome-wide expression data processing and modeling}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage \centerline{\textblue{\Large \bf CLASSIFICATION}}
+~\\
+{\bf Données~:} $E_{gt} =$ expression du gène $g$ dans le tissus
+$t$ (souvent normalisées~: centrées, réduites, log, etc.)\\
+~\\
+{\bf Bonne typologie =} répartition des gènes en classes
+\begin{itemize}
+\item homogènes
+\item bien distinctes les unes des autres.
+\end{itemize}
+{\bf Difficulté combinatoire~:} peu de méthodes optimales\\
+~\\
+{\bf Méthodes heuristiques}
+\begin{enumerate}
+\item méthodes hiérarchiques~: nombre de classes {\bf inconnu} 
+\item $k$-means, SOM~:  nombre de classes {\bf connu a priori}
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\noindent\textgreen{\bf \large Modèles de mélange} \\
+~\\
+On suppose que les gènes se répartissent en une série de $K$ classes
+(inconnues) $\Ccal_1$, $\Ccal_2$, \dots, $\Ccal_K$
+
+\vspace{1cm}
+
+\noindent{\bf Modèle statistique}\\
+Les profils d'expression des gènes de la classe $\Ccal_k$ ont une même
+distribution de probabilité $P_k$~:
+$$
+g \in \Ccal_k \quad \Rightarrow (E_{g1}, \dots, E_{gC}) \simeq P_k
+$$
+
+\vspace{1cm}
+
+\noindent{\bf Problème combinatoire}\\
+\centerline{$\mbox{3 classes, 100 gènes} \quad \Rightarrow \quad
+  \approx 10^{44} \mbox{ répartitions possibles}$}
+
+\vspace{1cm}
+
+\noindent{\bf Algorithmes stochastiques}\\
+Temps de calcul important~: prix à payer pour atteindre un optimum global
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\noindent{\textgreen{\bf \large Classification hiérarchique}} \\
+~\\
+Représentation arborescente (``{\sl Eisen plot}'') fondée sur trois critères
+\begin{enumerate}
+\item une {\bf mesure de similarité ou dissimilarité} entre les gènes
+  \begin{itemize}
+  \item distance (euclidienne ou non) \\
+    \centerline{$\quad d^2(g_1, g_2) = \sum_t p_t (E_{g_1 t} -
+      E_{g_2t})^2 $}
+  \item coefficient de corrélation\\
+    \centerline{$ s(g_1, g_2) \propto \sum_t (E_{g_1 t} -
+      E_{g_1 \bullet})(E_{g_2 t} - E_{g_2 \bullet}) $}\\
+%  \item etc.
+  \end{itemize}
+\item un {\bf critère d'agrégation} pour réunir des groupes de gènes
+  (donne souvent son nom à la méthode)
+  \begin{itemize}
+  \item lien simple ({\sl single linkage})
+  \item lien moyen ({\sl UPGMA}), {\sl UPGMC}, {\sl WPGMA}, {\sl WPGMC}, 
+  \item Ward\\
+  \end{itemize}
+\item une {\bf critère d'arrêt} 
+  \begin{itemize}
+  \item local (ex.: coût de la dernière agrégation)
+  \item global (ex.: $R^2 = \mbox{var. inter-classes} / \mbox{var. totale}$)
+  \end{itemize}
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\noindent L'arbre ({\sl dendrogramme}) dépend (fortement ?) de ces trois critères\\
+~\\
+\noindent{\begin{tabular}{ccc}
+    lien simple & lien moyen  & Ward \\
+    \epsfig{figure=Circadian-single.eps,height=12cm,width=7.5cm} &  
+    \epsfig{figure=Circadian-UPGMA.eps,height=12cm,width=7.5cm} &  
+    \epsfig{figure=Circadian-Ward.eps,height=12cm,width=7.5cm} 
+\end{tabular}\\
+~\\
+\noindent{\small {\bf Données~:} Schaffer \& al. (01)~: 
+  {\sl Microarray Analysis of Diurnal and Circadian-Regulated Genes in
+    Arabidopsis }}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\noindent En coupant l'arbre à une hauteur donnée, on obtient une typologie des gènes\\
+%\begin{center}
+\epsfig{figure=SLA01-Fig3.ps,height=24cm,width=12cm,angle=270, clip=}
+%\end{center}
+
+\noindent\small Schaffer \& al. (01)~: 
+  {\sl Microarray Analysis of Diurnal and Circadian-Regulated Genes in
+    Arabidopsis }}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\noindent\textgreen{\bf \large $k$-means, Nuées dynamiques, 
+  Self-organized maps (SOM)} \\
+~\\
+\centerline{\bf Nombre de classes $k$ connu a priori}
+~\\
+La plupart des algorithmes fonctionnent sur le même principe
+\begin{itemize}
+\item[0.] on se donne a priori $k$ points (ou groupes de points)
+  ``centraux''
+  \begin{itemize}
+  \item gènes tirés au hasard 
+  \item gènes fictifs réguliérement réparti
+  \item gènes typiques choisis par l'utilisateur\\
+  \end{itemize}
+\item[1.] on chaque chaque gène à une classe en minimisant un critère
+  de dispersion autour des points cenraux (ex. $R^2$)\\
+\item[2.] on recalcule les points centraux et on retourne en (1.)
+\end{itemize}
+~\\
+Méthodes\\
+%\begin{itemize}
+%\item 
+$-$ souvent {\bf plus rapides} de les classifications hiérarchiques \\
+%\item 
+$-$ mais {\bf extrêmement sensibles} au choix initial (étape 0.)
+%\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\centerline{\textblue{\Large \bf ANALYSE DIFFÉRENTIELLE}}
+
+\noindent\textgreen{\bf \large Analyse de la variance} \\
+Permet de séparer et de comparer les sources de variabilité
+$$
+{\footnotesize
+  \begin{tabular}{l|ccc}
+    Facteur & ddl 
+    & \begin{tabular}{c}Variance\\dûe au facteur\end{tabular} 
+    & Fisher 
+%    & \begin{tabular}{c}Probabilité\\critique\end{tabular}
+    \\
+    \hline
+    Quantité               &     1  &  614.279  &  624~373.11  \\ %&            0
+    Date                   &     1  &   63.126  &   64~163.02  \\ %&            0
+    Date*Quantité          &     1  &   51.885  &   52~737.69  \\ %&            0
+    Culture*Date*Quantité  &     1  &    5.846  &    5~942.51  \\ %&            0
+    Culture*Quantité       &     1  &    2.527  &    2~568.92  \\ %&            0
+    Culture*Date           &     1  &    2.122  &    2~156.76  \\ %&            0
+    Gène                   &  4106  &    1.119  &    1~137.52  \\ %&            0
+    Culture                &     1  &    0.687  &      697.93  \\ %&   10^2.206E-152
+    Gène*Quantité          &  4106  &    0.026  &       26.63  \\ %&            0
+    Gène*Date              &  4106  &    0.012  &       12.69  \\ %&            0
+    Gène*Date*Quantité     &  4106  &    0.008  &        7.69  \\ %&            0
+\hline
+{\bf Culture*Gène}         &  4106  &    0.004  &  {\bf 4.23}  \\ %&            0
+\hline
+    Culture*Gène*Date      &  4106  &    0.003  &        3.25  \\ %&            0
+    Culture*Gène*Quantité  &  4106  &    0.003  &        2.79  \\ %&            0
+  \end{tabular}
+  }
+$$
+{\small {\bf Données~:} Sekowska \& al. (01)~:
+  {\sl Extracting biological information from DNA arrays: \dots}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\noindent De classer les gènes par différence d'expression 
+({\it comparaison multiples})
+$$
+\epsfig{file = Versailles-tab.eps, height = 13cm,width = 22cm}
+$$
+{\small {\bf Données~:} Sekowska \& al. (01)~:
+  {\sl Extracting biological information from DNA arrays: \dots}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\noindent{\textgreen{\bf \large Approche bayésienne}} \\
+~\\
+Dans une analyse différentielle, permet d'estimer la probabilité qu'un
+gène soit affecté par le changement de condition~: 
+$Z \propto E_{\mbox{cond. 1}} - E_{\mbox{cond. 2}}$\\
+\epsfig{figure=ETG00-Fig1-red.ps,height=13cm,width=22cm,clip=}\\
+{\small Efron \& al. (00)~: {\sl Microarrays and their Use in a
+    Comparative Experiment}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\centerline{\textblue{\Large \bf DIAGNOSTIC}}
+~\\
+{\bf \large Analyse discriminante} 
+\begin{itemize}
+\item Analyse de la variance multivariée~: fournit un modèle explicatif
+\item Fonctionne bien pour des populations ``linéairement'' séparées
+\end{itemize}
+{\bf \large Réseaux de neurones}
+\begin{itemize}
+\item Miment l'apprentissage du cerveau
+\item Souvent efficaces mais ne fournissent aucun modèle explicatif
+\end{itemize}
+{\bf \large Support Vector Machine (SVM)} 
+
+Recherche de la frontière entre les populations
+
+\noindent{\small Brown M. \& al. (00)~: {\sl Knowledge-based analysis of
+    microarray gene expression data by using support vector machines}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\centerline{\textblue{\Large \bf Action IMPG}}
+~\\
+\centerline{\Large (Informatique, Mathématique, Physique pour la Génomique)}
+
+~\\
+\noindent 10 groupes thématiques dont\\
+\begin{itemize}
+\item {\bf Bioinformatique fonctionnelle des systèmes de régulations génétiques}\\
+  ~\\
+\item {\bf Analyse Statistique du Transcriptome}\\
+\end{itemize}
+
+\centerline{Première réunion les 21-22 juin 2001 à l'INA-PG}
+~\\
+\centerline{sur le thème de la \textgreen{\bf Classification}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

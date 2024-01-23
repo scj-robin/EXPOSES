@@ -1,0 +1,83 @@
+%------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Modèle à nombre fini d'allèles}
+  \begin{itemize}
+  \item Les mutations sont vues comme des transitions entre $A$
+    allèles possibles.
+  \item Elles surviennent selon un processus Markovien homogène à
+    temps continu $\{X_t\}_{t \geq 0}$.
+  \end{itemize}
+  \pause
+  On note $r_{ab}$ le taux de transition de l'allèle $a$ vers l'allèle
+  $b$ et $R = [r_{ab}]$ le générateur infinitésimal du
+    processus. %($r_{aa} = -\sum_{b \neq a} r_{ab}$).
+  \begin{itemize}
+  \item La matrice de transition en une unité de temps est $\exp(R)$.
+  \item Plus généralement~: 
+    $$
+    \pi_{ab}(s) := P(X_{t+s} = b | X_t = a) = [exp(s R)]_{ab}.
+    $$
+  \end{itemize}
+  
+  $\pi_{66}(t_1)$ ne signifie pas qu'il n'y a pas eu de mutation entre
+  temps.
+\end{frame}
+
+%------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Probabilité à noeuds internes connus}
+
+  La possibilité de retour en arrière ne permet pas de connaître les
+  périodes de mutation.
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.5\textwidth}}
+      $P(\Dcal|\Tcal, \theta) = $
+      \begin{eqnarray*}
+        %
+        &  & \pi_{53}(T) \\
+        & \times & \pi_{56}(T-t_3) \\
+        & \times & \pi_{66}(t_3-t_2) \pi_{66}(t_2-t_1) \pi_{66}(t_1)  \\  
+        & \times & \pi_{66}(t_1)  \\ 
+        & \times & \pi_{66}(t_2)  \\ 
+        & \times & \pi_{67}(t_3)
+      \end{eqnarray*}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.4\textwidth,
+      height=.6\textheight,clip=]{transition2-left}  
+    \end{tabular}
+  \end{tabular}
+\end{frame}
+
+%------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Probabilité à noeuds internes inconnus}
+
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.5\textwidth}}
+      $P(\Dcal|\Tcal, \theta) = $
+      \begin{eqnarray*}
+        &  & \sum_{a_4} \pi_{a_43}(T) \\
+        & \times & \Big( \sum_{a_3} \pi_{a_4a_3}(T-t_3)
+        \pi_{a_37}(t_3) \\
+        & \times & \Big( \sum_{a_2} \pi_{a_3a_2}(t_3-t_2)
+        \pi_{a_26}(t_2) \\
+        & \times & \Big( \sum_{a_1} \pi_{a_2a_1}(t_2-t_1)  \\
+        & & \qquad 
+        \pi_{a_16}(t_1) \pi_{a_16}(t_1) \Big)\Big)\Big)
+      \end{eqnarray*}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.4\textwidth,
+      height=.6\textheight,clip=]{transition1-left}  
+    \end{tabular}
+  \end{tabular}
+\end{frame}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "presgen"
+%%% End: 

@@ -1,0 +1,555 @@
+\documentclass[12pt]{article}
+%
+%
+% Retirez le caractere "%" au debut de la ligne ci--dessous si votre
+% editeur de texte utilise des caracteres accentues
+\usepackage[latin1]{inputenc}
+%
+% Retirez le caractere "%" au debut des lignes ci--dessous si vous
+% utiisez les symboles et macros de l'AMS
+\usepackage{amsmath}
+\usepackage{amsfonts}
+%
+%
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{21cm}
+\setlength{\hoffset}{-1.4cm}
+
+\newcommand{\ymt}{y_{mt}}
+\newcommand{\Ymt}{Y_{mt}}
+\newcommand{\ec}[1]{\mathbb{E}_{\phi^{(h)}}\left\{#1 |\mathbf{Y} \right\}}
+\newcommand{\vc}[1]{\mathbb{V}_{\phi^{(h)}}\left\{#1 |\mathbf{Y} \right\}}
+
+\newcommand{\alphabf}{\text{\mathversion{bold}{$\alpha$}}}
+\newcommand{\thetabf}{\text{\mathversion{bold}{$\theta$}}}
+\newcommand{\Sigmabf}{\text{\mathversion{bold}{$\Sigma$}}}
+\newcommand{\Psibf}{\text{\mathversion{bold}{$\Psi$}}}
+\newcommand{\mubf}{\text{\mathversion{bold}{$\mu$}}}
+\newcommand{\xbf}{\mathbf{x}}
+\newcommand{\Xbf}{\mathbf{X}}
+\newcommand{\Ybf}{\mathbf{Y}}
+\newcommand{\Zbf}{\mathbf{Z}}
+\newcommand{\Bbf}{\mathbf{B}}
+\newcommand{\Bbfp}{\mathbf{B}^{\prime}}
+\newcommand{\Zbfp}{\mathbf{Z}^{\prime}}
+\newcommand{\Wbf}{\mathbf{W}}
+\newcommand{\ZA}{\mathbf{Z}_A}
+\newcommand{\ZB}{\mathbf{Z}_B}
+\newcommand{\WB}{\mathbf{W}_B}
+\newcommand{\WA}{\mathbf{W}_A}
+\newcommand{\WAB}{\mathbf{W}_{AB}}
+\newcommand{\UA}{\mathbf{U}_A}
+\newcommand{\UB}{\mathbf{U}_B}
+\newcommand{\Vbf}{\mathbf{V}}
+\newcommand{\Rbf}{\mathbf{R}}
+\newcommand{\Ubf}{\mathbf{U}}
+\newcommand{\Ebf}{\mathbf{E}}
+\newcommand{\Gbf}{\mathbf{G}}
+\newcommand{\Tbf}{\mathbf{T}}
+\newcommand{\Ibf}{\mathbf{I}}
+\newcommand{\RMSE}{\mbox{RMSE}}
+\newcommand{\FPR}{\mbox{FNR}}
+\newcommand{\FNR}{\mbox{FNR}}
+\newcommand{\LogL}{\mathcal{L}}
+\def\1{1\!{\rm l}}
+%\newtheorem{prop}{Proposition}
+%\newproof{pf}{Proof}Les problèmes de segmentation se rencontrent dans de nombreux domaines (économie, écologie, biologie). 
+
+
+\def\argmin{\mathop{\mathrm{argmin}}}
+%
+%
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+\begin{document}
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+%
+\begin{center}
+{\Large
+        {\sc A factor model approach for the segmentation of correlated time series 
+        }
+}
+\bigskip
+
+Emilie Lebarbier \& Stéphane Robin
+
+\medskip
+{\it
+
+UMR 518 AgroParisTech / INRA Math. Info. Appli. \\
+16, rue Claude Bernard \\
+75005 Paris {\sc France}
+}
+\end{center}
+\bigskip
+\noindent
+
+\paragraph{Résumé.} On s'intéresse à la segmentation d'un ensemble de
+séries d'observations corrélées, typiquement organisées spatialement.
+On propose de modéliser la dépendance entre les séries au moyen d'un
+modèle à facteur. Cette modélisation de la dépendance autorise
+l'utilisation d'algorithmes de segmentation efficaces pour obtenir les
+estimateur du maximum de vraisemblance. On propose également une
+procédure de sélection de modèle pour déterminer le nombre de points
+de ruptures ainsi que le nombre de facteurs.
+
+\paragraph{Abstract.} We consider the segmentation of set of
+correlated time-series, typically with some spatial structure. We
+propose to model the between-series dependency with a factor model.
+This modelling allows us to use efficient segmentation algorithms to
+obtain the maximum likelihood estimates. We also propose a model
+selection procedure to determine the number of change point in each
+series and the number of factors.
+
+\paragraph{Keywords.}   E-M algorithm, Factor model, Segmentation.
+
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+\section{Introduction}
+%-------------------------------------------------------------------------
+We consider the detection of change-points in a set of time-series. We
+are typically interested in the case where this data consist in series
+of measurements observed along time in different locations. Each
+series is supposed to be affected changes at series-specific
+breakpoints and the signals observed at each location are supposed to
+be correlated due to their spatial organisation.
+
+One of the difficulty here is to propose a modelling that leads to an
+efficient estimation algorithm. Indeed, the inference of segmentation
+models often require to search over the space of all possible
+segmentations, which is prohibitive in terms of computational time.
+Dynamic programming (DP) strategies remain among the most efficient
+but can only be applied when the contrast to be optimised is additive
+with respect to the segments. In presence of dependency, the contrast
+(e.g. the log-likelihood) is generally not additive. Our strategy
+consists in 'removing' the dependency so that, at a given step of the
+estimation algorithm, dynamic programming can be applied to
+transformed data.
+
+A similar setting is considered in \cite{PLB11} where a variance
+component model is used to account for the dependecy between the
+series.  Our purpose here is broaden the set of possible dependency
+structures that the modelling can account for. The factor model
+provides a convenient and efficient way to describe various covariance
+matrices, still limiting the number of parameters. It can be viewed as
+a generalisation of variance components models, where the components
+are unknown and need to be estimated, together with the associated
+variances. It is based on the spectral decomposition of the covariance
+matrix and has been successfully applied in situation where very
+little is known about the correlation structure (see e.g.
+\cite{FKC09}).  The inference of factor models is often achieved via
+an EM algorithm.
+
+We present here a general model for correlated Gaussian time series,
+based on a factor model for the covariance matrix. We show that some
+by-product of the EM algorithm can be used to 'remove' the dependency
+between the series. This allows use to combine EM and DP algorithms
+together. We then discuss the issue of choosing both the number of
+breakpoints and the number of factors. Simulation and illustrations
+will be presented in the oral presentation.
+
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+\section{Data, notations and model}
+%-------------------------------------------------------------------------
+
+\paragraph{Data and notations.} We consider $M$ series with $n_m$ points
+each. We note $y_{tm}$ the observed signal of series $m$ at time $t$.
+The total number of observations is $N=\sum_{m=1}^M n_m$. In the
+following, we consider that $n_m=n$ whatever the series. The data $y$
+are modeled by a random Gaussian process $Y$ with size $[n \times M]$.
+In general we denote $A_t$ the row vector with size $M$ of the matrix
+$A$ and $A^m$ its column vector with size $n$. Thus $Y^m$ represents
+whole series $m$, while $Y_t$ stands for the observations at time $t$
+in all the series.
+
+\paragraph{Segmentation.} We consider here that each series has its
+own segmentation: the mean of the series $\{Y_{tm}\}_t$ is subject to
+$K_{m}-1$ specific abrupt changes at breakpoints $\{t_{k}^{m}\}$ (with
+convention $t^m_0=0$ and $t^m_{K_m}=n_{\max}$) and is constant between
+two breakpoints within the interval $I_{k}^{m} = ]t_{k-1}^{m},
+t_{k}^{m}]$. In the following we denote by $K=\sum_{m}^M K_{m}$ the
+total number of segments and $n_k^{m} = t_{k}^{m}- t_{k-1}^{m}$ the
+length of segment $k$ for series $m$ ($k=1,\ldots,K_m$). The
+segmentation model is written as follows:
+\begin{equation} \label{eq:model1}
+Y_{tm}=\mu_{km} +F_{tm} \qquad \forall t \in I_k^{m}
+\end{equation}
+where the error vectors $\{F_t\}_t$ has a centered Gaussian
+distribution with a covariance matrix $\Sigmabf$ to be specified.
+
+\paragraph{Correlations between series.} We want to take
+into account the correlations that can exit between series. In the
+case of spatial data, the correlation can take the form
+$e^{-d(m,m^{\prime})}$ where $d(m,m^{\prime})$ is the distance between
+the locations of series $m$ and $m^{\prime}$. However this correlation
+structure (or other structures) hampers the use of the DP algorithm
+to obtain the best segmentation. \\
+We propose here to consider the factor analysis model framework.  That
+consists in identifying a linear space of $Q$ random vectors that
+captures the dependence among the series (see \cite{FKC09}).  In
+others words, we set
+$$
+\Sigmabf=\Bbf \mathbb{V}(\Zbf) \Bbfp+\Psibf,
+$$
+where $\Zbf$ corresponds to the $Q$ random vectors and $B$ the
+associated coefficients. The dependence between series is then free
+from any spatial structure. In the above decomposition, $\Bbf
+\mathbb{V}(\Zbf) \Bbfp$ refers to the shared variance and $\Psibf$ to
+the specific one. 
+% Note that, in this case $Q$, can not be equal to the number of series
+% $M$.
+
+\paragraph{Model.} With the previous decomposition of the variability,
+the model (\ref{eq:model1}) can be rewritten as a mixed linear model:
+\begin{equation*}
+Y_{tm}=\mu_{km} + \sum_{q=1}^{Q} Z_{tq} b_{qm}+E_{tm} \qquad \forall t
+\in I_k^{m}
+\end{equation*}
+where the $\{E_{t}\}_t$ are i.i.d. centered Gaussian vectors with
+variance matrix $\Psibf$ and the $\{Z_{t}\}_t$ are i.i.d. centered
+Gaussian vectors with variance $I_Q$ (without loss of generality), the
+two sets of vectors being independent.  So $\Sigmabf$ can be
+decomposed as
+\begin{eqnarray} \label{eq:variance_decomposition}
+\Sigmabf=\Bbf \Bbfp+\Psibf.
+\end{eqnarray}
+Here $\Psibf$ is supposed to be diagonal $\Psibf=\sigma^2 I_M$. This
+will allow us to use the DP algorithm for the segmentation parameter
+estimation. The matrix formulation of this linear model is
+\begin{equation} \label{eq:model}
+\Ybf=\Tbf \mubf +\Zbf \Bbfp+\Ebf
+\end{equation}
+where
+\begin{itemize}
+\item $\Ybf$, with size $[n \times M]$, stands for the observed data,
+\item $\Tbf$ is the incidence matrix of breakpoints with size $[n\times
+K]$,
+$
+{T^m} = \text{Bloc} \left[ \1_{n_{K_m}^{m}} \right],
+$
+and
+$
+{\Tbf} = \left[ T^1 \ T^2 \ \ldots \ T^M \right].
+$
+\item $\mubf$ the means with size $[K\times M]$ (and $\mu_{k}^m$ the mean of the segment $k$ for series $m$) such that
+$
+{\mu^{m}}= \text{Bloc} \left[ \mu_{K_m}^m \right],
+$
+and
+$
+{\mubf}  = \left[ \mu^1  \ \mu^2  \ \ldots  \ \mu^M \right].
+$
+\item $\Zbf$ with size $[n\times Q]$ and $\Bbf$
+with size $[M \times Q]$,
+\item $\Ebf$ with size $[n\times M]$. \\
+\end{itemize}
+The main difference between this model and a classical mixed linear
+model is that both the incidence matrix $\Tbf$ and the factor matrix
+$\Bbf$ are unknown.
+
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+\section{Estimation using the EM algorithm}
+%-------------------------------------------------------------------------
+
+We now consider the maximum-likelihood inference of model
+\eqref{eq:model}. This can be done via an EM algorithm, considering
+that $\Zbf$ represents the missing data (hidden and unobserved). The
+parameters of the model are $\phi=(\Tbf,\mubf,\sigma^2,\Bbf)$. In this
+setting, the complete-data log-likelihood is:
+\begin{eqnarray*}
+\log \mathcal{L}(\Ybf,\Zbf; \phi) = \log \mathcal{L}_0(\Ybf|\Zbf;
+\phi) + \log \mathcal{L}_1(\Zbf).
+\end{eqnarray*}
+Since the distribution of $\Zbf$ does not depend on the parameters
+$\phi$, only the first term will be considered which is written:
+\begin{eqnarray*}
+-2 \log \mathcal{L}_0(\Ybf|\Zbf; \phi)=N  \log{(2 \pi)}+ n
+\log{(|\Psibf|)}+\sum_{t=1}^n \|Y_t - \mu_{k(t)} - Z_t
+\Bbfp\|^2_{\Psibf^{-1}},
+\end{eqnarray*}
+then its conditional expectation, $Q_0(\phi; \phi^{(h)})=\ec{\log
+\mathcal{L}_0(\Ybf|\Zbf; \phi)}$ satisfies
+\begin{eqnarray*}
+-2 Q_0(\phi; \phi^{(h)}) &=& N  \log{(2 \pi)}+ n
+\log{(|\Psibf|)}+\sum_{t=1}^n \left [ \|Y_t - \mu_{k(t)} -
+\widehat{\Zbf}_t^{(h)} \Bbfp\|^2_{\Psibf^{-1}} +\text{Tr} \left( \Bbfp
+  \Psibf^{-1} \Bbf \Wbf_t^{(h)} \right) \right ],
+\end{eqnarray*}
+where $\mathbb{E}_{\phi}\{\cdot\}$ is the expectation operator using
+$\phi$ as the parameter value and $\mathbb{V}_{\phi}\{\cdot\}$ the
+corresponding variance, $\widehat{\Zbf}_t^{(h)} = \ec{\Zbf_t}$,
+$\text{Tr}(A)$ is the trace of matrix $A$, $|A|$ its determinant and
+$\Wbf_t^{(h)}=\vc{\Zbf_t}$. \\
+%The second $\log$-likelihood is written:
+%\begin{eqnarray*}
+%-2 \log \mathcal{L}_1(\Zbf)=N  \log{(2 \pi)}+ \sum_{t=1}^n \|Z_t
+%\|^2,
+%\end{eqnarray*}
+%then its conditional version is
+%\begin{eqnarray*} -2 Q_1(\phi; \phi^{(h)}) &=& N  \log{(2 \pi)}+
+%\sum_{t=1}^n \left [ \widehat{\Zbf}_t^{(h)} \widehat{\Zbfp}_t^{(h)}
+%+\text{Tr} \left( \Wbf_t^{(h)} \right) \right ].
+%\end{eqnarray*}
+
+\paragraph{E-step} This step consists in the calculation of the
+conditional expectation which only requires the calculation of
+$\widehat{\Zbf}$ and $\Wbf$: at iteration $(h+1)$, we get\\
+%$$
+%\begin{cases}
+%\widehat{\Zbf}_t^{(h+1)} = E_t^{(h)} \Psibf^{-1,(h)} \Bbf^{(h)}
+%\Wbf_t^{(h)}/{\sigma^{2,(h)}}, \\
+%\Wbf_t^{(h+1)}  = \left (I_M+ \Bbf'^{(h)} \Psibf^{-1,(h)} \Bbf^{(h)}
+%\right )^{-1}.
+%\end{cases}
+%$$
+$$
+\begin{cases}
+\widehat{\Zbf}_t^{(h+1)} = \tilde{Y}_t^{(h)} \Bbf^{(h)}
+\Wbf_t^{(h)}/{\sigma^{2,(h)}}, \\
+\Wbf_t^{(h+1)}  = \left (I_M+ \Bbf'^{(h)} \Bbf^{(h)} /\sigma^{2,(h)}
+\right )^{-1}.
+\end{cases}
+$$
+where $\tilde{Y}_t^{(h)}=Y_t-\mu_{k(t)}^{(h)}$.
+\paragraph{M-step} This step consists in the estimation of the
+parameters by maximizing the obtained conditional expectation.
+\begin{itemize}
+\item Estimation of the variance component $\sigma^{2}$:
+%\begin{eqnarray*}
+%\Psibf^{(h+1)}&=&\arg \max_{\Psibf} Q_0,\\
+%&=& \frac{1}{n} \sum_{t=1}^n (Y_t-\mu_{k(t)}^{(h)})'
+%(Y_t-\mu_{k(t)}^{(h)})- \frac{1}{n} \sum_{t=1}^n
+%(Y_t-\mu_{k(t)}^{(h)})' \widehat{\Zbf}_t^{(h+1)}  \Bbf'^{(h)}
+%\end{eqnarray*}
+%In the case where $\Psibf=\sigma^2 I_M$, we get
+\begin{eqnarray*}
+\sigma^{2,(h+1)} &=& \frac{1}{N} \sum_{t=1}^n \left [ E_t^{(h)}
+E_t'^{(h)}+ \text{Tr} \left( \Bbf'^{(h)}
+ \Bbf^{(h)}  \Wbf_t^{(h+1)} \right)\right ],
+\end{eqnarray*}
+where $E_t^{(h)}=Y_t-\mu_{k(t)}^{(h)}-\widehat{\Zbf}_t^{(h)}
+\Bbf'^{(h)}$.
+
+\item Estimation of $\Bbf$.
+\begin{eqnarray*}
+\Bbf^{(h+1)}= \sum_{t=1}^n (Y_t-\mu_{k(t)}^{(h)})'
+\widehat{\Zbf}_t^{(h+1)} \ \left [ \sum_{t=1}^n
+(\widehat{Z}_t'^{(h+1)} \widehat{Z}_t^{(h+1)}+ W_t^{(h+1)})\right
+]^{-1}.
+\end{eqnarray*}
+
+\item Estimation of the segmentation parameters $\Tbf \mubf$.
+\begin{eqnarray*}
+\left\{ \Tbf^{(h+1)},\mubf^{(h+1)} \right\} & = & \arg
+\max_{\Tbf,\mubf} Q_0, \\
+&=& \arg \max_{\Tbf,\mubf} \sum_{t=1}^n \| Y_t- (\Tbf \mubf)_t-
+\widehat{\Zbf}^{(h+1)}_t \Bbf'^{(h+1)}\|^2_{\Psibf^{-1,(h+1)}}, \\
+&=& \arg \max_{\Tbf,\mubf} \sum_{t=1}^n \| \tilde{\tilde{Y}}_t-
+(\Tbf \mubf)_t\|^2_{\Psibf^{-1,(h+1)}}.
+\end{eqnarray*}
+where $\tilde{\tilde{Y}}_t=Y_t- \widehat{\Zbf}_t^{(h+1)}
+\Bbf'^{(h+1)}$. This last term can be viewed as a correction to remove
+dependency between the series. Since $\Psibf$ is diagonal the DP (in
+particular the two-stages DP) can be used to obtain the segmentation
+parameter estimations.
+\end{itemize}
+
+%\max_{\Tbf,\mubf} \sum_{m=1}^M \sum_{k=1}^{K_m} \sum_{t \in I^k_m}
+%\left (\tilde{Y}_{tm}-\mu_{km} \right )^2,
+
+% The EM algorithm is known to depend strongly on the initial value of
+% the parameters, which is here the segmentation one. This phenomenon
+% often leads to erratic behavior of the likelihood and consequently
+% hampers the use of model selection criteria based on this likelihood. \\
+% In the application of the procedure on the real data, this phenomenon
+% is almost often observed on the likelihood with respect to $q$ for
+% each considered value of $K$. To solve this problem, for the values of
+% $q$ for which the likelihood does not increase, we restart the EM
+% algorithm with initial parameters, the parameters obtained with eithe
+% $q-1$ or $q+1$.
+
+
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+\section{Model selection}
+%-------------------------------------------------------------------------
+
+Here either the number of factors $q$ and the number of segments $K$
+should be estimated. The joint estimation of two parameters is not
+classical. We propose here a heuristic to select both these two
+parameters. First, for each $K$, $q$ is selected by using the BIC
+criterion:
+\begin{eqnarray*}
+\hat{q}_K&=&\argmin_{q \in \{1,\ldots,M-1\}} BIC(q_K),\\
+&=& \argmin_{q \in \{1,\ldots,M-1\}}-2 \LogL(\widehat{\Tbf \mubf}_K,
+\hat{\Sigmabf}_q)+Dq \log{(n)},
+\end{eqnarray*}
+where $\LogL(\widehat{\Tbf \mubf}_K, \hat{\Sigmabf}_q)$ is the
+$\log$-likelihood calculated at its maximum for a fixed $K$ and a
+fixed $q$, and $D_q$ is the number of parameters in a model with $q$
+factors, $D_q=q(2 M -q+1)/2+1$. Indeed for the variance components,
+according to the variance decomposition (cf equation
+(\ref{eq:variance_decomposition})), the number of parameters are $M
+\times q$ for $B$ and one for $\sigma^2$. Moreover, with the
+orthogonality condition on $B$, only $M q -q(q-1)/2$ need to be
+estimated. \\
+% Note that the number of segments is not be considered since
+% does not affected this part of the model selection.\\
+To select the number of segments, we use the modified BIC proposed by
+\cite{ZhS07} adapted to the joint segmentation by \cite{PLB11}
+\begin{eqnarray*}
+mBIC_{\text{JointSeg}}(K)&= &\left ( \frac{N+1}{2} \right
+)\log{SS_{\text{all}}} -\left ( \frac{N-K+1}{2} \right )
+\log{SS_{\text{wg}}(\hat{t})} + \log{\left [\Gamma \left
+(\frac{N-K+1}{2} \right)\right ]}
+\\
+&&   -\frac{1}{2} \sum_{m=1}^M \sum_{k=1}^{k_m} \log
+{\hat{n}^m_k}+\left ( \frac{1}{2}-(K-M) \right ) \log{(N)},
+\end{eqnarray*}
+where
+\begin{eqnarray*}
+&&SS_{\text{wg}}(\hat{t})=\sum_{t=1}^n (\Ybf_t-\hat{\mu}_{k(t)})
+\hat{\Sigmabf}_q^{-1}(\Ybf_t-\hat{\mu}_{k(t)})', \\
+&& SS_{\text{all}}=\sum_{t=1}^n (\Ybf_t-\bar{Y})
+\hat{\Sigmabf}_q^{-1}(\Ybf_t-\bar{Y})',
+\end{eqnarray*}
+with $\hat{n}^m_k$ is the length of segment $k$ in profile $m$
+($\hat{n}^m_k=\hat{t}^m_k-\hat{t}^m_{k-1}+1$), and $\hat{\mu}_{k(t)}$
+is a vector of size $M$ with the component $m$ is
+$\bar{y}_{mk}=(\hat{n}^m_k)^{-1}
+\sum_{t=\hat{t}^m_{k-1}+1}^{\hat{t}^m_{k}} y_m(t)$ if $t \in
+\hat{I}^m_k$.
+
+
+
+
+
+
+%We use two criteria: the ones developed by \cite{Lav05} and
+%\cite{L05} which the penalty depends on the number of parameters in
+%a model with $K$ segments, denoted by $D_K$. Here
+%$$
+%D_K=K+\frac{Q}{2}(2 M -Q+1)+1.
+%$$
+%Indeed, for the mean parameters, we have $K$ means to estimate and
+%for the variance components, according to the variance decomposition
+%(cf equation (\ref{eq:variance_decomposition})), the number of
+%parameters are $M \times Q$ for $B$ and one for $\sigma^2$.
+%Moreover, with the orthogonality condition on $B$, only $M Q
+%-Q(Q-1)/2$ need to be estimated. \\
+
+
+%The criterion proposed by \cite{Lav05} is
+%begin{equation*} Crit_{\text{Lav}}(K)= -2 \log {\mathcal{L}_K(\Ybf;
+%\widehat{\phi})}+\beta D_K
+%\end{equation*}
+%where $\log { \mathcal{L}_K(\Ybf; \widehat{\phi})}$ stands for the
+%log-likelihood calculated at its maximum. The constant $\beta$ is
+%chosen using an adaptative method which involves a threshold $s$. As
+%Lavielle suggests $s \in [0.5, 0.75]$, we used $s=0.7$ throughout
+%the simulation study. \\
+
+%The one proposed by \cite{L05} is
+%\begin{equation*}
+%Crit_{\text{Leb}}(K)=-2 \log {\mathcal{L}_K(\Ybf;
+%\widehat{\phi})}+\alpha \left[ 5 D_K +2 (K-M) \log \left
+%(\frac{N-M}{K-M} \right) \right]
+%\end{equation*}
+%This penalty also depends on a constant $\alpha$ which can be
+%calibrated in practice (cf \cite{BM04}).
+
+
+
+% %-------------------------------------------------------------------------
+% %-------------------------------------------------------------------------
+% \section{Simulation study}
+% %-------------------------------------------------------------------------
+
+
+% %-------------------------------------------------------------------------
+% %-------------------------------------------------------------------------
+% \section{Application to temperature data series}
+% %-------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+% \bibliography{/Biblio/AST}
+% \bibliographystyle{amsplain}
+
+\begin{thebibliography}{1}
+
+\bibitem{FKC09}
+C.~Friguet, M.~Kloareg, and D.~Causeur, \emph{A factor model approach to
+  multiple testing under dependence}, J. Amer. Statist. Assoc. \textbf{104}
+  (2009), no.~488, 1406--15, {\tt DOI:10.1198/jasa.2009.tm08332}.
+
+\bibitem{PLB11}
+F.~Picard, E.~Lebarbier, E.~Budinska, and S.~Robin, \emph{Joint segmentation of
+  multivariate gaussian processes using mixed linear models}, Comput. Statist.
+  and Data Analysis \textbf{55} (2011), no.~2, 1160--70.
+
+\bibitem{ZhS07}
+N.~R. Zhang and D.~O. Siegmund, \emph{A modified {B}ayes information criterion
+  with applications to the analysis of comparative genomic hybridization data},
+  Biometrics \textbf{63} (2007), no.~1, 22--32.
+
+\end{thebibliography}
+
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+\end{document}
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+
+
+TexteLong  de quatre \`a six pages qui sera mis en ligne sur le site
+du congr\`es et reproduit sur le CD ROM distribu\'e aux
+participants. Ce TexteLong devra mentionner le titre, le ou les
+auteurs, leurs affiliations et leurs adresses. Il comprendra un
+r\'esum\'e en fran\c cais, un r\'esum\'e en anglais, une liste de
+mots cl\'es et une bibliographie.
+\medskip
+
+Les r\'ef\'erences bibliographiques seront donn\'ees dans le texte
+sous la forme pr\'esent\'ee dans l'exemple suivant.
+\bigskip
+
+\noindent{EXEMPLE}
+
+La n\'ecessit\'e de produire des r\'esum\'es clairs et bien
+r\'ef\'erenc\'es a \'et\'e d\'emontr\'ee par Achin et Quidont~(2000). Le
+r\'ecent article de Noteur~(2003) met en \'evidence \dots
+
+%Quelques rappels :
+%%
+%\begin{center}
+%%
+%\begin{tabular}{lr} \hline
+%%
+%Accent aigu :              &  \'e; \\
+%Accent grave :             &  \`a;\\
+%Accent circonflexe :       &  \^o mais \^{\i};\\
+%Tr\'emas :                 &  \"o mais \"{\i};\\
+%C\'edille :                &  \c{c}. \\ \hline
+%\end{tabular}
+%%
+%\end{center}
+
+\bigskip
+
+\noindent {\large{\bf Bibliographie}}
+\medskip
+%
+
+\noindent [1] Auteurs (ann\'ee) Titre, revue, localisation.
+
+\noindent [2] Achin, M. et Quidont, C. (2000) {\it Th\'eorie des
+Catalogues}, Editions du Soleil, Montpellier.
+
+\noindent [3] Noteur, U. N. (2003) Sur l'int\'er\^et des
+r\'esum\'es. {\it Revue des Organisateurs de Congr\`es}, 34, 67--89.
+
+

@@ -1,0 +1,139 @@
+\section{Echantillonnage préférentiel}
+
+%------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Echantillonnage préférentiel : Principe}
+  On cherche à calculer (évaluer) une fonction d'intérêt
+  $$
+  L(\theta) = \int g(\Tcal, \theta) P(\Tcal |\theta) \dd \Tcal
+  \qquad 
+  (\text{e.g. } g(\Tcal, \theta) = P(\Dcal | \Tcal, \theta))
+  $$ 
+  sans pouvoir calculer cette intégrale.
+
+  \pause \bigskip
+  {\bf Astuce~:} Pour toute distribution $Q$ t.q. 
+  $$
+  g(\Tcal, \theta) P(\Tcal |\theta) > 0 \qquad \Rightarrow \qquad
+  Q(\Tcal) > 0,
+  $$
+  on a 
+  $$
+  L(\theta) = \int g(\Tcal, \theta) \frac{P(\Tcal |\theta)}{Q(\Tcal)}
+  Q(\Tcal) \dd \Tcal.
+  $$ 
+
+\end{frame}
+
+%------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Estimation par Monte-Carlo}
+  
+  Pour $\{\Tcal^{(1)}, \dots, \Tcal^{(M)}\}$ i.i.d. $\sim Q$, 
+  $$
+  \widehat{L}(\theta) = \frac1M \sum_{i=1}^M g(\Tcal^{(i)}, \theta)
+    \frac{P(\Tcal^{(i)} |\theta)}{Q(\Tcal^{(i)})}
+  $$
+  \pause
+  estime $L(\theta)$ sans bias et 
+  $$
+  \Var\left[\widehat{L}(\theta) \right] = \frac1M
+  \Var_Q\left[g(\Tcal^{(i)}, \theta)
+    \frac{P(\Tcal^{(i)} |\theta)}{Q(\Tcal^{(i)})} \right].
+  $$
+  \pause
+  $Q$ est d'autant meilleure que $\Var\left[\widehat{L}(\theta)
+  \right]$ est petite, i.e. que
+  $$
+  S(Q) = \Esp_Q\left[g^2(\Tcal^{(i)}, \theta) \frac{P^2(\Tcal^{(i)}
+      |\theta)}{Q^2(\Tcal^{(i)})} \right] \qquad \text{est
+    petite.}
+  $$
+\end{frame}
+
+%------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Meilleure distribution $Q$}
+
+  La distribution $Q^*$ est optimale si, pour toute 'contamination'
+  $F$
+  $$
+  \left. \frac{\partial}{\partial h} \left[S(Q+h F) - \lambda \int h F(\Tcal)
+      \dd \Tcal \right] \right|_{h=0} = 0
+  $$
+  \pause 
+  Si on peut dériver sous l'intégrale (la somme), cette dérivée vaut
+  $$
+  \int \left[g^2(\Tcal, \theta) \frac{P^2(\Tcal |\theta)}{{Q^*}^2(\Tcal)}
+  - \lambda \right]  F(\Tcal) \dd \Tcal
+  $$
+  et est nulle pour toute $F$, si
+  $$
+  Q^*(\Tcal) \propto g(\Tcal, \theta) P(\Tcal |\theta).
+  $$
+  \pause
+  Pour $g(\Tcal, \theta) = P(\Dcal | \Tcal, \theta)$, on obtient $
+  Q^*(\Tcal) \propto P(\Dcal | \Tcal, \theta) P(\Tcal |\theta)$
+  $$
+  \Rightarrow \qquad   
+  Q^*(\Tcal) = \frac{P(\Dcal | \Tcal, \theta) P(\Tcal
+    |\theta)}{P(\Dcal | \theta)} = P(\Tcal | \Dcal, \theta)...
+  $$
+\end{frame}
+
+%------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Surface de vraisemblance}
+
+  La distribution $Q^*$ pour l'estimation $\widehat{L}(\theta)$
+    dépend en $\theta: Q^* = Q^*_\theta$. \\
+  \begin{itemize}
+  \item \pause {\bf Point par point~:} estimer $L^*(\theta)$ avec $Q^*_\theta$
+    requiert un échantillonnage de $M$ valeurs pour chaque $\theta$ \\
+    $\rightarrow$ trop long.
+  \item \pause {\bf Valeur pilote $\theta_0$~:} on estime $L(\theta)$
+    en utilisant $Q^*_{\theta_0}$ \\
+    $\rightarrow$ marche pour $\theta$ proche de $\theta_0$.
+  \item \pause {\bf Grille $(\theta_1, \dots \theta_G$)~:} on définit
+    une distribution moyenne
+    $$
+    Q(\Tcal) = \sum_g Q^*_{\theta_g}(\Tcal).
+    $$
+  \end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Inférence ancestral}
+  
+  On peut estimer l'espérance a posteriori de l'âge du plus récent
+  ancêtre commun $T_{MRCA}$ utilisant les arbres $\Tcal^{(i)}$ obtenus
+  lors de l'échantillonnage préférentiel.
+
+  \pause 
+  On définit les poids
+  $$
+  w^{(i)} = \frac{W^{(i)}}{\sum_j W^{(j)}}, 
+  \qquad
+  W^{(i)} = \frac{P(\Dcal |\Tcal^{(i)}, \theta) P(\Tcal^{(i)} |
+    \theta)}{Q(\Tcal^{(i)})}.  
+  $$
+  \pause
+  et on utilise
+  \begin{eqnarray*}
+    \sum_i w^{(i)} T_{MRCA}(\Tcal^{(i)}) & \approx & 
+    \frac1{P(\Dcal|\theta)} \int P(\Dcal, \Tcal | \theta)
+    T_{MRCA}(\Tcal) \dd \Tcal \\
+    & = & \Esp(T_{MRCA} | \Dcal, \theta). 
+  \end{eqnarray*}
+\end{frame}
+
+%------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{}
+\end{frame}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "presgen"
+%%% End: 

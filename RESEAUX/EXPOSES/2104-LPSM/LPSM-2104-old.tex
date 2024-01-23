@@ -1,0 +1,344 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+% \usepackage[dvipsnames]{xcolor}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd, mathabx}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\bEDD}{B-EDD\xspace}
+
+% Directory
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title[Bipartite motifs]{Motif-based analysis of bipartite networks \\}
+
+\author[S. Robin]{S. Robin \\ \medskip
+joint work with S. Ouadah, P. Latouche \refer{OLR21}\\ ~}
+
+\institute[]{INRA / AgroParisTech / univ. Paris-Saclay / Museum National d'Histoire Naturelle \\~ \\~}
+
+\date[Paris, Apr.'21]{LPSM, Paris, Apr. 2021}
+
+%====================================================================
+%====================================================================
+\maketitle
+%====================================================================
+\frame{\frametitle{Outline} \tableofcontents}
+
+%====================================================================
+%====================================================================
+\section{Bipartite networks and motifs}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Bipartite networks and motifs} 
+
+  \hspace{-.04\textwidth}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.53\textwidth}}
+      \paragraph{Bipartite graph.} Graph connecting to distinct types of nodes: 
+      $$
+      G = (E^{\circ}, E^{\square}, V)
+      $$ 
+      \begin{itemize}
+      \item $E^{\circ} = \{1, \dots m\} =$ set of 'top' nodes (vertices)
+      \item $E^{\square} = \{1, \dots n\} =$ set of 'bottom' nodes
+      \item $V \subset E^{\circ} \times E^{\square} =$ set of edges
+      \end{itemize}
+      Equivalent to a $m \times n$ adjacency matrix $G$.
+      
+      \bigskip \bigskip \pause
+      \paragraph{Bipartite motif.} Sub-graph ($p_s \ll m$, $q_s \ll n$) of a bipartite graph
+      $$
+      s = (\{1, \dots p_s\}, \{1, \dots q_s\}, A_s)
+      $$
+      \bigskip
+      $$
+      \text{Example on the right:} \qquad A^s = \left( \begin{array}{cc} 0 & 1 \\ 0 & 1 \\ 1 & 1\end{array} \right)
+      $$
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth} \pause
+    \begin{tabular}{c} 
+      Bipartite graph $G$ \\
+      \includegraphics[width=.4\textwidth, trim=0 50 0 50]{\fignet/Zackenberg-1996_12-red-net} \\
+      Bipartite motif $s$ \\
+      \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism1}
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Motivation} 
+
+  \paragraph{Ecological networks.}
+  \begin{itemize}
+  \item Plant-pollinator: $\circ =$ insects, $\square =$ plants (mutualistic)
+  \item Host-parasite: $\circ =$ viruses, $\square =$ plants (antagonistic)
+  \end{itemize}
+      
+  \bigskip 
+\bigskip 
+\pause
+  \paragraph{Motif counts} provide a generic 'meso-scale' description of a network \refer{SCB19}
+  \begin{itemize}
+  \item motifs = 'building-blocks'
+  \item between local (node degree) and global ('metrics')
+  \end{itemize}
+
+  \bigskip 
+\bigskip 
+\pause
+  \paragraph{Application.}
+  \begin{itemize}
+  \item Characterize and compare networks (even when the nodes=species are different)
+  \item \textcolor{gray}{Characterize species according their 'species-role' in various networks}
+  \end{itemize} 
+  + Efficient tool to count motif occurrences in a network (\url{bmotif} package \refer{SSS19})
+
+}
+
+%==================================================================
+\frame{\frametitle{Motif count}
+
+  \bigskip 
+  \paragraph{Automorphisms =} non-redundant permutations of the motifs' adjacency matrix:
+  $$
+  \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism1}
+  \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism2}
+  \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism3} 
+  \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism4}
+  \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism5}
+  \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism6} 
+  $$
+  
+  \bigskip 
+  \paragraph{Set of positions $\Pcal_s =$} choice of $p_s$ nodes (among $m$) $\times$ choice of $q_s$ nodes (among $n$) $\times$ choice of an automorphism (among $r_s$)
+  $$
+  c_s := |\Pcal_s| = 
+  \left(\begin{array}{c}m \\ p_s\end{array}\right)
+  \times \left(\begin{array}{c}n \\ q_s\end{array}\right)
+  \times r_s
+  $$ 
+
+  \bigskip 
+  \paragraph{Motif count.} For a position $\alpha \in \Pcal_s$, define the indicator variable 
+  $$
+  Y_s(\alpha) = 1 \text{ if match,} \qquad 0 \text{ otherwise}.
+  $$
+  Then the motif count is
+  $$
+  N_s = \sum_{\alpha \in \Pcal_s} Y_s(\alpha)
+  $$
+  and its frequency is $F_s := N_s / c_s$
+  
+}
+
+%====================================================================
+\section{Moments of motif count}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Bipartite expected degree distribution model} 
+
+  \paragraph{\bEDD model.} A row-column exhangeable (RCE) model: \\ ~
+  \begin{itemize}
+   \item $\{U_i\}_{1 \leq i \leq m} \text{ iid}: U_i \sim \Ucal_{[0, 1]}$, 
+   \qquad $\{V_j\}_{1 \leq j \leq n} \text{ iid}: V_j \sim \Ucal_{[0, 1]}$, \\ ~
+   \item $\{G_{ij}\}_{1 \leq i, \leq m, 1 \leq j \leq n} \text{ independent } \mid \{U_i\}, \{V_j\}:$
+   $$
+   \Pr\{G_{ij} = 1 \mid U_i, V_j\} = \rho \; g(U_i) \; h(V_j).
+   $$
+  \end{itemize}
+  
+  \bigskip \bigskip 
+  where:
+  \begin{itemize}
+  \item $\rho =$ network density, \\ ~
+  \item $g =$ degree imbalance among top nodes ($g \geq 0$, $\int g(u) \d u = 1$), \\ ~
+  \item $h =$ degree imbalance among bottom nodes ($h \geq 0$, $\int h(v) \d v = 1$).
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Star motifs} 
+
+  \paragraph{Top star motif} with degree $d$ = one top node connected to $d$ bottom nodes 
+
+  \bigskip \bigskip 
+  \paragraph{Counting (top) star motifs.} Only depends on the (top) degrees $\{D_i\}_{1 \leq i \leq m}$
+  $$
+  N(\text{top star with degre $d$}) = \sum_{i=1}^m \binom{D_i}{d}
+  $$
+  
+  \bigskip \bigskip 
+  \paragraph{Exchangeability.} Under any RCE model, $\Pr\{Y_s(\alpha)\}$ does not depend on $\alpha$.
+
+  \bigskip \bigskip 
+  \paragraph{Probability of a star motif.} Under the \bEDD model, the probability of a top-star motif with degree $d$ writes
+  $$
+  \gamma_d = \rho^d \int g(u)^d \d u.
+  $$
+  Obviously, $\gamma_1 = \lambda_1 = \rho$
+    
+}
+
+%====================================================================
+\frame{\frametitle{Motif probability} 
+
+  \bigskip 
+  \paragraph{\bEDD model.} Under the \bEDD model, the motif probability writes
+  $$
+  \phi_s := \Pr\{Y_s(\alpha)\} = \prod_{u = 1}^{p_s} \gamma_{d_u^s} \prod_{v = 1}^{q_s} \lambda_{e_v^s} \left/ \rho^{d_+^s} \right.
+  $$
+  where
+  \begin{itemize}
+   \item $d_u^s =$ degree of the $u$-th top node in motif $s$ (resp. $e_v^s$ for the $v$-th bottom node) \\ ~
+   \item $d_+^s = \sum_u d_u^s = \sum_v e_v^s =$ number of edges in motif $s$
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  That is
+  $$
+  \Pbb\left(
+  \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9} 
+  \right)
+  \; = \; 
+  \frac{
+  \overset{\text{top stars}}{\overbrace{
+  \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
+  \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
+  \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top2}\right)   }}
+  \times
+  \overset{\text{bottom stars}}{\overbrace{
+  \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom1}\right) % \times
+  \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom3}\right)
+  }}
+  }{
+  \underset{\text{edges}}{\underbrace{
+  \left(\Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right)\right)^4
+  }}
+  } 
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Variance of the count} 
+
+}
+
+%====================================================================
+\frame{\frametitle{Plug-in estimates} 
+
+  \paragraph{Estimated probability.} 
+  $$
+  {\phi}_s := \frac{\gamma_2 \lambda_3}{\rho}
+  \qquad \rightarrow \qquad 
+  \overline{F}_s := \frac{\Gamma_2 \Lambda_4}{F_1}
+  $$
+  where $F_1$ is the edge frequency and $\Gamma_d$ (resp. $\lambda_e$) the frequency of top (resp. bottom) stars
+  }
+
+}
+
+%====================================================================
+\section{Asymptotic normality}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Main result} 
+
+}
+
+%====================================================================
+\frame{\frametitle{Sketch of proof} 
+
+}
+
+%====================================================================
+\frame{\frametitle{Limitation of the plug-in step} 
+
+}
+
+%====================================================================
+\section{Goodness-of-fit and network comparison}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{} 
+
+}
+
+%====================================================================
+\section{Network embedding}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{} 
+
+}
+
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References}
+  {%\footnotesize
+   \tiny
+   \bibliography{/home/robin/Biblio/BibGene}
+%    \bibliographystyle{/home/robin/LATEX/Biblio/astats}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+\backupbegin
+%====================================================================
+%====================================================================
+
+%====================================================================
+\backupend
+%====================================================================
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+  
+  \hspace{-.025\textwidth}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+

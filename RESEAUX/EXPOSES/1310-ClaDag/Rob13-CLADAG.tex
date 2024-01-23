@@ -1,0 +1,157 @@
+%%%%%%%%%%%%%%%%%%%% author.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% sample root file for your "contribution" to a contributed volume
+%
+% Use this file as a template for your own input.
+%
+%%%%%%%%%%%%%%%% Springer %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% RECOMMENDED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[graybox]{svmult}
+
+% choose options for [] as required from the list
+% in the Reference Guide
+
+\usepackage{mathptmx}       % selects Times Roman as basic font
+\usepackage{helvet}         % selects Helvetica as sans-serif font
+\usepackage{courier}        % selects Courier as typewriter font
+\usepackage{type1cm}        % activate if the above 3 fonts are
+                            % not available on your system
+%
+\usepackage{makeidx}         % allows index generation
+\usepackage{graphicx}        % standard LaTeX graphics tool
+                             % when including figure files
+\usepackage{multicol}        % used for the two-column index
+\usepackage[bottom]{footmisc}% places footnotes at page bottom
+
+% see the list of further useful packages
+% in the Reference Guide
+
+\usepackage{amsmath, amssymb, amsfonts, stmaryrd}
+\renewcommand{\paragraph}[1]{~\\ \noindent {\bf #1}}
+
+
+\makeindex             % used for the subject index
+                       % please use the style svind.ist with
+                       % your makeindex program
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title*{Deciphering and modeling heterogeneity in interaction networks}
+% Use \titlerunning{Short Title} for an abbreviated version of
+% your contribution title if the original one is too long
+\author{St\'ephane Robin}
+% Use \authorrunning{Short Title} for an abbreviated version of
+% your contribution title if the original one is too long
+\institute{S. Robin \at UMR518, AgroParisTech / INRA, Paris, France, \email{robin@agroparistech.fr}}
+%
+% Use the package "url.sty" to avoid
+% problems with special characters
+% used in your e-mail or web address
+%
+\maketitle
+
+\abstract*{Network analysis has become a very active field of statistics within the last decade. Several models have been proposed to describe and understand the heterogeneity observed in real networks. We present several models involving latent variables. We discuss the issues raised by their inference, focusing on the stochastic block model. We describe a variational approach that allows to deal with the complex dependency structure of this model.}
+
+\abstract{Network analysis has become a very active field of statistics within the last decade. Several models have been proposed to describe and understand the heterogeneity observed in real networks. We will present here several modeling involving latent variable. We will discuss the issues raised by their inference, focusing on the stochastic block model. We will describe a variational approach that allows to deal with the complex dependency structure of this model.}
+
+\keywords{network, random graph, mixture model, variational inference}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+From more than a decade, network analysis has arisen in many fields of application such as biology, sociology, ecology, industry, internet, {\it etc}. Network is a natural way to describe how individuals or entities interact. An interaction network consists in a graph where each nodes represents an individual and an edge exists between two nodes if the two corresponding individuals interact in some way. Interaction may refer to social relationships, molecular bindings, wired connexion or web hyperlinks, depending on the context. Such interactions can be symmetric or asymmetric, binary (when only the presence or absence of an edge is recorded) or weighted (when a value is associated with each observed edge).
+
+Network analysis raises a series of interesting statistical questions because of the atypical organization of graph-structured data. We focus here on the analysis of the global topology of the graph. It has been observed that real network display various structural characteristics such as hubs (nodes connected to a large number of other nodes), highly imbalanced degree ('scale free') distributions, communities (sets of nodes highly connected between them but with only few connections with outer nodes), small diameter ('small world': every node can be reached from any other in a small number of steps with respect to the graph size). All such characteristics result from an heterogeneous behavior of the nodes, that we would like to capture to better understand the network's organization.
+
+A large number of methods have been proposed to analyze the topology of a given graph, that mostly belong to two categories. Algorithmic approaches do not make any assumption about the way the network has been build but propose efficient computational strategies to split it into sub-network or to isolate node with critical topological properties (\cite{NeG04}). Model-based methods rely of some probabilistic model (\cite{PaR07}) that provides easy-to-interpret results but often raise inference issues. We focus here on the latter approach, with a special attention to state space models. We limit ourselves to undirected binary network, although many of these methods can be generalized.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{State space models for networks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cite{BJR07} proposed a general framework for heterogeneous random graph model. Their model is a state space model and is defined as follows. Consider $n$ nodes ($i = 1, \dots, n$) and denote the presence of an edge between nodes $i$ and $j$ as $X_{ij} := \mathbb I\{i \sim j\}$. A latent (unobserved) variable $Z_i$ is associated with each node, the $Z_i$'s being iid with distribution $\pi$ over some space $\mathcal Z$: $
+(Z_i)_i \text{ iid } \sim \pi.$
+The edges $X_{ij}$ are drawn independently conditional on the $Z_i$'s, with Benoulli distribution:
+%depending on the respective latent variables associated to each node:
+%$(X_{ij})_{i, j}$ independent given $(Z_i)_i$ and 
+$X_{ij} | Z_i, Z_j \sim \mathcal B(\gamma(Z_i, Z_j))$
+where $\gamma$ is some mapping of $\mathcal Z \times \mathcal Z$ onto $[0, 1]$.
+A series of models that have been proposed in the literature can be casted into this framework; we briefly remind some of them.
+\begin{description}
+ \item[Latent space model:] \cite{HRH02} define a model where the $Z_i$'ss have a $d$-dimensional normal distribution $\pi = \mathcal N_d(\bf 0, \bf R)$ and where the connections are governed by the distances in the latent space: $\text{logit}(\gamma(z, z')) = a + \|z - z'\|$.
+ \item[Clustering in the latent space:] \cite{HRT07} propose an extension of the previous model, accounting for clustering. Keeping a similar function $\gamma$, the clustering is modeled via a $d$-dimensional Gaussian mixture in the latent space: $\pi = \sum_k p_k \mathcal N_d({\bf m}_k, \bf R)$.
+ \item[Stochastic block model (SBM):] \cite{NoS01} propose a mixture model where the $Z_i$'s can only take a finite number of values: $\mathcal Z = (1, \dots, K)$ so $\pi$ is simply multinomial.
+ \item[$W$-graph:] \cite{LoS06} assume that the latent variable are uniformly distributed over $\mathcal Z = [0, 1]$ so $\pi = \mathcal U[0, 1]$. The function $W$ defined in the quoted article corresponds to the function $\gamma$ of this abstract.
+\end{description}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Variational inference for the stochastic block model}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+We now focus on the SBM. The aim of the inference is both to estimate the parameter $\theta = (\pi, \gamma)$ and to infer the latent variables $Z_i$'s. 
+
+\paragraph{Regular EM.}
+As SBM is a genuine mixture model, maximum likelihood inference can be attempted via the EM algorithm (\cite{DLR77}). We remind that the E step requires to compute the conditional distribution $p(Z |X)$ of the latent variables $Z = (Z_i)$ given the observed ones $X = (X_{ij})$, or at least some of its moments. 
+
+\paragraph{Dependency structure.}
+The E step turns out to be infeasible because of the complexity of this conditional distribution. Intuitively, the issue is due to the moralization phenomenon that is observed is certain graphical models (\cite{Lau96}). 
+% Consider two nodes $i$ and $j$, their latent variables $Z_i$ and $Z_j$ are independent and the edge $X_{ij}$ only depends on them so their joint distribution factorizes as $p(Z_i, Z_j, X_{ij}) = p(Z_i) p(Z_j) p(X_{ij} | Z_i, Z_j).$ However the latent variables are not independent conditional on the edge since $p(Z_i, Z_j | X_{ij}) = p(Z_i) p(Z_j) p(X_{ij} | Z_i, Z_j) / p(X_{ij})$ does not factorize. 
+The conditional distribution of the latent variables under SBM displays a highly intricate dependency structure that make classical inference infeasible even for medium-size graphs.
+
+\paragraph{Variational EM.}
+Variational approximations are often used for the inference of complex graphical models (\cite{WaJ08}). The idea is to replace the calculation of the conditional distribution, $p_\theta(Z|X)$ in the E step by an approximation step defined as 
+$$
+q_\theta^*(Z) = \arg\min_{q \in \mathcal Q} KL(q_\theta(Z) || p_\theta(Z|X))
+$$
+where $\mathcal Q$ is a class of easy-to handle distributions, e.g. $\mathcal Q = \{q: q(Z) = \prod_i q_i(Z_i)\}$. It can be shown that the resulting variational EM (VEM) algorithm aims at maximizing a lower bound of the log-likelihood of the data $\log p_\theta(X)$. Such a strategy can be applied to SBM (\cite{DPR08}) and results in a so-called mean field approximation (\cite{Par88}).
+
+\paragraph{Validity of the variational approximation.}
+Not much is known in general about the validity of variational approximations except some rather negative results (\cite{GuB05}). However, due to specific asymptotic framework of graphs (the number of edges grows as $n^2$), the variational approximation turns out to be valid as shown in \cite{CDP12}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Alternatives and Extensions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\paragraph{Alternatives inference strategies}
+
+Alternatives to variational EM have been proposed for SBM inference.
+\begin{description}
+ \item [Variational Bayes EM (VBEM).]
+ A Bayesian counterpart of VEM can be derived in order to get an approximate conditional distribution of both the parameter and the latent variables: $p(\theta, Z | X)$. The problem can be stated as
+ $$
+ q^*(Z, \theta) = \arg\min_{q \in \mathcal Q} KL (q^*(Z, \theta) || p(\theta, Z | X)).
+ $$
+ If the distributions belong to the exponential family and if conjugate priors are used for $\theta$, explicit update formulas for VBEM can be derived (\cite{BeG03}). \cite{LBA11b} applied this strategy to SBM and \cite{GDR11} showed its validity even on medium-size graphs, based on an intensive simulation study.
+ \item [Spectral clustering.]
+ Spectral clustering is an efficient algorithm for graph clustering based on the spectral decomposition of the graph Laplacian (\cite{LBB08}). Although it has not been conceived as a model-based method, \cite{RCY11} show that, combined with a $K$-means step, it results in consistent estimates for SBM.
+ \item [Degree distribution.]
+ As said before, random graph models possess a specific property, as each new node provides information on all other nodes. Under SBM, the degree of each node conditional on its latent variable has a binomial distribution. In the case of SBM, this specific asymptotic framework results in a fast concentration of the degrees around their means, so that the clustering of the nodes can be achieved only based on the degrees, in a linear time, with consistency guaranties (\cite{CDR12}). 
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Extension of SBM}
+
+\begin{description}
+  \item[Weighted graphs and covariates.]
+  The SBM model can be generalized to some valued graph by simply changing the emission distribution $\mathcal B(\gamma(z, z'))$ into any parametric distribution such as normal or Poisson. In the framework of generalized linear models, covariates can be accounted for via a regression models, as studied in \cite{MRV10}.
+  \item[Connexion with $W$-graphs.]
+  It can be easily seen that SBM corresponds to a $W$ graph where the graphon function $\gamma$ is block-wise constant. SBM can therefore be viewed as a piece-wise constant approximation of $W$-graph and variational inference can be used to infer the graphon function. As noticed in \cite{ChD11}, the $W$-graph suffers strong identifiability issues, but some network characteristics such as the expected number of occurrence of given subgraphs (also called motifs) are invariant. Such moments can be computed in the framework of SBM (\cite{PDK08}).
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{spmpsci}
+\bibliography{/home/robin/Biblio/Polys,/home/robin/Biblio/AST,/home/robin/Biblio/ARC,/home/robin/Biblio/SSB}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,49 @@
+%====================================================================
+\subsection*{Introduction}
+%====================================================================
+\frame{\frametitle{Networks are useful} 
+
+  Networks 
+  \begin{itemize}
+   \item have invaded most scientific fields (social sciences, economy, industry, biology, ecology, ...)
+   \item provide a natural way to represent interactions between entities (humans, companies, genes, species, ...)
+   \item have raised new interests in the mathematical community is the last two decades
+  \end{itemize}
+  
+  \pause\bigskip\bigskip
+  A network is actually a graph
+  $$
+  G = (E, V)
+  $$
+  \begin{itemize}
+    \item $V =$ set of vertices (= nodes = entities, genes, species): 
+    $$V := \llbracket 1, m \rrbracket$$
+    \item $E = $ set of edges $\subset V \times V$
+    % : binary or weighted, undirected or directed, univariate or multivariate.
+  \end{itemize}
+  }
+
+%====================================================================
+\frame{\frametitle{Two prominent statistical questions} 
+
+  $$
+  \text{\emphase{$Y =$ observed data}}
+  $$
+  
+  \pause\bigskip
+  \paragraph{Network inference.} Based on a $n \times m$ data matrix $Y = [Y_{ij}]$:
+  \begin{align*}
+   Y_{ij} & = \text{expression of gene $j$ in patient $i$,} \\
+   & = \text{abundance of species $j$ in site $i$,}
+  \end{align*}
+  infer the biological / ecological network $G$ \ra \emphase{$G$ is fixed} (but unknown).
+  
+
+  \pause\bigskip\bigskip
+  \paragraph{Network topology.} Based on an $m \times m$ interaction matrix $Y = [Y_{ij}]$
+  \begin{align*}
+   Y_{ij} & = \text{existence of a physical interaction between proteins $i$ and $j$} \\
+   & = \text{number of parasites shared by species $i$ and $j$}
+  \end{align*}
+  understand the organization of the biological / ecological network \ra \emphase{$G = Y$ is random}.
+  }

@@ -1,0 +1,671 @@
+\documentclass{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+\usetheme{CambridgeUS}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+%\usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+%\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{epsfig}
+\usepackage{url}
+% \usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+% Commands
+\definecolor{darkred}{rgb}{0.65,0.15,0.25}
+\newcommand{\emphase}[1]{\textcolor{darkred}{#1}}
+%\newcommand{\emphase}[1]{{#1}}
+\newcommand{\paragraph}[1]{\textcolor{darkred}{#1}}
+\newcommand{\refer}[1]{{{\textcolor{blue}{{\cite{#1}}}}}}
+\newcommand{\Refer}[1]{{{\textcolor{blue}{{\sl #1}}}}}
+\newcommand{\newblock}{}
+
+% Symbols
+% \newcommand{\Abf}{{\bf A}}
+\newcommand{\Beta}{\text{B}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\BIC}{\text{BIC}\xspace}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\dd}{\text{~d}}
+% \newcommand{\dbf}{{\bf d}}
+\newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Esp}{\mathbb{E}}
+% \newcommand{\Ebf}{{\bf E}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Gam}{\mathcal{G}\text{am}}
+\newcommand{\Ibb}{\mathbb{I}}
+% \newcommand{\Ibf}{{\bf I}}
+\newcommand{\ICL}{\text{ICL}\xspace}
+\newcommand{\Cov}{\mathbb{C}\text{ov}}
+\newcommand{\Corr}{\mathbb{C}\text{orr}}
+\newcommand{\Var}{\mathbb{V}}
+\newcommand{\Vsf}{\mathsf{V}}
+\newcommand{\pen}{\text{pen}}
+\newcommand{\Fcal}{\mathcal{F}}
+% \newcommand{\Hbf}{{\bf H}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Jcal}{\mathcal{J}}
+% \newcommand{\Kbf}{{\bf K}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Mcal}{\mathcal{M}}
+% \newcommand{\mbf}{{\bf m}}
+% \newcommand{\mum}{\mu(\mbf)}
+\newcommand{\Ncal}{\mathcal{N}}
+% \newcommand{\Nbf}{{\bf N}}
+% \newcommand{\Nm}{N(\mbf)}
+\newcommand{\Ocal}{\mathcal{O}}
+% \newcommand{\Obf}{{\bf 0}}
+\newcommand{\Omegas}{\underset{s}{\Omega}}
+% \newcommand{\Pbf}{{\bf P}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Rcal}{\mathcal{R}}
+% \newcommand{\sbf}{{\bf s}}
+% \newcommand{\Sbf}{{\bf S}}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\BP}{\text{BP}}
+\newcommand{\EM}{\text{EM}}
+\newcommand{\VEM}{\text{VEM}}
+\newcommand{\VBEM}{\text{VBEM}}
+\newcommand{\cst}{\text{cst}}
+\newcommand{\obs}{\text{obs}}
+\newcommand{\ra}{\emphase{\mathversion{bold}{$\rightarrow$}~}}
+\newcommand{\QZ}{Q_{Z}}
+\newcommand{\Qt}{Q_{\theta}}
+%\newcommand{\transp}{\text{{\tiny $\top$}}}
+\newcommand{\transp}{\text{{\tiny \mathversion{bold}{$\top$}}}}
+
+\newcommand{\beginbackup}{
+   \newcounter{framenumbervorappendix}
+   \setcounter{framenumbervorappendix}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+   \addtocounter{framenumbervorappendix}{-\value{framenumber}}
+   \addtocounter{framenumber}{\value{framenumbervorappendix}} 
+}
+
+
+% Directory
+\newcommand{\figmixt}{/home/robin/ENSEIGN/COURS/MELANGE}
+\newcommand{\figbma}{/home/robin/RECHERCHE/RUPTURES/MELANGE/Exemples/Grippe}
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
+%\newcommand{\figmotif}{/home/robin/RECHERCHE/RESEAUX/Motifs/FIGURES}
+
+
+%--------------------------------------------------------------------
+\title[Variational inference for $W$-graphs]{{Averaging Stochastic Block Models to approximate $W$-graphs}}
+  
+%   Averaging Stochastic Block Models to estimate the graphon function of a W-graph
+
+\author{S. Robin}
+
+\institute[AgroParisTech / INRA]{AgroParisTech / INRA \\
+  \begin{tabular}{ccccc}
+    \epsfig{file=\fignet/LogoINRA-Couleur.ps,
+      width=2.5cm} & 
+    \hspace{.5cm} &
+    \epsfig{file=\fignet/logagroptechsolo.eps,
+      width=3.75cm} & 
+    \hspace{.5cm} &
+    \epsfig{file=\fignet/logo-ssb.eps,
+      width=2.5cm} \\ 
+  \end{tabular} \\
+  \bigskip
+    {\normalsize joint work with P. Latouche} \\ ~\\
+  }
+
+\date[Dublin, July'14]{{\normalsize Working group on model-based clustering, July 2014, Dublin}}
+%--------------------------------------------------------------------
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\begin{document}
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+
+%--------------------------------------------------------------------
+\frame{\titlepage}
+
+%--------------------------------------------------------------------
+\section{Modeling network heterogeneity}
+%--------------------------------------------------------------------
+\frame{\frametitle{Modeling network heterogeneity}
+
+  \paragraph{Latent variable models} allow to capture the underlying structure of a network.
+
+  \bigskip \bigskip \pause
+  \paragraph{General setting for binary graphs.} \refer{BJR07}: %\pause
+  \begin{itemize}
+   \item   {A latent (unobserved) variable $Z_i$} is associated with each node:
+  $$
+  \{Z_i\} \text{ iid } \sim \pi 
+  $$
+  \item 
+  Edges {$X_{ij} = \Ibb\{i \sim j\}$ are independent conditionally} to the $Z_i$'s:
+  $$
+  \{X_{ij}\} \text{ independent } | \{Z_i\}: \Pr\{X_{ij} = 1\} = \gamma(Z_i, Z_j)
+  $$
+  \end{itemize}
+
+  \bigskip 
+  Includes latent position models \refer{HRH02,HRT07}, see \refer{MaR14} for a review.
+
+  }
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Stochastic Block Model (SBM)}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<1->{\paragraph{A mixture model for random graphs.}}
+      \onslide+<2->{\begin{itemize}
+        \item Consider $n$ nodes ($i = 1..n$); \\ ~ } 
+        \onslide+<3->{
+        \item $Z_i = $ unobserved label of node $i$:
+          $$
+          \{Z_i\} \text{ i.i.d. } \sim \Mcal(1; \pi)
+          $$
+          $\pi = (\pi_1, ... \pi_K)$; \\ ~ } 
+        \onslide+<4->{
+        \item Edge $X_{ij}$ depends on the labels:
+          $\{X_{ij}\}$ independent given $\{Z_i\}$,
+          $$
+          (X_{ij}) \sim \Bcal(\gamma_{Z_i, Z_j})
+          $$}
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \vspace{1cm}
+      \begin{overprint}
+        \onslide<2>
+        \epsfig{file = \fignet/FigSBM-Model-1.eps,
+          width=.75\textwidth, clip=}    
+        \onslide<3>
+        \epsfig{file = \fignet/FigSBM-Model-2.eps,
+          width=.75\textwidth, clip=}    
+        \onslide<4>
+        \epsfig{file = \fignet/FigSBM-Model-3.eps,
+          width=.75\textwidth, clip=}    
+        \onslide<5>
+%        \epsfig{file = \fignet/FigSBM-Model-4.eps,
+%        width=.75\textwidth, clip=}    
+%        \onslide<6>
+        \epsfig{file = \fignet/FigSBM-Model-5.eps,
+          width=.75\textwidth, clip=}    
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  }
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{$W$-graph model}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+	 Latent variables:
+	 $$
+	 (Z_i) \text{ iid } \sim \Ucal_{[0, 1]},
+	 $$ ~\\
+	 Graphon function $\gamma$:
+	 $$
+	 \gamma(z, z'): [0, 1]^2 \rightarrow [0, 1]
+	 $$ ~\\    
+	 Edges:
+	 $$
+	 \Pr\{X_{ij} = 1\} = \gamma(Z_i, Z_j)
+	 $$    
+	 \end{tabular}
+    & 
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+	 Graphon function $\gamma(z, z')$ \\
+      \includegraphics[width=.5\textwidth]{\fignet/FigCLADAG-W-graphon} \\
+    \end{tabular}
+  \end{tabular}
+  
+  \medskip
+  \paragraph{Aim of this work:} provide an estimate of the graphon function.
+%   Intensively studied in probability theory as a limit for dense graphs \refer{LoS06}.
+
+ }
+
+%--------------------------------------------------------------------
+\section{Variational approximation}
+%--------------------------------------------------------------------
+\frame{\frametitle{Looking for conditional distributions}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<1->{
+        \paragraph{Maximum likelihood estimation} (e.g. EM) of $\theta = (\pi, \gamma)$ often requires the calculation of
+        $$
+        P_{\theta}(Z | X).
+        $$
+        ~\\~\\~\\
+      }
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+            \begin{overprint}
+        \onslide<2>
+        \epsfig{file=../FIGURES/FigSBM-Z.eps, clip=, width=0.6\textwidth}
+        \onslide<3>
+        \epsfig{file=../FIGURES/FigSBM-Z-X12.eps, clip=, width=0.6\textwidth}
+        \onslide<4>
+        \epsfig{file=../FIGURES/FigSBM-Z-X12-Moral.eps, clip=,
+          width=0.6\textwidth} 
+        \onslide<5>
+        \epsfig{file=../FIGURES/FigSBM-Z-X-Moral.eps, clip=,
+          width=0.6\textwidth} 
+        \onslide<6->
+        \epsfig{file=../FIGURES/FigSBM-ZcondX.eps, clip=,
+          width=0.6\textwidth}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+  \onslide+<6->{
+    \vspace{-.1\textheight}
+    \paragraph{Conditional distribution.} The dependency graph of
+    $Z$ given $X$ is a clique. \\
+    \ra No factorization can be hoped (unlike for HMM). \\
+    \ra $P_{\theta}(Z | X)$ can not be computed
+    (efficiently). \\
+%     \ra Variational techniques provide 
+%     $$
+%     Q(Z) \simeq P_{\theta}(Z | X).
+%     $$
+  }
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Looking for conditional distributions}
+  
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Bayesian inference.} We are now interested in 
+      $$
+      P(Z, \theta | X)
+      $$
+      \ra more intricate than $P_{\theta}(Z | X)$.
+      \\~\\~\\~\\~\\
+    \end{tabular}
+    & 
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<2>
+        \epsfig{file = \fignet/FigSBM-Z-X.eps,
+          width=.7\textwidth, clip=}   
+        \onslide<3>
+        \epsfig{file = \fignet/FigSBM-Bayes-1.eps,
+          width=.7\textwidth, clip=}   
+        \onslide<4>
+        \epsfig{file = \fignet/FigSBM-Bayes-2.eps,
+          width=.7\textwidth, clip=}   
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  
+%   \onslide+<4>{
+%     \vspace{-1cm}
+%     Variational techniques can provide an approximation
+%     $$
+%     Q(Z, \theta) \simeq P(Z, \theta | X).
+%     $$}
+  }
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Variational approximation}
+
+  Allows to compute optimal\footnote{in terms of Küllback-Leibler divergence} approximate distributions.
+  
+  \begin{itemize}
+   \item \paragraph{Variational EM:}
+   $$
+   P_\theta(Z|X) \approx Q(Z) := \prod_i Q_i(Z_i) 
+   $$
+   Usefull and asymptotically exact for SBM  \refer{DPR08,CDP11,MaM13}.
+   \item \pause \paragraph{Variational Bayes EM:}
+   $$
+   P(Z, \theta | X) \approx Q(Z, \theta) := \prod_i Q_i(Z_i) \times Q_{\theta}(\theta) 
+   $$
+   in the exponential family / conjugate prior context \refer{BeG03}. \\
+   Theoretical arguments and empirical evidence of its good behavior for SBM \refer{LBA11b,GDR11}.
+  \end{itemize}
+
+}
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Why does it work for SBM ?}
+
+  \vspace{-.1\textheight}
+  \begin{tabular}{cc}
+   \begin{tabular}{p{.4\textwidth}}
+   Degree distribution = mixture of binomials. \\
+   \bigskip 
+   Binomials concentrate very fast toward their respective means. \\
+   \bigskip 
+   The classification problem is asymptotically 'trivial'. \\
+   \bigskip
+   Efficient alternatives to VEM exist for large networks \refer{CDR12}.
+   \end{tabular}
+   &
+  \hspace{-.1\textheight}
+  \begin{tabular}{c}
+  \vspace{-.12\textheight}
+  \includegraphics[width=.27\textwidth, height=.8\textheight, angle=270]{../FIGURES/ConcentrBinom-n100} \\
+  \vspace{-.12\textheight}
+  \includegraphics[width=.27\textwidth, height=.8\textheight, angle=270]{../FIGURES/ConcentrBinom-n1000} \\
+  \vspace{-.12\textheight}
+  \includegraphics[width=.27\textwidth, height=.8\textheight, angle=270]{../FIGURES/ConcentrBinom-n10000} \\
+  ~ \\ ~ 
+   \end{tabular}
+  \end{tabular}
+
+}
+
+%--------------------------------------------------------------------
+\frame{\frametitle{Variational approximation (for SBM)}
+
+  Can be pushed one step further for model averaging.
+  
+  \bigskip
+  \paragraph{Variational Bayes model averaging:} Consider a series of models $1, \dots, K, \dots$:
+  \begin{eqnarray*}
+  P(Z, \theta, K|X) & \approx & Q(Z, \theta, K) \\
+  & := & Q_{Z|K}(Z|K) \times Q_{\theta|K}(\theta|K) \times Q_{K}(K)  \end{eqnarray*}
+
+  \bigskip \pause
+  Model weights \refer{VMR12}: 
+  $$
+    Q_K^*(K) \propto P(K) e^{\log P(X|K) - KL(K)} = P(K|X) e^{-\emphase{KL(K)}}
+  $$ ~ \\
+  where $KL(K) = KL[Q^*(Z, \theta|K); P(Z,  \theta|X, K)]$. 
+
+}
+
+%--------------------------------------------------------------------
+\section{Inference of the graphon model}
+%--------------------------------------------------------------------
+\frame{ \frametitle{Inference of the graphon function}
+
+  \paragraph{Probabilistic point of view.}
+  \begin{itemize}
+   \item $W$-graph have been mostly studied in the probability literature as a limit for dense graphs: \refer{LoS06}, \refer{DiJ08}
+   \item Intrinsic un-identifiability of the graphon function $\gamma$ is often overcome by imposing that $u \mapsto \int \gamma(u, v) \dd v$ is monotonous increasing.
+   \item Motif (sub-graph) frequencies are invariant characteristics of a $W$-graph.
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Statistical point of view.}
+  \begin{itemize}
+   \item Not much attention has been paid to its inference until very recently: \refer{Cha12}, \refer{ACC13}, \refer{WoO13}, ...
+   \item The two latter also uses SBM as a proxy for $W$-graph.
+  \end{itemize}
+}
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{SBM as a $W$-graph model}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+	 Latent variables:
+	 $$
+	 (Z_i) \text{ iid } \sim \Mcal(1, \pi)
+	 $$ ~\\
+	 Blockwise constant graphon:
+	 $$
+	 \gamma(z, z') = \gamma_{k\ell}
+	 $$ ~\\
+	 Edges:
+	 $$
+	 \Pr\{X_{ij} = 1\} = \gamma(Z_i, Z_j)
+	 $$    
+	 \end{tabular}
+    & 
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+	 Graphon function $\gamma^{SBM}_K(z, z')$ \\
+      \includegraphics[width=.5\textwidth]{\fignet/FigCLADAG-SBM-graphon} \\
+    \end{tabular}
+  \end{tabular}
+
+  \ra block widths $= \pi_k$, block heights $\gamma_{k\ell}$
+ }
+
+%--------------------------------------------------------------------
+\subsection*{Variational Bayes inference}
+%--------------------------------------------------------------------
+\frame{ \frametitle{Variational Bayes estimation of $\gamma(z, z')$}
+
+%   \paragraph{General idea.} Estimate the true $\gamma$ with a blockwise constant function $\gamma_K^{SBM}$ with $K$ classes.
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+    \paragraph{VBEM inference} provides the \\approximate posteriors:
+    \begin{eqnarray*}
+    (\pi | X) & \approx & \text{Dir}(\pi^*) \\
+    (\gamma_{k\ell} | X) & \approx & \text{Beta}(\gamma^{0*}_{k\ell}, \gamma^{1*}_{k\ell}) 
+    \end{eqnarray*}
+    ~
+    
+    \paragraph{Estimate of $\gamma(u, v)$.} 
+    Due \\
+    to the uncertainty of the $\pi_k$, \\
+    the posterior mean of $\gamma^{SBM}_K$  \\
+    is smooth
+    
+    \bigskip \bigskip 
+    (Explicit integration using \refer{GoS10})
+%     $$
+%     \widehat{\gamma}_K^{SBM}(u, v) = \widetilde{\Esp}\left(\gamma_{C(u), C(v)} | X\right)
+%     $$
+%     where $C(u) = 1 + \sum_k \Ibb\{\sigma_k \leq u\}$. \\ ~
+%     \\
+%     \refer{GoS10}
+    \end{tabular}
+    & 
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+	 Posterior mean $\widetilde{\Esp}(\gamma^{SBM}_K(z, z') | X, K)$ \\
+      \includegraphics[width=.5\textwidth]{\fignet/FigGraphon-SBM-average} \\
+% 	 Posterior mean of $\gamma^{SBM}_K(z, z')$ \\
+%     \includegraphics[width=.6\textwidth]{../FIGURES/FigGraphon-SBM-average} \\
+    \end{tabular}
+  \end{tabular}
+  
+}
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Averaging SBMs}
+
+  \paragraph{Model averaging:} There is no 'true $K$' in the $W$-graph model.
+
+  \bigskip \bigskip
+  \paragraph{Apply VBMA recipe to $\gamma(z, z')$.}
+  For $K = 1 .. K_{\max}$, fit an SBM model via VBEM and compute
+  $$
+  \widehat{\gamma}_K^{SBM}(z, z') = \widetilde{\Esp}[\gamma_{C(z), C(z')} | X, K].
+  $$
+  
+  \pause \bigskip \bigskip
+  Then perform model averaging as
+  $$
+  \widehat{\gamma}(z, z') = \widetilde{\Esp}[\gamma_{C(z), C(z')} | X] = \sum_K Q^*_K(K) \widehat{\gamma}_K^{SBM}(z, z').
+  $$
+%   \end{itemize}
+
+}
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Some simulations}
+
+  \begin{tabular}{cc}
+    \hspace{-.5cm}
+    \begin{tabular}{p{.5\textwidth}}
+    \paragraph{Design.} Symetric graphon:
+    $$
+    \gamma(u, v) = \rho \lambda^2 (uv)^{\lambda-1}
+    $$
+    \begin{itemize}
+     \item $\lambda \uparrow$: imbalanced graph 
+     \item $\rho \uparrow$: dense graph
+    \end{itemize}
+    
+    \bigskip
+    \paragraph{Results.}
+    \begin{itemize}
+     \item More complex models as $n$ and $\lambda$ $\uparrow$
+     \item Posterior fairly concentrated
+    \end{itemize}
+
+    \end{tabular}
+    & 
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    Variational posterior for $K$: $Q^*(K)$.
+    \includegraphics[width=.5\textwidth]{../FIGURES/PostDistQ-Talk-Lambda-N-rho0316227766016838}
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{French political blogosphere}
+
+  \paragraph{Website network.} French political blogs: 196 nodes, 1432 edges.
+  $$
+  \includegraphics[width=.65\textwidth]{../FIGURES/Blogosphere-raw}
+  $$
+}
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{French political blogosphere}
+
+  \paragraph{Infered graphon.} $\widehat{W}(u, v) = \widetilde{\Esp}(\gamma(u, v)|X)$
+  \begin{overprint}
+  \onslide<1>
+  $$
+  \includegraphics[width=.65\textwidth]{\fignet/Blogosphere-graphon}
+  $$
+  \onslide<2>
+  \vspace{-.05\textheight}
+  $$
+  \includegraphics[width=.6\textwidth]{\fignet/Blogosphere-contour}
+  $$
+  \end{overprint}
+}
+
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Extensions}
+
+  $$
+  \begin{tabular}{ccccccccccc}
+  \includegraphics[width=.05\textwidth]{\fignet/Vmotif}
+  & & \includegraphics[width=.05\textwidth]{\fignet/trianglemotif}
+  & & \includegraphics[width=.05\textwidth]{\fignet/squaremotif}
+  & & \includegraphics[width=.05\textwidth]{\fignet/starmotif}
+  & & \includegraphics[width=.05\textwidth]{\fignet/whisker}
+  & & \includegraphics[width=.05\textwidth]{\fignet/clique}
+  \end{tabular}
+  $$
+  
+  \bigskip
+  \paragraph{Considering network motifs}
+  \begin{itemize}
+   \item Network motifs have sociological interpretation (e.g. triangles)
+   \item The expected count $N(m)$ under SBM is known \refer{PDK08}: 
+   $$
+   \Esp_{SBM} N(m) \propto  \mu_{SBM}(m) = f(\theta_{SBM}) %, \Var_{SBM(K)} N(m)
+   $$
+   \item Motif probability can be estimated as 
+   $$
+   \widehat{\mu}(m) = \sum_k Q_K^*(K) \widetilde{\Esp}(\mu_{SBM}(m) | X, K)
+   $$
+   \ra Goodness of fit criterion?
+  \end{itemize}
+   
+}
+
+%--------------------------------------------------------------------
+\frame{ \frametitle{Advertisement}
+
+  \bigskip
+  $$
+  \framebox{
+    \begin{tabular}{c}
+    ~ \\
+    \paragraph{Post-doc position at AgroParisTech/INRA} \\
+    ~ \\
+    \paragraph{on imputation for genetic data} \\
+    ~
+    \end{tabular}
+  }
+  $$
+   
+}
+
+%--------------------------------------------------------------------
+{\tiny
+  \bibliography{/home/robin/Biblio/ARC,/home/robin/Biblio/AST,/home/robin/Biblio/SSB} 
+  %\bibliographystyle{/home/robin/LATEX/Biblio/astats}
+  \bibliographystyle{plain}
+  }
+
+%--------------------------------------------------------------------
+\beginbackup
+%--------------------------------------------------------------------
+\frame{ \frametitle{Some more simulations}
+
+  \begin{tabular}{cc}
+%     \hspace{-.5cm}
+    \begin{tabular}{c}
+    $RMSE[\gamma(z, z')]$ \\
+    \includegraphics[width=.3\textwidth, height=.7\textheight]{../FIGURES/RMSE-rho-Nlambda} \\
+    legend: $(n : \lambda)$
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{c}
+    $KL[\mu(m)]$ \\
+    \includegraphics[width=.6\textwidth, height=.7\textheight]{../FIGURES/KL-Motif2-4-rho-Nlambda} \\
+    left: triangle, right: square
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%--------------------------------------------------------------------
+\backupend
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+\end{document}
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+
