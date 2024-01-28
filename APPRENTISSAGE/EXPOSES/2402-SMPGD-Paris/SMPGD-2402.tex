@@ -1,4 +1,4 @@
-\documentclass[8pt]{beamer}
+\documentclass[9pt]{beamer}
 
 % Beamer style
 %\usetheme[secheader]{Madrid}
@@ -31,6 +31,10 @@
 
 % Directory
 \newcommand{\figcp}{/home/robin/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+\newcommand{\figexp}{/home/robin/RECHERCHE/EXPRESSION/EXPOSES/FIGURES}
+\newcommand{\figfdr}{/home/robin/RECHERCHE/COMPMULT/EXPOSES/FIGURES}
+\newcommand{\figmhs}{/home/robin/ENSEIGN/CoursAgro/MOD-GRAPH/Figures}
+\newcommand{\figbayes}{/home/robin/RECHERCHE/BAYES/EXPOSES/FIGURES}
 
 %====================================================================
 %====================================================================
@@ -44,7 +48,7 @@
 %====================================================================
 \title[Latent variables in genomics]{A partial history of latent variable models in genomics}
 
-\author[S. Robin]{S. Robin}
+\author[S. Robin]{S. Robin + many others}
 
 \institute[]{LPSM, Sorbonne université}
 
@@ -56,89 +60,615 @@
 
 %====================================================================
 %====================================================================
-\section{Mixture models models}
-\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+\section*{Introduction}
 %====================================================================
-\frame{\frametitle{} 
+\frame{\frametitle{Introduction}
 
-* Gaussien (FDR \& McLachlan)
+  \paragraph{Latent variable model.} Model involving unobserved = latent = hidden = ... variables.
+  
+  \bigskip \pause
+  \paragraph{Use for modelling.} Account for
+  \begin{itemize}
+  \item missing information (e.g. classification)
+  \item dependency structure
+  \item over-dispersion, ...
+  \end{itemize}
+  
+  \bigskip \pause
+  \paragraph{Notations.}
+  \begin{description}
+  \item[$Y = $] observed variables (data)
+  \item[$\theta =$] model parameters
+  \item[$Z = $] latent variables
+  \end{description}
+  
+  \bigskip \pause
+  \paragraph{Parameters $\neq$ latent variables.}
+  \begin{itemize}
+    \item $\theta$ can be fixed or random (e.g. frequentist vs Bayesian)
+    \item $Z$ is random, $\simeq$ same dimension as $Y$
+  \end{itemize}
 
-* Non paramétrique
+}
 
-* Composites
+%====================================================================
+\frame{\frametitle{Inference}
+
+  \paragraph{Intractable likelihood.} 
+  $$
+  \log p_\theta (Y) = \log \int p_\theta(Y, z) \d z 
+  $$
+  
+  \bigskip \pause
+  \paragraph{Popular approach.} Use the \refer{DLR77} decomposition
+  \begin{align*}
+    \log p_\theta (Y) 
+%     & =  \Esp_\theta[\log p_\theta(Y, Z) \mid Y] - \Esp_\theta[\log p_\theta(Z \mid Y) \mid Y] \\ 
+    & =  \Esp_\theta[\log p_\theta(Y, Z) \mid Y] + \underset{\text{entropy}}{\underbrace{\Hcal_\theta(Z \mid Y)}}
+  \end{align*}
+  \pause
+  and apply the iterative expectation-maximization (EM) algorithm:
+  $$
+  \theta^{(h+1)} = \underset{\text{M step}}{\underbrace{\argmax_\theta}} \underset{\text{E step}}{\underbrace{\Esp_{\theta^{(h)}}}} [\log p_\theta(Y, Z) \mid Y]
+  $$
+  to (hopefully) get the MLE $\widehat{\theta} = \argmax_\theta \log p_\theta (Y)$.
+
+  \bigskip \bigskip \pause
+  \paragraph{Critical step = E step.}
+  Given the current $\theta^{(h)}$, compute some moments of the conditional distribution $$
+  p_\theta(Z \mid Y).
+  $$
 
 }
 
 %====================================================================
 %====================================================================
-\section{Hidden Markov models}
+\section{Mixture models}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
-\frame{\frametitle{} 
+\frame{\frametitle{Differentially expressed genes} 
 
-* CNV
+  \paragraph{Multiple testing.} $n \simeq 10^3, 10^4$ genes, 
+  $$
+  H_i = \{\text{gene $i$ has the same expression level under conditions $A$ and $B$}\},
+  $$
+  $P_i = p$-value for gene $i$ ($P_i \sim \Ucal(0, 1)$ if $H_i$ holds).
 
-* Détection de gène (P. Nicolas)
+  \bigskip \pause
+  \paragraph{Aim.}
+  \begin{itemize}
+    \item Detect which $H_i$ should be rejected
+    \item while avoiding to many false rejections 
+  \end{itemize}
 
-* Non paramétrique
+  \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.6\textwidth}}
+      \paragraph{Mixture model \refer{MBB06}.} 2 component mixture 
+      \begin{itemize}
+        \item $Z_i = 0$ if $H_i$ holds, 0 otherwise
+        $$
+        \pi = \Pr\{Z_i = 1\}
+        $$
+        \item $Y_i = -\Phi^{-1}(P_i)$ $(\Phi^{-1} =$ probit):
+        $$
+        Y_i \mid Z_i=0 \sim \Ncal(0, 1), \quad Y_i \mid Z_i=0 \sim \Ncal(\mu, \sigma^2)
+        $$
+        \item $\theta = (\pi, \mu, \sigma^2)$
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.3\textwidth]{\figexp/MBB06-Bioinformatics-Fig3}
+    \end{tabular}
+  \end{tabular}
+}
+
+%====================================================================
+\frame{\frametitle{Mixture model} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Easy EM.} Independent couples $(Z_i, Y_i)$
+      $$
+      p_\theta(Z_i \mid Y) = p_\theta(Z_i \mid Y_i)
+      $$
+      \ra Bayes formula:
+      $$
+      \tau_i = \Pbb_{\widehat{\theta}}\{Z_i = 1 \mid Y_i\}.
+      $$
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \paragraph{Graphical model:} ~\\  
+      \includegraphics[width=.4\textwidth]{\figmhs/PolyMHS-GMmixture}
+    \end{tabular}
+  \end{tabular}
+  
+  \bigskip \pause
+  \paragraph{False discovery rate =} fraction of false positives among positives: 
+  $$
+  \widehat{FDR}(t) = \left. \sum_{i: \tau_i>t} (1 - \tau_i)  \right/ \#\{i: \tau_i>t\}. 
+  $$
+  \begin{itemize}
+    \item Choose the detection threshold $t$ so that $\widehat{FDR}(t) \leq 5\%$ (say).
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Semi-parametric mixture model} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Non-parametric emission distribution.} \nocite{RBD07,GRC09}
+      \begin{itemize}
+        \item Available prior estimate $\widehat{\pi}$ \refer{Sto02}
+        \item Known null distribution
+        $$
+        p_\theta(Y_i \mid Z_i=0) = \Ncal(Y_i; 0, 1)
+        $$
+        \item Free alternative distribution 
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth, trim=200 0 0 0, clip=]{\figfdr/GRC09-BMCBioinfo-Fig5a}
+    \end{tabular}
+  \end{tabular}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Kernel density estimate} of $f_1 = p_\theta(Y_i \mid Z_i=1)$:
+  $$
+  \widehat{f}_1(y) = \left. \sum_i \tau_i k(y - y_i) \right/ \sum_i \tau_i.
+  $$
+  
+}
+
+%====================================================================
+\frame{\frametitle{Composed hypotheses} 
+
+  \paragraph{More complex latent distribution.} $n$ genes, $Q$ comparison tests: 
+  $$
+  H_i^q = \{\text{gene $i$ is not differentially expressed in comparison $q$}\}
+  $$
+  \ra Latent variable: $Z_i = (Z_i^1, \dots Z_i^Q) \in \{0, 1\}^Q$, 
+  $\Rightarrow 2^Q$ possible configurations.
+  
+  \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Mixture model.}
+      \begin{itemize}
+       \item $Z_i =$ gene configuration:
+       $$p_\theta(Z) = p_\theta(Z_i^1, \dots Z_i^Q)$$
+       \item $Y_i =$ probit $p$-values
+       $$p_\theta(Y_i \mid Z_i) = \prod_q p_\theta(Y^q_i \mid Z_i^q)$$
+       \pause
+       \item Right: 5 time points. \\
+       $H^q = \{\Esp Y(t_{q-1}) = \Esp Y(t_q)\}$. \\
+       Genes with at least 2 successive differences.
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{c}
+      \includegraphics[width=.4\textwidth]{\figexp/MDM21-Bioinformatics-fig2} \\
+      $Z =$ (\textcolor{black}{0110}), (\textcolor{red}{0011}), (\textcolor{green}{0111}), (\textcolor{blue}{1111})
+    \end{tabular}
+  \end{tabular}
+  
+}
+
+%====================================================================
+\frame{\frametitle{And also}
+
+  \paragraph{Avatars of the Poisson distribution.} ~ \\
+  \begin{itemize}
+    \item Zero inflated Poisson = Mixture Dirac(0) + Poisson \\
+    \ra Regular mixture \\ ~
+    \item Over-dispersed Poisson = Negative binomial = Poisson-Gamma \\
+    \ra Close form conditional distribution, thanks to conjugacy
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Gaussian mixed models.} ~ \\
+  \begin{itemize}
+    \item $Z =$ Gaussian random effect \\
+    \ra Close form conditional distribution
+  \end{itemize}
 
 }
 
 %====================================================================
 %====================================================================
-\section{Trees}
+\section{More complex latent structure}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
-\frame{\frametitle{} 
+\frame{\frametitle{Copy number variation}
 
-* Phylogenie (upward-downward, ref Bioinfo Lyon)
-
-* Evolution de traits ?
+  \paragraph{Data.} $n$ locus along the genome, 
+  $$
+  Y_t = \text{noisy measurement of the number of copies at locus $t$}
+  $$
+  (should be two for diploids).
+  
+  \bigskip \pause
+  \paragraph{Asumption.} 
+  Neighbor loci often share the same number of copies.
+  
+  \bigskip \pause
+  \paragraph{Example.} \refer{Hup08} 
+  $$
+  \includegraphics[width=.5\textwidth]{\figmhs/Hup08-Fig128a}
+  $$
 
 }
 
 %====================================================================
-%====================================================================
-\section{Network models}
-\frame{\frametitle{Outline} \tableofcontents[currentsection]}
-%====================================================================
-\frame{\frametitle{} 
+\frame{\frametitle{Hidden Markov model}
 
-* SBM
+  \paragraph{Latent variable model.} 
+  \begin{itemize}
+    \item $Z_t =$ status at locus $t$:
+    $$
+    Z = (Z_t)_{1 \leq t \leq n} \sim MC(\nu, \pi), 
+    \qquad \text{($\nu=$ initial dist, $\pi =$ transition matrix)}
+    $$
+    \item $(Y_t)_{1 \leq t \leq n}$ independent $\mid Z$ : 
+    $$
+    (Y_t \mid Z_t = k) \sim \Ncal(\mu_k, \sigma^2).
+    $$
+    \item $\theta = (\nu, \pi, \mu, \sigma^2)$
+    \item Graphical model:
+    $$
+    \includegraphics[width=.4\textwidth]{\figmhs/PolyMHS-GMhmm}
+    $$
+  \end{itemize}
+  
+  \bigskip \pause
+  \paragraph{Inference.} E-step = forward-backward (Baum-Welsh, Kalman) recursion.
 
-* VEM
+  \bigskip \pause
+  \paragraph{Classification.} Most probable hidden path $\widehat{Z}$  = Viterbi (dynamic programming) algorithm.
 
 }
 
 %====================================================================
-%====================================================================
-\section{Multivariate count models}
-\frame{\frametitle{Outline} \tableofcontents[currentsection]}
-%====================================================================
-\frame{\frametitle{} 
+\frame{\frametitle{Modelling the Markov structure}
 
-* PLN \& avatars
+  \paragraph{Gene detection.} \refer{NBM02}
+  \begin{itemize}
+    \item $Y = (Y_t)_{1 \leq t \leq n}$ = (bacterial) genome ($n \sim 10^6$)
+    \item $Z_t = $ coding status of nucleotide $t$
+  \end{itemize}
+  
+  \bigskip \pause
+  \paragraph{Transition graph of $(Z_t)$.} 
+  $$
+  \includegraphics[width=.7\textwidth]{\figmhs/genedetectionHMM_o6}
+  $$
 
 }
 
 %====================================================================
+\frame{\frametitle{Tree-shaped Markov models}
+
+  \paragraph{Remark.}
+  The graphical model of an HMM is tree-shaped, likewise this of many evolutionary models.
+  
+  \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Phylogeny.}
+      \begin{itemize}
+       \item $Y =$ genomes of extant species
+       \item $Z =$ ancestral genomes
+      \end{itemize}
+      
+      \bigskip
+      \paragraph{Likelihood of a tree.} ~ \\
+      Felsentein's algorithm \refer{Fel81} \\
+      = 'upward-downward' recursion
+      
+    \end{tabular}
+    & 
+    \hspace{-.07\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.5\textwidth]{\figmhs/PolyMHS-GMtree}
+    \end{tabular}
+  \end{tabular}
+
+  
+  \bigskip \pause
+  \paragraph{Ancestral trait reconstruction.}
+  Same problem and same solution for continuous (e.g. Brownian) latent $Z$ \refer{Lar14}. \nocite{BMR16}
+
+}
+
 %====================================================================
-\section{Alternatives to (V)EM}
+\frame{\frametitle{And also}
+
+  \paragraph{Non-parametric HMM.} 
+  \refer{AMR09} $\Rightarrow$ HMM with non-parametric emission distributions are generically identifiable. \nocite{GCR16}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Other complex latent structures} manageable using relevant algebraic properties : \\~
+  \begin{itemize}
+    \item Sequence partitioning (segmentation): dynamic programming \refer{AuL89}  and/or simple matrix products \\
+    \ra quadratic complexity \nocite{RLR11} \\~
+    \item Spanning tree-shaped graphical models: maximum spanning tree \refer{Kru56} and/or simple determinant calculation \refer{Cha82} \\
+    \ra cubic complexity \nocite{SRS19} 
+  \end{itemize}
+
+}
+
+
+%====================================================================
+%====================================================================
+\section{Too complex latent structure}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
-\frame{\frametitle{} 
+\frame{\frametitle{Interaction networks} 
 
-* VAE
+  \paragraph{Data.} $Y = n \times n$ interaction matrix:
+  $$
+  Y_{ij} = 1 \text{ if entities $i$ and $j$ interact}, \quad = 0 \text{ otherwise}
+  $$
+  Entities = protein, genes, operons, ...
+
+  \bigskip
+  \paragraph{Aim.} Cluster entities according to their interaction profile.
+  
+  \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Stochastic block-model.}
+      \begin{itemize}
+        \item $Z_i$ cluster membership of entity $i$
+        $$
+        \pi_i = \Pbb\{Z_i = k\}
+        $$
+        \item $Y_{ij}$ interaction $(i, j)$
+        $$
+        \gamma_{k\ell} = \Pbb\{Y_{ij} = 1 \mid Z_i = k, Z_j = \ell\}
+        $$
+        (can include covariates, strength, ...).
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.4\textwidth]{\figmhs/PolyMHS-GMsbm}
+    \end{tabular}
+  \end{tabular}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Stochastic block-models} 
+
+  \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Nasty conditional distribution.}
+      \begin{itemize}
+        \item The graphical model of $p_\theta(Z \mid Y)$ is a clique
+        \item No nice factorization can be hoped to integrate it
+        \item The E-step is intractable for $n \geq 20$
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.4\textwidth]{\figmhs/PolyMHS-GMsbmCond}
+    \end{tabular}
+  \end{tabular}
+  
+  \bigskip 
+  Regular EM does not apply
+
+}
+
+%====================================================================
+\frame{\frametitle{Metabarcoding} 
+
+  \paragraph{Data.} $n$ samples, $p$ species, 
+  $$
+  Y_{ij} = \text{\# of individuals (reads) from species $j$ in sample $i$}
+  $$
+
+  \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Poisson log-normal model.}
+      \begin{itemize}
+        \item Independent $(Z_i)_{1 \leq i \leq n}$: $Z_i \sim \Ncal_p(0, \Sigma)$, 
+        \item Conditionally independent counts $(Y_{ij})$:
+        $$
+        (Y_{ij} \mid Z_{ij}) \sim \Pcal(\exp(Z_{ij}))
+        $$
+        (can include covariates, offset, ..)    
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{c}
+    \includegraphics[width=.4\textwidth]{\figmhs/PolyMHS-GMmixture} \\
+    $Y_i, Z_i \in \Rbb^p$
+    \end{tabular}
+  \end{tabular}
+
+  \bigskip \pause
+  \paragraph{Nasty conditional distribution.} $p_\theta(Z_i \mid Y_i) = p_\theta(Y_i, Z_i) / p_\theta(Y_i)$ but
+  $$
+  \text{no close form for} \quad p_\theta(Y_i) = \int p_\theta(Y_i, z_i) \d z_i
+  $$
+  \begin{itemize}
+    \item Intractable E step
+    \item Regular EM does not apply
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Variational EM} 
+
+  \paragraph{Principle.} Replace $p_\theta(Z \mid Y)$ with some approximation $q_\psi(Z)$
+  \begin{itemize}
+    \item $q_\psi$ chosen within a parametric distribution class $\Qcal$
+    \item $\psi =$ variational parameter
+  \end{itemize}
+  
+  \bigskip \pause
+  \paragraph{Evidence lower bound (ELBO).}
+  \begin{align*}
+    ELBO(\theta, \psi) 
+    & = \log p_\theta(Y) - KL(q_\psi(Z) || p_\theta(Z \mid Y)) \\
+    & = \Esp_\psi[\log p_\theta(Y, Z)] - \Hcal(q_\psi)
+  \end{align*}
+    
+  \bigskip \pause
+  \paragraph{Variational EM.}
+  \begin{align*}
+    \psi^{h+1} 
+    = \argmax_\psi ELBO(\theta^{(h)}, \psi)
+    & = \argmin_\psi KL(q_\psi(Z) || p_{\theta^{(h)}}(Z \mid Y)), \\
+    \theta^{(h+1)}
+    = \argmax_\theta ELBO(\theta, \psi^{(h+1)})
+    & = \argmax_\theta \Esp_{\psi^{(h+1)}}[\log p_\theta(Y, Z)]
+  \end{align*}
+
+}
+
+%====================================================================
+\frame{\frametitle{Variational EM} 
+
+  \paragraph{Application.} Critical choice = choice of $\Qcal$
+  \begin{description}
+   \item[SBM:] $\Qcal =$ factorable distributions
+   $$q_\psi(Z) = \prod_i q_{\psi_i}(Z_i)$$
+   \item[PLN:] $\Qcal =$ Gaussian distributions
+   $$q_{\psi_i}(Z_i) = \Ncal(Z_i; m_i, S_i)$$
+  \end{description}
+
+  \bigskip \bigskip \pause
+  \paragraph{What do we know about VEM?}
+  \begin{itemize}
+    \item Computationally efficient
+    \item Works well in practice (estimation, classification, ...)
+    \item Almost no theoretical guaranty
+    \item Provides no measure of uncertainty
+  \end{itemize}
+  \ra Need to consider alternatives or post-processing
+}
+
+%====================================================================
+\frame{\frametitle{Sequential Monte-Carlo for SBM} 
+
+  \paragraph{Weighted SBM with covariates.}
+  $$
+  Y_{ij} \sim \Pcal(e^{\alpha_{k\ell} + x_i^\top \beta})
+  $$
+  VEM provides : an estimate $\widehat{\theta}_{VEM}$ and an approximate $q_\psi(Z)$.
+  \\
+  \ra Build an approximate posterior $p_{VEM}(Z, \theta \mid Y)$.
+
+  \bigskip \bigskip \pause
+  \paragraph{SMC algorithm.} Sample from a sequence of distributions
+  $$
+  p_h(Z, \theta \mid Y)
+  \; \propto \;
+  p(Z, \theta \mid Y)^{\rho_h} \; p_0(Z, \theta \mid Y)^{1-\rho_h}
+  $$
+  \begin{itemize}
+    \item starting from $p^0 = p_{VEM}$ rather than $p^0 =$ prior.
+    \item tuning the $\rho_1, \rho_2, \dots$ so to keep a sufficient effective sample size (ESS) at each step.
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Sequential Monte-Carlo for SBM} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.4\textwidth}}
+      \paragraph{Posterior distribution} for $\beta$: \\
+      \textcolor{orange}{$p_{VEM}$} \\
+      \textcolor{darkgreen}{posterior with $\widehat{K}$}
+      \textcolor{purple}{posterior model averaging}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.6\textwidth}}
+      \includegraphics[width=.25\textwidth]{\figbayes/DoR21-Fig7-beta1} 
+      \includegraphics[width=.25\textwidth]{\figbayes/DoR21-Fig7-beta2}
+    \end{tabular}
+    \\
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.4\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.6\textwidth}}
+      \includegraphics[width=.4\textwidth]{\figbayes/DoR21-Fig1-simu-rho} 
+    \end{tabular}  
+  \end{tabular}
+      
+}
+
+%====================================================================
+\frame{\frametitle{MCEM for PLN} 
 
 * Vraisemblance composite + MCEM
 
 }
 
 %====================================================================
+\frame{\frametitle{Other alternatives} 
+
+* VAE
+
+* Learning transform for PLN
+
+* generic rule to identify manageable E-steps
+
+}
+
+%====================================================================
+%====================================================================
+\section*{Conlusion}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{} 
+
+* Monte-Carlo
+
+* VAE
+
+* Vraisemblance composite + MCEM
+
+* generic rule to identify manageable E-steps
+
+}
+
+%====================================================================
 \frame[allowframebreaks]{ \frametitle{References}
   {
-   \footnotesize
-   \bibliography{/home/robin/Biblio/BibGene}
+   \tiny
+   \bibliography{BibGeneSMPGD}
    \bibliographystyle{alpha}
   }
 }
