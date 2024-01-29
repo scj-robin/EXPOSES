@@ -1,0 +1,923 @@
+\documentclass[10pt]{article}
+\usepackage{amssymb}
+\usepackage{amsfonts, amsmath}
+\usepackage{epsfig, color}
+\usepackage{enumerate}
+\usepackage{/Latex/astats}
+%\usepackage[latin1]{inputenc}
+
+\newcommand{\fbf}{{\bf f}}
+\newcommand{\gbf}{{\bf g}}
+\newcommand{\Kbf}{{\bf K}}
+\newcommand{\Unbf}{{\bf 1}}
+\newcommand{\ubf}{{\bf u}}
+\newcommand{\vbf}{{\bf v}}
+\newcommand{\wbf}{{\bf w}}
+\newcommand{\alphabf}{\mbox{\mathversion{bold}{$\alpha$}}}
+\newcommand{\betabf}{\mbox{\mathversion{bold}{$\beta$}}}
+\newcommand{\gammabf}{\mbox{\mathversion{bold}{$\gamma$}}}
+\newcommand{\phibf}{\mbox{\mathversion{bold}{$\phi$}}}
+\newcommand{\psibf}{\mbox{\mathversion{bold}{$\psi$}}}
+\newcommand{\taubf}{\mbox{\mathversion{bold}{$\tau$}}}
+
+\newcommand{\Rbb}{{\mathbb R}}
+
+\newcommand{\Bcal}{{\mathcal B}}
+\newcommand{\Ecal}{{\mathcal E}}
+\newcommand{\Fcal}{{\mathcal F}}
+\newcommand{\Lcal}{{\mathcal L}}
+\newcommand{\Ncal}{{\mathcal N}}
+\newcommand{\Ucal}{{\mathcal U}}
+\newcommand{\Xcal}{{\mathcal X}}
+\newcommand{\Ycal}{{\mathcal Y}}
+
+\newcommand{\Esp}{{\mathbb E}}
+\newcommand{\Var}{{\mathbb V}}
+\newcommand{\lFDR}{\ell FDR}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{algorithm}[theorem]{Algorithm}
+
+\textwidth 16cm
+\textheight 22cm
+\topmargin 0 cm
+\oddsidemargin 0cm
+\evensidemargin 0cm
+\renewcommand{\baselinestretch}{1.2}    
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{empty}
+\title{\bf A semi-parametric approach for mixture models:
+  Application to  local FDR estimation }
+
+% \author{St\'{e}phane Robin, Avner Bar-Hen, Jean-Jacques Daudin\\INA-PG / INRA Biom\'{e}trie, 16 rue Claude Bernard,
+%     75005 Paris, {\sc France}\\ Laurent Pierre\\ Universit\'{e} Paris X,  200 avenue de la R\'{e}publique, 92001  Nanterre Cedex}
+\author{St\'{e}phane Robin, Avner Bar-Hen, Jean-Jacques Daudin,
+  Laurent Pierre} 
+\date{ }
+\maketitle
+
+\pagestyle{empty}
+
+\newpage
+
+% \begin{abstract}
+% In this article we propose a procedure to estimate a two-components mixture model where one component is known. The unknown part is estimated with a weighted
+% kernel function. The weights are defined in an adaptative way.  We prove the  convergence and unicity of our estimation procedure. This results are applied to
+% multiple testing procedure so as to estimate the posterior population probabilities and the local FDR.
+% \bigskip
+
+% {\em Key words:} FDR, Mixture model,Multiple testing procedure, Semi-parametric density estimation
+% \end{abstract}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+Probability density estimation is a classical approach to classification. The population densities are estimated  and combined with the estimated or known
+prior population probabilities to construct discrimination rules that perform optimally, if the density estimates are accurate. While it is true that optimal
+density estimates are not necessary for good discrimination rules, it is sometimes better to estimate the population posterior probabilities directly. Local
+FDR is a classical example and will developed in section 5
+
+Let consider the two population mixture model. The density of the data can be written as\[g(x)=af(x)+(1-a)\phi(x)\] where $f$ and $\phi$ are the population
+densities and $a$ is the prior population probability.
+
+In this model, the posterior probability for the observation $i$ to be issued from the distribution $f$ given the observed value $x_i$ is
+\begin{equation} \label{Eq:Tau}
+\tau_i = a f(x_i) \left/ g(x_i) \right..
+\end{equation}
+
+In many situations, the two populations are not equivalent and the amount of information on the population density is very different. For example, if $f$ is a
+contamination of $\phi$, it is often reasonable to make assumptions about the density of $\phi$ while $f$ is completely unknown. The same situation arises in
+microarrays analysis, neuro-imaging or any multiple testing situation: the distribution of the $p$-value under $H_0$ is uniformly distributed on $[0,1]$ (as
+soon as the distribution of test statistic is valid) while the distribution of the $p$-values associated to differentially expressed genes is unknown.
+
+
+The two classical approaches to probability density estimation are the parametric and the non parametric ones. In parametric estimation, the density underlying
+the data is assumed to belong to some rather restricted family of functions $f(\theta)$. Such approach is very efficient as soon as the family $f(\theta)$ is
+close to $f$. Therefore this approach can be recommended in case of small amount of data or when assumptions are realistic.
+
+In the framework of multiple testing, mixture model (see, for example, McLahan and Peel \cite{MaP00} ) have been proposed.
+% with hypothesis on the
+% modified genes distribution, frequentist and bayesian approaches
+A key point is to note that the distribution of the $p$-values is uniform on the interval [0,1] regardless of the statistical test used (provided that test is
+valid) and regardless of the sample size. In contrast, under the alternative hypothesis, the distribution of $p$-values is concentrated near zero and null near
+one. Allison et al. \cite{AGH02} proposed the use of finite mixture models of beta laws (since a beta(1,1) is a uniform distribution). They estimated the
+number of component as well as the parameters. Pounds and Morris (\cite{POM03}) is a restricted version of this work. This work has been extended to the
+mixture of a uniform and a beta distribution by Liao et al. \cite{LLS04}. Other approaches based on mixture models in a Bayesian framework have also been
+proposed (see for example Bro\"{e}t et al. \cite{BLR04} or Newton et al. \cite{NNS04}).
+
+In nonparametric density estimation, no parametric assumption about $f$ is made except some smoothness properties. The shape of the density  is determined by
+the data and arbitrary densities $f$ can be estimated accurately. A classical nonparametric estimator is the kernel estimator based on local smoothing of the
+data. In practice it requires large amount of data and heavy smoothing can lead to large bias. It is also computationally expensive.
+
+
+In this paper we propose a non parametric estimate of $\tau_i$ that
+use information on $\phi$. The difficulty arises from the fact that
+some observations are coming from the unknown density $f$ while some
+observations are coming from the parametric density $\phi$.
+
+
+The idea to mix parametric and nonparametric estimate is not new. Olkin and Spiegelman \cite{OlS87} proposed to use a linear combination of a parametric
+estimate and a nonparametric estimates (there is a huge literature on aggregation of classifiers, see Acuna and Rojas \cite{AcR01} for aggregation of
+classifier). Hjort and Glad \cite{HjG95} proposed to update parametric estimate by nonparametric correction functions. The reverse idea using properties of the
+exponential family was developed by Efron and Tibshirani \cite{EfT96}. Priebe and Marchette \cite{PrM00} and Di Marzio and Taylor \cite{DMT04} proposed to use
+parametric estimates for the weights of kernel density estimation. Using projection pursuit density estimation framework, Hoti and Holmstr\"om \cite{HoH04}
+proposed to estimate a mixture of normal densities with kernels functions.
+
+The general approach of our work and the main result are presented in Section 2. Practical issues are discussed in Section 3. Application to the multiple
+testing procedure, estimation of FDR, FNR and local FDR is studied in Section 4. The last section is devoted to the application of the proposed procedure to
+the classical Hedenfalk  dataset \cite{HDC01}.
+
+%\paragraph{Motivation.} Multiple testing problems in large datasets,
+%FDR and local FDR estimation
+%
+%\paragraph{Biblio.}
+%
+%\paragraph{Approach.} Semi parametric mixture model
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Mixture model}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%We consider the mixture density $g$ defined as
+%\begin{equation} \label{Eq:MixtureModel}
+%g(x) = a f(x) + (1-a) \phi(x)
+%\end{equation}
+%where the proportion $a$ and the density $f$ are unknown, while the
+%density $\phi$ is completely specified. Typically, $\phi$ is the
+%standard normal probability density function (pdf) or the uniform pdf
+%over $(0, 1)$. In the following, we denote $G$, $F$ and $\Phi$ the
+%cumulative distribution functions (cdf) of $g$, $f$ and $\phi$,
+%respectively.
+%
+%In this model, the posterior probability for the observation $i$ to be
+%issued from the distribution $f$ given the observed value $x_i$ is
+%\begin{equation} \label{Eq:Tau}
+%\tau_i = a f(x_i) \left/ g(x_i) \right..
+%\end{equation}
+%% In the multiple testing framework described above, we expect
+%% $\tau_i$ to decrease with $x_i$. This implies that
+%% $$
+%% \frac1{\tau_i} = 1 + \frac{(1-a)}a  \frac{\phi(x_i)}{f(x_i)}
+%% $$
+%% increases with $x_i$, so $f(x) / \phi(x)$ should be a decreasing
+%% function of $x$.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Estimation of the unknown density}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Kernel estimate}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Since $f$ is completely unspecified, it has to be estimated in a
+non-parametric way. Let $k$ denote an arbitrary cdf (called kernel
+function), the standard kernel estimate of $f$ is
+$$
+\widehat{f}(x) = \left[\sum_i Z_i k_i(x)\right] \left/ \sum_i Z_i \right..
+$$
+where $k_i(x) = k[(x-x_i)/h]/h$, $h$ is the bandwidth of the kernel and $Z_i$ is one if the data $x_i$ comes from $f$ and 0 otherwise.
+
+This estimate can not be directly used since the $\{Z_i\}$ are unknown. We propose to replace them with their conditional expectation given the data $\{x_i\}$
+that are equal to the posterior probabilities: $\Esp(Z_i \;|\; x_i) = \tau_i$ as defined in equation~\ref{Eq:Tau}. We get the following estimate for $f$:
+\begin{equation} \label{Eq:WeightedKernel}
+\widehat{f}(x) = \left(\sum_i \tau_i k_i(x)\right)
+\left/ \sum_i \tau_i \right..
+\end{equation}
+This estimates is a {\em weighted kernel estimates} where each observation is weighted according to its posterior probability to be issued from $f$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Estimation of the posterior probabilities}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The conjunction of (\ref{Eq:WeightedKernel}) and (\ref{Eq:Tau})
+implies that the vector $\widehat{\taubf}$ containing the estimated
+posterior probabilities $\tau_i$ must satisfy
+$$
+\widehat{\taubf} = \psibf(\widehat{\taubf})
+$$
+where $\psibf$ maps $\Rbb^n$ into $\Rbb^n$:
+\begin{equation} \label{Eq:Psi}
+  \mbox{ For all } \ubf  = (u_1 \dots u_n) \in \Rbb^n: \psi_j(\ubf) =
+  \frac{\sum_i u_i b_{ij}}{\sum_i u_i b_{ij}+ \sum_i u_i},
+  \qquad \mbox{with } b_{ij} = \frac{a}{1-a} \frac{k_i(x_j)}{\phi(x_j)}.
+\end{equation}
+$\widehat{\taubf}$ must therefore be a fix point of the function
+$\psibf$.
+
+\begin{theorem} \label{Thm:Contract}
+  If all coefficients $b_{ij}$ are positive, the function $\psibf$ has
+  a unique fix point $\ubf^*$ and the sequence $\ubf^{\ell+1} =
+  \psibf(\ubf^{\ell})$ converges towards it for any initial value
+  $\ubf^0$.
+\end{theorem}
+
+The proof of this theorem is based on the decomposition of $\psibf$ as
+$\psibf = \alphabf \circ \betabf \circ \gammabf$ where $\alphabf$,
+$\betabf$ and $\gammabf$ are functions mapping from $\Rbb^n$ into
+$\Rbb^n$:
+$$
+\alpha_j(\ubf) = \frac{u_j}{u_j + 1},
+\qquad
+\beta_j(\ubf) = \sum_i b_{ij} u_i,
+\qquad
+\gamma_j(\ubf) = \frac{u_j}{\sum_i u_i}.
+$$
+$\gammabf$ is actually the projection onto the simplex
+$\Ecal = \{\ubf \in \Rbb^n: \sum_i u_i = 1\}$. \\
+The proof requires the three following lemmas, the proofs of which are
+given in Appendix.
+
+\begin{lemma} \label{Lem:Simplex}
+  $\ubf^*$ is a fix point of $\psibf$ if and only if $\vbf^* = \gammabf(\ubf^*)$ is
+  a fix point of $\gammabf \circ \psibf$.
+\end{lemma}
+
+\begin{lemma} \label{Lem:DefDistance}
+  Consider the interior $\Fcal$ of the simplex $\Ecal$: $\Fcal =
+  \{\ubf \in \Ecal: \mbox{ For all } i, u_i > 0\}$. The function $d$ mapping
+  $\Fcal \times \Fcal$ into $\Rbb+$:
+  $$
+  d(\ubf, \vbf) = \ln \left[ \max_i \left(\frac{u_i}{v_i}\right)
+    \left/ \min_i \left(\frac{u_i}{v_i}\right) \right. \right]
+  $$
+  is a distance.
+\end{lemma}
+
+\begin{lemma} \label{Lem:Decrease}
+  For any $\vbf$ and $\wbf$ in $\Fcal$, we have
+  $$
+  d(\gammabf \circ \psibf(\vbf), \gammabf \circ \psibf(\wbf))  <
+  d(\vbf, \wbf)
+  $$
+  if $\vbf \neq \wbf$, and $d(\gammabf \circ \psibf(\vbf), \gammabf
+  \circ \psibf(\wbf)) = d(\vbf, \wbf) = 0$ otherwise.
+\end{lemma}
+
+\paragraph{Proof of Theorem {\bf \ref{Thm:Contract}}.}
+Thanks to Lemma {\bf \ref{Lem:Simplex}}, we can restrict the proof to
+the study of the convergence of the sequence $\vbf^{\ell+1} = \gammabf
+\circ \psibf(\vbf^{\ell})$ in the simplex $\Ecal$. Since $\Ecal$ is a
+compact and $\gammabf \circ \psibf$ is continuous, Brouwer's theorem
+insures that $\gammabf \circ \psibf$ admits at least one fix point in
+$\Ecal$.
+
+Furthermore, since every $b_{ij}$ is strictly greater than zero, the
+image $\gammabf \circ \psibf(\vbf)$ of any element $\vbf$ of $\Ecal$
+can not have any null coordinate. That is: the function $\gammabf
+\circ \psibf$ sends the elements of the border of $\Ecal$ into its
+interior $\Fcal$. So the fix points of $\gammabf \circ \psibf$
+necessarily belong to $\Fcal$.
+
+Lemma {\bf \ref{Lem:Decrease}} proves that $\gammabf \circ \psibf$ admits at most one fix point since the 2 fix points case would contradict the lemma for
+$\vbf \neq \wbf$. This implies that there exist a unique fix point. Finally, Lemma {\bf \ref{Lem:Decrease}} says that the distance $d$ (Lemma {\bf
+\ref{Lem:DefDistance}}) strictly decreases when the function $\gammabf \circ \psibf$ is applied. This shows that the iteration of the function $\gammabf \circ
+\psibf$ necessarily converges toward its unique fix point and achieves the proof.  $\blacksquare$
+
+\paragraph{Hypothesis on the $b_{ij}.$}
+This hypothesis may be relaxed. The second argument of the proof still
+holds if the function $\psibf$ sends any element of the border of
+$\Ecal$ into the interior in a finite number of iterations.  In terms
+of kernel estimate, the convergence is therefore guarantied for kernel
+with non-compact support (such as the Gaussian kernel), or if no
+observation $x_i$ is isolated within its kernel, i.e. if
+$$
+\mbox{ For all } i: \min_{j \neq i} |x_i - x_j| < h.
+$$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Estimation algorithm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The iteration of the function $\psibf$ can be decomposed in 3 sub-steps, as exposed in Algorithm \ref{Algo:Estim}.
+
+\begin{algorithm} \label{Algo:Estim}
+  Let $\widehat{f}^{(h)}$, $\widehat{g}^{(h)}$ and
+  $\widehat{\tau}_i^{(h)}$ denote the estimates of $f$, $g$ and
+  $\tau_i$ after step $h$.
+  $$
+  \fbox{
+    \begin{tabular}{p{2cm}p{3cm}p{9cm}}
+      \multicolumn{2}{p{5cm}}{\bf Initialization:} & Set $\widehat{\tau}^0_i$
+      to 1 for the proportion $a$ of the smallest $x_i$ and to 0 for
+      the remaining. \\
+      \\
+      {\bf Step $l$} & estimation of $f$: &  $\widehat{f}^{(l)}(x) = \sum_i
+      \widehat{\tau}_i^{(l-1)} k_i(x) \left/ \sum_i \widehat{\tau}_i^{(l-1)}
+      \right. $\\
+      \\
+      & estimation of $g$: & $\widehat{g}^{(l)}(x) = a \widehat{f}^{(l)}(x) +
+      (1-a) \phi(x)$ \\
+      \\
+      & update of $\{\tau_i\}$: & $\widehat{\tau}_i^{(l)} = a
+      \widehat{f}^{(l)}(x_i) \left/ \widehat{g}^{(l)}(x_i) \right. $  \\
+      \\
+      \multicolumn{2}{p{5cm}}{\bf Stopping rule} & Stop when $\max_i
+      |\widehat{\tau}^{(l)}_i - \widehat{\tau}^{(l-1)}_i| /
+      \widehat{\tau}^{(l-1)}_i < \varepsilon$.
+    \end{tabular}
+    }
+  $$
+\end{algorithm}
+
+\paragraph{Connexion with the E-M algorithm.}
+Algorithm \ref{Algo:Estim} has some Expectation-Maxi\-mi\-za\-tion
+(E-M) flavor.  Actually the updating of the $\widehat{\tau}_i$ is
+equivalent to the E step. Moreover, considering the $\{k_i(x)\}$ as
+data, $\widehat{f}(x)$ can be seen as an average of them, so the
+updating of $\widehat{f}$ may look like an M step.  \\
+However, this comparison is not valid since kernel estimates do not
+aim at maximizing the likelihood of the data (like E-M does), but
+typically to minimize the norm of $(\widehat{f} - f)$.  Therefore,
+Algorithm \ref{Algo:Estim} can not be justified in the standard E-M
+framework for mixture models.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Estimation of the proportion and bandwidth}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Simultaneous estimation $a$ and $f$}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The analogy with the E-M algorithm suggests to estimate $a$ using a
+modified version of Algorithm \ref{Algo:Estim}, where
+$\widehat{a}$ is updated at each step:
+$$
+\widehat{a}^{(l)} = \frac1n \sum_i \widehat{\tau}_i^{(l)}.
+$$
+However, it can be easily seen that the solution $\widehat{a} = 1$ and $\widehat{\tau}_i = 1$, for all $i$, is a fixed point of this modified algorithm. This
+solution corresponds to the standard kernel estimate of $g$ (not of $f$). This property can be interpreted as an over-fitting trend: $\widehat{a}=1$ will
+always provide a better fit than any other value since $\phi$ itself can be estimate using a kernel estimate.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Estimation of $a$} \label{Subsec:EstimA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The estimation of $a$ is a difficult task that can not be achieved by the algorithm proposed in the preceding section. In the case were the support of the
+distribution $f$ is compact (typically, $(-\infty, \lambda]$), two unbiased estimates of $a$ can be proposed. Both come from the observation that, for $x >
+\lambda$, if $F(x)=1$, the mixture cdf becomes
+$$
+G(x) = a + (1-a)\Phi(x),
+$$
+where $G$ and $\Phi$ are the respective cdfs of $g$ and $\phi$. In the framework of FDR control, Storey et al. \cite{STS04} proposes
+$$
+\widehat{a} = \frac{\widehat{G}(\lambda)-\Phi(\lambda)}{1-\Phi(\lambda)}
+$$
+where $\widehat{G}$ is the empirical cdf of $X$. The authors discuss the performances of these estimates and its sensitivity to the choice of $\lambda$.
+Following the same principle, $a$ can be estimated using a linear least square fit of $\widehat{G}(X_i)$ to $\Phi(X_i)$, that is
+$$
+\widehat{a} = \arg\min_a \sum_{i:X_i > \lambda} (\widehat{G}(X_i) - b-(1-a)\Phi(X_i))^2.
+$$
+where $b$ is a constant. Provided $\lambda$ exists and is known, both estimates are unbiased. However, they both rely on the existence of some additional
+information about the relative positions of distributions $f$ and $\phi$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Estimation of $h$}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+To estimate the bandwidth $h$, we propose to use the standard approach (Scott, \ref{Sco92}) based on $V$-fold cross-validation. We split randomly the data set
+$\{x_i\}_{i=1..n}$ into $V$ non-overlapping subsets $\Ycal_1, \dots, \Ycal_V$, each of size $n/V$: $\cup_v \Ycal_v = \{x_i\}_{i=1..n}$.  For each $v=1\ldots
+V$, we define $\Xcal_v = \cup_{u
+  \neq v} \Ycal_u$ as the training set, and $\Ycal_v$ as the test set.
+We denote $\Lcal(\Ycal_v; h)$ the log-likelihood of the subset
+$\Ycal_v$:
+$$
+\Lcal(\Ycal_v; h) = \sum_{x_j \in \Ycal_v} \ln \widehat{g}_v(x_j; h)
+$$
+where $\widehat{g}_v$ is estimated with Algorithm \ref{Algo:Estim} on the training set $\Xcal_v$ with the given window width $h$. We define the $V$-fold cross
+validation log-likelihood as
+$$
+\Lcal_{CV}(h) = \frac1V \sum_v \Lcal(\Ycal_v; h).
+$$
+$n^{-1} \left(\sum_{i=1}^{n} \ln g(x_i) - V \Lcal_{CV}(h)\right)$ is an estimate of the Kullback-Leibler divergence between $\widehat{g}$ and $g$. This
+estimated divergence between $\widehat{g}$ and $g$ is minimized when the cross-validation likelihood is maximized, that is for
+$$
+\widehat{h} = \arg \max_{h} \Lcal_{CV}((h).
+$$
+This optimization can be performed numerically.
+
+ %In practice we
+%observe the $\Lcal_{CV}((h)$ is more sensitive to the variations of
+%$a$ than to the variations of $h$ (see Section
+%\ref{Sec:Applications}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{False positive and negative rates}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Presentation and definitions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Multiple testing is a classical problem for many high-dimensional data sets. The breakthrough of technology for image analysis or genomic has given a new
+interest for this question.
+% A classical application is microarrays. This technology is part of a
+% new class of biotechnologies that allow the monitoring of the
+% expression level of thousands of genes simultaneously. Among the
+% applications of microarrays, an important task is the identification
+% of differentially expressed genes i.e., genes whose expression is
+% associated with the status of patients (treatment/control for
+% example). The biological question of identifying of differentially
+% expressed genes can be restated as a two-sample hypothesis testing
+% procedure: is the gene differentially expressed between the two
+% situations. However, when thousands of genes in a microarray data set
+% are evaluated simultaneously by fold changes and significance tests
+% approach, multiple testing problems immediately arise and lead to many
+% false positive genes. In this "one-by-one gene" the probability of
+% detecting false positives rises sharply.
+% Another classical application is neuroimaging data set. At each vowel,
+% a test statistic is computed related to the null hypothesis of no
+% difference between two images. The voxel for which the test exceed the
+% threshold are then classify as different between the two images under
+% study. The main question is to choose the threshold. When using the
+% nominal level of the test, the probability of type 1 error becomes
+% high.
+% There is other application as genetics or astronomy.
+A central problem in multiple testing problems is the control of type
+I (i.e. false positive) and type II (i.e. false negative) errors. For
+a given threshold $t$, we denote
+$$
+\begin{tabular}{rcll}
+  $P(t)$ & $=$ & $\#\{j: X_j < t\}$ & the number of positives; \\
+  $FP(t)$ & $=$ & $\#\{j: (X_j < t) \cap (Z_j=0)\}$ & the number of false
+  positives; \\
+  $N(t)$ & $=$ & $\#\{j: X_j \geq t\}$ & the number of negatives; \\
+  $FN(t)$ & $=$ & $\#\{j: (X_j \leq t) \cap (Z_j=1)\}$ & the number of false
+  positives.
+\end{tabular}
+$$
+
+% However, as argued by Benjamini and Hochberg \cite{BeH95}, controlling
+% the FWER in multiple testing settings may not always be appropriate.
+% As an alternative and less stringent concept of error control they
+% introduced the false discovery rate (FDR). The main interest of
+% controlling the FDR is that it is an appealing quantity that leads to
+% more powerful procedures than those relying on the FWER. The False
+% Discovery Rate (FDR) is defined as the expected proportion of false
+% positives among the total number of positives:
+
+% \paragraph{Control of the type I error.}
+The most popular criterion regarding type I errors is
+% are the
+% Family-Wise Error Rate ($FWER$):
+% $$
+% FWER(t) = \Pr\{ FP(t) \leq 1\}
+% $$
+% and
+the False Discovery Rate ($FDR$: Benjamini and Hochberg  \cite{BeH95}):
+%\begin{equation} \label{Eq:FDR}
+$$
+FDR(t) = \Esp\left[ FP(t) / \max\{P(t), 1\}\right].
+$$
+%\end{equation}
+Broadly speaking, the FDR corresponds to the proportion of rejections
+that are incorrect.{}
+%\paragraph{Control of the type II error.}
+It is worth noting that a dual quantity of the FDR is the FNR (false
+non-discovery rate) as defined by Genovese and Wasserman~\cite{GeW02}:
+% To take into account the sensitivity of a procedure we also have to care about the False Negative Rate ($FNR$):
+$$
+FNR(t) = \Esp\left( FN(t) / \max(N(t), 1) \right).
+$$
+In the mixture model framework $FDR$ and $FNR$ play symmetric
+roles.
+
+% In their seminal paper, Benjamini and Hochberg \cite{BeH95} discussed
+% another criterion, later called the positive False Discovery Rate
+% ($pFDR$) by Storey \cite{storey04} and defined as $pFDR=E\left(
+%   \frac{V}{R} \;|\; R>0\right) $. However, Benjamini and Hochberg
+% \cite{BeH95} did not consider this criterion because it cannot be
+% controlled since under the complete null hypothesis (all null
+% hypotheses tested are true), all significant results (if there are
+% significant ones) are necessary false discoveries. So, it is
+% impossible to insure that $pFDR<\alpha $ if $\alpha < 1$.
+
+% The FDR seems particularly well-suited for exploratory analysis. In
+% practice, the FDR leads to more powerful procedures than those relying
+% on the FWER and gives an idea of the proportion of false positive
+% hypothesis that a practitioner can expect if the experiment is done an
+% infinite number of time. However, being an expectation, it gives very
+% little information about the proportion of false discovery hypothesis
+% in a given experiment. It also gives little information about
+
+% Storey {\em et al.}, 2003 have stressed the importance of assessing to each feature its own measure of significance. They proposed to use the $q$-value,
+% \[\frac{\hat{m_0}P_i}{R_i},\]
+% where $P_i$ is the $p$-value of the ordered gene $i$ and $R_i$ is
+% the total number of rejected genes with the threshold $t=P_i$. \\
+% The $q$-value is appealing because it gives a measure of significance
+% that can be attached to each gene, but it must be stressed that it is
+% not an estimate of the probability for the gene to be a false
+% positive.  The $q$-value is generally lower than the latter because it
+% is computed using all the genes that are more significant than gene
+% $i$.  Obviously a gene whose $p$-value is near to the threshold $t$
+% does not have the same probability to be differentially expressed than
+% a gene whose $p$-value is close to zero. Therefore the $q$-value gives
+% a too optimistic view of the probability for the gene to be a false
+% positive.
+
+% \paragraph{Local FDR.}
+More recently, it has been pointed out that, in many multiple testing framework, we need an information at the individual level about the probability for a
+given observation to be a false positive (Aubert et al. \cite{ABD04}). This motivated the work of Storey and Tibshirani \cite{StT03} regarding the $q$-value,
+which is actually not completely individual. In a mixture framework, a natural way to define a 'local FDR' ($\lFDR$: Efron et al. \cite{ETS01}) is to consider
+the posterior probability
+$$
+\lFDR(x) = \Pr\{Z_i = 0 \;|\; X_i = x\}.
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Estimation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{False positive and negative rates.}
+In many practical situations, given the ordered observations $x_1 \leq \dots \leq x_i \leq \dots \leq x_n$, the question is to decide where to stop in that
+list. The problem is therefore to estimate $FDR$ and $FNR$ when the first $i$ observations are declared positive. Following Genovese and Wasserman
+\cite{GeW02,GeW04}, we define conditional versions of all the variables defined at the beginning of this section:
+$$
+P_i = i, \quad
+FP_i = \#\{j \leq i: Z_j = 0\}, \quad
+N_i = n-i, \quad
+FN_i = \#\{j > i: Z_j = 1\}
+$$
+All these quantities are defined conditionally to the observed
+values $(x_1, \dots, x_n)$ and correspond to any threshold $t$ such as
+$x_i < t \leq x_{i+1}$.  The conditional rates follow:
+\begin{equation} \label{Eq:FDRiFNRi}
+  FDR_i = \Esp(FP_i) / i,
+  \qquad
+  FNR_i = \Esp(FN_i) / (n-i).
+\end{equation}
+Both expectations and variances of $FP$ and $FN$ can be calculated in
+the mixture model framework:
+$$
+\Esp(FP_i) = \sum_{j=1}^i \Pr\{Z_j = 0 \;|\; x_j\} = \sum_{j=1}^i (1-\tau_j), \qquad \Esp(FN_i) = \sum_{j=i+1}^n \tau_j,
+$$
+$$
+\Var(FP_i) = \sum_{j=1}^i \Pr\{Z_j = 0 \;|\; x_j\} = \sum_{j=1}^i (1-\tau_j) \tau_j, \qquad \Var(FN_i) = \sum_{j=i+1}^n \tau_j (1- \tau_j).
+$$
+Finally, we get two natural estimates:
+$$
+\widehat{FDR}_i = \frac1i \sum_{j=1}^i (1-\widehat{\tau}_j),
+\qquad
+\widehat{FNR}_i = \frac1{n-i} \sum_{j=i+1}^n \widehat{\tau}_j
+$$
+which are unbiased if the posterior probability
+estimates are unbiased. Since the estimate of $\tau_j$ is proportional
+to the estimate of $a$, underestimating $a$ leads to overestimate
+$FDR$ and underestimate $FNR$.
+
+\paragraph{Local $FDR$.} According to the definition given above, the
+local $FDR$ for observation $i$ is
+$$
+\lFDR(x_i) = 1 - \tau_i
+$$
+so its natural estimate is $\widehat{\lFDR}_i = 1 - \widehat{\tau}_i$. Remark that the estimates $\widehat{\lFDR}$ and $\widehat{FDR}$ are consistent with the
+definition of $\lFDR$ in terms of derivative of $FDR$ proposed by Aubert et al. \cite{ABD04}.
+
+% In the framework of mixtu\widehat{\tau}re model (\ref{Eq:MixtureModel}), $DFR(t)$
+% can be restated as
+% \begin{equation} \label{Eq:FDRMixture}
+%   \begin{array}{rcl}
+%     FDR(t) & = & \displaystyle{\Pr\left\{Z = 0 \;|\; X \leq t\right\}
+%       = \frac{\Pr\{(Z=0) \cap (X \leq t)\}}{\Pr\{X \leq t\}}} \\
+%     & = & \displaystyle{\frac{\int_{-\infty}^{t} (1-a) \phi(x)
+%         \mbox{d}x}{G(t)} = \frac{(1-a) \Phi(t)}{G(t)}}.
+%     \end{array}
+% \end{equation}
+
+% Two estimates of $FDR(t)$ can be proposed.
+% \begin{description}
+% \item[Plug-in:] Denoting $K(x)$ the cdf associated to the kernel
+%   function $k(x)$ and $K_i(x) = K[(x-x_i)/h]$, the cdfs $F(x)$ and
+%   $G(x)$ can be estimated\widehat{\tau} by
+%   $$
+%   \widehat{F}(x) = \sum_i \widehat{\tau}_i K_i(x) \left/ \sum_i
+%     \widehat{\tau}_i \right.,
+%   \qquad
+%   \widehat{G}(x) = \widehat{a} \widehat{F}(x) + (1-\widehat{a})
+%   \Phi(x).
+%   $$
+%   A simple plug-in of these estimates in (\ref{Eq:FDRMixture}) provides
+%   $$
+%   \widehat{FDR}_1(t) = (1-\widehat{a}) \Phi(t) / \widehat{G}(t).
+%   $$
+% \item[Empirical:] A simpl\widehat{\tau}er estimate is based on the empirical version
+%   of the expectation of definition (\ref{Eq:FDR}):
+%   $$
+%   \widehat{FDR}_2(t) = \frac{\sum_{i: x_i \leq t}
+%     \widehat{\tau}_i}{\# \{i: x_i \leq t\} }.
+%   $$
+% \end{description}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Local FDR}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% With the notations of the present paper, it equals $1 - \tau_i$.
+
+% The main interest of the mixture model (\ref{Eq:MixtureModel}) lies in
+% the estimation of the local FDR ($\lFDR$). Indeed, in this
+% framework, the local FDR associate to a given value $x$ can be
+% precisely defined as the posterior probability
+% $$
+% \lFDR(x) = \Pr\{Z = 0 \;|\; X=x\} = \frac{a f(x)}{g(x)}.
+% $$
+% The $\{\widehat{\tau}_i\}$ provided by Algorithm \ref{Algo:Estim}
+% are therefore the estimates of the local FDR associated to all the
+% observed values $\{x_i\}$\widehat{\tau}:
+% $$
+% \widehat{\lFDR}(x_i) = \widehat{\tau}_i.
+% $$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Application: Hedenfalk data} \label{Sec:Applications}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Hedenfalk et al. \cite{HDC01} compare the gene expression levels measured on patients with two different breast cancer. The dataset consist in 7 BRCA1 patients
+and 8 BRCA2 patients; the total number of genes is $n=3226$.
+
+\paragraph{Differential analysis.} We used t-test to detect
+differentially expressed genes. Because of the small number of replicates, the estimate of the within group variability appears to very quite poor. This bad
+estimation is known to have strong consequences on the conclusion. To circumvent this problem, we used test statistics and $p$ values $P_i$ computed under the
+two following hypothesis regarding the variance.
+\begin{description}
+\item[{\sl (i) Homogenous variance.}] The variance of all the genes are
+  all equal to a same variance~$\sigma^2$.
+\item[{\sl (ii) Mixture model.}] Genes are spread into $K$ groups of
+  variance, the variance and proportion of which can estimated using  a
+  mixture model  (Delmar et al. \cite{DRL05}).
+\end{description}
+Other variance modeling have been proposed: see Rudemo et al. \cite{RLM02} for a general discussion.
+
+\paragraph{Semi-parametric modeling.} In this situation, the
+$p$-values are expected to have a mixture distribution $$p_i\sim a F + (1-a) \Ucal_{[0; 1]}$$. This mixture is hard to identify because of a high number of
+$p$-values very close to 0. Therefore, we used the probit transform suggested by \cite{Efr03}, and considered the mixture model on the transformed $p$-values:
+$$
+X_i = \Phi^{-1}(p_i) \sim a F + (1-a) \Phi
+$$
+were $\Phi$ is the cdf of the standard Gaussian distribution.
+
+\paragraph{Results.} Figure \ref{Fig:MixtureX} presents the fit of the
+semi-parametric mixture model to the histogram of the transformed
+$p$-values. We see that in both cases, the distribution $f$ and $\phi$
+strongly overlap. In both case, we used the least-square estimate of
+$a$ presented in Section \ref{Subsec:EstimA}. It resulted in
+$\widehat{a} = 20.6 \%$ in the homogenous variances case ,and in
+$\widehat{a} = 30.5 \%$ in the mixture variance case.
+
+\begin{figure}
+  \begin{center}
+    \begin{tabular}{cc}
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Ainit/Asup-1.0/Homogen-Gaus.eps, 
+%      file=Homogen-Gaus.eps, 
+      height=7cm, width=4cm, bbllx=66, bblly=510, bburx=283,
+      bbury=691, clip=, angle=90}
+    &
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Ainit/Asup-1.0/Varmixt-Gaus.eps,
+%      file=Varmixt-Gaus.eps,
+      height=7cm, width=4cm, bbllx=66, bblly=510, bburx=283,
+      bbury=691, clip=, angle=90}
+    \end{tabular}
+    \caption{Fit of the semi-parametric mixture model to the
+      transformed $p$-values for homogenous (left) and mixture (right)
+      gene variances. {\bf --}: histogram, \textcolor{blue}{\bf --}:
+      mixture density, \textcolor{red}{\bf -~-}: $\widehat{a}
+      \widehat{f}$, \textcolor{green}{\bf -~-}: $(1-\widehat{a})
+    \phi$.}
+    \label{Fig:MixtureX}
+  \end{center}
+\end{figure}
+
+Figures \ref{Fig:TauX} and \ref{Fig:TauP} present the estimated posterior probabilities $\widehat{\tau}_i$ and $\widehat{FDR}_i$ as a function of $X_i$ and
+$P_i$ respectively. In the homogeneous variance case, we see that the posterior probabilities first decrease (as expected), and then re-increase on the right
+part of the plot, which is unexpected. The explanation is that the non-parametric part of the mixture model actually capture a lack of fit of the true
+distribution of the test statistic to the theoretical distribution under the null hypothesis.  In this situation, estimation procedures of the proportion $a$
+based on this theoretical distribution under $H_0$ are probably biased.  This phenomena is strongly reduced by the mixture model for the variances.
+
+\begin{figure}
+  \begin{center}
+    \begin{tabular}{cc}
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Ainit/Asup-1.0/Homogen-Gaus.eps, 
+%      file=Homogen-Gaus.eps,
+      height=7cm, width=4cm, bbllx=66, bblly=295, bburx=283,
+      bbury=480, clip=, angle=90}
+    &
+    \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Ainit/Asup-1.0/Varmixt-Gaus.eps,
+%      file=Varmixt-Gaus.eps,
+      height=7cm, width=4cm, bbllx=66, bblly=295, bburx=283,
+      bbury=480, clip=, angle=90}
+    \end{tabular}
+    \caption{Posterior probabilities $\widehat{\tau}$ (\textcolor{blue}{\bf --}) and false
+      discovery rate $\widehat{FDR}_i$ (\textcolor{red}{\bf -~-}) as a
+      function of the transformed $p$-values $X_i$. Left: homogenous gene
+      variances, right: mixture gene variances.}
+    \label{Fig:TauX}
+  \end{center}
+\end{figure}
+
+\begin{figure}
+  \begin{center}
+    \begin{tabular}{cc}
+      \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Ainit/Asup-1.0/Homogen-Gaus.eps,
+%        file=Homogen-Gaus.eps,
+        height=7cm, width=4cm, bbllx=66, bblly=85, bburx=283,
+        bbury=265, clip=, angle=90}
+      &
+      \epsfig{
+      file=/RECHERCHE/EXPRESSION/EXEMPLES/HEDENFALK/Ainit/Asup-1.0/Varmixt-Gaus.eps,
+%        file=Varmixt-Gaus.eps,
+        height=7cm, width=4cm, bbllx=66, bblly=85, bburx=283,
+        bbury=265, clip=, angle=90}
+    \end{tabular}
+    \caption{Posterior probabilities $\widehat{\tau}$ (\textcolor{blue}{\bf --}) and false
+      discovery rate $\widehat{FDR}_i$ (\textcolor{red}{\bf -~-}) as a
+      function of the $p$-values $P_i$. Left: homogenous gene
+      variances, right: mixture gene variances.}
+    \label{Fig:TauP}
+  \end{center}
+\end{figure}
+
+Table \ref{Tab:FDR} gives the number of positive genes for some pre-specified values of the FDR. We see that, for small FDR, the minimal posterior probability
+is still high, which means that all the positive genes can be trusted. We also see that FNR slowly decreases. The estimated FDR and FNR are equal ($19.7 \%$)
+for $i = 633$ positive genes: the corresponding $p$-value is $P_{[i]} = 5.4 \%$, the posterior probability is $\widehat{\tau}_{(i)} = 43.5 \%$. This means
+that, at this point, some of the positive genes are really questionable.
+
+\begin{table}
+  \begin{center}
+    $$
+    \begin{array}{ccccc}
+      \quad \widehat{FDR}_{(i)} \quad & \qquad i \qquad & \quad P_{(i)}
+      \quad & \quad \widehat{\tau}_{(i)} \quad & \quad
+      \widehat{FNR}_{(i)} \quad \\
+      \hline
+      1\% & 4 & 2.5\;10^{-5} & 0.988 & 31.5 \% \\
+      5\% & 142 & 3.1\;10^{-3} & 0.914 & 28.7 \% \\
+      10\% & 296 & 1.3\;10^{-2} & 0.798 & 25.7 \% \\
+    \end{array}
+    $$
+    \caption{}
+    \label{Tab:FDR}
+  \end{center}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{/Latex/astats}
+%\bibliographystyle{astats}
+\bibliography{/Biblio/AST}
+% \begin{itemize}
+% \item Olkin, I., and Spiegelman, C. (1987), A Semiparametric Approach
+%   to Density Estimation, Journal of the American Statistical
+%   Association, 82, 858-865.
+% \item Hjort, N.L. and Glad, I.K., 'Nonparametric density estimation
+%   with a parametric start', Annals of Statistics, Vol.23, No.3 1995.
+%   882-904
+% \item F. Hoti and L. Holmstr\"{o}m. A semiparametric density
+%   estimation approach to pattern classification. Pattern Recognition,
+%   37:409-419, 2004.
+% \item C.E. Priebe and D.J. Marchette, "Alternating Kernel and Mixture
+%   Density Estimates," Computational Statistics and Data Analysis, Vol.
+%   35, No. 1, pp. 43--65, 2000.
+% \item Marco Di Marzio and Charles C. Taylor Boosting kernel density
+%   estimates: A bias reduction technique?  Biometrika 2004 91: 226-233;
+% \item B. Efron and R. Tibshirani Using specially designed exponential
+%   families for density estimation Ann. Statist.  24 (1996), no. 6,
+%   2431--2461
+% \item Acuna, E. and Rojas, A. (2001) Bagging classifiers based on
+%   kernel density estimators. Proceedings of the International
+%   Conference on New Trends in Computational Statistics with Biomedical
+%   Applications. Osaka University, Japan. 343-350.
+% \item{allison} Allison, D.B.; Gadbury, G.; Heo, M; Fernandez, J., Lee,
+%   C.-K.; Prolla, T.A.; Weindruch, R. A Mixture Model Approach For The
+%   Analysis Of Microarray Gene Expression Data. Computational
+%   Statistics \& Data Analysis {\bf 2002}, 39, 1-20.
+% \item{broet} Bro\"{e}t, P.; Lewin, A.; Richardson, S.; Dalmasso, C.;
+%   Magdelenat H.  a mixture model-based strategy for selecting sets of
+%   genes in multiclass response microarray experiments. Bioinformatics
+%   {\bf 2004}, {20}, 2562-2571
+% \item{liao} Liao, J.G.; Lin, Y. ; Selvanayagam, Z.E.; Weichung J.S.  A
+%   mixture model for estimating the local false discovery rate in DNA
+%   microarray analysis. {Bioinformatics} {\bf 2004}, {20(16)},
+%   2694-2701.
+% \item{newton} Newton, M.A.; Noueiry, A.; Sarkar, D.; Ahlquist, P.
+%   Detecting differential gene expression with a semiparametric
+%   hierarchical mixture method. {Biostatistics} {\bf 2004}, {5},
+%   155-176
+% \item{pounds2} Pounds, S.; Morris, S.W.  Estimating the occurrence of
+%   false positives and false negatives in microarray studies by
+%   approximating and partitioning the empirical distribution of
+%   $p$-values. Bioinformatics {\bf 2003}, {19}, 1236-42.
+% \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+\section*{Appendix}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Proof of Lemma {\bf \ref{Lem:Simplex}}.}  We have $\psibf = \alphabf \circ \betabf \circ \gammabf$. Since $\gammabf$
+is a projection, we have $\psibf \circ \gammabf = \psibf$. So, for $\vbf^* = \gammabf(\ubf^*)$, we have $\psibf(\ubf^*) = \psibf(\vbf^*)$ and
+$$
+\ubf^* = \psibf(\ubf^*) \quad \Rightarrow \quad \vbf^* = \gammabf
+\circ \psibf(\ubf^*) = \gammabf \circ \psibf \circ \gammabf (\ubf^*) =
+\gammabf \circ \psibf(\vbf^*).
+$$
+Conversely, let $\vbf^*$ denote a fix point of $\gammabf \circ
+\psibf$ and $\ubf^* = \alphabf \circ \betabf(\vbf^*)$. Since $\vbf^*$
+belongs to $\Ecal$, we have $\vbf^* = \gammabf(\vbf^*)$ so $\ubf^* =
+\psibf(\vbf^*)$ and $\psibf(\ubf^*) = \psibf \circ \psibf(\vbf^*)$.
+Remarking that
+$$
+\psibf \circ \psibf(\vbf^*) = \psibf \circ \gammabf \circ
+\psibf(\vbf^*) = \psibf(\vbf^*)
+$$
+we get $\psibf(\ubf^*) = \psibf(\vbf^*) = \ubf^*$.  $\blacksquare$
+
+\paragraph{Proof of Lemma {\bf \ref{Lem:DefDistance}}.} $d$ is a distance
+iff, for all $\ubf$, $\vbf$ and $\wbf$ in $\Fcal$, ($i$) $d(\ubf,
+\vbf) \geq 0$; ($ii$) $d(\ubf, \vbf) = d(\vbf, \ubf)$; ($iii$)
+$\{d(\ubf, \vbf) = 0\} \Leftrightarrow \{\ubf = \vbf\}$; ($iv$)
+$d(\ubf, \wbf) \leq d(\ubf, \vbf) + d(\vbf, \wbf)$. ($i$), ($ii$) and
+($iii$) are straightforward. ($iv$) is due to
+$$
+\max_i \left(\frac{u_i}{w_i}\right)
+=
+\max_i \left(\frac{u_i}{v_i}\frac{v_i}{w_i}\right)
+\leq
+\max_i \left(\frac{u_i}{v_i}\right) \max_i \left(\frac{v_i}{w_i}\right)
+$$
+and conversely for the $\min$. $\blacksquare$
+
+\paragraph{Proof of Lemma {\bf \ref{Lem:Decrease}}.}  The second case
+is obvious since $d$ is a distance. So we concentrate on the proof of the first one. The main idea is to prove that  $\betabf$ can not increase the distance
+$d$ and that $\alphabf\circ\betabf$ necessarily reduces it.
+\begin{description}
+\item[$\betabf$:] For $\vbf \neq \wbf$ we define $c_1 = \min_i
+  (w_i/v_i)$ and $c_2 = \max_i(w_i/v_i)$. Remark that $c_1 < 1 < c_2$,
+  $d(\vbf, \wbf) = \ln(c_2/c_1)$ and
+  \begin{equation} \label{Eq:Ineq_ab}
+    \mbox{For all } i: c_1 v_i \leq w_i \leq c_2 v_i.
+  \end{equation}
+  Denote $v'_j = \beta_j(\vbf)$ and $w'_j = \beta_j(\wbf)$. Since all
+  the $b_{ij}$ are positive, (\ref{Eq:Ineq_ab}) implies that $c_1 v'_j
+  \leq w'_j \leq c_2 v'_j$ for all $j$, which means that $\betabf$
+  does not increase $d$.
+\item[$\alphabf\circ\betabf$:] Denote now $v''_j =
+  \alpha_j[\betabf(\vbf)] = v'_j/(1+v'_j)$ and $w''_j =
+  \alpha_j[\betabf(\wbf)] = w'_j/(1+w'_j)$.  Remarking that the
+  transformation $t \rightarrow t/(1+t)$ is increasing, we derive that
+  if $w'_i \geq v'_i$ then $w''_i \geq v''_i > c_1 v''_i$, and if $
+  w'_i < v'_i$ then
+  $$
+  w''_i = \frac{w'_i}{1+w'_i} > \frac{w'_i}{1+v'_i} \geq c_1
+  \frac{v'_i}{1+v'_i} = c_1 v''_i.
+  $$
+  So, in both cases, we have $w''_i > c_1 v''_i$ for every $i$.\\
+  Conversely, if $w'_i \leq v'_i$ then $w''_i \leq v''_i < c_2 v''_i$,
+  and if $w'_i > v'_i$ then
+  $$
+  w''_i = \frac{w'_i}{1+w'_i} < \frac{w'_i}{1+v'_i} \leq c_2
+  \frac{v'_i}{1+v'_i} = c_2 v''_i.
+  $$
+  So, in both cases, we have $w''_i < c_2 v''_i$ for every $i$.\\
+\end{description}
+This shows that, for every $i$, $c_1 v''_i < w''_i < c_2 v''_i$. So,
+denoting $c''_1 = \min_i (w''_i / v''_i)$ and $c''_2 = \max_i (w''_i /
+v''_i)$ we have $c_1 < c''_1$ and $c_2 > c''_2$, which implies that
+$$
+d(\gammabf\circ\psibf(\wbf), \gammabf\circ\psibf(\vbf)) = \ln(c''_2/c''_1) < \ln(c_2/c_1) = d(\wbf, \vbf).
+$$
+We conclude that $\alphabf\circ\betabf$ strictly reduces $d$.
+$\blacksquare$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibitem{storey04} Storey JD, Taylor JE, and Siegmund D. (2004) Strong control,
+conservative point estimation, and simultaneous conservative consistency of false discovery rates: A unified approach. {\em Journal of the Royal Statistical
+Society, Series B}, {\bf 66} 187-205.
+
+Scott, D. W. (1992) Multivariate Density Estimation. Theory, Practice and Visualization. New York: Wiley.
+
+Silverman, B. W. (1986) Density Estimation. London:Chapman and Hall.

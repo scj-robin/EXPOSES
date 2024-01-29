@@ -1,4 +1,4 @@
-\documentclass[9pt]{beamer}
+\documentclass[8pt]{beamer}
 
 % Beamer style
 %\usetheme[secheader]{Madrid}
@@ -32,6 +32,7 @@
 % Directory
 \newcommand{\figcp}{/home/robin/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
 \newcommand{\figexp}{/home/robin/RECHERCHE/EXPRESSION/EXPOSES/FIGURES}
+\newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
 \newcommand{\figfdr}{/home/robin/RECHERCHE/COMPMULT/EXPOSES/FIGURES}
 \newcommand{\figmhs}{/home/robin/ENSEIGN/CoursAgro/MOD-GRAPH/Figures}
 \newcommand{\figbayes}{/home/robin/RECHERCHE/BAYES/EXPOSES/FIGURES}
@@ -64,7 +65,7 @@
 %====================================================================
 \frame{\frametitle{Introduction}
 
-  \paragraph{Latent variable model.} Model involving unobserved = latent = hidden = ... variables.
+  \paragraph{Latent variable model.} Model involving unobserved (= 'latent' = 'hidden' = ...) variables.
   
   \bigskip \pause
   \paragraph{Use for modelling.} Account for
@@ -100,7 +101,7 @@
   $$
   
   \bigskip \pause
-  \paragraph{Popular approach.} Use the \refer{DLR77} decomposition
+  \paragraph{Popular approach.} Use the decomposition \refer{DLR77} 
   \begin{align*}
     \log p_\theta (Y) 
 %     & =  \Esp_\theta[\log p_\theta(Y, Z) \mid Y] - \Esp_\theta[\log p_\theta(Z \mid Y) \mid Y] \\ 
@@ -116,7 +117,7 @@
   \bigskip \bigskip \pause
   \paragraph{Critical step = E step.}
   Given the current $\theta^{(h)}$, compute some moments of the conditional distribution $$
-  p_\theta(Z \mid Y).
+  p_{\theta^{(h)}}(Z \mid Y).
   $$
 
 }
@@ -359,6 +360,20 @@
 }
 
 %====================================================================
+\frame{\frametitle{Non-parametric HMM}
+
+  \paragraph{Non-parametric HMM.} 
+  \refer{AMR09} $\Rightarrow$ HMM with non-parametric emission distributions are generically identifiable. \nocite{GCR16} \\
+  \ra No distribution assumptions (Gaussian, Poisson, Negative binomial, etc).
+
+  \bigskip \pause
+  \paragraph{Differentially expressed regions along the genome.} Kernel-density estimates in each of the $K=5$ states
+  $$
+  \includegraphics[width=.55\textwidth]{\figcp/GCR16-StatComp-Fig7}
+  $$
+}
+
+%====================================================================
 \frame{\frametitle{Tree-shaped Markov models}
 
   \paragraph{Remark.}
@@ -395,19 +410,22 @@
 }
 
 %====================================================================
-\frame{\frametitle{And also}
+\frame{\frametitle{Other complex latent structures}
 
-  \paragraph{Non-parametric HMM.} 
-  \refer{AMR09} $\Rightarrow$ HMM with non-parametric emission distributions are generically identifiable. \nocite{GCR16}
-  
-  \bigskip \bigskip \pause
-  \paragraph{Other complex latent structures} manageable using relevant algebraic properties : \\~
+%   \paragraph{Non-parametric HMM.} 
+%   \refer{AMR09} $\Rightarrow$ HMM with non-parametric emission distributions are generically identifiable. \nocite{GCR16}
+
+  More complex latent structures may remain manageable using relevant algebraic properties, e.g.: \\~
   \begin{itemize}
     \item Sequence partitioning (segmentation): dynamic programming \refer{AuL89}  and/or simple matrix products \\
     \ra quadratic complexity \nocite{RLR11} \\~
     \item Spanning tree-shaped graphical models: maximum spanning tree \refer{Kru56} and/or simple determinant calculation \refer{Cha82} \\
     \ra cubic complexity \nocite{SRS19} 
   \end{itemize}
+
+  \bigskip
+  ... no generic rule to identify manageable E-steps.
+
 
 }
 
@@ -577,7 +595,7 @@
 %====================================================================
 \frame{\frametitle{Sequential Monte-Carlo for SBM} 
 
-  \paragraph{Weighted SBM with covariates.}
+  \paragraph{Weighted SBM with covariates.} \nocite{DoR21}
   $$
   Y_{ij} \sim \Pcal(e^{\alpha_{k\ell} + x_i^\top \beta})
   $$
@@ -593,8 +611,9 @@
   p(Z, \theta \mid Y)^{\rho_h} \; p_0(Z, \theta \mid Y)^{1-\rho_h}
   $$
   \begin{itemize}
-    \item starting from $p^0 = p_{VEM}$ rather than $p^0 =$ prior.
-    \item tuning the $\rho_1, \rho_2, \dots$ so to keep a sufficient effective sample size (ESS) at each step.
+    \item $p_0 =$ starting distribution (e.g.$p_{VEM}$ or prior).
+    \item $p_H =$ posterior, when $\rho_H = 1$, .
+    \item $\rho_1, \dots, \rho_H$ tuned so to keep a sufficient effective sample size (ESS) at each step.
   \end{itemize}
 
 }
@@ -602,48 +621,104 @@
 %====================================================================
 \frame{\frametitle{Sequential Monte-Carlo for SBM} 
 
+  \paragraph{Choice of $p_0$.} Number of steps to reach the posterior \textcolor{cyan}{from $p_{VEM}$} or \textcolor{red}{from the prior}
+  $$
+  \includegraphics[width=.5\textwidth]{\figbayes/DoR21-Fig1-simu-rho} 
+  $$
+  (Synthetic data)
+        
+}
+
+%====================================================================
+\frame{\frametitle{An ecological example ($p = 51$ species)} 
+
   \begin{tabular}{cc}
     \hspace{-.04\textwidth}
-    \begin{tabular}{p{.4\textwidth}}
-      \paragraph{Posterior distribution} for $\beta$: \\
-      \textcolor{orange}{$p_{VEM}$} \\
-      \textcolor{darkgreen}{posterior with $\widehat{K}$}
-      \textcolor{purple}{posterior model averaging}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Posterior distribution for $\beta$:}
+      \begin{itemize}
+       \item \textcolor{orange}{$p_{VEM}$}
+       \item \textcolor{darkgreen}{posterior with $\widehat{K}$} 
+       \item \textcolor{pink}{(posterior with model averaging)}
+      \end{itemize}
     \end{tabular}
     & 
-    \hspace{-.02\textwidth}
-    \begin{tabular}{p{.6\textwidth}}
+    \hspace{-.1\textwidth}
+    \begin{tabular}{c}
       \includegraphics[width=.25\textwidth]{\figbayes/DoR21-Fig7-beta1} 
       \includegraphics[width=.25\textwidth]{\figbayes/DoR21-Fig7-beta2}
     \end{tabular}
-    \\
+    \\ \pause
+    ~ \\ ~\\
     \hspace{-.04\textwidth}
-    \begin{tabular}{p{.4\textwidth}}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Path to the posterior:}
+      \begin{itemize}
+       \item 25 steps to reach the posterior
+       \item Mostly to recover the dependency structure between the $Z_i$
+      \end{itemize}
     \end{tabular}
     & 
-    \hspace{-.02\textwidth}
-    \begin{tabular}{p{.6\textwidth}}
-      \includegraphics[width=.4\textwidth]{\figbayes/DoR21-Fig1-simu-rho} 
-    \end{tabular}  
+    \hspace{-.1\textwidth}
+    \begin{tabular}{cc}
+      $\rho_h$ & $MI(Z)$ \\
+      \includegraphics[width=.25\textwidth, trim=0 0 0 30, clip=]{\figbayes/DoR21-Fig7-rho} &
+      \includegraphics[width=.25\textwidth, trim=0 0 0 30, clip=]{\figbayes/DoR21-Fig7-MI}
+    \end{tabular}
   \end{tabular}
       
 }
 
 %====================================================================
-\frame{\frametitle{MCEM for PLN} 
+\frame{\frametitle{Monte-Carlo EM for PLN} 
 
-* Vraisemblance composite + MCEM
+  \paragraph{Monte-Carlo EM (MCEM).} Replace the E step with a sampling step
+  \begin{align*}
+  (Z^m)_{1 \leq m \leq M} \text{ iid} & \sim p_{\theta}(Z \mid Y) & 
+  \to \quad
+  \widehat{\Esp}[f(Z)] & = M^{-1} \sum_{m=1}^M f(Z^m).
+  \end{align*}
 
+  \bigskip \bigskip \pause
+  \paragraph{Importance sampling.} When $p_{\theta}(Z \mid Y)$ not available, sample from a surrogate proposal:
+  \begin{align*}
+    (Z^m)_{1 \leq m \leq M} \text{ iid} & \sim q(Z) & 
+    \to \quad \widehat{\Esp}[f(Z)] & = \sum_{m=1}^M w^m f(Z^m), \\
+    \text{where} \quad w^m \propto \; p_{\theta}(Z^m \mid Y) & / q(Z^m).
+  \end{align*}
+
+  \bigskip \bigskip \pause
+  \paragraph{Monte-Carlo EM.}
+  \begin{itemize}
+    \item Regular M step to update $\theta^{(h)}$,
+    \item Monte-Carlo E step, using au Gaussian $q$ fitted to estimated the moments of $p_{\theta^{(h)}}(Z \mid Y)$,
+    \item Starting with $q_\psi$ from VEM.
+  \end{itemize}
 }
 
 %====================================================================
-\frame{\frametitle{Other alternatives} 
+\frame{\frametitle{Composite likelihood} 
 
-* VAE
-
-* Learning transform for PLN
-
-* generic rule to identify manageable E-steps
+  \paragraph{Importance sampling} has poor efficiency (low ESS) in 'large' dimension ($p \geq 5, 10$).
+  
+  \bigskip \bigskip \pause
+  \paragraph{Composite likelihood} = linear combination of marginal likelihoods:
+  \begin{itemize}
+    \item Spread the $p$ species into $B$ overlapping blocks $\Ccal_1, \dots \Ccal_B$ of size $k$;
+    \item Define
+    $$
+    \cl_\theta(Y) = \sum_{b=1}^B \log p_\theta(Y^{\Ccal_b});
+    $$
+    \item Get $\widehat{\theta}_{\cl} = \argmax_\theta\cl_\theta(Y)$ using EM (which still applies);
+    \item $\widehat{\theta}_{\cl}$ is asymptotically normal, with known asymptotic variance (Godambe information replaces Fisher information).
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{MCEM for composite likelihood.} Same as before
+  \begin{itemize}
+    \item replacing the E step with e Monte Carlo step
+    \item where importance sampling is made in dimension $k \ll p$.
+  \end{itemize}
 
 }
 
@@ -652,15 +727,59 @@
 \section*{Conlusion}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
-\frame{\frametitle{} 
+\frame{\frametitle{Summary}
 
-* Monte-Carlo
+  \paragraph{Latent variable model =} generic and flexible modelling tool.
+  
+  \bigskip \bigskip 
+  \paragraph{Inference} mostly depends on the complexity of the conditional distribution $p_\theta(Z \mid Y)$.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Variational approximations} provide efficient algorithms to manage too complex hidden structure, but with few statistical guaranties.
+  
+  \bigskip \bigskip 
+  \paragraph{Monte Carlo-based} methods can take advantage of variational approximations, but at a computational cost.
+  
+}
 
-* VAE
+%====================================================================
+\frame{\frametitle{Some alternatives}
 
-* Vraisemblance composite + MCEM
+  \bigskip \bigskip 
+  \paragraph{Classical MCMC-based} techniques often come at a prohibitive computational cost in genomics.
 
-* generic rule to identify manageable E-steps
+  \bigskip \bigskip \pause
+  \paragraph{Variational auto-encoders} 
+  \begin{itemize}
+    \item provide more flexibility to fit the variational parameters ($\to$ better approximation)
+    \item still relying on a Gaussian assumption
+  \end{itemize}
+
+  \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Learning some basic useful transforms.} ~\\
+      'Learn' a smooth 1D transform 
+      $$
+      \psi = \psi_{\mu, \sigma^2, y},
+      $$
+      such that, if
+      $$
+      Z \sim \Ncal(\mu, \sigma^2)
+      $$
+      then
+      $$
+      \psi(Z) \sim p_{PLN(\mu, \sigma^2)}(Z \mid Y=y)
+      $$
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.3\textwidth}}
+      \includegraphics[width=.4\textwidth]{\figeco/DirectSamplingPLNcondDist-transform}
+    \end{tabular}
+  \end{tabular}
+
 
 }
 
@@ -676,6 +795,27 @@
 %====================================================================
 \backupbegin
 %====================================================================
+
+%====================================================================
+\frame{\frametitle{Monte-Carlo EM for PLN} 
+
+  $p$ species, blocks of size $k$
+
+  $$
+  \begin{tabular}{c|cc}
+    \emphase{Log-likelihood $\log p_\theta(Y)$} & \multicolumn{2}{c}{\emphase{Composite log-likelihood  $\cl_\theta(Y)$}} \\    
+    & & \\
+    Synthetic data & \multicolumn{2}{c}{Barents fish ($n = 89$, $p=30$)} \\
+    & & \\
+    Normality & Estimates $\widehat{B}$ & ESS ($k=5$) \\
+    \includegraphics[width=.3\textwidth, trim=10 10 10 20, clip=]{\figbayes/StR24-Fig9} &
+    \includegraphics[width=.3\textwidth, trim=10 10 10 20, clip=]{\figbayes/StR24-Fig7a} &
+    \includegraphics[width=.3\textwidth, trim=10 10 10 20, clip=]{\figbayes/StR24-Fig7c} \\    
+    $KS$ p-val = f($p$) & Color = $k$ & $ESS =$ f(iteration)\\
+  \end{tabular}
+  $$
+
+}
 
 %====================================================================
 \backupend
