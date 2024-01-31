@@ -50,7 +50,7 @@ joint work with E. Lebarbier, C. Dion-Blanc \refer{DLR23}}
 
 \institute[]{Sorbonne université}
 
-\date[MSV'24]{Math pour les Sciences du Vivant, Jan. 2024}
+\date[LMO'24]{Laboratoire de mathématique d'Orsay, Feb. 2024}
 
 %====================================================================
 %====================================================================
@@ -291,45 +291,6 @@ joint work with E. Lebarbier, C. Dion-Blanc \refer{DLR23}}
   $$
   can be recovered in $\Ocal(n^2)$ using a dynamic programming algorithm.
   
-}
-
-%====================================================================
-\frame{\frametitle{Dynamic programming} 
-
-  \paragraph{Belman's principle.}
-  All sub-paths of the optimal path must be optimal themselves.
-  
-  \pause \bigskip 
-  \paragraph{Dynamic programming algorithm \refer{AuL89}.}
-  \begin{enumerate}
-    \item For each $m \in \llbracket n\rrbracket$, compute (in $\Ocal(m)$)
-    $$
-    t_1(m) = \argmin_{1 \leq t < m} C(1, t) + C(t+1, m), 
-    \qquad
-    S_2(m) = \min_{1 \leq t < m}();
-    $$
-    \item Then, for each $k = 3 \dots K$ and each $m \in \llbracket n\rrbracket$, compute  (in $\Ocal(m)$)
-    $$
-    t_{k-1}(m) = \argmin_{k-1 \leq t < m} S_{k-1}(1, t) + C(t+1, m), 
-    \qquad
-    S_k(m) = \min_{k-1 \leq t < m} (). 
-    $$
-  \end{enumerate}
-  
-  \pause \bigskip  \bigskip 
-  \paragraph{Solution.}
-  After $\Ocal(Kn^2)$ operations:
-  $$
-  \min_{\tau \in \Tcal_K} \gamma(\tau) = S_K(n), 
-  $$
-  and 
-  $$
-  \widehat{\tau}_{K-1} = t_{K-1}(n), 
-  \qquad
-  \widehat{\tau}_{k-1} = t_{K-1}(\widehat{\tau}_k).
-  $$
-  
-
 }
 
 %====================================================================
@@ -658,12 +619,23 @@ joint work with E. Lebarbier, C. Dion-Blanc \refer{DLR23}}
     \item $\overline{\lambda}$ average intensity (\ra total number of events), 
     \item $\lambda_R =$ height of the steps (\ra contrast between segments).
   \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Intensity function $\lambda(t)$.} $\overline{\lambda} = 100$, $\lambda_R = 1, 3, 8$.
+  $$
+  \includegraphics[width=.6\textwidth, trim=0 10 0 10, clip=]{\figcp/DLR23-ArXiv-Fig2}
+  $$
   
-  \bigskip
+}
+
+%====================================================================
+\frame{\frametitle{Some simulations} 
+
   \paragraph{Estimation.} Choose $K$ via CV, then refit the parameters to the whole dataset.
 
   \bigskip \bigskip \pause
-  \paragraph{Results.}  ~\\
+  \paragraph{Results.}  $x$-axis = $\lambda_R$, color = $\overline{\lambda}$
+  \bigskip
   \begin{tabular}{ccc}
     Model selection & 
     Change-point location & 
@@ -698,10 +670,10 @@ joint work with E. Lebarbier, C. Dion-Blanc \refer{DLR23}}
 
 %====================================================================
 %====================================================================
-\section{Extension to marked-Poisson processes}
+\section{Extensions \& future works}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
-\frame{\frametitle{Extension to marked-Poisson processes} 
+\frame{\frametitle{Marked-Poisson processes} 
 
   \paragraph{Marked Poisson Process.}
   \begin{itemize}
@@ -779,6 +751,54 @@ joint work with E. Lebarbier, C. Dion-Blanc \refer{DLR23}}
 }
 
 %====================================================================
+\frame{\frametitle{Model selection} 
+
+  \paragraph{Poisson process: Mauna Loa eruptions.} $n = 40$
+  $$
+  \begin{tabular}{ccc}
+    $K = 2$ & $K = 3$ & $K = 4$ \\
+    \includegraphics[width=.25\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10_}    
+    &
+    \includegraphics[width=.25\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10a}    
+    &
+    \includegraphics[width=.25\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10b}    
+    \\ ~ \\
+    $K = 5$ & $K = 6$ \\
+    \includegraphics[width=.25\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10c}    
+    &
+    \includegraphics[width=.25\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10d}    
+  \end{tabular}
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Model selection} 
+
+  \paragraph{Choice of the fraction $f$ for cross-validation.} 
+  Proposed $f = 4/5$ \\
+  
+  \bigskip
+  Synthetic data: $\overline{\lambda} = 100$ and $\lambda_R=8$
+  $$
+  \begin{array}{ccc}
+    \widehat{K} & d(\widehat{\tau}, \tau) & \ell_2(\widehat{\Lambda}, \Lambda) \\
+    \includegraphics[width=.3\textwidth, trim=10 10 10 50, clip=]{\figDLR/Kcv-V} & 
+    \includegraphics[width=.3\textwidth, trim=10 10 10 50, clip=]{\figDLR/Hausdorff-V} & 
+    \includegraphics[width=.3\textwidth, trim=10 10 10 50, clip=]{\figDLR/relL2cum-V}     
+  \end{array}
+  $$
+
+  \bigskip \pause
+  \paragraph{Ongoing work.}
+  \begin{itemize}
+    \item Need for an alternative criterium, e.g. BIC
+    \item Consistency of the estimated change-points 
+  \end{itemize}
+  
+  }
+
+%====================================================================
 %====================================================================
 \section{Future works}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
@@ -794,12 +814,12 @@ joint work with E. Lebarbier, C. Dion-Blanc \refer{DLR23}}
   \end{itemize}
 
   \bigskip \bigskip \pause
-  \paragraph{And also.}
+  \paragraph{Hawkes process.}
   \begin{itemize}
     \setlength{\itemsep}{1.1\baselineskip}
-    \item Theoretically grounded model selection criterion (BIC: ongoing), 
-    \item Consistency of the estimated change-points (ongoing), 
-    \item Other desirable contrasts, ...
+    \item Accounts for sel excication (or inhibition), but yields non-additive contrasts
+    \item Markovian reformulation of the discrete-time approximation, with exponential kernel
+    \item Segmentation-clustering doable via $\simeq$ classical hidden Markov modeling
   \end{itemize}
 }
 
@@ -817,6 +837,44 @@ joint work with E. Lebarbier, C. Dion-Blanc \refer{DLR23}}
 \backupbegin
 %====================================================================
 
+%====================================================================
+\frame{\frametitle{Dynamic programming} 
+
+  \paragraph{Belman's principle.}
+  All sub-paths of the optimal path must be optimal themselves.
+  
+  \pause \bigskip 
+  \paragraph{Dynamic programming algorithm \refer{AuL89}.}
+  \begin{enumerate}
+    \item For each $m \in \llbracket n\rrbracket$, compute (in $\Ocal(m)$)
+    $$
+    t_1(m) = \argmin_{1 \leq t < m} C(1, t) + C(t+1, m), 
+    \qquad
+    S_2(m) = \min_{1 \leq t < m}();
+    $$
+    \item Then, for each $k = 3 \dots K$ and each $m \in \llbracket n\rrbracket$, compute  (in $\Ocal(m)$)
+    $$
+    t_{k-1}(m) = \argmin_{k-1 \leq t < m} S_{k-1}(1, t) + C(t+1, m), 
+    \qquad
+    S_k(m) = \min_{k-1 \leq t < m} (). 
+    $$
+  \end{enumerate}
+  
+  \pause \bigskip  \bigskip 
+  \paragraph{Solution.}
+  After $\Ocal(Kn^2)$ operations:
+  $$
+  \min_{\tau \in \Tcal_K} \gamma(\tau) = S_K(n), 
+  $$
+  and 
+  $$
+  \widehat{\tau}_{K-1} = t_{K-1}(n), 
+  \qquad
+  \widehat{\tau}_{k-1} = t_{K-1}(\widehat{\tau}_k).
+  $$
+  
+
+}
 
 %====================================================================
 \frame{\frametitle{Appendix} 
@@ -850,41 +908,102 @@ joint work with E. Lebarbier, C. Dion-Blanc \refer{DLR23}}
 }
 
 %====================================================================
-\frame{\frametitle{Choice of the fraction $f$ for cross-validation} 
+\frame{\frametitle{Segmentation in a Hawkes process} 
 
-  Proposed $f = 4/5$ ($\overline{\lambda} = 100$ and $\lambda_R=8$) :
+  \paragraph{Modeling.} Many counting processes display a self-exciting behavior (events generate --~or prevent~-- new events), which the Poisson process does not account for.
+  
+  \pause \bigskip \bigskip
+  \paragraph{Hawkes process.} Counting process $N(t)$ with intensity conditional on the past events:
+  $$
+  \lambda(t) 
+  = m + \int_0^t h(t-s) d N(s) 
+  = m + \sum_{i: T_i < t} h(t -T_i).
+  $$
+  \begin{itemize}
+    \item $m =$ baseline intensity,
+    \item $h =$ kernel, e.g. exponential: $h(u) = a e^{-bu}$.
+  \end{itemize}
 
-  \bigskip \bigskip 
-  \begin{tabular}{ccc}
-    $\widehat{K}$ & $d(\widehat{\tau}, \tau)$ & $\ell_2(\widehat{\Lambda}, \Lambda)$ \\
-    \includegraphics[width=.3\textwidth, trim=10 10 10 10 50, clip=]{\figDLR/Kcv-V} & 
-    \includegraphics[width=.3\textwidth, trim=10 10 10 10 50, clip=]{\figDLR/Hausdorff-V} & 
-    \includegraphics[width=.3\textwidth, trim=10 10 10 10 50, clip=]{\figDLR/relL2cum-V}     
-  \end{tabular}
+  \pause \bigskip \bigskip 
+  \paragraph{Change point detection in the baseline.} Change-points $0 < \tau_1 < \dots < \tau_{K-1} < 1$:
+  $$
+  \lambda(t) 
+  = m_k + \sum_{i: T_i < t} h(t -T_i), 
+  \qquad \text{if} \quad
+  \tau_{k-1} < t \leq \tau_k.
+  $$
 
-
-  }
+}
 
 %====================================================================
-\frame{\frametitle{Poisson process: Mauna Loa eruptions} 
+\frame{\frametitle{Segmentation in a Hawkes process: Discrete time} 
 
-  $$
-  \begin{tabular}{ccc}
-    $n = 40$ & $K = 2$ & $K = 3$ \\
-    & 
-    \includegraphics[width=.28\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10_}    
-    &
-    \includegraphics[width=.28\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10a}    
-    \\ ~ \\
-    $K = 4$ & $K = 5$ & $K = 6$ \\
-    \includegraphics[width=.28\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10b}    
-    &
-    \includegraphics[width=.28\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10c}    
-    &
-    \includegraphics[width=.28\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10d}    
-  \end{tabular}
-  $$
+  \paragraph{Non-additive contrast.} Disjoint time segments are not independent, so  classical contrasts (e.g. negative log-likelihood, \dots) are not additive anymore.
 
+  \pause \bigskip \bigskip 
+  \paragraph{Discrete time Hawkes process.} Consider discrete times $t_i = i/n$ and define
+  $$
+  Y_i \sim \Pcal\left(\mu + \sum_{j \geq 1} \alpha \beta^j Y_{i-j}\right)
+  $$
+  (taking $\mu = m/n$,  $\beta = e^{-b/n}$).
+
+  \pause \bigskip \bigskip 
+  \paragraph{Makovian reformulation.} 
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}  
+    \item $\{Y_i\}_{i \geq 1}$ is not a Markov chain,
+    \item but, defining $U_1 = 0$ and
+    $$
+    U_i = \beta \left(\alpha Y_{i-1} + U_{i-1}\right),
+    \qquad \text{for} \quad i \geq 1,
+    $$
+    $\{(Y_i, U_i)\}_{i \geq 1}$ is a Markov chain.
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Segmentation and classification in a Hawkes process: Discrete time} 
+
+  \paragraph{Hidden Markov models (HMM)} provide a convenient framework for segmentation and classification.
+  
+  \pause \bigskip \bigskip
+  \paragraph{Discrete time Hawkes HMM.}   
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}  
+    \item Hidden path: $\{Z_i\}_{i \leq 1} =$ homogeneous Markov chain, with transition matrix $\pi$, 
+    \item 'Observed path': for $i \geq 1$, set $U_1 = 0$ and
+    $$
+    Y_i \sim \Pcal\left(\mu_{Z_i} + \sum_{j \geq 1} \alpha \beta^j Y_{i-j}\right), 
+    \qquad \qquad 
+    U_i = \alpha Y_{i-1} + \beta U_{i-1}.
+    $$
+  \end{itemize}
+
+  \pause \bigskip
+  \paragraph{Inference.} Regular EM algorithm for HMM.
+
+
+  \pause \bigskip \bigskip
+  \paragraph{Extensions.}
+  \begin{itemize}
+    \item Multivariate (discrete time) Hawkes process.
+    \item Applications: neuro-sciences, ecology.
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{HMM for discrete time Hawkes process} 
+
+  \renewcommand{\nodesize}{2em}
+  \renewcommand{\edgeunit}{3*\nodesize}
+
+  \paragraph{Graphical model.} 
+  
+  \begin{center}
+  \input{\figcp/DirectedGM_alpha_cst}
+  \end{center}
 }
 
 %====================================================================
