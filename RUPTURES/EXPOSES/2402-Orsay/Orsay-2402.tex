@@ -753,7 +753,7 @@ joint work with E. Lebarbier, C. Dion-Blanc \refer{DLR23}}
 %====================================================================
 \frame{\frametitle{Model selection} 
 
-  \paragraph{Poisson process: Mauna Loa eruptions.} $n = 40$
+  \paragraph{Poisson process: Mauna Loa eruptions.} $n = 40$, $\widehat{K}_{CV} = 2$
   $$
   \begin{tabular}{ccc}
     $K = 2$ & $K = 3$ & $K = 4$ \\
@@ -769,6 +769,7 @@ joint work with E. Lebarbier, C. Dion-Blanc \refer{DLR23}}
     \includegraphics[width=.25\textwidth, trim=0 35 10 50, clip=]{\figcp/DLR23-ArXiv-Fig10d}    
   \end{tabular}
   $$
+  \ra 'over-penalization' of the CV proccedure?
 
 }
 
@@ -877,27 +878,17 @@ joint work with E. Lebarbier, C. Dion-Blanc \refer{DLR23}}
 }
 
 %====================================================================
-\frame{\frametitle{Appendix} 
+\frame{\frametitle{Additional simulation} 
 
   \paragraph{Number of elements in the partition of the segmentation space.}
   $$
   |\Ncal_K| = \sum_{h=\lfloor (K-1)/2\rfloor}^K {{n-1}\choose{h-1}} {{h+1}\choose{K-h}}
   $$
-
-  \bigskip \bigskip \bigskip \pause
-  \paragraph{Simulations: Shape of the intensity function $\lambda(t)$.} $K=6$, $\overline{\lambda} = 100$, $\lambda_R = 1, 3, 8$.
-  $$
-  \includegraphics[width=.6\textwidth, trim=0 10 0 10, clip=]{\figcp/DLR23-ArXiv-Fig2}
-  $$
-
-}
-
-%====================================================================
-\frame{\frametitle{Choice of the hyper-parameters $(a, b)$} 
-
-  Sticking to $a/b = n$ ($\overline{\lambda} = 100$ and $\lambda_R=8$) :
-
+  
   \bigskip \bigskip 
+  \paragraph{Choice of the hyper-parameters $(a, b)$.}
+  Sticking to $a/b = n$ ($\overline{\lambda} = 100$ and $\lambda_R=8$) :
+  \bigskip  
   \begin{tabular}{ccc}
     $\widehat{K}$ & $d(\widehat{\tau}, \tau)$ & $\ell_2(\widehat{\Lambda}, \Lambda)$ \\
     \includegraphics[width=.3\textwidth, trim=10 10 10 10 50, clip=]{\figDLR/Kcv-a} & 
