@@ -26,11 +26,10 @@
 \usepackage{graphicx}
 
 \input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
-\newcommand{\dN}{\Delta N}
-\newcommand{\dtau}{\Delta \tau}
 
 % Directory
 \newcommand{\figcp}{/home/robin/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+\newcommand{\figgen}{/home/robin/RECHERCHE/GENOME/EXPOSES/FIGURES}
 \newcommand{\figexp}{/home/robin/RECHERCHE/EXPRESSION/EXPOSES/FIGURES}
 \newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
 \newcommand{\figfdr}{/home/robin/RECHERCHE/COMPMULT/EXPOSES/FIGURES}
@@ -65,25 +64,30 @@
 %====================================================================
 \frame{\frametitle{Introduction}
 
-  \paragraph{Latent variable model.} Model involving unobserved (= 'latent' = 'hidden' = ...) variables.
+  \paragraph{Latent variable model.} Model involving unobserved (= 'latent' = 'hidden' = \dots) variables.
   
-  \bigskip \pause
+  \bigskip \bigskip \pause
   \paragraph{Use for modelling.} Account for
   \begin{itemize}
   \item missing information (e.g. classification)
   \item dependency structure
-  \item over-dispersion, ...
+  \item over-dispersion, \dots
   \end{itemize}
   
-  \bigskip \pause
+  \bigskip \bigskip \pause
   \paragraph{Notations.}
-  \begin{description}
-  \item[$Y = $] observed variables (data)
-  \item[$\theta =$] model parameters
-  \item[$Z = $] latent variables
-  \end{description}
+  $$
+  \emphase{Y =} \text{ observed variables (data)}, \qquad
+  \emphase{\theta =} \text{ model parameters}, \qquad
+  \emphase{Z =} \text{ latent variables}
+  $$
+%   \begin{description}
+%   \item[$Y = $] observed variables (data)
+%   \item[$\theta =$] model parameters
+%   \item[$Z = $] latent variables
+%   \end{description}
   
-  \bigskip \pause
+  \bigskip \bigskip \pause
   \paragraph{Parameters $\neq$ latent variables.}
   \begin{itemize}
     \item $\theta$ can be fixed or random (e.g. frequentist vs Bayesian)
@@ -105,19 +109,21 @@
   \begin{align*}
     \log p_\theta (Y) 
 %     & =  \Esp_\theta[\log p_\theta(Y, Z) \mid Y] - \Esp_\theta[\log p_\theta(Z \mid Y) \mid Y] \\ 
-    & =  \Esp_\theta[\log p_\theta(Y, Z) \mid Y] + \underset{\text{entropy}}{\underbrace{\Hcal_\theta(Z \mid Y)}}
+    & =  \Esp_\theta[\emphase{\log p_\theta(Y, Z)} \mid Y] + \underset{\text{entropy}}{\underbrace{\Hcal_\theta(Z \mid Y)}}
   \end{align*}
   \pause
   and apply the iterative expectation-maximization (EM) algorithm:
   $$
-  \theta^{(h+1)} = \underset{\text{M step}}{\underbrace{\argmax_\theta}} \underset{\text{E step}}{\underbrace{\Esp_{\theta^{(h)}}}} [\log p_\theta(Y, Z) \mid Y]
+  \theta^{(h+1)} = \underset{\text{\emphase{M step}}}{\underbrace{\argmax_\theta}} \; \underset{\text{\emphase{E step}}}{\underbrace{\Esp_{\theta^{(h)}}}} [\log p_\theta(Y, Z) \mid Y]
   $$
   to (hopefully) get the MLE $\widehat{\theta} = \argmax_\theta \log p_\theta (Y)$.
 
   \bigskip \bigskip \pause
   \paragraph{Critical step = E step.}
-  Given the current $\theta^{(h)}$, compute some moments of the conditional distribution $$
-  p_{\theta^{(h)}}(Z \mid Y).
+  Given the current $\theta^{(h)}$, compute some moments of the conditional distribution $p_{\theta^{(h)}}(Z \mid Y)$: 
+  $$
+%   p_{\theta^{(h)}}(Z \mid Y).
+  \Esp_{\theta^{(h)}}[f(Z) \mid Y].
   $$
 
 }
@@ -179,7 +185,7 @@
       $$
       \ra Bayes formula:
       $$
-      \tau_i = \Pbb_{\widehat{\theta}}\{Z_i = 1 \mid Y_i\}.
+      \widehat{\tau}_i = \Pbb_{\widehat{\theta}}\{Z_i = 1 \mid Y_i\}.
       $$
     \end{tabular}
     & 
@@ -190,10 +196,10 @@
     \end{tabular}
   \end{tabular}
   
-  \bigskip \pause
+  \bigskip \bigskip \pause
   \paragraph{False discovery rate =} fraction of false positives among positives: 
   $$
-  \widehat{FDR}(t) = \left. \sum_{i: \tau_i>t} (1 - \tau_i)  \right/ \#\{i: \tau_i>t\}. 
+  \widehat{FDR}(t) = \left. \sum_{i: \widehat{\tau}_i>t} (1 - \widehat{\tau}_i)  \right/ \#\{i: \widehat{\tau}_i>t\}. 
   $$
   \begin{itemize}
     \item Choose the detection threshold $t$ so that $\widehat{FDR}(t) \leq 5\%$ (say).
@@ -227,7 +233,7 @@
   \bigskip \bigskip \pause
   \paragraph{Kernel density estimate} of $f_1 = p_\theta(Y_i \mid Z_i=1)$:
   $$
-  \widehat{f}_1(y) = \left. \sum_i \tau_i k(y - y_i) \right/ \sum_i \tau_i.
+  \widehat{f}_1(y) = \left. \sum_i \widehat{\tau}_i k(y - y_i) \right/ \sum_i \widehat{\tau}_i.
   $$
   
 }
@@ -253,8 +259,8 @@
        \item $Y_i =$ probit $p$-values
        $$p_\theta(Y_i \mid Z_i) = \prod_q p_\theta(Y^q_i \mid Z_i^q)$$
        \pause
-       \item Right: 5 time points. \\
-       $H^q = \{\Esp Y(t_{q-1}) = \Esp Y(t_q)\}$. \\
+       \item Right: 5 time points.
+       $$H^q = \{\Esp Y(t_{q-1}) = \Esp Y(t_q)\}.$$ 
        Genes with at least 2 successive differences.
       \end{itemize}
     \end{tabular}
@@ -335,10 +341,31 @@
   \end{itemize}
   
   \bigskip \pause
-  \paragraph{Inference.} E-step = forward-backward (Baum-Welsh, Kalman) recursion.
+  \paragraph{Inference.} E-step = forward-backward (= Baum-Welsh = Kalman = \dots) recursion.
 
   \bigskip \pause
   \paragraph{Classification.} Most probable hidden path $\widehat{Z}$  = Viterbi (dynamic programming) algorithm.
+
+}
+
+%====================================================================
+\frame{\frametitle{Gene detection}
+
+  \paragraph{Aim} starting from $Y =$ \\
+  {\small
+{\tt ATCTTTTTCGGCTTTTTTTAGTATCCACAGAGGTTATCGACAACATTTTCACATTACCAACCCCTGTGGACAAGGTTTTT} \\
+{\tt TCAACAGGTTGTCCGCTTTGTGGATAAGATTGTGACAACCATTGCAAGCTCTCGTTTATTTTGGTATTATATTTGTGTTT} \\
+{\tt TAACTCTTGATTACTAATCCTACCTTTCCTCTTTATCCACAAAGTGTGGATAAGTTGTGGATTGATTTCACACAGCTTGT} \\
+{\tt GTAGAAGGTTGTCCACAAGTTGTGAAATTTGTCGAAAAGCTATTTATCTACTATATTATATGTTTTCAACATTTAATGTG} \\
+{\tt TACGAATGGTAAGCGCCATTTGCTCTTTTTTTGTGTTCTATAACAGAGAAAGACGCCATTTTCTAAGAAAAGGAGGGACG} \\
+{\tt \dots}
+}
+
+  \bigskip \bigskip 
+  get
+  $$
+  \includegraphics[width=.9\textwidth]{\figgen/NBM02-NucAcidRes-Fig1}
+  $$
 
 }
 
@@ -360,13 +387,16 @@
 }
 
 %====================================================================
-\frame{\frametitle{Non-parametric HMM}
+\frame{\frametitle{Not modelling the emission distribution}
 
   \paragraph{Non-parametric HMM.} 
-  \refer{AMR09} $\Rightarrow$ HMM with non-parametric emission distributions are generically identifiable. \nocite{GCR16} \\
-  \ra No distribution assumptions (Gaussian, Poisson, Negative binomial, etc).
+  Application of \refer{AMR09} to HMM
+  \begin{itemize}
+    \item HMM with non-parametric emission distributions are generically identifiable. \nocite{GCR16}
+    \item No distribution assumptions (Gaussian, Poisson, Negative binomial, etc).
+  \end{itemize}
 
-  \bigskip \pause
+  \bigskip \bigskip \pause
   \paragraph{Differentially expressed regions along the genome.} Kernel-density estimates in each of the $K=5$ states
   $$
   \includegraphics[width=.55\textwidth]{\figcp/GCR16-StatComp-Fig7}
@@ -390,7 +420,7 @@
       \end{itemize}
       
       \bigskip
-      \paragraph{Likelihood of a tree.} ~ \\
+      \paragraph{Likelihood for a given\footnote{Main problem in phylogeny = find the tree} tree\footnote{Breaks down for a network (e.g. horizontal transfert)}.} ~ \\
       Felsentein's algorithm \refer{Fel81} \\
       = 'upward-downward' recursion
       
@@ -398,7 +428,7 @@
     & 
     \hspace{-.07\textwidth}
     \begin{tabular}{p{.5\textwidth}}
-      \includegraphics[width=.5\textwidth]{\figmhs/PolyMHS-GMtree}
+      \includegraphics[width=.45\textwidth]{\figmhs/PolyMHS-GMtree}
     \end{tabular}
   \end{tabular}
 
@@ -415,16 +445,16 @@
 %   \paragraph{Non-parametric HMM.} 
 %   \refer{AMR09} $\Rightarrow$ HMM with non-parametric emission distributions are generically identifiable. \nocite{GCR16}
 
-  More complex latent structures may remain manageable using relevant algebraic properties, e.g.: \\~
+  More complex latent structures may remain manageable using relevant algebraic properties. \\~
   \begin{itemize}
     \item Sequence partitioning (segmentation): dynamic programming \refer{AuL89}  and/or simple matrix products \\
     \ra quadratic complexity \nocite{RLR11} \\~
-    \item Spanning tree-shaped graphical models: maximum spanning tree \refer{Kru56} and/or simple determinant calculation \refer{Cha82} \\
+    \item Spanning tree\footnote{Phylogenetic trees are not spanning trees}-shaped graphical models: maximum spanning tree \refer{Kru56} and/or simple determinant calculation \refer{Cha82} \\
     \ra cubic complexity \nocite{SRS19} 
   \end{itemize}
 
   \bigskip
-  ... no generic rule to identify manageable E-steps.
+  \dots no generic rule to identify manageable E-steps.
 
 
 }
@@ -441,7 +471,7 @@
   $$
   Y_{ij} = 1 \text{ if entities $i$ and $j$ interact}, \quad = 0 \text{ otherwise}
   $$
-  Entities = protein, genes, operons, ...
+  Entities = protein, genes, operons, \dots
 
   \bigskip
   \paragraph{Aim.} Cluster entities according to their interaction profile.
@@ -460,7 +490,7 @@
         $$
         \gamma_{k\ell} = \Pbb\{Y_{ij} = 1 \mid Z_i = k, Z_j = \ell\}
         $$
-        (can include covariates, strength, ...).
+        (can include covariates, strength, \dots).
       \end{itemize}
     \end{tabular}
     & 
@@ -481,9 +511,11 @@
     \begin{tabular}{p{.5\textwidth}}
       \paragraph{Nasty conditional distribution.}
       \begin{itemize}
+      \setlength\itemsep{1.25em}        
+        \item 'Moralization' makes parents married
         \item The graphical model of $p_\theta(Z \mid Y)$ is a clique
         \item No nice factorization can be hoped to integrate it
-        \item The E-step is intractable for $n \geq 20$
+        \item The E-step is intractable for, say, $n \geq 20$
       \end{itemize}
     \end{tabular}
     & 
@@ -494,12 +526,12 @@
   \end{tabular}
   
   \bigskip 
-  Regular EM does not apply
+  \ra Regular EM does not apply
 
 }
 
 %====================================================================
-\frame{\frametitle{Metabarcoding} 
+\frame{\frametitle{Metabarcoding \& PLN model} 
 
   \paragraph{Data.} $n$ samples, $p$ species, 
   $$
@@ -585,7 +617,7 @@
   \paragraph{What do we know about VEM?}
   \begin{itemize}
     \item Computationally efficient
-    \item Works well in practice (estimation, classification, ...)
+    \item Works well in practice (estimation, classification, \dots)
     \item Almost no theoretical guaranty
     \item Provides no measure of uncertainty
   \end{itemize}
@@ -608,10 +640,10 @@
   $$
   p_h(Z, \theta \mid Y)
   \; \propto \;
-  p(Z, \theta \mid Y)^{\rho_h} \; p_0(Z, \theta \mid Y)^{1-\rho_h}
+  p(Z, \theta \mid Y)^{\emphase{\rho_h}} \; p_0(Z, \theta \mid Y)^{\emphase{1-\rho_h}}
   $$
   \begin{itemize}
-    \item $p_0 =$ starting distribution (e.g.$p_{VEM}$ or prior).
+    \item $p_0 =$ starting distribution ($p_{VEM}$, prior, \dots).
     \item $p_H =$ posterior, when $\rho_H = 1$, .
     \item $\rho_1, \dots, \rho_H$ tuned so to keep a sufficient effective sample size (ESS) at each step.
   \end{itemize}
@@ -674,7 +706,7 @@
 
   \paragraph{Monte-Carlo EM (MCEM).} Replace the E step with a sampling step
   \begin{align*}
-  (Z^m)_{1 \leq m \leq M} \text{ iid} & \sim p_{\theta}(Z \mid Y) & 
+  (Z^m)_{1 \leq m \leq M} \text{ iid} & \emphase{\sim p_{\theta}}(\cdot \mid Y) & 
   \to \quad
   \widehat{\Esp}[f(Z)] & = M^{-1} \sum_{m=1}^M f(Z^m).
   \end{align*}
@@ -682,7 +714,7 @@
   \bigskip \bigskip \pause
   \paragraph{Importance sampling.} When $p_{\theta}(Z \mid Y)$ not available, sample from a surrogate proposal:
   \begin{align*}
-    (Z^m)_{1 \leq m \leq M} \text{ iid} & \sim q(Z) & 
+    (Z^m)_{1 \leq m \leq M} \text{ iid} & \emphase{\sim} q(\cdot) & 
     \to \quad \widehat{\Esp}[f(Z)] & = \sum_{m=1}^M w^m f(Z^m), \\
     \text{where} \quad w^m \propto \; p_{\theta}(Z^m \mid Y) & / q(Z^m).
   \end{align*}
@@ -691,7 +723,7 @@
   \paragraph{Monte-Carlo EM.}
   \begin{itemize}
     \item Regular M step to update $\theta^{(h)}$,
-    \item Monte-Carlo E step, using au Gaussian $q$ fitted to estimated the moments of $p_{\theta^{(h)}}(Z \mid Y)$,
+    \item Monte-Carlo E step, using a Gaussian $q$ fitted to estimated the moments of $p_{\theta^{(h)}}(Z \mid Y)$,
     \item Starting with $q_\psi$ from VEM.
   \end{itemize}
 }
@@ -775,8 +807,9 @@
     \end{tabular}
     & 
     \hspace{-.02\textwidth}
-    \begin{tabular}{p{.3\textwidth}}
-      \includegraphics[width=.4\textwidth]{\figeco/DirectSamplingPLNcondDist-transform}
+    \begin{tabular}{c}
+      $\mu = 0, \quad \sigma^2 = 1$ \\
+      \includegraphics[width=.4\textwidth, trim=0 0 0 50, clip=]{\figeco/DirectSamplingPLNcondDist-transform}
     \end{tabular}
   \end{tabular}
 
