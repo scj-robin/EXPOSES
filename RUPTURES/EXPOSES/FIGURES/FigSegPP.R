@@ -1,10 +1,15 @@
 # Figures for Poisson point process segmentation
 
-rm(list=ls())
-source('/home/robin/RECHERCHE/RUPTURES/Hawkes/segHP/codes/PoissonCV-R/FunctionSegPP-CV.R')
-source('/home/robin/RECHERCHE/RUPTURES/Hawkes/segHP/codes/Poisson-R/DynProg.R')
-source('/home/robin/RECHERCHE/RUPTURES/Hawkes/segHP/codes/Poisson-R/Gsegmentation.R')
-source('/home/robin/RECHERCHE/RUPTURES/Hawkes/segHP/codes/Poisson-R/G.contrast.R')
+rm(list=ls()); palette('R3')
+# source('/home/robin/RECHERCHE/RUPTURES/Hawkes/segHP/codes/PoissonCV-R/FunctionSegPP-CV.R')
+# source('/home/robin/RECHERCHE/RUPTURES/Hawkes/segHP/codes/Poisson-R/DynProg.R')
+# source('/home/robin/RECHERCHE/RUPTURES/Hawkes/segHP/codes/Poisson-R/Gsegmentation.R')
+# source('/home/robin/RECHERCHE/RUPTURES/Hawkes/segHP/codes/Poisson-R/G.contrast.R')
+source('/home/robin/RECHERCHE/RUPTURES/Hawkes/segHP/codes/Functions/FunctionCrossValidation.R')
+source('/home/robin/RECHERCHE/RUPTURES/Hawkes/segHP/codes/Functions/FunctionsContrasts.R')
+source('/home/robin/RECHERCHE/RUPTURES/Hawkes/segHP/codes/Functions/FunctionsSegmentation.R')
+source('/home/robin/RECHERCHE/RUPTURES/Hawkes/segHP/codes/Functions/FunctionsSimulation.R')
+source('/home/robin/RECHERCHE/RUPTURES/Hawkes/segHP/codes/Functions/FunctionValidationCriteria.R')
 
 # Dirs
 figName <- 'FigSegPP'
@@ -42,10 +47,13 @@ times <- as.vector(read.table(paste0(dataDir, dataName, '-PP.csv'), sep=';')$x)
  
 # Segmentation
 n <- length(times); a <- 1; b <- 1/n
-breaks <- TimesProc(times)
+# breaks <- TimesProc(times)
 # cost <- CostPP(breaks$N.Potential.Times, breaks$Potential.Times, a=a, b=b) # Cost matrix
-cost <- Gsegmentation(breaks$N.Potential.Times, breaks$Potential.Times, b=b) # Cost matrix
-seg <- SegProc(times, Kmax, breaks, cost)
+breaks <- PotentialBreaks(times)
+cost <- CostMatrix(breaks=breaks, ContrastSeg=ContrastSeg.PG.ab, parms=list(a=1, b=1/length(times), lga=0))
+dp <- DynProg(cost, Kmax)
+seg <- BestSeg.K(breaks, dp, Kopt)
+seg$lambda <- seg$DN / seg$Dt
 
 # Plots
 if(exportFig){png(paste0(figDir, figName, '-', dataName, '-Path.png'))}
@@ -53,7 +61,7 @@ plot(c(0, times, 1), c((0:n), n), type='s', xlab='t', ylab='N(t)')
 if(exportFig){dev.off()}
 
 if(exportFig){png(paste0(figDir, figName, '-', dataName, '-Seg.png'))}
-PlotSeg(times, seg[[Kopt]])
+PlotSeg(times=times, seg=seg)
 if(exportFig){dev.off()}
 
 ################################################################################
@@ -67,10 +75,10 @@ seed <- 1; set.seed(seed)
 # for(k in 2:K){times <- c(times, tau[k-1]+(tau[k]-tau[k-1])*sort(runif(nk[k])))}
 # dataName <- paste0('simul-n', n, '-K', K, '-seed', seed)
 n <- 10; times <- sort(runif(n)); tau <- lambdak <- nk <- NULL
-dataName <- paste0('FigSegPPP-simul-n', n, '-K1-seed', seed)
+dataName <- paste0('simul-n', n, '-K1-seed', seed)
 
 # Simul
-if(exportFig){png(paste0(figDir, dataName, '-Path.png'))}
+if(exportFig){png(paste0(figDir, 'FigSegPP-', dataName, '-Path.png'))}
 plot(c(0, times, 1), c(0, 1:n, n), type='s', xlab='', ylab='N(t)', lwd=2)
 abline(v=times, col=8, lwd=2)
 abline(v=c(0, 1), col=1, lwd=3)
@@ -102,7 +110,7 @@ for(i in 1:nGrid){
 }
 library(fields)
 if(exportFig){png(paste0(figDir, 'FigSegPP-', dataName, '-Contrast.png'))}
-image.plot(tauGrid, tauGrid, -logLtau, xlab='tau1', ylab='tau2')
+image.plot(tauGrid, tauGrid, -logLtau, xlab=expression(tau[1]), ylab=expression(tau[2]))
 # image(tauGrid, tauGrid, -logLtau, xlab='tau1', ylab='tau2')
 abline(v=times, h=times, col=8)
 if(exportFig){dev.off()}
@@ -110,17 +118,40 @@ if(exportFig){dev.off()}
 ################################################################################
 # Thining
 ################################################################################ 
-seed <- 1; set.seed(seed)
-n <- 15; v <- 2/3
-times <- sort(runif(n))
-train <- which(runif(n) < v); test <- (1:n)[-train]
+seed <- 1; set.seed(seed); exportFig <- TRUE
+tau <- c(0, .4, .55, .825, .925, 1)
+lambda <- 10*c(4, 1, 3, 1.5, 5)
+times <- SimulHPP(lambda=lambda, tau=tau)
+n <- length(times)
+v <- 4/5
+train <- sort(sample(1:n, size=round(v*n))); test <- (1:n)[-train]
+
+par(mfrow=c(2, 1))
 if(exportFig){png(paste0(figDir, 'FigSegPP-ThiningOriginal.png'))}
 plot(times, rep(0, n), pch=20, xlab='', ylab='', axes=0, cex=2)
 abline(h=0)
 if(exportFig){dev.off()}
+
+if(exportFig){png(paste0(figDir, 'FigSegPP-ThiningOriginalLambda.png'))}
+plot(0, 0, xlab='', ylab='', axes=0, col=0, xlim=c(0, 1), ylim=c(0, max(lambda)))
+abline(h=0, v=0)
+for(k in 1:length(lambda)){lines(tau[k:(k+1)], rep(lambda[k], 2), lwd=4)}
+abline(v=tau, lty=2, col=8)
+if(exportFig){dev.off()}
+
 if(exportFig){png(paste0(figDir, 'FigSegPP-ThiningSampling.png'))}
 plot(times, rep(0, n), pch=20, xlab='', ylab='', axes=0, cex=2)
 abline(h=0)
 points(times[train], rep(0, length(train)), pch=20, cex=2, col='blue')
 points(times[test], rep(0, length(test)), pch=20, cex=2, col='red')
 if(exportFig){dev.off()}
+
+if(exportFig){png(paste0(figDir, 'FigSegPP-ThiningSamplingLambda.png'))}
+plot(0, 0, xlab='', ylab='', axes=0, col=0, xlim=c(0, 1), ylim=c(0, max(lambda)))
+abline(h=0, v=0)
+for(k in 1:length(lambda)){lines(tau[k:(k+1)], rep(lambda[k], 2), lwd=4, lty=3)}
+abline(v=tau, lty=2, col=8)
+for(k in 1:length(lambda)){lines(tau[k:(k+1)], v*rep(lambda[k], 2), lwd=4, col=4)}
+for(k in 1:length(lambda)){lines(tau[k:(k+1)], (1-v)*rep(lambda[k], 2), lwd=4, col=2)}
+if(exportFig){dev.off()}
+
