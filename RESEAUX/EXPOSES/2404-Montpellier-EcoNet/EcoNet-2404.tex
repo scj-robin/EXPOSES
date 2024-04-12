@@ -428,12 +428,12 @@
   \begin{itemize}
   \setlength{\itemsep}{1.5\baselineskip}
   \item \emphase{Mean:} $\Esp_{\BEDD}(N_s) = c_s \times \overline{\phi}_s$ 
-  \item \emphase{Variance:} Same game, requires to evaluate $\displaystyle{\Esp_{\BEDD}(N_s ^2) = \Esp_{\BEDD}\left(\sum_\alpha Y_{s\alpha} \right)^2}$ \\
+  \item \pause \emphase{Variance:} Same game, requires to evaluate $\displaystyle{\Esp_{\BEDD}(N_s ^2) = \Esp_{\BEDD}\left(\sum_\alpha Y_{s\alpha} \right)^2}$ \\
   \ra Need to account for overlap between positions ({\sl super-motifs}: \refer{PDK08}) 
   $$
   \includegraphics[width=.8\textwidth, trim=0 25 0 0, clip=]{\fignet/OLR22-EJS-Fig2}
-  $$
-  \item \emphase{Covariance:} Same game to compute $\Cov(N_s, N_{s'})$
+  $$ \\ ~
+  \item \pause \emphase{Covariance:} Same game to compute $\Cov(N_s, N_{s'})$
   \end{itemize}
 
 }
@@ -441,28 +441,56 @@
 %==================================================================
 \frame{\frametitle{Distribution of the count}
 
-  \paragraph{Asymptotic normality for non-star motifs.} Under \BEDD (and sparsity conditions \refer{OLR22}):
+  \paragraph{Asymptotic normality for non-star motifs.} Under \BEDD (and sparsity conditions):
   $$
   (F_s - \overline{F}_s) \left/ \sqrt{\widehat{\Var}(F_s)} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
   $$
-  Proof: 
-  \begin{itemize}
-   \item decompose 
-   $$
+  Proof \refer{OLR22}: 
+  \begin{equation*}
+    \text{decompose} \qquad
    F_s - \overline{F}_s 
    = \underset{\text{random fluctuations}}{\underbrace{(F_s - \phi_s)}} 
    + \underset{\text{null under \BEDD}}{\underbrace{(\phi_s - \overline{\phi}_s)}}  
    + \underset{\text{estimation error } \rightarrow 0}{\underbrace{(\overline{\phi}_s - \overline{F}_s)}}, 
-   $$
-   \item construct a counting martingale \refer{GaL17b} for $F_s - \phi_s$
-  \end{itemize}
-
+  \end{equation*}
+  + construct a counting martingale for $F_s - \phi_s$  \refer{GaL17b}.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Consequence.} We know the expected behavior of motif counts under the BEDD model (= 'null model').
 }
 
 %==================================================================
 %==================================================================
 \section{Goodness-of-fit and network comparison}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
+\frame{\frametitle{Goodness-of-fit (GOF)}
+
+  \paragraph{Aim.} Test if the observed data arise from a given model.
+
+  \medskip
+  More cautious: 'if the model fits the data reasonably well'
+  
+  \bigskip \bigskip \pause
+  \paragraph{Typical approach.} 
+  \begin{enumerate}
+    \setlength{\itemsep}{1.15\baselineskip}
+    \item Define some statistic (= function of the data) $T$, 
+    \item Establish the distribution of $T$ under the model, 
+    \item Compare the observed value of $T$ with its distribution under the model.
+  \end{enumerate}
+
+  
+  \bigskip \bigskip \pause
+  \paragraph{Example.} 
+  \begin{enumerate}
+    \item Data = observed plant-pollinator network
+    \item Statistic $T$ = motif count $N_s$ 
+    \item Model = BEDD
+  \end{enumerate}
+
+}
+
+%==================================================================
 \frame{\frametitle{Goodness-of-fit (GOF) of the BEDD model}
 
   \hspace{-.05\textwidth}
@@ -479,9 +507,7 @@
       T'_s = \frac{N_s - (\widehat{\Esp} N_s - \emphase{\widehat{\Bias}(\widehat{\Esp} N_s)})}{\sqrt{\emphase{\widehat{\Var} (N_s - \widehat{\Esp} N_s)}}}
       $$ \\ 
       }
-      \onslide+<3>{\paragraph{Choleski      
-      \footnote{$\Sigma = P \Lambda P^\intercal$, $\Sigma = P \Lambda^{-1/2} P^\intercal$} 
-      transformation:} accounts for the correlation between the counts
+      \onslide+<3>{\paragraph{Choleski\footnote{$\Sigma = P \Lambda P^\intercal$, $\Sigma = P \Lambda^{-1/2} P^\intercal$} transformation:} accounts for the correlation between the counts
       $$
       \Sigma_{s, s'} = \Cov(N_s - \widehat{\Esp} N_s, N_{s'} - \widehat{\Esp} N_{s'})
       $$
@@ -510,13 +536,64 @@
 
 %==================================================================
 \frame{\frametitle{Testing degree imbalance}
+
+  \paragraph{Question.} Is there some degree imbalance between plants?
+  
+  \bigskip \pause
+  \paragraph{Statistical test.} 
+  \begin{itemize}
+    \item Assume $A \sim BEDD(\rho, g, h)$, 
+    $$
+    H_0 = \{h = 1\}
+    $$
+    \item For motif $s$, evaluate $\widehat{\Esp}_0(N_s)$ and $\widehat{\Esp}_0(N_s)$ and compare 
+    $$
+    W_s = (N_s - \widehat{\Esp}_0(N_s)) / \sqrt{\widehat{\Var}_0(N_s)}
+    $$ 
+    with $\Ncal(0, 1)$
+  \end{itemize}
+
+  
+  \bigskip \pause
+  \paragraph{Example.} (only one significant difference) 
+  $$
+  \includegraphics[width=.75\textwidth]{\fignet/OLR22-EJS-Tab3}
+  $$
+}
+
+
+%==================================================================
+\frame{\frametitle{Comparing network imbalances}
+
+  \paragraph{Question.} Do network $A$ and $B$ share the same imbalance for insects?
+  
+  \bigskip \pause
+  \paragraph{Statistical test.} 
+  \begin{itemize}
+    \item Assume $A \sim BEDD(\rho^A, g^A, h^A)$ and $B \sim BEDD(\rho^B, g^B, h^B)$
+    $$
+    H_0 = \{g^A = g^B\}
+    $$
+    \item For motif $s$, evaluate $\widehat{\Esp}_{\widehat{\rho}^A, \emphase{\widehat{g}^B}, \widehat{g}^A}(N^A_s)$ and $\widehat{\Esp}_{\widehat{\rho}^B, \emphase{\widehat{g}^A}, \widehat{g}^B}(N^B_s)$ and compare 
+    $$
+    W_s = \frac{(N_s^A - \widehat{\Esp}_0(N_s^A)) - (N_s^B - \widehat{\Esp}_0(N_s^B))}{\sqrt{\widehat{\Var}_0(N^A_s) + \widehat{\Var}_0(N^B_s)}}
+    $$ 
+    with $\Ncal(0, 1)$
+  \end{itemize}
+
+  
+  \bigskip \pause
+  \paragraph{Example.} (no significant difference) 
+  $$
+  \includegraphics[width=.8\textwidth]{\fignet/OLR22-EJS-Tab4}
+  $$
+
 }
 
 %==================================================================
-\frame{\frametitle{Network comparison}
-}
-
 %==================================================================
+\section{Network embedding}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
 \frame{\frametitle{Network embedding: Multivariate analysis}
 
   \paragraph{Analysing multiple networks.} Principle
@@ -525,7 +602,7 @@
    \item Use standard multivariate analysis (clustering, PCA, MDS, ...)
   \end{itemize}
   
-  \bigskip \bigskip 
+  \bigskip \bigskip \pause
   \paragraph{Using motifs.} $K$ networks 
   $$
   (\text{Network})_k \quad \rightarrow \quad
@@ -533,7 +610,7 @@
   $$
   but need to correct for: network sizes, correlation between motif frequencies, etc...
 
-  \bigskip \bigskip 
+  \bigskip \bigskip \pause
   \hspace{-.05\textwidth}
   \begin{tabular}{ll}
     \begin{tabular}{p{.4\textwidth}}
@@ -558,14 +635,6 @@
     \end{tabular} 
   \end{tabular}
 
-}
-
-%==================================================================
-%==================================================================
-\section{Network embedding}
-\frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
-\frame{\frametitle{Network embedding}
-  \todo{aim of embedding, udins motif, accounting for their covariance}
 }
 
 %==================================================================
