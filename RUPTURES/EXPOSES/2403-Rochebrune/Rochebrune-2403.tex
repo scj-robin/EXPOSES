@@ -1,0 +1,612 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+% \usepackage[dvipsnames]{xcolor}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd, mathabx}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage{array}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\dN}{\Delta N}
+\newcommand{\dtau}{\Delta \tau}
+
+% Directory
+\newcommand{\figcp}{/home/robin/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title[Segmentation/culstering in a Poisson process]{Change-point detection \& clustering in a Poisson process}
+
+\author[S. Robin]{S. Robin \\ \medskip
+joint ongoing work with E. Lebarbier, C. Dion-Blanc}
+
+\institute[]{Sorbonne université}
+
+\date[Rochebrune'24]{Stats au sommet, Rochebrune, Mar. 2024}
+
+%====================================================================
+%====================================================================
+\maketitle
+
+%====================================================================
+%====================================================================
+\section{Previously in Rochebrune}
+%====================================================================
+\frame{\frametitle{Previously in Rochebrune} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<2->{
+      \paragraph{Point process on $t \in [0, 1]$.} \\ ~\\
+      Event times:
+      $$
+      0 < T_1 < \dots T_i < \dots T_n < 1
+      $$ \\
+      
+      Counting process:
+      $$
+      N(t) = \sum_{i=1}^n \Ibb\{T_i \leq t\}
+      $$}      
+      
+      \onslide+<3->{
+      \bigskip
+      \paragraph{Poisson Process.}
+      $$
+      \{N(t)\}_{0 \leq t \leq 1} \sim PP(\lambda(t))
+      $$}
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \paragraph{Bat cries} \\ ~\\
+        \includegraphics[width=.45\textwidth, trim=0 10 10 10, clip=]{\figcp/ChauveSouris-GrandBourg-NB}
+        \onslide<2->
+        \paragraph{Bat cries}\footnote{source: Vigie-Chiro program, Y. Bas, CESCO-MNHN} \\ 
+        \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/Chiro-sequence2295-path}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+  \bigskip
+  \onslide+<3->{\paragraph{Intensity function $\lambda(t)$:} 
+  $$
+  \lambda(t) = \lim_{\Delta t \rightarrow 0} \frac{\Pbb\{N(t+\Delta t) - N(t) = 1\}}{\Delta t}, 
+  \qquad \qquad 
+  \Esp N(s) - \Esp N(t) = \int_t^s \lambda(u) \d u
+  $$}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Previously in Rochebrune} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Piecewise constant intensity function.} \\ ~ \\
+      Change-points
+      $$
+      (\tau_0 =) 0 < \tau_1 \dots < \tau_{K-1} < 1 (= \tau_K)
+      $$ \\
+      
+      For $t \in I_k = ]\tau_{k-1}, \tau_k]$:
+      $$
+      \lambda(t) = \lambda_k
+      $$ \\
+      
+      \ra Continuous piece-wise linear cumulated intensity function      
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \paragraph{Bat cries}\footnote{source: Vigie-Chiro program, Y. Bas, CESCO-MNHN} \\
+        \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/Chiro-sequence2295-path}
+        \onslide<2>
+        \paragraph{Bat cries}\footnote{source: Vigie-Chiro program, Y. Bas, CESCO-MNHN} \\
+        \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/Chiro-sequence2295-K5-seg}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  
+  \pause
+  \paragraph{Aim.} 
+  \begin{itemize}
+   \item Segmentation: estimate $(\tau, \lambda)$ reasonnably fast 
+   \item Model selection: choose $K$
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Previously in Rochebrune} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Efficient change-point detection.} 
+      If the constrast (e.g. neg-log-likelihood) is \\ ~
+      \begin{itemize}
+        \setlength{\itemsep}{1.05\baselineskip}
+        \item additive wrt the segments and 
+        \item concave wrt the length of each segment,
+      \end{itemize}
+      ~ \\ ~ \\ ~ \\ 
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<2>
+        \includegraphics[width=.45\textwidth, trim=0 0 20 50, clip=]{\figcp/FigSegPP-simul-n10-K1-seed1-Contrast}  
+        \onslide<3>
+        \includegraphics[width=.385\textwidth, height=.30\textheight]{\figcp/Turtle-FriendsOfTheSea}        
+        \onslide<4->
+        \includegraphics[width=.45\textwidth, trim=0 0 20 50, clip=]{\figcp/FigSegPP-simul-n10-K1-seed1-Contrast}  
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  
+  \vspace{-.075\textheight}
+  \onslide<5->{
+  then the optimal change points belong to 
+  $$
+  \{T_1^-, T_1, T_2^-, T_2, \dots T_i^-, T_i, \dots, T_n^-, T_n\}
+  $$
+  
+  \bigskip
+  \ra Continuous to discrete optimization problem \\
+  \ra Dynamic programming algorithm $= \Ocal(n^2)$.}
+
+}
+
+%====================================================================
+\frame{\frametitle{Previously in Rochebrune} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Lazy model selection.} Thining property: \\ ~
+      \begin{itemize}
+        \setlength{\itemsep}{1.05\baselineskip}
+        \item independent processes with proportional internsities and common change point;
+        \item cross-validation procedure to choose $K$.
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.075\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \includegraphics[width=.5\textwidth, trim=0 225 0 225, clip=]{\figcp/FigSegPP-ThiningOriginal.png} \\
+        \includegraphics[width=.5\textwidth, height=.3\textheight, trim=0 0 0 0, clip=]{\figcp/FigSegPP-ThiningOriginalLambda.png}
+        \onslide<2->
+        \includegraphics[width=.5\textwidth, trim=0 225 0 225, clip=]{\figcp/FigSegPP-ThiningSampling.png} \\
+        \includegraphics[width=.5\textwidth, height=.3\textheight, trim=0 0 0 0, clip=]{\figcp/FigSegPP-ThiningSamplingLambda.png}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  \refer{DLR23}
+
+
+  \bigskip \bigskip \pause
+  \paragraph{On-going.} Consistency + (modified) BIC criterion for choosing $K$.
+  
+}
+
+%====================================================================
+%====================================================================
+\section{Next step: clustering}
+%====================================================================
+\frame{\frametitle{Next step: clustering} 
+  
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<5->{
+        \paragraph{Segment clustering.} $P$ groups of segments \\ ~
+        \begin{itemize}
+          \setlength{\itemsep}{1.05\baselineskip}
+          \item each segments belong to one group 
+          \item group = underlying behavior
+        \end{itemize} 
+        ~ \\~ \\
+      }
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+%        \paragraph{Bat cries} \\ ~\\
+        \includegraphics[width=.45\textwidth, trim=0 10 10 10, clip=]{\figcp/ChauveSouris-GrandBourg-NB}
+        \onslide<2>
+%        \paragraph{Bat cries} \\ ~\\
+        \includegraphics[width=.45\textwidth, trim=0 10 10 10, clip=]{\figcp/ChauveSouris-GrandBourg}
+        \onslide<3>
+%        \paragraph{Bat cries}\footnote{source: Vigie-Chiro program, Y. Bas, CESCO-MNHN} \\ 
+        \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/Chiro-sequence2295-K5-seg}
+        \onslide<4->
+%        \paragraph{Bat cries}\footnote{source: Vigie-Chiro program, Y. Bas, CESCO-MNHN} \\ 
+        \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/Chiro-sequence2295-K5-P3-segClassif}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+  
+  \onslide+<6->{\vspace{-.15\textheight}\paragraph{Model.}
+  \medskip
+  \begin{itemize}
+    \setlength{\itemsep}{1.05\baselineskip}
+    \item $K$ segments $I_1, \dots I_K$
+    \item Segment $k$ belongs to group $p$ with probability $\pi_p$
+    \item Point process $N(I_k) \sim PP(\lambda_p)$
+  \end{itemize}        
+  }
+}
+
+%====================================================================
+\frame{\frametitle{Segmentation-clustering model}
+
+  \paragraph{More precisely.}
+  \begin{itemize}
+%     \setlength{\itemsep}{1.05\baselineskip}
+    \item $K+1$ change-points: $\tau_0 = 0 < \tau_1 < \dots < \tau_{K-1} < \tau_K = 1$
+    \item $K$ segments: $I_k = (\tau_{K-1}, \tau_K]$ 
+    \item \pause $P$ groups, with proportions: $\pi = (\pi_1, \dots \pi_K)$
+    \item $K$ latent variables (segment memberships):
+    $$
+    (Z_k)_{1 \leq k \leq K} \text{ iid} \sim \Mcal(1, \pi)
+    $$
+    \item \pause $P$ intensities: $\lambda = (\lambda_1, \dots \lambda_K)$
+    \item Point process in segment $k$:
+    $$
+    N(Ik) \mid Z_k = p \sim PP(\lambda_p)
+    $$
+  \end{itemize}        
+  
+  \bigskip \pause
+  \paragraph{Model parameters.}
+  $$
+  \theta = (\pi, \lambda, \tau)
+  $$
+  + $(K, P)$
+}
+
+%====================================================================
+\frame{\frametitle{Inference algorithm (1/2)}
+
+  \paragraph{Observed likelihood.} Segment $I_k = (\tau_{K-1}, \tau_K]$, width $\Delta \tau_k$, count $\Delta N_k$:
+  $$
+  \log p_\theta(N) 
+  = \sum_{k=1}^K \log \left(\sum_{p=1}^P \pi_p p_{\lambda_p}(N(I_k))\right)
+  = \sum_{k=1}^K \underset{\text{$-c(I_k)$}}{\underbrace{\log \left(\sum_{p=1}^P \pi_p e^{-\lambda_p \Delta \tau_k} \lambda_p^{\Delta N_k} \right)}}.
+  $$
+  
+  \bigskip \pause 
+  \begin{proposition}[concave constrast]
+  The contrast $c(I_k)$ is a concave function of the width $\Delta \tau_k = \tau_{k} - \tau_{k-1}$ of interval $I_k$ 
+  \end{proposition}
+
+  \bigskip \bigskip \pause 
+  \paragraph{Consequence.} For given mixture parameters $(\pi, \lambda)$, the optimal segmentation
+  $$
+  \widehat{\tau}(\pi, \lambda) = \argmax_\tau \log p_{(\pi, \lambda, \tau)}(N)
+  $$
+  is a subset of $\{T_1^-, T_1, T_2^-, T_2, \dots T_i^-, T_i, \dots, T_n^-, T_n\}$. 
+}
+
+%====================================================================
+\frame{\frametitle{Inference algorithm (2/2)}
+
+  \paragraph{Complete likelihood.} Denoting $Z_{kp} = \Ibb\{Z_k = p\}$,
+  $$
+  \log p_\theta(N, Z) = \sum_{k=1}^K \sum_{p=1}^P Z_{kp} \left(\log \pi_p + \log p_{\lambda_p}(N(I_k)) \right)
+  $$
+  
+  \bigskip \bigskip \pause 
+  \paragraph{'EM-DP' algorithm.} (see \refer{PRL07} for a discrete time version)
+  \begin{description}
+    \setlength{\itemsep}{1.1\baselineskip}
+    \item[Clustering.] Given $\tau^{(h)}$, get
+    $$
+    (\pi, \lambda)^{(h+1)} = \argmax_{(\pi, \lambda)} \log p_{(\pi, \lambda, \tau^{(h)})}(N)
+    $$
+    using expectation-maximization (EM), based on $\Esp_\theta(\log p_\theta(N, Z) \mid N)$; 
+    \item[Segmentation.] Given $(\pi^{(h+1)}, \lambda^{(h+1)})$, get
+    $$
+    \tau^{(h+1)} = \argmax_\tau \log p_{(\pi^{(h+1)}, \lambda^{(h+1)}, \tau)}(N)
+    $$
+    using dynamic programming (DP).
+  \end{description}
+  
+}
+
+%====================================================================
+\frame{\frametitle{In practice}
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{itemize}
+        \setlength{\itemsep}{1.05\baselineskip}
+        \item Need to run EM-DP for 
+        $$
+        1 \leq K \leq K_{\max}, \quad 1 \leq P \leq P_{\max}
+        $$
+      \item With few guaranty to attain the global optimum (very few EM iterations) 
+      \item \onslide+<2->{Need for (time-consuming) smoothing steps, restarting EM-DP \\
+      \ra with neighbor mixture parms: 
+      \begin{align*}
+        (\widehat{\pi}_{\emphase{K-1}, P}, \widehat{\lambda}_{\emphase{K-1}, P}, \widehat{\tau}_{K, P}) \\
+        (\widehat{\pi}_{\emphase{K+1}, P}, \widehat{\lambda}_{\emphase{K+1}, P}, \widehat{\tau}_{K, P})
+      \end{align*}
+%       $$(\widehat{\pi}_{K-1, P}, \widehat{\lambda}_{K-1, P}, \widehat{\tau}_{K, P})$$
+%       $$(\widehat{\pi}_{K+1, P}, \widehat{\lambda}_{K+1, P}, \widehat{\tau}_{K, P})$$
+      \ra or neighbor segmentation parms: 
+      \begin{align*}
+      (\widehat{\pi}_{K, P}, \widehat{\lambda}_{K, P}, \widehat{\tau}_{K, \emphase{P-1}}) \\
+      (\widehat{\pi}_{K, P}, \widehat{\lambda}_{K, P}, \widehat{\tau}_{K, \emphase{P+1}})
+      \end{align*}
+%       $$(\widehat{\pi}_{K, P}, \widehat{\lambda}_{K, P}, \widehat{\tau}_{K, P-1})$$
+%       $$(\widehat{\pi}_{K, P}, \widehat{\lambda}_{K, P}, \widehat{\tau}_{K, P+1})$$
+      }
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{overprint}
+      \onslide<1>
+      \begin{tabular}{c}
+        First rounds of EM-DP \\
+        \includegraphics[width=.45\textwidth, trim=5 20 20 50, clip=]{\figcp/Chiro-sequence2147-logLpathInit}      
+      \end{tabular}
+      \onslide<2>
+      \begin{tabular}{c}
+        After smoothing \\
+        \includegraphics[width=.45\textwidth, trim=5 20 20 50, clip=]{\figcp/Chiro-sequence2147-logLpathImprove}      
+      \end{tabular}
+    \end{overprint}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Model selection}
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{itemize}
+        \setlength{\itemsep}{1.05\baselineskip}
+        \item Need to select both $K$ and $P$
+        \item Cross-validation too demanding
+        \item \onslide+<2->{BIC penalty for mixture
+        $$
+        pen(P) = (2P - 1) \log(K)/2
+        $$
+         (wrong: see \refer{LeM06})}
+        \item \onslide+<3->{Penalty for segmentation: slope heuristic (capushe)}
+      \end{itemize}
+      \\ ~ \\ ~ \\
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+%     \begin{tabular}{c}
+      \begin{overprint}
+        \onslide<1>
+        \begin{tabular}{c}
+        $\log p_{K, P}(N)$ \\
+        \includegraphics[width=.45\textwidth, trim=5 20 20 50, clip=]{\figcp/Chiro-sequence2147-logL}      
+        \end{tabular}
+        \onslide<2>
+        \begin{tabular}{c}
+        $BIC_{\text{mixture}}(K, P)$ \\
+        \includegraphics[width=.45\textwidth, trim=5 20 20 50, clip=]{\figcp/Chiro-sequence2147-BICmixture}      
+        \end{tabular}
+        \onslide<3>
+        \begin{tabular}{c}
+        $\widehat{K} = 13, \widehat{P} = 5$ \\
+        \includegraphics[width=.45\textwidth, trim=5 20 20 50, clip=]{\figcp/Chiro-sequence2147-select}      
+        \end{tabular}
+      \end{overprint}
+%     \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+%====================================================================
+\section{Illustrations}
+%====================================================================
+\frame{\frametitle{Some examples}
+
+  \newcommand{\seq}{2295} \newcommand{\Kdp}{16} \newcommand{\Kemdp}{14}
+  \newcommand{\Pemdp}{3}
+  \vspace{-.05\textheight}
+  $$
+  \begin{tabular}{m{.25\textwidth}m{.35\textwidth}m{.35\textwidth}}
+    \begin{tabular}{p{.2\textwidth}}
+      Segmentation \\ (DP)
+    \end{tabular}
+    & 
+    \hspace{-0.1\textwidth}
+    \begin{tabular}{c}
+      $\widehat{K}_{DP} = \Kdp$ \\
+      \includegraphics[width=.33\textwidth, trim=10 30 0 50, clip=]{\figcp/Chiro-sequence\seq-K\Kdp-seg}
+    \end{tabular}
+    & 
+    \hspace{-0.1\textwidth}
+    \begin{tabular}{c}
+      $\widehat{K}_{EMDP} = \Kemdp$ \\
+      \includegraphics[width=.33\textwidth, trim=10 30 0 50, clip=]{\figcp/Chiro-sequence\seq-K\Kemdp-seg}
+    \end{tabular}
+    \\
+    \begin{tabular}{p{.2\textwidth}}
+      Segmentation \\ clustering \\ (EM-DP)
+    \end{tabular}
+    &
+    \hspace{-0.1\textwidth}
+    \begin{tabular}{c}
+      $\widehat{K}_{DP} = \Kdp$, $\widehat{P}_{EMDP} = \Pemdp$ \\
+      \includegraphics[width=.33\textwidth, trim=10 30 0 50, clip=]{\figcp/Chiro-sequence\seq-K\Kdp-P\Pemdp-segClassif}
+    \end{tabular}
+    & 
+    \hspace{-0.1\textwidth}
+    \begin{tabular}{c}
+      $\widehat{K}_{EMDP} = \Kemdp$, $\widehat{P}_{EMDP} = \Pemdp$ \\
+      \includegraphics[width=.33\textwidth, trim=10 30 0 50, clip=]{\figcp/Chiro-sequence\seq-K\Kemdp-P\Pemdp-segClassif}
+    \end{tabular}
+  \end{tabular}
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{Some examples}
+
+  \newcommand{\seq}{1082} \newcommand{\Kdp}{7} \newcommand{\Kemdp}{23}
+  \newcommand{\Pemdp}{5}
+  \vspace{-.05\textheight}
+  $$
+  \begin{tabular}{m{.25\textwidth}m{.35\textwidth}m{.35\textwidth}}
+    \begin{tabular}{p{.2\textwidth}}
+      Segmentation \\ (DP)
+    \end{tabular}
+    & 
+    \hspace{-0.1\textwidth}
+    \begin{tabular}{c}
+      $\widehat{K}_{DP} = \Kdp$ \\
+      \includegraphics[width=.33\textwidth, trim=10 30 0 50, clip=]{\figcp/Chiro-sequence\seq-K\Kdp-seg}
+    \end{tabular}
+    & 
+    \hspace{-0.1\textwidth}
+    \begin{tabular}{c}
+      $\widehat{K}_{EMDP} = \Kemdp$ \\
+      \includegraphics[width=.33\textwidth, trim=10 30 0 50, clip=]{\figcp/Chiro-sequence\seq-K\Kemdp-seg}
+    \end{tabular}
+    \\
+    \begin{tabular}{p{.2\textwidth}}
+      Segmentation \\ clustering \\ (EM-DP)
+    \end{tabular}
+    &
+    \hspace{-0.1\textwidth}
+    \begin{tabular}{c}
+      $\widehat{K}_{DP} = \Kdp$, $\widehat{P}_{EMDP} = \Pemdp$ \\
+      \includegraphics[width=.33\textwidth, trim=10 30 0 50, clip=]{\figcp/Chiro-sequence\seq-K\Kdp-P\Pemdp-segClassif}
+    \end{tabular}
+    & 
+    \hspace{-0.1\textwidth}
+    \begin{tabular}{c}
+      $\widehat{K}_{EMDP} = \Kemdp$, $\widehat{P}_{EMDP} = \Pemdp$ \\
+      \includegraphics[width=.33\textwidth, trim=10 30 0 50, clip=]{\figcp/Chiro-sequence\seq-K\Kemdp-P\Pemdp-segClassif}
+    \end{tabular}
+  \end{tabular}
+  $$
+}
+
+%====================================================================
+%====================================================================
+\section{Conclusion}
+%====================================================================
+\frame{\frametitle{To summarize (1/2)}
+
+  Segmentation-clustering allows to classify segment according to underlying behaviors
+
+  \bigskip \bigskip \pause
+  \paragraph{What does work.} \\ ~
+  \begin{itemize}
+    \setlength{\itemsep}{1.05\baselineskip}
+    \item Segmentation step still efficient thank to the concavity property
+    \item Fast (!) EM-DP algorithm for the whole inference
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{What does not work.} \\ ~
+  \begin{itemize}
+    \setlength{\itemsep}{1.05\baselineskip}
+    \item Exploration of $(K, P)$ computationaly demanding
+    \item Need for a dedicated model selection procedure
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{To summarize (2/2)}
+
+$$
+\text{\Large effici\textcolor{red}{E}nt c\textcolor{red}{L}ustering and seg\textcolor{red}{ME}ntation of Poisson p\textcolor{red}{R}ocesses}
+$$
+\pause
+$$
+\begin{tabular}{m{.4\textwidth}m{.1\textwidth}m{.4\textwidth}}
+%   segmentation & & segmentation / clustering \\
+  \includegraphics[width=.35\textwidth, trim=5 5 5 5, clip=]{\figcp/Elmer-NB}
+  & $\longrightarrow$
+  & \includegraphics[width=.35\textwidth, trim=5 5 5 5, clip=]{\figcp/Elmer}
+\end{tabular}
+$$
+}
+
+%====================================================================
+\frame{ \frametitle{References}
+  {
+   \footnotesize
+   \bibliography{/home/robin/Biblio/BibGene}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+\backupbegin
+%====================================================================
+
+
+%====================================================================
+\backupend
+%====================================================================
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+  
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}

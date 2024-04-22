@@ -1,0 +1,90 @@
+% Abstract template for RMR2024 workshop
+%
+% INFORMATION TO AUTHORS
+%
+% Please do not edit or add anything to the preamble of this document.
+%
+%
+% We also kindly ask author *NOT* to use any homemade macros
+% etc. Write them in full, aka write $\mathbb{R}$ not $\R$.
+%
+% We kindly ask you to keep the file in UTF8 encoding, or only use
+% ascii characters.
+%
+
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+% some standard packages
+\usepackage{amsmath,amssymb,bm,mathtools,graphicx}
+% abstract related macros
+\newcommand\Presenter[1]{\def\thepresenter{#1}}
+\renewcommand\title[1]{\def\thetitle{#1}}
+\newcommand\JointWork[2][Joint with]{\def\thejointwith{#1 #2}}
+\def\thejointwith{}
+\renewenvironment{abstract}{\begin{trivlist}\item}{\end{trivlist}}
+\makeatletter
+\renewcommand\maketitle{
+  \section*{\thepresenter}
+  \subsection*{\thetitle}
+  \ifx\@empty\thejointwith\else%
+  \textit{\thejointwith}\fi%
+}
+\makeatother
+\begin{document}
+
+% 
+% Insert your data below:
+%
+% Please note that any text *outside* \Presenter, \title, \JointWork
+% plus the abstract environment (or the thebibliography env), will be
+% ignored in our processing.
+%
+
+% remember to add the affiliation of the presenter, keep the
+% affiliation short, like University name, separate using ; if needed
+\Presenter{Stéphane Robin, LPSM, Sorbonne Université}
+
+
+
+\title{Change-point detection in a Poisson process}
+
+
+
+
+
+% to credit co-authors or similar, fill in the \JointWork command. 
+
+\JointWork{Charlotte Dion-Blanc, Sorbonne Université; \'Emilie Lebarbier, Université Paris-Nanterre}
+
+
+% generate the titling material
+\maketitle
+
+
+% please provide the abstract text within the abstract environment 
+% Note that we kindly ask presenters *not* to add keywords.
+
+\begin{abstract}
+ 
+  % Kindly note that collaborators should be listed with \JointWork,
+  % not as a part of the abstract.
+
+Change-point detection aims at discovering behavior changes lying behind time sequences data. In this paper, we investigate the case where the data come from an inhomogenous Poisson process or a marked Poisson process.
+We will present an offline multiple change-point detection methodology based on minimum contrast estimator. In particular we will explain how to deal with the continuous nature of the process together with the discrete available observations. Besides, we will select the appropriate number of regimes through a cross-validation procedure which is convenient here due to intrinsic properties of the Poisson process.
+Through experiments on synthetic and realworld datasets, we will assess ther performances of the proposed method, which is implemented in the CptPointProcess R package.
+If time permits, we will describe a clustering version of the aforementioned procedure, which enables to classify segments into a limited number of categories corresponding to unobserved underlying behaviors.
+
+\end{abstract}
+
+% You can use the standard thebibliography if you need a bibliography
+% for your abstract, though we'd prefer not to have any such
+% information with the abstact. 
+
+% \begin{thebibliography}{9}
+% \bibitem{mykey} Some text
+% \end{thebibliography}
+
+
+
+\end{document}
+
