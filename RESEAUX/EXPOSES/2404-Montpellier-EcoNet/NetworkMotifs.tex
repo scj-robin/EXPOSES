@@ -1,4 +1,4 @@
-\documentclass[9pt]{beamer}
+\documentclass[8pt]{beamer}
 
 % Beamer style
 %\usetheme[secheader]{Madrid}
@@ -20,7 +20,7 @@
 \usepackage{tikz}
 \usepackage{url}
 % \usepackage{ulem}
-\usepackage{/home/robin/LATEX/Biblio/astats}
+\usepackage{astats}
 %\usepackage[all]{xy}
 \usepackage{graphicx}
 \usepackage{xspace}
@@ -29,19 +29,7 @@
 
 \input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
 \newcommand{\BEDD}{BEDD\xspace}
-\renewcommand{\chaptername}{Lecture}
 \newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
-\newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
-\newcommand{\fignoisynetdata}{/home/robin/Bureau/Souhila/NoisyNetworkInference/Data21-10-19}
-\newcommand{\fignoisynetsimul}{/home/robin/Bureau/Souhila/NoisyNetworkInference/FigsOld}
-\newcommand{\figCMR}{/home/robin/Bureau/RECHERCHE/ECOLOGIE/CountPCA/sparsepca/Article/Network_JCGS/trunk/figs}
-\newcommand{\figeconet}{/home/robin/Bureau/RECHERCHE/ECOLOGIE/EXPOSES/1904-EcoNet-Lyon/Figs}
-% \newcommand{\figbarents}{/home/robin/Bureau/CountPCA/sparsepca/Pgm/PLNnetwork/barent_fish/output_barents}
-% \newcommand{\figbordeaux}{/home/robin/Bureau/RECHERCHE/EXPOSES/RESEAUX/1904-Bordeaux}
-% \newcommand{\nodesizeorg}{1.5em}
-% \renewcommand{\nodesize}{\nodesizeorg}
-% \newcommand{\edgeunitorg}{2.25*\nodesizeorg}
-% \renewcommand{\edgeunit}{\edgeunitorg}
 
 %==================================================================
 %==================================================================
@@ -507,15 +495,15 @@
       T'_s = \frac{N_s - (\widehat{\Esp} N_s - \emphase{\widehat{\Bias}(\widehat{\Esp} N_s)})}{\sqrt{\emphase{\widehat{\Var} (N_s - \widehat{\Esp} N_s)}}}
       $$ \\ 
       }
-      \onslide+<3>{\paragraph{Choleski\footnote{$\Sigma = P \Lambda P^\intercal$, $\Sigma = P \Lambda^{-1/2} P^\intercal$} transformation:} accounts for the correlation between the counts
-      $$
-      \Sigma_{s, s'} = \Cov(N_s - \widehat{\Esp} N_s, N_{s'} - \widehat{\Esp} N_{s'})
-      $$
-      $$
-      T'' = \emphase{\widehat{\Sigma}^{-1/2}}
-      \left[N_s - (\widehat{\Esp} N_s - \widehat{\Bias}(\widehat{\Esp} N_s))\right]
-      $$
-      }
+%       \onslide+<3>{\paragraph{Choleski\footnote{$\Sigma = P \Lambda P^\intercal$, $\Sigma = P \Lambda^{-1/2} P^\intercal$} transformation:} accounts for the correlation between the counts
+%       $$
+%       \Sigma_{s, s'} = \Cov(N_s - \widehat{\Esp} N_s, N_{s'} - \widehat{\Esp} N_{s'})
+%       $$
+%       $$
+%       T'' = \emphase{\widehat{\Sigma}^{-1/2}}
+%       \left[N_s - (\widehat{\Esp} N_s - \widehat{\Bias}(\widehat{\Esp} N_s))\right]
+%       $$
+%       }
     \end{tabular}
     &
     \begin{tabular}{p{.4\textwidth}}
@@ -526,8 +514,8 @@
         \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-StatCount}
         \onslide<2>
         \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-NormStatCount}
-        \onslide<3>
-        \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-CholNormStat}
+%         \onslide<3>
+%         \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-CholNormStat}
       \end{overprint}
     \end{tabular} 
   \end{tabular}
@@ -638,6 +626,63 @@
 }
 
 %==================================================================
+\frame{\frametitle{Choleski transform}
+
+  \bigskip
+  \paragraph{Aim:} 'Remove' correlation and variance heterogeneity
+  
+  \bigskip
+  \begin{tabular}{cc}
+    \hspace{-0.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Covariance matrix $(X_1, X_2)$:}
+      $$
+      \Sigma(X_1, X_2) = \left[\begin{array}{cc} 
+                      \sigma^2_1 & \sigma_{12} \\
+                      \sigma_{12} & \sigma^2_2 \\
+                     \end{array}\right]
+      $$
+    \end{tabular}
+    & 
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<2->{\paragraph{Choleski transform:}
+      $$
+      \left[\begin{array}{c} X'_1 \\ X'_2 \end{array} \right]
+      = \Sigma^{-1/2} \left[\begin{array}{c} X_1 \\ X_2 \end{array} \right]
+      $$}
+    \end{tabular} 
+    \\
+    \hspace{-0.04\textwidth}
+    \begin{tabular}{c}
+      \vspace{-0.08\textheight}
+      \includegraphics[width=0.35\textwidth, trim=25 25 25 25, clip=]{\fignet/Cholevski-raw} 
+    \end{tabular}
+    & 
+    \begin{tabular}{c}
+      \vspace{-0.08\textheight}
+      \onslide+<2->{\includegraphics[width=0.35\textwidth, trim=25 25 25 25, clip=]{\fignet/Cholevski-chol}}
+    \end{tabular} 
+    \\
+    \hspace{-0.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      Diagonalization: $\Sigma = P \emphase{\Lambda} P^{-1}$ \\
+      ~ \\
+      Choleski matrix: $\Sigma^{-1/2} = P \emphase{\Lambda^{-1/2}} P^{-1}$
+    \end{tabular}
+    & \pause
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<2->{$$
+      \Sigma(X'_1, X'_2) = \left[\begin{array}{cc} 
+                      1 & 0 \\
+                      0 & 1 \\
+                     \end{array}\right]
+      $$}
+    \end{tabular} 
+  \end{tabular}
+
+}
+
+%==================================================================
 \frame{\frametitle{Network embedding: Zackenberg's data \refer{SRO16}}
 
   \bigskip
@@ -665,10 +710,10 @@
 
 }
 
-%==================================================================
-\frame{\frametitle{Contrast-based network embedding}
-  \todo{on-going work with Natasha}
-}
+% %==================================================================
+% \frame{\frametitle{Contrast-based network embedding}
+%   \todo{on-going work with Natasha}
+% }
 
 
 %====================================================================
