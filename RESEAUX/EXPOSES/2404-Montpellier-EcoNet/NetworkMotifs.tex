@@ -86,7 +86,7 @@
       \paragraph{Species.}
       \begin{itemize}
         \setlength{\itemsep}{1.15\baselineskip}
-        \item $i = 1, \dots m$ insects = rows = bottom nodes
+        \item $i = 1, \dots m$ pollinators = rows = bottom nodes
         \item $j = 1, \dots n$ plants = columns = top nodes
       \end{itemize}
     \end{tabular}
@@ -99,7 +99,7 @@
     \begin{tabular}{p{.6\textwidth}}
       \paragraph{Interactions.}
       \begin{itemize}
-      \item $A_{ij} = 1$ if insect $i$ interacts with plant $j$, \\
+      \item $A_{ij} = 1$ if pollinator $i$ interacts with plant $j$, \\
       0 otherwise
       $$
       A_{ij} = 1 \quad \Leftrightarrow \quad i \sim j
@@ -182,7 +182,7 @@
     \end{tabular}  
     ~ \\
     \hline
-    \\
+    \\ \pause
     \begin{tabular}{p{.45\textwidth}}
       top 'stars' (plants) \\
       \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif1} 
@@ -212,7 +212,7 @@
   \begin{itemize}
    \item the \emphase{size} of the network: $n \times m$
    \item the \emphase{density} of the network
-   \item the \emphase{imbalance} between bottom-node degrees (specialist vs generalist insects)
+   \item the \emphase{imbalance} between bottom-node degrees (specialist vs generalist pollinators)
    \item the \emphase{imbalance} between top-node degrees (specialist vs generalist plants)
   \end{itemize}
   
@@ -220,11 +220,11 @@
   \paragraph{Bipartite expected degree distribution (\BEDD) model:} (in words)
   \begin{itemize}
     \setlength{\itemsep}{1.15\baselineskip}
-    \item Consider $m$ insects ($i = 1, \dots m$): \\
+    \item Consider $m$ pollinators ($i = 1, \dots m$): \\
     each plant $i$ has a specific propensity to interact (degree of generalism)
     \item Consider $n$ plants ($j = 1, \dots n$): \\
     each plant $j$ has a specific propensity to interact  (idem)
-    \item The probability for insect $i$ and plant $j$ to interact is proportional to the product of their respective propensities.
+    \item The probability for pollinator $i$ and plant $j$ to interact is proportional to the product of their respective propensities.
   \end{itemize}
 
 }
@@ -232,7 +232,7 @@
 %==================================================================
 \frame{\frametitle{\BEDD model}
 
-  \paragraph{Bipartite expected degree distribution (\BEDD) model:} (more formaly)
+  \paragraph{Bipartite expected degree distribution (\BEDD) model:} (formaly) \\~
   \begin{itemize}
     \setlength{\itemsep}{1.15\baselineskip}
     \item $\rho =$ network density
@@ -252,6 +252,12 @@
 
   \bigskip
   (Bipartite version of the EDD model \refer{ChL02})
+  
+  \bigskip \bigskip \pause
+  \paragraph{Model parameters:}
+  $$
+  \theta = (\rho, g, h).
+  $$
 
 }
 
@@ -288,15 +294,15 @@
   \begin{itemize}
     \setlength{\itemsep}{1\baselineskip}
     \item No preferred or avoided specific connexion
-    \item \emphase{Graph-exchangeable} model: insects and plants can be permuted simultaneously
+    \item \emphase{Graph-exchangeable} model: pollinators can be permuted and plants can be permuted
   \end{itemize}
   
   \bigskip \bigskip \pause
   \paragraph{Properties.}
   \begin{itemize}
     \setlength{\itemsep}{1\baselineskip}
-    \item Expected degree for insect $i$ given $U_i$ : $n \; g(U_i)$.
-    \item Expected degree for plant $j$ given $V_j$ : $m \; h(V_j)$.
+    \item Expected degree for pollinator $i$ given $U_i$ : $n \; \rho \; g(U_i)$.
+    \item Expected degree for plant $j$ given $V_j$ : $m \; \rho \; h(V_j)$.
     \item 'Nested' structure by construction
   \end{itemize}
   
@@ -304,7 +310,7 @@
   \paragraph{Sufficient statistics} to fit \BEDD: 
   \begin{itemize}
     \setlength{\itemsep}{1\baselineskip}
-    \item Insect degrees + plant degrees
+    \item Pollinator degrees + plant degrees
     \item or, equivalently, star (single edge, top, bottom) frequencies
   \end{itemize}
 
@@ -319,7 +325,7 @@
   \hspace{-.05\textwidth}
   \begin{tabular}{ll}
     \begin{tabular}{p{.4\textwidth}}
-      \paragraph{Number of positions.}
+      \paragraph{Number of 'positions'.}
       \begin{itemize}
        \item Choose $p$ nodes among $m$
        \item Choose $q$ nodes among $n$
@@ -358,49 +364,102 @@
   
 }
 
+% %==================================================================
+% \frame{\frametitle{Motif probability}
+% 
+%   \paragraph{Occurrence probability $\overline{\phi}_s = \Pbb\{Y_{s\alpha} = 1\}$.} Under the B-EDD model \refer{OLR22}:
+%   \begin{align*}
+%     \overline{\phi}_s 
+%     & :=
+%     \Pbb_{\BEDD}\left(
+%     \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9} 
+%     \right)
+%     \; = \; 
+%     \frac{
+%     \onslide+<2->{
+%       \overset{\text{top stars}}{\overbrace{
+%       \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
+%       \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
+%       \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top2}\right)   }}
+%     }
+%     \onslide+<3->{
+%       \times
+%       \overset{\text{bottom stars}}{\overbrace{
+%       \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom1}\right) % \times
+%       \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom3}\right)
+%       }}
+%     }
+%     }{
+%     \onslide+<4->{
+%       \underset{\text{edges}}{\underbrace{
+%       \left(\Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right)\right)^4
+%       }}
+%     }
+%     } 
+%     \\
+%     \onslide+<5->{
+%     & =
+%     \frac{\left(\phi_1^2 \phi_2\right) \left(\phi_1 \phi_4\right)}{\left(\phi_1\right)^4}
+%     \qquad =
+%     \frac{\phi_2 \phi_4}{\phi_1}
+%     }
+%   \end{align*}
+% 
+%   \onslide+<6->{\bigskip \bigskip 
+%   \paragraph{Estimated probability.} 
+%   $$
+%   \overline{\phi}_s := \frac{\phi_2 \phi_4}{\phi_1}
+%   \qquad \rightarrow \qquad 
+%   \overline{F}_s := \frac{F_2 F_4}{F_1}
+%   $$
+%   where $F_1$, $F_2$, $F_4 =$ observed frequencies of  edges, top stars and bottom stars.
+%   }
+% }
+
 %==================================================================
 \frame{\frametitle{Motif probability}
 
   \paragraph{Occurrence probability $\overline{\phi}_s = \Pbb\{Y_{s\alpha} = 1\}$.} Under the B-EDD model \refer{OLR22}:
   \begin{align*}
-    \overline{\phi}_s 
-    & :=
-    \Pbb_{\BEDD}\left(
-    \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9} 
-    \right)
-    \; = \; 
+    \left(\includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9}\right) 
+    & = \; 
     \frac{
     \onslide+<2->{
       \overset{\text{top stars}}{\overbrace{
-      \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
-      \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
-      \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top2}\right)   }}
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top2}\right)   }}
     }
     \onslide+<3->{
-      \times
+      \quad
       \overset{\text{bottom stars}}{\overbrace{
-      \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom1}\right) % \times
-      \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom3}\right)
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom1}\right) % \times
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom3}\right)
       }}
     }
     }{
     \onslide+<4->{
       \underset{\text{edges}}{\underbrace{
-      \left(\Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right)\right)^4
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right)^4
       }}
     }
     } 
     \\
     \onslide+<5->{
-    & =
-    \frac{\phi_1^2 \phi_2 \phi_1 \phi_4}{\phi_1^4}
+    \overline{\phi}_s 
+    =
+    \Pbb_{\BEDD}\left(
+    \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9} 
+    \right)
+    & = \;
+    \frac{\left(\phi_1^2 \phi_2\right) \left(\phi_1 \phi_4\right)}{\left(\phi_1\right)^4}
     \qquad =
     \frac{\phi_2 \phi_4}{\phi_1}
     }
   \end{align*}
 
   \onslide+<6->{\bigskip \bigskip 
-  \paragraph{Estimated probability.} 
+  \paragraph{Estimated probability $\overline{F}_s$.} 
   $$
   \overline{\phi}_s := \frac{\phi_2 \phi_4}{\phi_1}
   \qquad \rightarrow \qquad 
@@ -415,12 +474,14 @@
 
   \begin{itemize}
   \setlength{\itemsep}{1.5\baselineskip}
+  \item \emphase{Number of positions:} $c_s$ 
   \item \emphase{Mean:} $\Esp_{\BEDD}(N_s) = c_s \times \overline{\phi}_s$ 
   \item \pause \emphase{Variance:} Same game, requires to evaluate $\displaystyle{\Esp_{\BEDD}(N_s ^2) = \Esp_{\BEDD}\left(\sum_\alpha Y_{s\alpha} \right)^2}$ \\
   \ra Need to account for overlap between positions ({\sl super-motifs}: \refer{PDK08}) 
   $$
   \includegraphics[width=.8\textwidth, trim=0 25 0 0, clip=]{\fignet/OLR22-EJS-Fig2}
-  $$ \\ ~
+  $$ 
+  \ra Compute the respective expected count in the way as for regular motifs \\ ~
   \item \pause \emphase{Covariance:} Same game to compute $\Cov(N_s, N_{s'})$
   \end{itemize}
 
@@ -444,7 +505,11 @@
   + construct a counting martingale for $F_s - \phi_s$  \refer{GaL17b}.
   
   \bigskip \bigskip \pause
-  \paragraph{Consequence.} We know the expected behavior of motif counts under the BEDD model (= 'null model').
+  \paragraph{Consequence.} We know 
+  \begin{itemize}
+    \item the expected behavior (mean, variance, distribution) of any motif count 
+    \item under the BEDD model (= 'null model').
+  \end{itemize}
 }
 
 %==================================================================
@@ -453,7 +518,7 @@
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
 \frame{\frametitle{Goodness-of-fit (GOF)}
 
-  \paragraph{Aim.} Test if the observed data arise from a given model.
+  \paragraph{Aim of GOF tests.} Test if the observed data arise from a given model.
 
   \medskip
   More cautious: 'if the model fits the data reasonably well'
@@ -532,9 +597,9 @@
   \begin{itemize}
     \item Assume $A \sim BEDD(\rho, g, h)$, 
     $$
-    H_0 = \{h = 1\}
+    \emphase{H_0 = \{h = 1\}}
     $$
-    \item For motif $s$, evaluate $\widehat{\Esp}_0(N_s)$ and $\widehat{\Esp}_0(N_s)$ and compare 
+    \item For motif $s$, evaluate $\widehat{\Esp}_0(N_s)$ and $\widehat{\Var}_0(N_s)$ and compare 
     $$
     W_s = (N_s - \widehat{\Esp}_0(N_s)) / \sqrt{\widehat{\Var}_0(N_s)}
     $$ 
@@ -553,7 +618,7 @@
 %==================================================================
 \frame{\frametitle{Comparing network imbalances}
 
-  \paragraph{Question.} Do network $A$ and $B$ share the same imbalance for insects?
+  \paragraph{Question.} Do network $A$ and $B$ share the same imbalance for pollinators?
   
   \bigskip \pause
   \paragraph{Statistical test.} 
@@ -573,7 +638,10 @@
   \bigskip \pause
   \paragraph{Example.} (no significant difference) 
   $$
-  \includegraphics[width=.8\textwidth]{\fignet/OLR22-EJS-Tab4}
+  \begin{array}{c}
+    \includegraphics[width=.8\textwidth, trim=0 50 0 0, clip=]{\fignet/OLR22-EJS-Tab4} \\ 
+    \includegraphics[width=.8\textwidth, trim=0 0 0 90, clip=]{\fignet/OLR22-EJS-Tab4}   
+  \end{array}
   $$
 
 }
@@ -635,9 +703,9 @@
   \begin{tabular}{cc}
     \hspace{-0.04\textwidth}
     \begin{tabular}{p{.45\textwidth}}
-      \paragraph{Covariance matrix $(X_1, X_2)$:}
+      \paragraph{Covariance matrix of $(X_1, X_2)$:}
       $$
-      \Sigma(X_1, X_2) = \left[\begin{array}{cc} 
+      \Sigma_{X_1, X_2} = \left[\begin{array}{cc} 
                       \sigma^2_1 & \sigma_{12} \\
                       \sigma_{12} & \sigma^2_2 \\
                      \end{array}\right]
@@ -672,7 +740,7 @@
     & \pause
     \begin{tabular}{p{.45\textwidth}}
       \onslide+<2->{$$
-      \Sigma(X'_1, X'_2) = \left[\begin{array}{cc} 
+      \Sigma_{X'_1, X'_2} = \left[\begin{array}{cc} 
                       1 & 0 \\
                       0 & 1 \\
                      \end{array}\right]
@@ -890,6 +958,52 @@
   \begin{itemize}
    \item Need to evaluate \emphase{$\Var(N - \widehat{\Esp}(N))$} and \emphase{$\Bias(\widehat{\Esp} N)$}: resort to Taylor expansion ($\Delta-$method)
   \end{itemize}
+}
+
+%==================================================================
+\frame{\frametitle{Goodness-of-fit (GOF) of the BEDD model}
+
+  \hspace{-.05\textwidth}
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<1->{\paragraph{Raw statistic:}
+      $$
+      T_s = \frac{N_s - \widehat{\Esp} N_s}{\sqrt{\widehat{\Var} N_s}}
+      $$ \\ 
+      }
+      \onslide+<2->{
+      \paragraph{Corrected stat.:} accounts for the estimation error in $\widehat{\Esp} N$
+      $$
+      T'_s = \frac{N_s - (\widehat{\Esp} N_s - \emphase{\widehat{\Bias}(\widehat{\Esp} N_s)})}{\sqrt{\emphase{\widehat{\Var} (N_s - \widehat{\Esp} N_s)}}}
+      $$ \\ 
+      }
+      \onslide+<3>{\paragraph{Cholevski      
+      \footnote{$\Sigma = P \Lambda P^\intercal$, $\Sigma = P \Lambda^{-1/2} P^\intercal$} 
+      transformation:} accounts for the correlation between the counts
+      $$
+      \Sigma_{s, s'} = \Cov(N_s - \widehat{\Esp} N_s, N_{s'} - \widehat{\Esp} N_{s'})
+      $$
+      $$
+      T'' = \emphase{\widehat{\Sigma}^{-1/2}}
+      \left[N_s - (\widehat{\Esp} N_s - \widehat{\Bias}(\widehat{\Esp} N_s))\right]
+      $$
+      }
+    \end{tabular}
+    &
+    \begin{tabular}{p{.4\textwidth}}
+      \hspace{-.05\textwidth}
+      \onslide+<1->{\paragraph{Zackenberg network.} ~ \\}
+      \begin{overprint}
+        \onslide<1>
+        \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-StatCount}
+        \onslide<2>
+        \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-NormStatCount}
+        \onslide<3>
+        \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-CholNormStat}
+      \end{overprint}
+    \end{tabular} 
+  \end{tabular}
+
 }
 
 %==================================================================
