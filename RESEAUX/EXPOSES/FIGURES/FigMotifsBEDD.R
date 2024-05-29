@@ -10,7 +10,7 @@ dirCodeSBM <- '/home/robin/ENSEIGN/COURS/RESEAUX/EcoStat/Materiel pour diffusion
 source(paste0(dirCodeGOF, 'MotifCount.R'))
 source(paste0(dirCodeGOF, 'MotifSimul.R'))
 source(paste0(dirCodeGOF, 'MotifAnalysis.R'))
-source(paste0(dirCodeSBM, 'function_for_blockmodels.R'))
+# source(paste0(dirCodeSBM, 'function_for_blockmodels.R'))
 
 # Figs
 mex <- 1; cex <- 10; lwdEdge <- 4; lwdCurve <- 8; cex.main <- 8; 
@@ -39,33 +39,33 @@ uList <- seq(0, 1, length.out=100)
 par(mfrow=c(3, 3), mex=mex); 
 plot(0, 0, col=0, axes=0, xlab='', ylab='')
 
-if(exportFig){pdf(paste0(figName, '-dist-g', round(10*lambda.gList[1]), '.pdf')); par(mfrow=c(1, 1), mex=mex)}
+if(exportFig){png(paste0(figName, '-dist-g', round(10*lambda.gList[1]), '.png')); par(mfrow=c(1, 1), mex=mex)}
 plot(uList, F_Glambda(uList, lambda.gList[1]), xlab='', ylab='', type='l', lwd=lwdCurve, col.axis=0, col=4)
 if(exportFig){dev.off()}
-if(exportFig){pdf(paste0(figName, '-dist-g', round(10*lambda.gList[2]), '.pdf')); par(mfrow=c(1, 1), mex=mex)}
+if(exportFig){png(paste0(figName, '-dist-g', round(10*lambda.gList[2]), '.png')); par(mfrow=c(1, 1), mex=mex)}
 plot(uList, F_Glambda(uList, lambda.gList[2]), xlab='', ylab='', type='l', lwd=lwdCurve, col.axis=0, col=4)
 if(exportFig){dev.off()}
 
-if(exportFig){pdf(paste0(figName, '-dist-h', round(10*lambda.hList[1]), '.pdf')); par(mfrow=c(1, 1), mex=mex)}
+if(exportFig){png(paste0(figName, '-dist-h', round(10*lambda.hList[1]), '.png')); par(mfrow=c(1, 1), mex=mex)}
 plot(uList, F_Glambda(uList, lambda.hList[1]), xlab='', ylab='', type='l', lwd=lwdCurve, col.axis=0, col=4)
 if(exportFig){dev.off()}
-if(exportFig){pdf(paste0(figName, '-adj-g', round(10*lambda.gList[1]), '-h', round(10*lambda.hList[1]), '.pdf')); par(mfrow=c(1, 1), mex=mex)}
+if(exportFig){png(paste0(figName, '-adj-g', round(10*lambda.gList[1]), '-h', round(10*lambda.hList[1]), '.png')); par(mfrow=c(1, 1), mex=mex)}
 net <- SimulB_EDD(m, n, rho, lambda.gList[1], lambda.hList[1]); net <- net$net[order(net$u), order(net$v)]
 image(1:n, 1:m, t(net), xlab='', ylab='', axes=0)
 if(exportFig){dev.off()}
-if(exportFig){pdf(paste0(figName, '-adj-g', round(10*lambda.gList[2]), '-h', round(10*lambda.hList[1]), '.pdf')); par(mfrow=c(1, 1), mex=mex)}
+if(exportFig){png(paste0(figName, '-adj-g', round(10*lambda.gList[2]), '-h', round(10*lambda.hList[1]), '.png')); par(mfrow=c(1, 1), mex=mex)}
 net <- SimulB_EDD(m, n, rho, lambda.gList[2], lambda.hList[1]); net <- net$net[order(net$u), order(net$v)]
 image(1:n, 1:m, t(net), xlab='', ylab='', axes=0)
 if(exportFig){dev.off()}
 
-if(exportFig){pdf(paste0(figName, '-dist-h', round(10*lambda.hList[2]), '.pdf')); par(mfrow=c(1, 1), mex=mex)}
+if(exportFig){png(paste0(figName, '-dist-h', round(10*lambda.hList[2]), '.png')); par(mfrow=c(1, 1), mex=mex)}
 plot(uList, F_Glambda(uList, lambda.hList[2]), xlab='', ylab='', type='l', lwd=lwdCurve, col.axis=0, col=4)
 if(exportFig){dev.off()}
-if(exportFig){pdf(paste0(figName, '-adj-g', round(10*lambda.gList[1]), '-h', round(10*lambda.hList[2]), '.pdf')); par(mfrow=c(1, 1), mex=mex)}
+if(exportFig){png(paste0(figName, '-adj-g', round(10*lambda.gList[1]), '-h', round(10*lambda.hList[2]), '.png')); par(mfrow=c(1, 1), mex=mex)}
 net <- SimulB_EDD(m, n, rho, lambda.gList[1], lambda.hList[2]); net <- net$net[order(net$u), order(net$v)]
 image(1:n, 1:m, t(net), xlab='', ylab='', axes=0)
 if(exportFig){dev.off()}
-if(exportFig){pdf(paste0(figName, '-adj-g', round(10*lambda.gList[2]), '-h', round(10*lambda.hList[2]), '.pdf')); par(mfrow=c(1, 1), mex=mex)}
+if(exportFig){png(paste0(figName, '-adj-g', round(10*lambda.gList[2]), '-h', round(10*lambda.hList[2]), '.png')); par(mfrow=c(1, 1), mex=mex)}
 net <- SimulB_EDD(m, n, rho, lambda.gList[2], lambda.hList[2]); net <- net$net[order(net$u), order(net$v)]
 image(1:n, 1:m, t(net), xlab='', ylab='', axes=0)
 if(exportFig){dev.off()}
@@ -76,7 +76,7 @@ if(exportFig){dev.off()}
 s <- 10
 motif <- motifList[[s]]
 sapply(1:max(length(motif$Rset), 6), function(r){
-   if(exportFig){pdf(paste0(figName, '-motif', s, '-automorphism', r, '.pdf')); par(mfrow=c(1, 1), mex=mex)}
+   if(exportFig){png(paste0(figName, '-motif', s, '-automorphism', r, '.png')); par(mfrow=c(1, 1), mex=mex)}
    PlotBNet(motif$Rset[[r]], cex=cex, lwd=lwdEdge, topch=topCh, bottomch=bottomCh, edgecol=edgeCol)
    if(exportFig){dev.off()}
 })
@@ -85,16 +85,16 @@ sapply(1:max(length(motif$Rset), 6), function(r){
 # Proprietes des motifs : probabilite
 ###############################################################################
 adj <- motif$Rset[[1]]
-if(exportFig){pdf(paste0(figName, '-motif', s, '.pdf')); par(mfrow=c(1, 1), mex=mex)}
+if(exportFig){png(paste0(figName, '-motif', s, '.png')); par(mfrow=c(1, 1), mex=mex)}
 PlotBNet(adj, cex=cex, lwd=lwdEdge, topch=topCh, bottomch=bottomCh, edgecol=edgeCol)
 if(exportFig){dev.off()}
 sapply(unique(motif$topdegree), function(u){
-   if(exportFig){pdf(paste0(figName, '-motif', s, '-top', u, '.pdf')); par(mfrow=c(1, 1), mex=mex)}
+   if(exportFig){png(paste0(figName, '-motif', s, '-top', u, '.png')); par(mfrow=c(1, 1), mex=mex)}
    PlotBNet(motifList[[starNum$top[u]]]$A, cex=cex, lwd=lwdEdge, topch=topCh, bottomch=bottomCh, edgecol=edgeCol)
    if(exportFig){dev.off()}
 })
 sapply(unique(motif$bottomdegree), function(v){
-   if(exportFig){pdf(paste0(figName, '-motif', s, '-bottom', v, '.pdf')); par(mfrow=c(1, 1), mex=mex)}
+   if(exportFig){png(paste0(figName, '-motif', s, '-bottom', v, '.png')); par(mfrow=c(1, 1), mex=mex)}
    PlotBNet(motifList[[starNum$bottom[v]]]$A, cex=cex, lwd=lwdEdge, topch=topCh, bottomch=bottomCh, edgecol=edgeCol)
    if(exportFig){dev.off()}
 })
@@ -104,7 +104,7 @@ sapply(unique(motif$bottomdegree), function(v){
 ###############################################################################
 superMotif <- superMotifList[[s]][[s]]; 
 sapply(1:16, function(r){
-   if(exportFig){pdf(paste0(figName, '-motif', s, '-supermotif', r, '.pdf')); par(mfrow=c(1, 1), mex=mex)}
+   if(exportFig){png(paste0(figName, '-motif', s, '-supermotif', r, '.png')); par(mfrow=c(1, 1), mex=mex)}
    PlotBNet(superMotif[[r]], cex=cex, lwd=lwdEdge, topch=topCh, bottomch=bottomCh, edgecol=edgeCol)
    if(exportFig){dev.off()}
 })
@@ -136,11 +136,11 @@ for(m in mList){
    load(simFile)
    for (s in c(2, nonStarNb)){
       # Motifs
-      if(exportFig){pdf(paste0(figName, '-adjMatMotif', nonStarNum[s], '.pdf')); par(mfrow=c(1, 1), mex=mex, lwd=2)}
+      if(exportFig){png(paste0(figName, '-adjMatMotif', nonStarNum[s], '.png')); par(mfrow=c(1, 1), mex=mex, lwd=2)}
       PlotBNet(motifList[[nonStarNum[s]]]$A, cex=cex, lwd=lwdEdge, topch=topCh, bottomch=bottomCh, edgecol=edgeCol)
       if(exportFig){dev.off()}
       # Count distribution
-      if(exportFig){pdf(paste0(figName, '-', simName, '-distCountMotif', nonStarNum[s], '.pdf')); par(mfrow=c(1, 1), mex=mex, lwd=2)}
+      if(exportFig){png(paste0(figName, '-', simName, '-distCountMotif', nonStarNum[s], '.png')); par(mfrow=c(1, 1), mex=mex, lwd=2)}
       H <- hist(N[, s], breaks=sqrt(B), main='', xlab='', ylab='', freq=FALSE)
       theoMeanN <- theoMoments$mean[nonStarNum]; theoSdN <- theoMoments$sd[nonStarNum]
       lines(sort(N[, s]), dnorm(sort(N[, s]), mean=theoMeanN[s],
@@ -152,17 +152,17 @@ for(m in mList){
       }
       if(exportFig){dev.off()}
       # Raw statistics
-      if(exportFig){pdf(paste0(figName, '-', simName, '-distRawStat', nonStarNum[s], '.pdf')); par(mfrow=c(1, 1), mex=mex, lwd=2)}
+      if(exportFig){png(paste0(figName, '-', simName, '-distRawStat', nonStarNum[s], '.png')); par(mfrow=c(1, 1), mex=mex, lwd=2)}
       H <- hist(statN_Nbar[, s], breaks=sqrt(B), main='', xlab='', ylab='', freq=FALSE)
       lines(x, phi, lwd=lwdCurve, col=4)
       if(exportFig){dev.off()}
       # Normalized statistics
-      if(exportFig){pdf(paste0(figName, '-', simName, '-distNormStat', nonStarNum[s], '.pdf')); par(mfrow=c(1, 1), mex=mex, lwd=2)}
+      if(exportFig){png(paste0(figName, '-', simName, '-distNormStat', nonStarNum[s], '.png')); par(mfrow=c(1, 1), mex=mex, lwd=2)}
       H <- hist(normStatN_Nbar[, s], breaks=sqrt(B), main='', xlab='', ylab='', freq=FALSE)
       lines(x, phi, lwd=lwdCurve, col=2)
       if(exportFig){dev.off()}
       # Raw statistics
-      if(exportFig){pdf(paste0(figName, '-', simName, '-distRawStat', nonStarNum[s], '.pdf')); par(mfrow=c(1, 1), mex=mex, lwd=2)}
+      if(exportFig){png(paste0(figName, '-', simName, '-distRawStat', nonStarNum[s], '.png')); par(mfrow=c(1, 1), mex=mex, lwd=2)}
       H <- hist(statN_Nbar[, s], breaks=sqrt(B), main='', xlab='', ylab='', freq=FALSE)
       lines(x, phi, lwd=lwdCurve, col=4)
       if(exportFig){dev.off()}
