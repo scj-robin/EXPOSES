@@ -1,4 +1,4 @@
-\documentclass[8pt]{beamer}
+\documentclass[9pt]{beamer}
 
 % Beamer style
 %\usetheme[secheader]{Madrid}
@@ -33,6 +33,7 @@
 % Directory
 \newcommand{\figcp}{/home/robin/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
 \newcommand{\figDLR}{/home/robin/Bureau/Hawkes/segHP/article/StatComp2023/Revision/figures}
+\newcommand{\figchiro}{/home/robin/Bureau/Hawkes/HawkesDiscreteHMM/Figures/chiropteres}
 
 %====================================================================
 %====================================================================
@@ -44,7 +45,7 @@
 %====================================================================
 
 %====================================================================
-\title{Segmentation and classification of a Hawkes process}
+\title{Segmentation {\sl and classification} of a {\sl Hawkes} process}
 
 \author[S. Robin]{S. Robin \\ \medskip
 joint work with A. Bonnet
@@ -63,7 +64,36 @@ joint work with A. Bonnet
 %====================================================================
 \section*{Introduction}
 %====================================================================
-\frame{\frametitle{Examples} 
+\frame{\frametitle{Problem} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Counting process} \\
+      Recording of bat cries in continuous time
+      
+      \bigskip
+      \begin{itemize}
+        \setlength{\itemsep}{.75\baselineskip}
+        \onslide+<2->{\item Can we detect changes in the occurrence of events?}
+        \onslide+<3->{\item Can we associate each time period with some underlying behavior?}
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \includegraphics[width=.45\textwidth]{\figchiro/Chiro-seq99}
+        \onslide<2>
+        \includegraphics[width=.45\textwidth]{\figchiro/Chiro-seq99-N692-Qmax5-Q3seg}
+        \onslide<3>
+        \includegraphics[width=.45\textwidth]{\figchiro/Chiro-seq99-N692-Qmax5-Q3tau}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+
 }
 
 %====================================================================
@@ -75,13 +105,16 @@ joint work with A. Bonnet
   $$
  
   \begin{itemize}
-  \item $(T_k)_{k \geq 1}$ a random collection of points
-  \item Intensity function $\lambda(t)$: immediate probability of observing an event at time $t$
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item $(T_k)_{k \geq 1}$ a random collection of points
+    \item Count process $N(t) = \sum_{k \geq 1} \Ibb\{T_k \leq t\}$
+    \item Intensity function $\lambda(t)$: immediate probability of observing an event at time $t$
   \end{itemize}
 
   \bigskip \bigskip \pause
   \paragraph{Examples}
   \begin{itemize}
+    \setlength{\itemsep}{0.5\baselineskip}
     \item{Homogeneous Poisson process:} $\lambda(t) \equiv \lambda$
     \item{Heterogeneous Poisson process:} $\lambda(t) =$ deterministic function
     \item{Hawkes process:} $\lambda(t) =$ random function of the past
@@ -90,23 +123,40 @@ joint work with A. Bonnet
 }
 
 %====================================================================
-\frame{\frametitle{Segmentation \& classification} 
+\frame{\frametitle{Segmentation \& classification of a point process} 
 
-  \bigskip \bigskip \pause
   \paragraph{Aim}
+  \begin{enumerate}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item Propose a set of reasonably realistic models;
+    \item Design an (efficient) algorithm to get the parameter estimates;
+    \item Choose among the models.
+  \end{enumerate}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Example} Segmentation of a Poisson process \refer{DLR23}:
+  \begin{enumerate}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item Model = Poisson process with piece-wise constant intensity function
+    \item Algorithm = dynamic programming in (less than) $\Ocal(N(T)^2)$
+    \item Model selection = cross validation (using thining)
+  \end{enumerate}
 
   \bigskip \bigskip \pause
-  \paragraph{Issues}
+  \paragraph{But} Segmenting a Poisson process
+  \begin{enumerate}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item Does not fit the scope of RMR2024\footnote{Modèles statistiques pour des données dépendantes et applications}
+    \item Does not provide any classification (although doable);
+    \item Does not account for the the self exciting (or inhibiting) nature of some processes.
+  \end{enumerate}
 
-}
-
-%====================================================================
-\frame{\frametitle{Independent case: Poisson process} 
 }
 
 %====================================================================
 %====================================================================
 \section{(Discrete) Hawkes process}
+\frame{\frametitle{Outline} \tableofcontents}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
 \frame{\frametitle{Univariate Hawkes process} 
@@ -148,11 +198,11 @@ joint work with A. Bonnet
     \hspace{-.05\textwidth}
     \begin{tabular}{p{.55\textwidth}}
       \begin{itemize}
-        \setlength{\itemsep}{.75\baselineskip}
+        \setlength{\itemsep}{1\baselineskip}
         \item Exponential kernel function \emphase{$h(t)= a e^{-b t}$}
         \item \emphase{$a \geq 0$} to ensure that $\lambda$ is non negative 
         \item \emphase{$a/b <1$} to ensure stationarity
-        \item Applications: Sismology, epidemiology, neuroscience, ecology, ...
+        \item Applications: sismology, epidemiology, neuroscience, ecology, ...
       \end{itemize}
     \end{tabular}
   \end{tabular}  
@@ -163,18 +213,19 @@ joint work with A. Bonnet
 \frame{\frametitle{Discrete time Hawkes process} 
 
 
-\paragraph{Exponential Hawkes process}
+\paragraph{Continuous time exponential Hawkes process}
 $$
 \lambda(t)=\lambda_0 + \underset{T_k < t}{\sum} a e^{-b(t-T_k)} 
 $$    
 
 \bigskip \bigskip \pause
-\paragraph{Discretization:}
+\paragraph{Discretization}
 \begin{itemize}
+  \setlength{\itemsep}{0.75\baselineskip}
   \item $I_k=[ \tau_{k-1};\tau_k]$ with $\tau_k=k\Delta$
   \item $N_k=N(I_k)$ the number of events on $I_k$
   $$
-  \includegraphics[width=.5\textwidth, trim=0 200 0 70, clip=]{\figcp/Bon24-Hawkes-Fig4}
+  \includegraphics[width=.45\textwidth, trim=0 230 0 70, clip=]{\figcp/Bon24-Hawkes-Fig4}
   $$
   \item Distribution of $(N_k)_{k \geq 1}$?
 \end{itemize}
@@ -190,7 +241,7 @@ $$
 
   \begin{itemize}
   \item Immigrants arrive at rate $\lambda_0$ 
-  \item Both immigrants and descendants produce new individuals at rate $h(t - T)$
+  \item Each immigrant or descendant produces new individuals at rate $h(t - T)$
   \end{itemize}
 
 }
@@ -207,14 +258,14 @@ $$
   $$
   \begin{itemize}
     \item $B_k \sim \mathcal{P}(\lambda_0 \Delta)$ discrete immigrant process
-    \item $ M_T(I_k) \sim \mathcal{P}\left(c(a,b,\Delta) e^{-b(\tau_{k-1}-T)}\right)$ descendants of $T<\tau_{k-1}$
+    \item $ M_T(I_k) \sim \mathcal{P}\left(c(a,b,\Delta) e^{-b(\tau_{k-1}-\emphase{T})}\right)$ descendants of $T<\tau_{k-1}$
     \item $R_k$ number of descendants of points $T \in I_k$ within $I_k$
   \end{itemize}
 
   \bigskip \bigskip \pause
   \paragraph{Approximation when $\Delta$ is small}
   \begin{itemize}
-    \item  $ M_T(I_k) \simeq \mathcal{P}\left(c(a,b,\Delta) e^{-b(\tau_{k-1}-\tau_{\ell-1)}}\right)$ for $T \in  I_\ell=[\tau_{\ell-1}; \tau_\ell]$
+    \item  $ M_T(I_k) \simeq \mathcal{P}\left(c(a,b,\Delta) e^{-b(\tau_{k-1}-\emphase{\tau_{\ell-1}})}\right)$ for $T \in  I_\ell=[\tau_{\ell-1}; \tau_\ell]$
     \item \emphase{$R_k \simeq 0$}
   \end{itemize}
 }
@@ -354,7 +405,7 @@ $$
 \section{Goodness of fit}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
-\frame{\frametitle{Model selection.} 
+\frame{\frametitle{Model selection} 
 
   \paragraph{Aim:} select the number of hidden states $Q$
   
@@ -451,11 +502,26 @@ $$
 }
 
 %====================================================================
-\frame{\frametitle{Bat datasets} 
+\frame{\frametitle{Bat cries} 
   
+  Recording of bat cries over one night:
+%   $$
+%   \includegraphics[width=.9\textwidth, height=.5\textwidth]{\figcp/Bon24-Hawkes-CompareQ}
+%   $$
   $$
-  \todo{!!!}
+  \begin{tabular}{cccc}
+    $Q = 1$ & $Q = 2$ & $Q = 3$ & $Q = 4$ \\
+    \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99} &
+    \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q2tau} &
+    \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q3tau} &
+    \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q4tau} 
+  \end{tabular}
   $$
+  \begin{itemize}
+    \item $Q = 2, 3, $ hidden states?
+    \item States = behavior (transit, foraging), species?
+  \end{itemize}
+
 
 }
 
@@ -478,10 +544,19 @@ $$
   $$
   where sparse interaction matrix $A = [a_{i, j}]_{1 \leq i, j \leq p}$
   
-  \bigskip 
-  \begin{itemize}
-    \item Interaction network between neurons, species, ...
-  \end{itemize}
+  \begin{tabular}{ll}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{itemize}
+        \item Interaction network between neurons, species, ...
+      \end{itemize}
+    \end{tabular}  
+     &
+    \hspace{-.04\textwidth}
+    \begin{tabular}{l}
+      \includegraphics[width=.3\textwidth]{\figcp/Bon24-Network}
+    \end{tabular}  
+  \end{tabular}  
 
 }
 
@@ -543,3 +618,14 @@ $$
 %====================================================================
 %====================================================================
   
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+
+
