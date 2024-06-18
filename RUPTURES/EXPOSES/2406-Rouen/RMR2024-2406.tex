@@ -280,11 +280,11 @@ $$
   with $\mu=\lambda_0 \Delta$ and $\alpha$, $\beta$ depending on $a$, $b$, $\Delta$.
 
   \bigskip \bigskip \pause
-  \paragraph{$\{Y_k\}_{k\geq 1}$ is not a Markov chain but...} 
-  Let us define $(U_k)_{k \geq 1}$
+  \paragraph{$\{Y_k\}_{k\geq 1}$ is not a Markov chain but} 
+  defining $(U_k)_{k \geq 1}$
   $$
   U_1 = 0, \qquad
-  U_k = \alpha Y_{k-1} + \beta U_{k-1}, 
+  U_k = \emphase{\alpha Y_{k-1} + \beta U_{k-1}}, 
   $$
   so that
   $$
@@ -292,9 +292,9 @@ $$
   $$   
   we have that
   $$
-  \left((Y_k,U_k)\right)_{k \geq 1} \text{ is a Markov Chain}
+  \left((Y_k,U_k)\right)_{k \geq 1}
   $$
-
+ is a Markov Chain.
 }
 
 %====================================================================
@@ -396,11 +396,6 @@ $$
 }
 
 %====================================================================
-\frame{\frametitle{} 
-
-}
-
-%====================================================================
 %====================================================================
 \section{Goodness of fit}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
@@ -425,7 +420,7 @@ $$
   $$
   pen(\widehat{\theta}_Q) = \frac12 \log(N) (Q^2 + 2)
   $$
-  where $N =$ number of time steps (i.e. discretized intervals)
+  where $N =$ number of time steps (i.e. discretized intervals) = \emphase{tuning parameter}
 }
 
 %====================================================================
@@ -504,7 +499,7 @@ $$
 %====================================================================
 \frame{\frametitle{Bat cries} 
   
-  Recording of bat cries over one night:
+  \paragraph{Back to the example} Recording of bat cries over one night:
 %   $$
 %   \includegraphics[width=.9\textwidth, height=.5\textwidth]{\figcp/Bon24-Hawkes-CompareQ}
 %   $$
@@ -518,7 +513,7 @@ $$
   \end{tabular}
   $$
   \begin{itemize}
-    \item $Q = 2, 3, $ hidden states?
+    \item $Q = 2, 3, $ hidden states? ($\widehat{Q}_{BIC} = 1$ or $2$, depending on $N$)
     \item States = behavior (transit, foraging), species?
   \end{itemize}
 
