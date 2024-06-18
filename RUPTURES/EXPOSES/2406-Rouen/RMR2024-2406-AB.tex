@@ -1,0 +1,719 @@
+\documentclass[french,english]{beamer}
+%\usepackage{mathpazo}
+\renewcommand{\sfdefault}{lmss}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\usepackage{amsfonts,amsmath,amssymb,amsthm,enumerate,mathtools,color,hyperref,bbm,tabularx,ifthen,twoopt,mathabx,multirow}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage[authoryear]{natbib}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+\usepackage{tikz}
+\usepackage{multirow}
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+\newcommand{\nodesize}{2em}
+\newcommand{\edgeunit}{4*\nodesize}
+\definecolor{burgundy}{rgb}{0.5, 0.0, 0.13}
+\definecolor{cadmiumgreen}{rgb}{0.0, 0.50, 0.24}
+\definecolor{skobeloff}{rgb}{0.0, 0.48, 0.45}
+\definecolor{dimgray}{rgb}{0.95, 0.95, 0.95}
+\definecolor{twilightlavender}{rgb}{0.54, 0.29, 0.42}
+\definecolor{eggplant}{rgb}{0.38, 0.25, 0.32}
+\colorlet{eggplant_light}{eggplant!50!white}
+\definecolor{viridian}{rgb}{0.25, 0.51, 0.43}
+\definecolor{warmblack}{rgb}{0.0, 0.26, 0.26}
+\definecolor{darkorange}{rgb}{1.0, 0.55, 0.0}
+\definecolor{darkpastelpurple}{rgb}{0.59, 0.44, 0.84}
+\usetheme{boxes}
+\useinnertheme{rectangles}
+\setbeamertemplate{blocks}[default]
+\setbeamercolor{block body alerted}{fg=black,bg=dimgray}
+\setbeamercolor{block body}{fg=black,bg=dimgray}
+%\setbeamercolor{block title alerted}{fg=black,bg=white }
+\setbeamercolor{block title}{fg=warmblack,bg=black!10}
+\setbeamercolor{itemize item}{fg=skobeloff}
+\setbeamercolor{itemize subitem}{fg=warmblack}
+\setbeamercolor{palette tertiary}{fg=white,bg=warmblack}
+\setbeamercolor{palette secondary}{fg=warmblack,bg=lightgray}
+\setbeamertemplate{itemize subitem}[ast]
+\setbeamercolor{enumerate item}{fg=warmblack,bg=warmblack}
+\setbeamertemplate{enumerate item}[triangle]
+%\setbeamertemplate{itemize subitem}{\tiny\raise3.5pt\hbox{\donotcoloroutermaths$\blacktriangleright$}}
+
+\setbeamercolor{palette primary}{fg=white,bg=dimgray}
+\setbeamercolor{structure}{fg=warmblack,bg=black!10}
+\setbeamercolor{title}{fg=viridian,bg=white}
+\setbeamercolor{frametitle}{fg=viridian,bg=white}
+\setbeamertemplate{bibliography item}{[\theenumiv]}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{title page}[default]
+
+
+
+
+
+\usepackage[]{graphicx}
+\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+
+
+
+
+\usepackage{multicol}
+\usepackage{fix-cm}
+
+
+
+
+\def\PE{\mathbb{E}}
+\def\PP{\mathbb{P}}
+\def\Var{\mathop{\rm Var}\nolimits}
+\def\Tr{\mathop{\rm Tr}\nolimits}
+\def\rmd{\mathrm{d}}
+\def \1{\mathbbm{1}}
+\def\Y{\mathbf{Y}}
+\def\betabold{\boldsymbol{\beta}}
+\def\X{\mathbf{X}}
+\def\u{\mathbf{u}}
+\def\Z{\mathbf{Z}}
+\def\R{\mathbf{R}}
+\def\W{\mathbf{W}}
+\def\D{\mathbf{D}}
+\def\G{\mathbf{G}}
+\def\g{\mathbf{g}}
+\def\B{\mathbf{B}}
+\def\M{\mathbf{M}}
+\def\H{\mathbf{H}}
+\def\U{\mathbf{U}}
+\def\T{\mathbf{T}}
+\def\J{\mathbf{J}}
+\def\e{\mathbf{e}}
+\def\v{\mathbf{v}}
+\def\t{\mathbf{t}}
+\def\V{\mathbf{V}}
+\def\L{\mathbf{L}}
+\def\l{\mathbf{l}}
+\def\w{\mathbf{w}}
+\def\eps{\boldsymbol{\varepsilon}}
+\def\Id{\textrm{Id}}
+\def\rset{\mathbb{R}}
+\def \1{\mathbbm{1}}
+\def\II{{\mathds 1}}
+
+\title[Modeling spatial interactions] % (optional, use only with long paper titles)
+{
+Markov switching Hawkes process with applications in ecology
+}
+\institute[LPSM]{LPSM, Sorbonne Université}
+\date{Rencontres statistiques du CEREMADE, 6 mai 2024}
+
+%\author[Anna Bonnet] % (optional, use only with lots of authors)
+%{Anna Bonnet, Franck Picard, Vincent Rivoirard}
+
+\author{Anna Bonnet \and Stéphane Robin}
+
+
+%\institute[AgroParisTech]{}
+% - Give the names in the same order as the appear in the paper.
+
+
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+
+\end{frame}
+
+
+\begin{frame}{Point process}
+
+\begin{minipage}{6cm}
+\includegraphics[scale=0.1,trim=130mm 900mm 20mm 150mm]{figures/random_univ.png}
+\end{minipage}
+\begin{minipage}{4.5cm}
+\begin{itemize}
+\item $(T_k)_{k \geq 1}$ a random collection of points
+\item Intensity function $\lambda(t)$: immediate probability of observing an event at time $t$
+\end{itemize}
+\end{minipage}
+
+\vspace{0.5 cm}
+\begin{block}{Hawkes process}
+    \begin{itemize}
+      The intensity function $\lambda(t)$ depends on the past history $\mathcal{H}_t$
+    \end{itemize}
+\end{block}
+
+
+
+\end{frame}
+
+
+\begin{frame}{Linear univariate Hawkes process (Hawkes, 1971)}
+
+\vspace{2cm}
+
+\includegraphics[scale=0.1,trim=40mm 900mm 20mm 250mm]{figures/random_univ_Ht.png}
+
+
+\begin{block}{(Conditional) intensity function}
+$$\lambda(t \vert \mathcal{H}_t)= \lambda(t)= \lambda_0 + \underset{T_k < t}{\sum} h(t-T_k)$$
+\end{block}
+
+
+
+\begin{itemize}
+\item $\lambda_0$ is called the baseline 
+\item $h$ describes the influence of past events
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Self-exciting exponential Hawkes process}
+
+
+$$ \lambda(t)= \lambda_0 + \underset{T_k < t}{\sum} a e^{-b(t-T_k)}$$
+
+
+
+\begin{minipage}{5.6cm}
+
+\vspace{1cm}
+\includegraphics[scale=0.13,trim=10mm 120mm 0mm 0mm,clip]{figures/point_process.png} \\
+
+
+\end{minipage}
+\begin{minipage}{5cm}
+\begin{alertblock}{}
+\small
+\begin{itemize}
+\item Classical exponential kernel function $h(t)= a e^{-b t}$
+\item $ a \geq 0$, which ensures that $\lambda$ is non negative 
+%\item This model is called \textbf{self-exciting} process or \textbf{linear} Hawkes process
+\item An event increases the probability of observing another event
+\item Stationarity condition: $a/b <1$
+\item Applications: Sismology, epidemiology, neuroscience...
+
+\end{itemize}
+\end{alertblock}
+
+\end{minipage}
+
+%\begin{itemize}
+%\item Cluster representation and results from branching processes
+%\end{itemize}
+%
+%\begin{center}
+%\includegraphics[scale=0.15]{figures/cluster_representation.png}
+%\end{center}
+\end{frame}
+
+
+
+\begin{frame}{Application in ecology}
+
+\begin{itemize}
+    \item Sounds emission of an animal
+    \item Observations: times when each call is recorded (one process for each species)
+
+\begin{itemize}
+    \item  Bats  monitoring (Vigie-Chiro program, CESCO-MNHN)
+
+
+\begin{center}
+      \includegraphics[scale=0.38,trim=0mm 5mm 5mm 0mm, clip]{figures/images_data_description_buzz_sonogramme2.png}  \\
+   \footnotesize{Denis et al. (2023)} 
+\end{center}
+ 
+
+
+\vspace{0.3cm}
+
+\item Narwhals monitoring in Greenland (Greenland Institute of Natural Resources)
+
+\vspace{0.1cm}
+\centering
+  \includegraphics[scale=0.4]{figures/narwhals.jpg}
+\end{itemize}
+  \end{itemize}
+  
+\end{frame}
+\begin{frame}{Modeling different phases}
+\centering 
+\footnotesize{Count process} 
+
+\vspace{-0.2cm}
+
+    \includegraphics[scale=0.3]{figures/changement_phase.pdf}
+
+    \begin{block}{Goals}
+    \begin{itemize}
+        \item New modeling to integrate different phases while keeping the Hawkes dependence structure
+        \item Estimating all parameters and the change points
+    \end{itemize}
+        
+    \end{block}
+\end{frame}
+
+
+
+\begin{frame}{Interest in ecology}
+     \begin{itemize}
+        
+              \item[$\blacktriangleright$] Bats: modeling animal activity (commuting/foraging phases)
+              \begin{center}
+
+             
+             \begin{center}
+            \includegraphics[scale=0.25,trim=0mm 0mm 0mm 0mm, clip]{figures/chiro.png} 
+             \end{center}       
+             
+                 
+              \end{center}
+              \item[$\blacktriangleright$] Narwhals: modeling the impact of external factors on sounds emission while fishing
+              \begin{itemize}
+                 \item[$\blacktriangleright$]  Sound exposure
+                 \item[$\blacktriangleright$]   Distance from ships
+                     \item[$\blacktriangleright$]  Environmental changes
+              \end{itemize}
+              
+         
+        \end{itemize} 
+
+    
+
+
+  
+\end{frame}
+\begin{frame}{When covariates are observed}
+  \vspace{-0.5cm}
+\begin{minipage}{7cm}
+    $\blacktriangleright$ Narwhals' behaviour
+\end{minipage}
+\begin{minipage}{3cm}
+ \includegraphics[scale=0.08,trim=0mm 30mm 0mm 50mm,clip]{figures/noun-narwhal-3564834.png}   
+\end{minipage}
+
+       
+        \begin{block}{Goals}
+            \begin{itemize}
+                \item Integrate the covariates in the intensity function
+                \item Estimate the effect of covariates, select the covariates with major impact
+            \end{itemize}
+        \end{block}
+        
+    \vspace{-0.5cm}
+
+             $$ \lambda(t)= \lambda_0(X_t) + \underset{T_k < t}{\sum} h(t-T_k,X_t)$$
+
+             \vspace{-0.2cm}
+    \begin{block}{Observations}
+          \begin{itemize}
+             \item  $(T_k)_{k \geq 1}$ event times
+         \item  $X_t$ observed covariates at time $t$
+         \end{itemize} 
+     \end{block} 
+ 
+$\blacktriangleright$  Collaboration with C. Dion-Blanc, A. Samson, M. Sadeler          
+      
+
+\end{frame}
+
+\begin{frame}{When covariates are not observed}
+\begin{minipage}{5cm}
+     $\blacktriangleright$ Bats monitoring  
+\end{minipage}
+\begin{minipage}{5cm}
+     \includegraphics[scale=0.12,trim=0mm 30mm 0mm 50mm,clip]{figures/noun-bat-1110.png}   
+\end{minipage}
+
+       
+    \begin{itemize}
+        \item Introduce a latent variable $Z$ that encodes the changes of phases
+    \end{itemize}
+
+\small 
+\begin{figure}
+   \begin{centering}
+\input{HMM}\
+\end{centering}
+\end{figure}
+
+\begin{block}{Discretized version}
+      \begin{itemize}
+            \item[$\blacktriangleright$] Discrete Markov Chain for the hidden dynamics
+             \item[$\blacktriangleright$]   Discretized version of the Hawkes process
+        \end{itemize}
+\end{block}
+       
+        
+\end{frame}
+
+
+
+
+\begin{frame}{Discrete time Hawkes process}
+\small
+\vspace{-0.2cm}
+\begin{block}{Exponential Hawkes process}
+$$\lambda(t)=\lambda_0 + \underset{T_k < t}{\sum} a e^{-b(t-T_k)} $$    
+\end{block}
+\begin{itemize}
+    \item $I_k=[ \tau_{k-1};\tau_k]$ with $\tau_k=k\Delta$
+    \item $N_k=N(I_k)$ the number of events on $I_k$
+
+
+\vspace{-0.2cm}
+\begin{center}
+\includegraphics[scale=0.16]{figures/discrete_process.png}
+\end{center}
+
+\vspace{-0.3cm}
+
+\item Distribution of $N_k$?
+\end{itemize}
+
+
+
+\end{frame}
+
+\begin{frame}{Cluster representation (Hawkes and Oakes, 1974)}
+
+\includegraphics[scale=0.3]{figures/cluster_representation.png}
+
+\begin{itemize}
+\item Immigrants arrive at rate $\lambda_0$ 
+\item All individuals $T$ (immigrant and descendant) produce a new individual at rate $h(t - T)$
+\end{itemize}
+\end{frame}
+\begin{frame}{Discrete time Hawkes process}
+$N_k=N(I_k)$ the number of events on $I_k=[ \tau_{k-1};\tau_k]$
+\begin{block}{Count distribution}
+$$N_k \overset{\Delta}{=} B_k + \sum_{\ell \leq k-1} \sum_{T \in I_\ell} M_T(I_k) + R_k
+$$
+\end{block}
+\small
+   \begin{itemize}
+       \item $B_k \sim \mathcal{P}(\lambda_0 \Delta)$ discrete immigrant process
+ \item $ M_T(I_k) \sim \mathcal{P}\left(c(a,b,\Delta) e^{-b(\tau_{k-1}-T)}\right)$ descendants of $T<\tau_{k-1}$
+
+ \item $R_k$ number of descendants of points $T \in I_k$
+   \end{itemize}
+
+\begin{block}{Approximation when $\Delta$ is small}
+    \begin{itemize}
+        \item  $ M_T(I_k) \simeq \mathcal{P}\left(c(a,b,\Delta) e^{-b(\tau_{k-1}-\tau_{\ell-1)}}\right)$ for $T \in  I_\ell=[\tau_{\ell-1}; \tau_\ell]$
+        \item We neglect $R_k$
+    \end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Markovian reformulation}
+
+ \begin{block}{Approximation of $N_k$}
+$$
+Y_k \mid \{Y_\ell\}_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \sum_{\ell = 1}^{\infty} \alpha \beta^\ell Y_{k-\ell} \right),
+$$
+  with $\mu=\lambda_0 \Delta$ and $\alpha$, $\beta$ depending on $a$, $b$, $\Delta$.
+   \end{block}
+\begin{itemize}
+    \item $\{Y_k\}_{k\geq 1}$ is not a Markov chain
+    \item If we define $U_k$ such that 
+  \end{itemize}  
+  
+  $$
+ \left\{
+ \begin{array}{l}
+  U_1=0 \\
+    U_k= \alpha Y_{k-1} + \beta U_{k-1}
+ \end{array}
+\right.
+$$  
+    
+\begin{alertblock}{ }
+$$Y_k \vert (U_{k-1}, Y_{k-1}) \sim  \mathcal{P}\left(\alpha Y_{k-1} +  \beta U_{k-1} \right)$$   
+\end{alertblock}
+
+$\rightarrow$ $(Y_k,U_k)_{\geq 1}$ is a Markov Chain    
+
+
+
+
+
+\end{frame}
+
+    
+\begin{frame}{Discrete time Hawkes HMM}
+\begin{itemize}
+    \item Hidden path: $\{Z_k\}_{k \geq 1}$ homogeneous Markov chain with transition matrix $\pi$
+    \item Observed counts: for $k\geq 1$, set $U_1=0$ and
+
+    $$Y_k \mid \{Y_\ell\}_{\ell \leq k-1} \sim \mathcal{P}\left(\mu_{Z_k} + \sum_{\ell = 1}^{\infty} \alpha \beta^\ell Y_{k-\ell} \right)$$
+
+    \begin{itemize}
+        \item The immigration rate varies with the hidden path
+        \item The number of offspring does not vary with the hidden path
+    
+    \end{itemize}
+\end{itemize}
+
+\footnotesize
+\begin{figure}
+   \begin{centering}
+\input{DirectedGM_alpha_cst}
+\end{centering}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Inference}
+
+\begin{block}{Goals}
+    \begin{itemize}
+        \item Estimate $\mu=(\mu_1, \dots, \mu_Q)$, $\alpha$, $\beta$, $\pi$
+        \item Learn $p(Z\vert Y) \rightarrow$ detect the change points
+    \end{itemize}
+\end{block}
+    \begin{itemize}
+        \item Introducing $(U_k)_{k\geq 1} \rightarrow$  EM algorithm for HMM
+
+        \begin{block}{EM algorithm (Dempster et al, 1977)}
+       Estimator $\hat{\theta}_k$ of  $\theta=(\mu,\alpha,\beta,\pi)$ at step $k$
+            \begin{itemize}
+                \item E-Step : Compute $\mathbb{E}_{\hat{\theta}_k} [log(p_\theta(Y,Z)\vert Y)]$
+                \item M-Step : Define $\hat{\theta}_{k+1}=\underset{\theta}{\textrm{ argmax }} \mathbb{E}_{\hat{\theta}_k}[log(p_\theta(Y,Z)\vert Y)]$
+            \end{itemize}
+        \end{block}
+    
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{EM algorithm for HMM}
+
+    \begin{block}{Forward-Backward recursion for the E-step}
+        \begin{itemize}
+            \item Forward : Compute $p(Z_{k}\vert Y)$ as function of $p(Z_{k-1}\vert Y)$ 
+            \item Backward: Compute $p(Z_{k}\vert Y)$ as function of $p(Z_{k+1}\vert Y)$
+        \end{itemize}
+    \end{block}
+    \vspace{-0.3cm}
+\footnotesize
+\begin{figure}
+   \begin{centering}
+\input{DirectedGM_alpha_cst}
+\end{centering}
+\end{figure}
+
+
+  \vspace{-0.5cm}
+
+   \begin{block}{3-step initialization}
+       \begin{itemize}
+          \item Homogeneous Hawkes for the reproduction parameters $\alpha$ and $\beta$
+          \item Poisson-HMM for the rates $\mu_1, \dots, \mu_Q$
+          \item Correction: $\mu_k \rightarrow \widetilde{\mu}_k$ to account for reproduction rate
+      \end{itemize}
+   \end{block}
+      
+\end{frame}
+\begin{frame}{Numerical results: classification}
+
+
+\begin{center}
+ \small
+           \begin{tabular}{c||c|cccc}
+              & States &  1 &2  & 3\\
+              \hline
+                \multirow{3}{*}{Hawkes HMM}& 1 & 273.7 & 28.7 & 14.2\\
+    &2 &  37 & 166.3 & 96.9\\
+    & 3 &  4.7  & 24.7 & 353.8 \\
+    \hline 
+    \hline
+                   \multirow{3}{*}{Poisson HMM}& 1 & 181 & 122.8 & 12.8\\
+    &2 &  136 & 111.1 & 53.1\\
+    & 3 &  45.4 & 115.2 & 222.6
+               \end{tabular} 
+
+\vspace{0.5cm}
+\begin{tabular}{cc}
+    \includegraphics[scale=0.25]{figures/traj_mediane_Q3_true.pdf}    & 
+    \includegraphics[scale=0.25]{figures/traj_mediane_Q3_estimated.pdf}
+    \end{tabular}
+\end{center}
+               
+               
+
+
+\end{frame}
+
+\begin{frame}{Numerical results: parameters estimation}
+
+    \begin{center}
+       \includegraphics[scale=0.3]{figures/estim_param_discr_Q3.pdf}
+
+    \end{center}
+\end{frame}
+
+\begin{frame}{Goodness-of-fit}
+
+\begin{block}{Time-change theorem (Daley and Vere-Jones, 2003)}
+\small
+ A sequence $(T_k)_{k\ge 1}$ is a realization of $N$ if and only if $(\Lambda(T_k))_{k \ge 1}$ is a realization of a homogeneous Poisson process with unit intensity.
+\end{block}
+where $$\Lambda(t)=\int_0^t \lambda(u) du \quad \quad \quad \textrm{(Compensator)}$$
+
+\begin{block}{Goodness-of-fit test}
+\begin{itemize}
+\item $H_0$: ``$(T_k)_{k\ge 1}$ is a realization of a HMM-Hawkes process with parameter \(\theta\)''.
+\item Kolmogorov-Smirnov test between $\left( \Lambda_\theta(T_{k+1}) - \Lambda_\theta(T_k) \right)_{k \ge 1}$ and an exponential distribution $\mathcal{E}(1)$.
+\end{itemize}
+\end{block}
+
+$\blacktriangleright$ Same test for alternative models (Hawkes, HMM-Poisson)  \\
+   $\blacktriangleright$ Train/test samples (resampling procedure, Reynaud-Bouret et al. (2014)) 
+\end{frame}
+
+
+\begin{frame}{Results Goodness-of-fit}
+
+\begin{minipage}{4cm}
+\centering
+\includegraphics[scale=0.2]{figures/ex_traj_Q3.pdf}
+\end{minipage}
+\begin{minipage}{6cm}
+\centering
+    \includegraphics[scale=0.22]{figures/compar_pval_ks_Q3.pdf}
+\end{minipage}
+
+\begin{block}
+$\blacktriangleright$ The GoF test does not differentiate the homogeneous Hawkes process from the HMM-Hawkes process.
+\end{block}
+\end{frame}
+
+\begin{frame}{Results Goodness-of-fit}
+
+\begin{minipage}{4cm}
+\centering
+\includegraphics[scale=0.2]{figures/ex_traj.pdf}
+\end{minipage}
+\begin{minipage}{6cm}
+\centering
+    \includegraphics[scale=0.22]{figures/compar_pval_ks.pdf}
+\end{minipage}
+
+\begin{block}
+$\blacktriangleright$ The GoF test is able to detect that the point process is neither an homogeneous Hawkes nor a HMM-Poisson process
+\end{block}
+\end{frame}
+
+\begin{frame}{Preliminary results on bats data}
+\begin{minipage}{6.6cm}
+    \includegraphics[scale=0.28]{figures/compar_Q_bats.pdf} 
+\end{minipage}
+   \begin{minipage}{3.8cm}
+       \begin{itemize}
+       \item $Q=2$ or $Q=3$ give visually good results
+        \item Choice for $Q$:  BIC criterion, likelihood ratio test?
+       \end{itemize}
+   \end{minipage}
+\end{frame}
+
+
+\begin{frame}{Extension I : Multivariate Hawkes process}
+
+
+
+\includegraphics[scale=0.1,trim=40mm 1050mm 20mm 2050mm]{figures/random_multiv.png}
+
+\begin{block}{Conditional intensity}
+
+$$ \lambda^{(i)}(t)=  \lambda_{0}^i + \underset{i=1}{\overset{M}{\sum}} \underset{T_k^j  < t}{\sum} h_{i,j}(t-T_k^j) 
+$$    
+\end{block}
+
+
+\begin{itemize}
+    \item One dimension for each neuron/species
+    \item Allows to model interactions 
+\end{itemize}
+
+
+\end{frame}
+
+\begin{frame}{Extension I : Multivariate Hawkes process}
+\small
+\begin{minipage}{6cm}
+Example of a bivariate Hawkes process:
+\centering
+    \includegraphics[scale=0.35]{figures/anna_tlse_24.pdf}    
+\end{minipage}
+\begin{minipage}{3.5cm}
+\centering
+    Connectivity graph 
+\includegraphics[scale=0.2,trim=20mm 10mm 10mm 10mm,clip]{figures/communities_d10-2.pdf}
+\end{minipage}
+
+    \begin{block}{Modeling choice}
+       \begin{itemize}
+           \item Only one $(Z_k)_{k \geq 1}$ for the multivariate process
+           \item Each dimension has its own hidden path
+       \end{itemize} 
+    \end{block}
+\end{frame}
+\begin{frame}{Extension II : Changing memory/interaction functions }
+    
+\begin{itemize}
+
+    \item The hidden path can influence the memory/interaction functions
+   \item  $ U_k$ depends on $Z_{k-1}$
+\end{itemize}
+  
+\footnotesize
+\begin{figure}
+   \begin{centering}
+\input{DirectedGM}
+\end{centering}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}{Extension III : Nonlinear Hawkes process}
+
+\begin{itemize}
+    \item Modeling inhibition ($h \leq 0$)
+
+\begin{center}
+    \begin{tabular}{c}
+\includegraphics[scale=0.2]{figures/ann_1.png}
+    \end{tabular}
+\end{center}
+
+      $$ \lambda(t)= \phi \left( \lambda_0+  \underset{T_k \leq t}{\sum} h(t-T_k) \right)
+$$
+
+
+\end{itemize}
+    
+
+\end{frame}
+
+
+\end{document}
+
+\end{document}

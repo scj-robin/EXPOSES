@@ -1,0 +1,545 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+% \usepackage[dvipsnames]{xcolor}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd, mathabx}
+\usepackage{epsfig}
+\usepackage{multirow}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\dN}{\Delta N}
+\newcommand{\dtau}{\Delta \tau}
+
+% Directory
+\newcommand{\figcp}{/home/robin/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+\newcommand{\figDLR}{/home/robin/Bureau/Hawkes/segHP/article/StatComp2023/Revision/figures}
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title{Segmentation and classification of a Hawkes process}
+
+\author[S. Robin]{S. Robin \\ \medskip
+joint work with A. Bonnet
+% , E. Lebarbier, C. Dion-Blanc \refer{DLR24}
+}
+
+\institute[]{Sorbonne université}
+
+\date[RMR'24]{Rencontres Mathématiques de Rouen, Jun. 2024}
+
+%====================================================================
+%====================================================================
+\maketitle
+
+%====================================================================
+%====================================================================
+\section*{Introduction}
+%====================================================================
+\frame{\frametitle{Examples} 
+}
+
+%====================================================================
+\frame{\frametitle{Point process} 
+
+  \vspace{-.1\textheight}
+  $$
+  \includegraphics[width=.6\textwidth]{\figcp/Bon24-Hawkes-Fig1}
+  $$
+ 
+  \begin{itemize}
+  \item $(T_k)_{k \geq 1}$ a random collection of points
+  \item Intensity function $\lambda(t)$: immediate probability of observing an event at time $t$
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Examples}
+  \begin{itemize}
+    \item{Homogeneous Poisson process:} $\lambda(t) \equiv \lambda$
+    \item{Heterogeneous Poisson process:} $\lambda(t) =$ deterministic function
+    \item{Hawkes process:} $\lambda(t) =$ random function of the past
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Segmentation \& classification} 
+
+  \bigskip \bigskip \pause
+  \paragraph{Aim}
+
+  \bigskip \bigskip \pause
+  \paragraph{Issues}
+
+}
+
+%====================================================================
+\frame{\frametitle{Independent case: Poisson process} 
+}
+
+%====================================================================
+%====================================================================
+\section{(Discrete) Hawkes process}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Univariate Hawkes process} 
+
+  $$
+  \includegraphics[width=.6\textwidth]{\figcp/Bon24-Hawkes-Fig2}
+  $$
+ 
+  \bigskip
+  \paragraph{(Conditional) intensity function for the Hawkes process \refer{Haw71a}:}
+  $$
+  \lambda(t \mid \Hcal_t)= \lambda(t) = \lambda_0 + \underset{T_k < t}{\sum} h(t-T_k)
+  $$
+ %\nocite{Haw71b}
+ 
+  \begin{itemize}
+  \item $\lambda_0 =$ baseline 
+  \item $h =$ kernel = influence of past events
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Self-exciting exponential Hawkes process} 
+
+  $$
+  \lambda(t)= \lambda_0 + \underset{T_k < t}{\sum} a e^{-b(t-T_k)}
+  $$
+  \paragraph{Self exciting:} 
+  Each event increases the probability of observing another event
+  
+  \bigskip \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.4\textwidth}}
+      \includegraphics[width=.4\textwidth, trim=0 450 0 0, clip=]{\figcp/Bon24-Hawkes-Fig3}
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.55\textwidth}}
+      \begin{itemize}
+        \setlength{\itemsep}{.75\baselineskip}
+        \item Exponential kernel function \emphase{$h(t)= a e^{-b t}$}
+        \item \emphase{$a \geq 0$} to ensure that $\lambda$ is non negative 
+        \item \emphase{$a/b <1$} to ensure stationarity
+        \item Applications: Sismology, epidemiology, neuroscience, ecology, ...
+      \end{itemize}
+    \end{tabular}
+  \end{tabular}  
+
+}
+
+%====================================================================
+\frame{\frametitle{Discrete time Hawkes process} 
+
+
+\paragraph{Exponential Hawkes process}
+$$
+\lambda(t)=\lambda_0 + \underset{T_k < t}{\sum} a e^{-b(t-T_k)} 
+$$    
+
+\bigskip \bigskip \pause
+\paragraph{Discretization:}
+\begin{itemize}
+  \item $I_k=[ \tau_{k-1};\tau_k]$ with $\tau_k=k\Delta$
+  \item $N_k=N(I_k)$ the number of events on $I_k$
+  $$
+  \includegraphics[width=.5\textwidth, trim=0 200 0 70, clip=]{\figcp/Bon24-Hawkes-Fig4}
+  $$
+  \item Distribution of $(N_k)_{k \geq 1}$?
+\end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Cluster representation} 
+
+  $$
+  \includegraphics[width=.7\textwidth]{\figcp/Bon24-Hawkes-Cluster}
+  $$
+
+  \begin{itemize}
+  \item Immigrants arrive at rate $\lambda_0$ 
+  \item Both immigrants and descendants produce new individuals at rate $h(t - T)$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Discrete time Hawkes process} 
+
+  $N_k=N(I_k)$ the number of events on $I_k=[ \tau_{k-1};\tau_k]$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Count distribution}
+  $$
+  N_k \overset{\Delta}{=} B_k + \sum_{\ell \leq k-1} \sum_{T \in I_\ell} M_T(I_k) + R_k
+  $$
+  \begin{itemize}
+    \item $B_k \sim \mathcal{P}(\lambda_0 \Delta)$ discrete immigrant process
+    \item $ M_T(I_k) \sim \mathcal{P}\left(c(a,b,\Delta) e^{-b(\tau_{k-1}-T)}\right)$ descendants of $T<\tau_{k-1}$
+    \item $R_k$ number of descendants of points $T \in I_k$ within $I_k$
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Approximation when $\Delta$ is small}
+  \begin{itemize}
+    \item  $ M_T(I_k) \simeq \mathcal{P}\left(c(a,b,\Delta) e^{-b(\tau_{k-1}-\tau_{\ell-1)}}\right)$ for $T \in  I_\ell=[\tau_{\ell-1}; \tau_\ell]$
+    \item \emphase{$R_k \simeq 0$}
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Markovian reformulation} 
+
+  \paragraph{Approximation of $N_k$}
+  $$
+  Y_k \mid \{Y_\ell\}_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \sum_{\ell = 1}^{\infty} \alpha \beta^\ell Y_{k-\ell} \right),
+  $$
+  with $\mu=\lambda_0 \Delta$ and $\alpha$, $\beta$ depending on $a$, $b$, $\Delta$.
+
+  \bigskip \bigskip \pause
+  \paragraph{$\{Y_k\}_{k\geq 1}$ is not a Markov chain but...} 
+  Let us define $(U_k)_{k \geq 1}$
+  $$
+  U_1 = 0, \qquad
+  U_k = \alpha Y_{k-1} + \beta U_{k-1}, 
+  $$
+  so that
+  $$
+  Y_k \vert (U_{k-1}, Y_{k-1}) \sim  \mathcal{P}\left(\alpha Y_{k-1} +  \beta U_{k-1} \right),
+  $$   
+  we have that
+  $$
+  \left((Y_k,U_k)\right)_{k \geq 1} \text{ is a Markov Chain}
+  $$
+
+}
+
+%====================================================================
+%====================================================================
+\section{Discrete Markov switching Hawkes process}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Discrete time Hawkes HMM} 
+
+  \paragraph{Model:} $Q$ hidden states
+  \begin{itemize}
+  \item Hidden path: $\{Z_k\}_{k \geq 1}$ homogeneous Markov chain with transition matrix $\pi$
+  \item Observed counts: for $k\geq 1$, set $U_1=0$ and
+    $$
+    Y_k \mid \{Y_\ell\}_{\ell \leq k-1} 
+    \sim \mathcal{P}\left(\emphase{\mu_{Z_k}} + \sum_{\ell = 1}^{\infty} \alpha \beta^\ell Y_{k-\ell} \right)
+    $$  
+  \end{itemize}
+  \paragraph{Graphical model:}
+  \begin{figure}
+    \begin{centering}
+    \input{\figcp/Hawkes-HMM-DirectedGM}
+    \end{centering}
+  \end{figure}
+
+  \bigskip \pause
+  \paragraph{Assumptions:}
+  \begin{itemize}
+    \item The immigration rate varies with the hidden path
+    \item The number of offspring does not vary with the hidden path
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Inference}
+
+  \paragraph{Aim:} Infer the parameter $\theta = ((\mu_q)_{1 \leq q \leq Q}, \pi)$
+  $$
+  \widehat{\theta} = \log p_\theta(Y)
+  $$
+
+  \bigskip \pause
+  \paragraph{EM algorithm:} \refer{DLR77}
+  $$
+  \theta^{(h+1)} 
+  = \underset{\text{\normalsize \emphase{M step}}}{\underbrace{\argmax_\theta}} \; \underset{\text{\normalsize \emphase{E step}}}{\underbrace{\Esp_{\theta^{(h)}}}}[\log p_\theta(Y, Z) \mid Y]
+  $$
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item E step: Evaluate $\ell^{(h)}(\theta) = \Esp_{\theta^{(h)}}[\log p_\theta(Y, Z) \mid Y]$ (forward-backward recursion)
+    \item M step: Gradient descent, computing $\nabla_\theta \ell^{(h)}(\theta)$ by recursion
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{By-product:} Classification
+  $$
+  \widehat{Z}_k = \argmax_q P_{\widehat{\theta}}\{Z_k = q \mid Y \}, 
+  \qquad
+  \widehat{Z} = \argmax_z p_{\widehat{\theta}}(Y, Z=z) 
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Synthetic data: classification} 
+
+\begin{center}
+  \begin{tabular}{c||c|cccc}
+    & States &  1 &2  & 3\\
+    \hline
+    \multirow{3}{*}{Hawkes HMM}& 1 & 273.7 & 28.7 & 14.2\\
+    & 2 &  37 & 166.3 & 96.9\\
+    & 3 &  4.7  & 24.7 & 353.8 \\
+    \hline 
+    \hline
+    \multirow{3}{*}{Poisson HMM}& 1 & 181 & 122.8 & 12.8\\
+    &2 &  136 & 111.1 & 53.1\\
+    & 3 &  45.4 & 115.2 & 222.6
+  \end{tabular} 
+
+  \vspace{0.01\textheight}
+  \begin{tabular}{cc}
+    \includegraphics[scale=0.25]{\figcp/Bon24-Hawkes-Fig5a}    & 
+    \includegraphics[scale=0.25]{\figcp/Bon24-Hawkes-Fig5b}
+  \end{tabular}
+\end{center}
+
+
+}
+
+%====================================================================
+\frame{\frametitle{Synthetic data: parameter estimation} 
+
+  $$
+  \includegraphics[width=.5\textwidth]{\figcp/Bon24-Hawkes-Fig6}
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{} 
+
+}
+
+%====================================================================
+%====================================================================
+\section{Goodness of fit}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Model selection.} 
+
+  \paragraph{Aim:} select the number of hidden states $Q$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Penalized likelihood:}
+  $$
+  \log p_\theta(Y) = \Esp_\theta[\log p_\theta(Y, Z) \mid Y] + \Hcal(p_\theta(Z \mid Y))
+  $$
+  
+  \bigskip 
+  \ra Standard criterion for discrete time HMM
+  \begin{align*}
+    BIC(Q) & = \log p_{\widehat{\theta}_Q}(Y) - pen(\widehat{\theta}_Q), \\
+    ICL(Q) & = \log p_\theta(Y)- \Hcal(p_{\widehat{\theta}_Q}(Z \mid Y)) - pen(\widehat{\theta}_Q)
+  \end{align*}
+  with
+  $$
+  pen(\widehat{\theta}_Q) = \frac12 \log(N) (Q^2 + 2)
+  $$
+  where $N =$ number of time steps (i.e. discretized intervals)
+}
+
+%====================================================================
+\frame{\frametitle{Goodness-of-fit} 
+
+  \paragraph{Time-change theorem \refer{DaV03}}
+  A sequence $(T_k)_{k\ge 1}$ is a realization of $N$ if and only if $(\Lambda(T_k))_{k \ge 1}$ is a realization of a homogeneous Poisson process with unit intensity.
+  where $$\Lambda(t)=\int_0^t \lambda(u) du \quad \quad \quad \text{(Compensator)}$$
+
+  \bigskip \pause 
+  \paragraph{Goodness-of-fit test}
+  \begin{itemize}
+  \item $H_0$: ``$(T_k)_{k\ge 1}$ is a realization of a HMM-Hawkes process with parameter $\theta$''.
+  \item Kolmogorov-Smirnov test between 
+  $$
+  \left( \Lambda_{\widehat{\theta}}(T_{k+1}) - \Lambda_{\widehat{\theta}}(T_k) \right)_{k \ge 1}
+  $$
+  and an exponential distribution $\mathcal{E}(1)$.
+  \end{itemize}
+
+  \bigskip \bigskip 
+  \paragraph{Comments}
+  \begin{itemize}
+   \item Same test for alternative models (Hawkes, HMM-Poisson)
+   \item Train/test samples (resampling procedure, \refer{RRG14}) 
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Synthetic data: Goodness-of-fit (1/2)}
+
+  \begin{center}
+    \begin{tabular}{cc}
+      \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[width=.4\textwidth]{\figcp/Bon24-GOF-Ex1-Path}
+      \end{tabular}
+      &
+      \vspace{-.05\textwidth}
+      \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[width=.4\textwidth]{\figcp/Bon24-GOF-Ex1-Pval}
+      \end{tabular}
+    \end{tabular}
+  \end{center}
+  
+  \bigskip \bigskip 
+  \begin{itemize}
+    \item The test rejects the homogeneous Poisson but does not differentiate the homogeneous Hawkes process from the HMM-Hawkes process.
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Synthetic data: Goodness-of-fit (2/2)}
+
+  \begin{center}
+    \begin{tabular}{cc}
+      \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[width=.4\textwidth]{\figcp/Bon24-GOF-Ex2-Path}
+      \end{tabular}
+      &
+      \vspace{-.05\textwidth}
+      \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[width=.4\textwidth]{\figcp/Bon24-GOF-Ex2-Pval}
+      \end{tabular}
+    \end{tabular}
+  \end{center}
+  
+  \bigskip \bigskip 
+  \begin{itemize}
+    \item The test is able to detect that the point process is neither an homogeneous Hawkes nor a HMM-Poisson process
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Bat datasets} 
+  
+  $$
+  \todo{!!!}
+  $$
+
+}
+
+%====================================================================
+%====================================================================
+\section*{Future works}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Some future works (1/2)} 
+
+  \paragraph{Multivariate Hawkes process:} Consider $p$ simultaneous processes $(N^{(i)})_{1 \leq i \leq p}$ (neurons, bat species, ...)
+  $$ 
+  \lambda^{(i)}(t)=  \lambda_{0}^i + \underset{i=1}{\overset{M}{\sum}} \underset{T_k^j  < t}{\sum} h_{i,j}(t-T_k^j) 
+  $$    
+  
+  \bigskip
+  {Exponential version:} 
+  $$
+  h_{i,j}(t-T_k^j) = a_{i, j} e^{-b (t - T_k^j)}
+  $$
+  where sparse interaction matrix $A = [a_{i, j}]_{1 \leq i, j \leq p}$
+  
+  \bigskip 
+  \begin{itemize}
+    \item Interaction network between neurons, species, ...
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Some future works (2/2)} 
+
+  \paragraph{Modelling inhibition:} Non-linear Hawkes process 
+  $$ 
+  \lambda(t)= \phi \left( \lambda_0 +  \underset{T_k \leq t}{\sum} h(t-T_k) \right)
+  $$  
+
+  \bigskip \bigskip \pause
+  \paragraph{Effect of the hidden state:} State-dependent parameters $\alpha$ and/or $\beta$
+  $$
+  Y_k \mid \{Y_\ell\}_{\ell \leq k-1} 
+    \sim \mathcal{P}\left(\emphase{\mu_{Z_k}} + \sum_{\ell = 1}^{\infty} \emphase{\alpha_{Z_k}} (\emphase{\beta_{Z_k}})^\ell Y_{k-\ell} \right)
+  $$  
+
+}
+
+%====================================================================
+\frame{ \frametitle{References}
+  {
+   \footnotesize
+   \bibliography{/home/robin/Biblio/BibGene}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+%====================================================================
+\backupbegin 
+\section*{Backup}
+%====================================================================
+\frame{ \frametitle{Backup}
+
+  \paragraph{Conversion formulas} from continuous to discrete Hawkes
+  $$
+  \alpha  = \frac{e^{b \Delta} - 1}{b}, \qquad \beta = e^{-b \Delta}
+  $$
+    
+  \bigskip \pause 
+  \paragraph{3-step initialization}
+  \begin{itemize}
+    \item Homogeneous Hawkes for the reproduction parameters $\alpha$ and $\beta$ \\
+    ({\tt hawkesbow} R package \refer{Che21})
+    \item Poisson-HMM for the rates $\mu_1, \dots, \mu_Q$
+    \item Correction $\mu_k \rightarrow \widetilde{\mu}_k$ to account for reproduction rate
+  \end{itemize}
+  
+}
+
+%====================================================================
+\backupend 
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+  
