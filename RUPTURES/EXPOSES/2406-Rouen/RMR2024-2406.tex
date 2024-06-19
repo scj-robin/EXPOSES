@@ -1,4 +1,4 @@
-\documentclass[9pt]{beamer}
+\documentclass[8pt]{beamer}
 
 % Beamer style
 %\usetheme[secheader]{Madrid}
@@ -48,7 +48,10 @@
 \title{Segmentation {\sl and classification} of a {\sl Hawkes} process}
 
 \author[S. Robin]{S. Robin \\ \medskip
-joint work with A. Bonnet
+\begin{tabular}{rl}
+  joint work with & C. Dion-Blanc, E. Lebarbier \\
+  and & A. Bonnet 
+\end{tabular}
 % , E. Lebarbier, C. Dion-Blanc \refer{DLR24}
 }
 
@@ -70,7 +73,7 @@ joint work with A. Bonnet
     \hspace{-.04\textwidth}
     \begin{tabular}{p{.5\textwidth}}
       \paragraph{Counting process} \\
-      Recording of bat cries in continuous time
+      Overnight recording of bat cries in continuous time
       
       \bigskip
       \begin{itemize}
@@ -99,11 +102,11 @@ joint work with A. Bonnet
 %====================================================================
 \frame{\frametitle{Point process} 
 
-  \vspace{-.1\textheight}
+  \paragraph{Reminder.}
+%   \vspace{-.1\textheight}
   $$
-  \includegraphics[width=.6\textwidth]{\figcp/Bon24-Hawkes-Fig1}
-  $$
- 
+  \includegraphics[width=.6\textwidth, trim=0 10 0 0, clip=]{\figcp/Bon24-Hawkes-Fig1}
+  $$ 
   \begin{itemize}
     \setlength{\itemsep}{0.5\baselineskip}
     \item $(T_k)_{k \geq 1}$ a random collection of points
@@ -123,11 +126,12 @@ joint work with A. Bonnet
 }
 
 %====================================================================
-\frame{\frametitle{Segmentation \& classification of a point process} 
+\frame{\frametitle{Segmentation (\& classification) of a point process} 
 
   \paragraph{Aim}
+  \medskip
   \begin{enumerate}
-    \setlength{\itemsep}{0.5\baselineskip}
+    \setlength{\itemsep}{0.75\baselineskip}
     \item Propose a set of reasonably realistic models;
     \item Design an (efficient) algorithm to get the parameter estimates;
     \item Choose among the models.
@@ -135,28 +139,165 @@ joint work with A. Bonnet
   
   \bigskip \bigskip \pause
   \paragraph{Example} Segmentation of a Poisson process \refer{DLR23}:
+  \medskip
   \begin{enumerate}
-    \setlength{\itemsep}{0.5\baselineskip}
-    \item Model = Poisson process with piece-wise constant intensity function
-    \item Algorithm = dynamic programming in (less than) $\Ocal(N(T)^2)$
+    \setlength{\itemsep}{0.75\baselineskip}
+    \item Model = Poisson process with piece-wise constant intensity function;
+    \item Algorithm = dynamic programming in (less than) $\Ocal(N(T)^2)$;
     \item Model selection = cross validation (using thining)
-  \end{enumerate}
-
-  \bigskip \bigskip \pause
-  \paragraph{But} Segmenting a Poisson process
-  \begin{enumerate}
-    \setlength{\itemsep}{0.5\baselineskip}
-    \item Does not fit the scope of RMR2024\footnote{Modèles statistiques pour des données dépendantes et applications}
-    \item Does not provide any classification (although doable);
-    \item Does not account for the the self exciting (or inhibiting) nature of some processes.
   \end{enumerate}
 
 }
 
 %====================================================================
 %====================================================================
+\section{Segmentation of a Poisson process}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Segmentation of a Poisson process (1/3)} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Model.} \\ ~ \\
+      Change-points
+      $$
+      (\tau_0 =) 0 < \tau_1 \dots < \tau_{K-1} < 1 (= \tau_K)
+      $$ \\
+      
+      For $t \in I_k = ]\tau_{k-1}, \tau_k]$:
+      $$
+      \lambda(t) = \lambda_k
+      $$ \\
+      
+      \ra Continuous piece-wise linear cumulated intensity function      
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \paragraph{Bat cries}\footnote{source: Vigie-Chiro program, Y. Bas, CESCO-MNHN} \\
+        \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/Chiro-sequence2295-path}
+        \onslide<2>
+        \paragraph{Bat cries}\footnote{source: Vigie-Chiro program, Y. Bas, CESCO-MNHN} \\
+        \includegraphics[width=.45\textwidth, trim=0 10 0 50, clip=]{\figcp/Chiro-sequence2295-K5-seg}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  
+  \bigskip \pause
+  \begin{itemize}
+   \item Segmentation algorithm: find the 'optimal' $(\tau, \lambda)$ in a reasonnable time
+   \item Model selection: choose $K$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Segmentation of a Poisson process (2/3)} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Classical contrasts} 
+      (negative log-likelihood, least-square) are \\ ~
+      \begin{itemize}
+        \setlength{\itemsep}{1.05\baselineskip}
+        \item additive wrt the segments and 
+        \item concave wrt the length of each segment,
+      \end{itemize}
+      ~ \\ ~ \\ ~ \\ 
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<2->
+        \includegraphics[width=.45\textwidth, trim=0 0 20 50, clip=]{\figcp/FigSegPP-simul-n10-K1-seed1-Contrast}  
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  
+  \vspace{-.075\textheight}
+  \onslide<3->{
+  \ra The set of optimal change points in included in
+  $$
+  \{T_1^-, T_1, T_2^-, T_2, \dots T_i^-, T_i, \dots, T_n^-, T_n\}
+  $$
+  
+  \bigskip
+  \ra The continuous optimization problem turns into a discrete optimization problem \\
+  \ra Dynamic programming algorithm $= \Ocal(n^2)$.}
+
+}
+
+%====================================================================
+\frame{\frametitle{Segmentation of a Poisson process (3/3)} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Lazy model selection.} Thining property: \\ ~
+      \begin{itemize}
+        \setlength{\itemsep}{1.05\baselineskip}
+        \item independent processes with proportional internsities and common change point;
+        \item cross-validation procedure to choose $K$.
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.075\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \includegraphics[width=.5\textwidth, trim=0 225 0 225, clip=]{\figcp/FigSegPP-ThiningOriginal.png} \\
+        \includegraphics[width=.5\textwidth, height=.3\textheight, trim=0 0 0 0, clip=]{\figcp/FigSegPP-ThiningOriginalLambda.png}
+        \onslide<2->
+        \includegraphics[width=.5\textwidth, trim=0 225 0 225, clip=]{\figcp/FigSegPP-ThiningSampling.png} \\
+        \includegraphics[width=.5\textwidth, height=.3\textheight, trim=0 0 0 0, clip=]{\figcp/FigSegPP-ThiningSamplingLambda.png}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+  
+  \bigskip \bigskip \pause \pause
+  \paragraph{But segmenting a Poisson process}
+  \medskip
+  \begin{enumerate}
+    \setlength{\itemsep}{0.75\baselineskip}
+    \item Does not provide any classification (although doable);
+    \item Does not account for the the self exciting (or inhibiting) nature of some processes; 
+    \item Does not fit the scope of RMR2024\footnote{Modèles statistiques pour des données dépendantes et applications}.
+  \end{enumerate}
+
+}
+
+% %====================================================================
+% \frame{\frametitle{Segmentation \& classification of a point process} 
+% 
+%   \paragraph{But} segmenting a Poisson process
+%   \medskip
+%   \begin{enumerate}
+%     \setlength{\itemsep}{0.75\baselineskip}
+%     \item Does not provide any classification (although doable);
+%     \item Does not account for the the self exciting (or inhibiting) nature of some processes; 
+%     \item Does not fit the scope of RMR2024\footnote{Modèles statistiques pour des données dépendantes et applications}.
+%   \end{enumerate}
+% 
+%   \bigskip \bigskip \pause
+%   \paragraph{Here:} Segmentation \& classification of a Hawkes process
+%   \medskip
+%   \begin{itemize}
+%     \setlength{\itemsep}{0.75\baselineskip}
+%     \item Hawkes process: intensity depends on the past;
+%     \item Discrete approximation, to make thing manaegable;
+%     \item Hidden Markov model to achieve both segmentation \& classification.
+%   \end{itemize}
+% 
+% }
+
+%====================================================================
+%====================================================================
 \section{(Discrete) Hawkes process}
-\frame{\frametitle{Outline} \tableofcontents}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
 \frame{\frametitle{Univariate Hawkes process} 
@@ -198,7 +339,7 @@ joint work with A. Bonnet
     \hspace{-.05\textwidth}
     \begin{tabular}{p{.55\textwidth}}
       \begin{itemize}
-        \setlength{\itemsep}{1\baselineskip}
+        \setlength{\itemsep}{1.5\baselineskip}
         \item Exponential kernel function \emphase{$h(t)= a e^{-b t}$}
         \item \emphase{$a \geq 0$} to ensure that $\lambda$ is non negative 
         \item \emphase{$a/b <1$} to ensure stationarity
@@ -219,7 +360,7 @@ $$
 $$    
 
 \bigskip \bigskip \pause
-\paragraph{Discretization}
+\paragraph{Discretization} \refer{Seo15}
 \begin{itemize}
   \setlength{\itemsep}{0.75\baselineskip}
   \item $I_k=[ \tau_{k-1};\tau_k]$ with $\tau_k=k\Delta$
@@ -279,9 +420,9 @@ $$
   $$
   with $\mu=\lambda_0 \Delta$ and $\alpha$, $\beta$ depending on $a$, $b$, $\Delta$.
 
-  \bigskip \bigskip \pause
-  \paragraph{$\{Y_k\}_{k\geq 1}$ is not a Markov chain but} 
-  defining $(U_k)_{k \geq 1}$
+  \bigskip \bigskip 
+  \paragraph{$\{Y_k\}_{k\geq 1}$ is not a Markov chain but} \pause
+  defining $\{U_k\}_{k \geq 1}$
   $$
   U_1 = 0, \qquad
   U_k = \emphase{\alpha Y_{k-1} + \beta U_{k-1}}, 
@@ -290,9 +431,9 @@ $$
   $$
   Y_k \vert (U_{k-1}, Y_{k-1}) \sim  \mathcal{P}\left(\alpha Y_{k-1} +  \beta U_{k-1} \right),
   $$   
-  we have that
+  then we have that
   $$
-  \left((Y_k,U_k)\right)_{k \geq 1}
+  \left\{(Y_k,U_k)\right\}_{k \geq 1}
   $$
  is a Markov Chain.
 }
@@ -313,19 +454,21 @@ $$
     \sim \mathcal{P}\left(\emphase{\mu_{Z_k}} + \sum_{\ell = 1}^{\infty} \alpha \beta^\ell Y_{k-\ell} \right)
     $$  
   \end{itemize}
-  \paragraph{Graphical model:}
-  \begin{figure}
-    \begin{centering}
-    \input{\figcp/Hawkes-HMM-DirectedGM}
-    \end{centering}
-  \end{figure}
-
+  
   \bigskip \pause
   \paragraph{Assumptions:}
   \begin{itemize}
     \item The immigration rate varies with the hidden path
     \item The number of offspring does not vary with the hidden path
   \end{itemize}
+
+  \bigskip  \pause
+  \paragraph{Graphical model:}
+  \begin{figure}
+    \begin{centering}
+    \input{\figcp/Hawkes-HMM-DirectedGM}
+    \end{centering}
+  \end{figure}
 
 }
 
@@ -497,9 +640,9 @@ $$
 }
 
 %====================================================================
-\frame{\frametitle{Bat cries} 
+\frame{\frametitle{Preliminary results on bat cries} 
   
-  \paragraph{Back to the example} Recording of bat cries over one night:
+  \paragraph{Back to} the recording of bat cries over one night:
 %   $$
 %   \includegraphics[width=.9\textwidth, height=.5\textwidth]{\figcp/Bon24-Hawkes-CompareQ}
 %   $$
@@ -510,7 +653,7 @@ $$
     \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q2tau} &
     \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q3tau} &
     \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q4tau} 
-  \end{tabular}
+    \end{tabular}
   $$
   \begin{itemize}
     \item $Q = 2, 3, $ hidden states? ($\widehat{Q}_{BIC} = 1$ or $2$, depending on $N$)
@@ -527,7 +670,7 @@ $$
 %====================================================================
 \frame{\frametitle{Some future works (1/2)} 
 
-  \paragraph{Multivariate Hawkes process:} Consider $p$ simultaneous processes $(N^{(i)})_{1 \leq i \leq p}$ (neurons, bat species, ...)
+  \paragraph{Multivariate Hawkes process:} Consider $p$ simultaneous processes $(N^{(i)})_{1 \leq i \leq p}$ (i.e. $p$ neurons, bat species, ...)
   $$ 
   \lambda^{(i)}(t)=  \lambda_{0}^i + \underset{i=1}{\overset{M}{\sum}} \underset{T_k^j  < t}{\sum} h_{i,j}(t-T_k^j) 
   $$    
@@ -562,6 +705,7 @@ $$
   $$ 
   \lambda(t)= \phi \left( \lambda_0 +  \underset{T_k \leq t}{\sum} h(t-T_k) \right)
   $$  
+  with $h < 0$.
 
   \bigskip \bigskip \pause
   \paragraph{Effect of the hidden state:} State-dependent parameters $\alpha$ and/or $\beta$
@@ -586,7 +730,7 @@ $$
 \backupbegin 
 \section*{Backup}
 %====================================================================
-\frame{ \frametitle{Backup}
+\frame{ \frametitle{Backup: Discrete HMM}
 
   \paragraph{Conversion formulas} from continuous to discrete Hawkes
   $$
@@ -602,6 +746,22 @@ $$
     \item Correction $\mu_k \rightarrow \widetilde{\mu}_k$ to account for reproduction rate
   \end{itemize}
   
+}
+
+%====================================================================
+\frame{ \frametitle{Backup: GoF}
+
+  \paragraph{Change-time} for the recording of bat cries over one night:
+  $$
+  \begin{tabular}{cccc}
+    $Q = 1$ & $Q = 2$ & $Q = 3$ & $Q = 4$ \\
+    \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q1gof} &
+    \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q2gof} &
+    \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q3gof} &
+    \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q4gof}   
+    \end{tabular}
+  $$
+
 }
 
 %====================================================================
