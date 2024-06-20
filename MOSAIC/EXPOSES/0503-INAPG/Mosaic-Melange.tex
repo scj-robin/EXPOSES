@@ -1,0 +1,665 @@
+\documentclass[dvips, french, lscape]{foils}
+%\documentclass[dvips, french]{slides}
+\textwidth 18cm
+\textheight 25cm 
+\topmargin -1cm 
+\oddsidemargin  -1cm 
+\evensidemargin  -1cm
+
+% Maths
+% \usepackage{amsfonts, amsmath, amssymb}
+% \newcommand{\Acal}{\mathcal{A}}
+% \newcommand{\Ccal}{\mathcal{C}}
+% \newcommand{\Dcal}{\mathcal{D}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Ncal}{\mathcal{N}}
+% \newcommand{\Pcal}{\mathcal{P}}
+% \newcommand{\Ucal}{\mathcal{U}}
+% \newcommand{\Hbf}{{\bf H}}
+% \newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Lcal}{\mathcal{L}}
+% \newcommand{\Tcal}{\md'{\sl E. coli} athcal{T}}
+% \newcommand{\alphabf}{\mbox{\mathversion{bold}{$\alpha$}}}
+% \newcommand{\betabf}{\mbox{\mathversion{bold}{$\beta$}}}
+% \newcommand{\gammabf}{\mbox{\mathversion{bold}{$\gamma$}}}
+% \newcommand{\psibf}{\mbox{\mathversion{bold}{$\psi$}}}
+% \newcommand{\taubf}{\mbox{\mathversion{bold}{$\tau$}}}
+% \newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Sbf}{{\bf S}}
+% \newcommand{\bps}{\mbox{bps}}
+% \newcommand{\ubf}{{\bf u}}
+% \newcommand{\vbf}{{\bf v}}
+\newcommand{\Esp}{{\mathbb E}}
+% \newcommand{\Var}{{\mathbb V}}
+% \newcommand{\Indic}{{\mathbb I}}
+% \newcommand{\liste}{$\bullet \quad$}
+
+% Couleur et graphiques
+\usepackage{color}
+\usepackage{graphics}
+\usepackage{epsfig} 
+\usepackage{pstcol}
+
+% Texte
+\usepackage{lscape}
+\usepackage{../../fancyheadings, rotating, enumerate}
+%\usepackage{../../../Latex/fancyheadings, rotating, enumerate}
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\definecolor{darkgreen}{cmyk}{0.5, 0, 0.5, 0.5}
+\definecolor{orange}{cmyk}{0, 0.6, 0.8, 0}
+\definecolor{jaune}{cmyk}{0, 0.5, 0.5, 0}
+\newcommand{\textblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\textred}[1]{\textcolor{red}{#1}}
+\newcommand{\textgreen}[1]{\textcolor{green}{ #1}}
+\newcommand{\textlightgreen}[1]{\textcolor{green}{#1}}
+%\newcommand{\textgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\textorange}[1]{\textcolor{orange}{#1}}
+\newcommand{\textyellow}[1]{\textcolor{yellow}{#1}}
+
+% Sections
+\newcommand{\chapter}[1]{\centerline{\Large \textblue{#1}}}
+\newcommand{\section}[1]{\centerline{\large \textblue{#1}}}
+%\newcommand{\subsection}[1]{\noindent{\large \textblue{#1}}}
+\newcommand{\paragraph}[1]{\noindent {\textblue{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\landscape
+\headrulewidth 0pt 
+\pagestyle{fancy} 
+\cfoot{}
+\rfoot{}
+\rhead{\begin{rotate}{90}{
+      \hspace{-.5cm} \tiny \thepage
+      }\end{rotate}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Classification des boucles du génome d'{\sl E. coli} }
+\bigskip
+\chapter{par modèle de mélange} 
+
+\bigskip
+\bigskip
+\centerline{\large E. Lebarbier, F. Picard, S. Robin + H. Chiappelo,
+  M. El Karoui}
+
+\bigskip
+\bigskip
+\paragraph{Objectif.}
+Définir une typologie des boucles des 3 souches ({\sl K12}, {\sl CFT},
+{\sl Sakai}) en fonction de 
+\begin{itemize}
+\item leur longueur
+\item leur composition
+\end{itemize}
+
+\bigskip
+\bigskip
+\paragraph{Données.} \\ 
+\centerline{
+\begin{tabular}{lcccc}
+  Souche & Nb. boucles & Longueur moyenne & (min,  &  max) \\
+  \hline
+  {\sl K12} & 827 & 1.1 kb & (20 b, & 40 kb) \\
+  {\sl CFT} & 769 & 1.9 kb & (20 b, & 150 kb) \\
+  {\sl Sakai} & 795 & 2.2 kb & (20 b, & 97 kb)
+\end{tabular}
+}
+
+\bigskip
+\bigskip
+\paragraph{Pour l'instant}, on travaille souche par souche (pas
+d'étude globale).
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Modèle de mélange pour les longueurs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bigskip 
+On observe $K$ séquences $S_1, \dots, S_K$ de longueurs respectives
+$L_1, \dots, L_K$. On suppose que ces séquences sont, en fait, issues
+de $Q$ populations différentes en termes de distribution des longueurs.  
+$$
+\begin{tabular}{cc}
+  \epsfig{file=sakai_histo_normale_loglongtronq.eps, clip=, bbllx=70,
+    bblly=212, bburx=550, bbury=600, width=20cm, height=12cm} 
+\end{tabular}
+$$
+
+Pour la population $q$, on note
+\begin{itemize}
+\item \textblue{$\pi_q$} la proportion de séquences qui y appartiennent
+\item \textblue{$\lambda_q$} la longueur moyenne des séquences.
+\end{itemize}
+
+\bigskip
+\paragraph{Distribution des longueurs dans une population.} Elle est
+définie par une loi de probabilité choisie {\it a priori}. 
+$$
+\begin{array}{cc}
+  \begin{array}{l}
+    \mbox{Par exemple~:} \\
+    \\
+    L \sim \Ecal(1/\lambda_q) :
+    \qquad \Pr\{L > \ell\} = e^{-\ell/\lambda_q}.    \\
+    ~\\
+    ~\\
+    \mbox{ou encore}
+  \end{array}
+  &
+  \begin{array}{c}
+    \epsfig{file=DensExpo.eps, clip=, bbllx=70, bblly=195, bburx=550,
+      bbury=600, width=10cm, height=5cm}
+  \end{array}
+\end{array}
+$$
+$$
+\log L \sim \Ecal(1/\lambda_q), 
+\qquad
+L \sim \Ncal(\lambda_q, \sigma^2_q),
+\qquad
+\log L \sim \Ncal(\lambda_q, \sigma^2_q).
+$$
+
+On peut ainsi calculer la (densité de) probabilité d'observer la
+longueur $L_k$ pour si la séquence $k$ est issue de la population $q$.
+Par exemple~:
+$$
+P(L_k \;|\; \lambda_q) = \frac1{\lambda_q} \exp(-L_k /\lambda_q).
+$$
+
+% \begin{tabular}{ccc}
+%   \begin{tabular}{l}
+%     Par exemple~:\\
+%     \\
+%     $P(L_k \;|\; \lambda_q) = \frac1{\lambda_q} \exp(-L_k /\lambda_q).$ \\  
+%     \\
+%     \\
+%     à droite, $\lambda_k = 10\;000$
+%   \end{tabular}
+%   & 
+%   \begin{tabular}{c}
+%     \epsfig{file=DensExpo.eps, clip=, bbllx=70, bblly=212, bburx=550,
+%       bbury=600, width=14cm, height=7cm}
+%   \end{tabular}
+% \end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Appartenance à une population}
+
+\bigskip
+\paragraph{Variable d'appartenance.} Pour chaque couple
+séquence/population, on définit la variable 
+$$
+\textblue{Z_{kq}} = \left\{ 
+  \begin{tabular}{ll} 
+    1 & si la séquence $k$ vient de la population $q$ \\
+    0 & sinon
+  \end{tabular}
+\right.
+$$
+La proportion $\pi_q = \Pr\{Z_{kq} = 1\}$ s'interprète comme
+une \textblue{probabilité {\it a priori}}.
+
+\medskip \centerline{\framebox{Les $Z_{kq}$ ne sont pas observés,
+    l'objectif est de les deviner (estimer).}}
+
+\bigskip
+\paragraph{Probabilité {\it a posteriori}.} La règle de Bayes donne la
+probabilité que la séquence $k$ (de longueur $L_k$) soit issue de la
+population $q$, connaissant sa longueur~: 
+$$
+\textblue{\tau_{kq}} = \Pr\{Z_{kq} = 1 \;|\; L_k\} = \frac{\pi_q
+  P(L_k \;|\; \lambda_q)}{\sum_{q'} \pi_{q'} P(L_k \;|\; \lambda_{q'})}.
+$$
+
+%\bigskip
+\paragraph{Affectation.} On utilise la règle du \textblue{maximum  {\it a
+    posteriori} (MAP)} en classant la séquence $k$ dans la population
+$q$ telle que $\tau_{kq}$ soit maximale.
+
+\newpage
+\paragraph{Exemple pour {\sl Sakai}.}
+$$
+\begin{tabular}{cc}
+  Histogramme ($\log L_k$) & ${\tau}_{kq} = {\Pr}\{k
+  \in q\;|\; L_k\}$ \\
+  \epsfig{file=sakai_histo_normale_loglongtronq.eps, clip=, bbllx=70,
+    bblly=212, bburx=550, bbury=600, width=12cm, height=12cm} 
+  & 
+  \epsfig{file=sakai_tau_normale_loglongtronq.eps, clip=, bbllx=70,
+    bblly=212, bburx=550, bbury=600, width=12cm, height=12cm} 
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Estimation des paramètres}
+
+\paragraph{Algorithme E-M.} On alterne les deux étapes
+\begin{description}
+\item[Étape E~:] calcul des $\widehat{\tau}_{kq}$ à partir des proportions
+  $\widehat{\pi}_q$ et des paramètres $\widehat{\lambda}_q$ estimés~:
+  $$
+  \widehat{\tau}_{kq} = \frac{\widehat{\pi}_q P(L_k \;|\;
+    \widehat{\lambda}_q)}{\sum_{q'} \pi_{q'} P(L_k \;|\;
+    \widehat{\lambda}_{q'})}
+  $$
+\item[Étape M~:] estimation des proportions $\widehat{\pi}_q$ et des
+  paramètres $\widehat{\lambda}_q$ à partir des $\widehat{\tau}_{kq}$~:
+  $$
+  \widehat{\pi}_q = \frac1K \sum_k \widehat{\tau}_{kq}, 
+  \qquad
+  \widehat{\lambda}_q = \left( \sum_k \widehat{\tau}_{kq} L_k\right)
+  \left/ \left( \sum_k \widehat{\tau}_{kq} \right) \right.  
+  $$
+\end{description}
+
+Cette algorithme fournit les estimations des paramètres ($\pi_q$,
+$\lambda_q$, {\it etc.}) qui maximise la vraisemblance des
+observations.
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Choix du nombre de groupes}
+
+\paragraph{Critère de vraisemblance pénalisé.} La vraisemblance
+$\Lcal(Q)$ des données croît systématiquement avec le nombre de
+groupes $Q$.
+
+On utilise des critères de la forme $\Lcal(Q) - pen(Q)$. 
+$$
+\begin{tabular}{cc}
+  \begin{tabular}{l}
+    {\sl Sakai} \\
+    \\
+    $L \sim \Ecal$ (tronquée) \\
+    \\
+    \textred{\bf --} $\Lcal(Q)$ \\
+    \\
+    \textblue{\bf --} $BIC(Q) = \Lcal(Q) - (2Q - 1) \log K$ \\
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \epsfig{file=LV_BIC_sakai_exp_longtronq.eps, clip=, bbllx=70,
+      bblly=212, bburx=550, bbury=600, width=10cm, height=10cm} \\
+  \end{tabular}
+\end{tabular}
+$$
+On obtient ici $Q^* = 4$ groupes.
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Choix de la distribution}
+\vspace{-1cm}
+\begin{tabular}{ccc}
+  \begin{tabular}{c}
+    $L \sim \Ecal$ (tronquée)  \\
+    \epsfig{file=sakai_histo_exp_longtronq.eps, clip=, bbllx=70,
+      bblly=212, bburx=550, bbury=600, width=10cm, height=7.5cm} \\
+    $\log L \sim \Ecal$ (tronquée) \\
+    \epsfig{file=sakai_histo_exp_loglongtronq.eps, clip=, bbllx=70,
+      bblly=212, bburx=550, bbury=600, width=10cm, height=7.5cm} 
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    $\log L \sim \Ncal$ (tronquée) \\
+    \epsfig{file=sakai_histo_normale_loglong.eps, clip=, bbllx=70,
+      bblly=212, bburx=550, bbury=600, width=10cm, height=7.5cm} \\
+    $\log L \sim \Lcal \Ncal$ (tronquée) \\
+    \epsfig{file=sakai_histo_normale_loglongtronq.eps, clip=, bbllx=70,
+      bblly=212, bburx=550, bbury=600, width=10cm, height=7.5cm} 
+  \end{tabular}
+\end{tabular}
+
+\paragraph{Influence sur la probabilités {\it a posteriori}.} \\
+\begin{tabular}{ccc}
+  \begin{tabular}{c}
+    $L \sim \Ecal$ (tronquée)  \\
+    \epsfig{file=sakai_tau_exp_longtronq.eps, clip=, bbllx=70,
+      bblly=212, bburx=550, bbury=600, width=10cm, height=7.5cm} \\
+    $\log L \sim \Ecal$ (tronquée) \\
+    \epsfig{file=sakai_tau_exp_loglongtronq.eps, clip=, bbllx=70,
+      bblly=212, bburx=550, bbury=600, width=10cm, height=7.5cm} 
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    $\log L \sim \Ncal$ (tronquée) \\
+    \epsfig{file=sakai_tau_normale_loglong.eps, clip=, bbllx=70,
+      bblly=212, bburx=550, bbury=600, width=10cm, height=7.5cm} \\
+    $\log L \sim \Lcal\Ncal$ (tronquée) \\
+    \epsfig{file=sakai_tau_normale_loglongtronq.eps, clip=, bbllx=70,
+      bblly=212, bburx=550, bbury=600, width=10cm, height=7.5cm} 
+  \end{tabular}
+\end{tabular}
+
+\newpage
+\paragraph{Attention à l'échelle log.} 
+
+\begin{tabular}{cc}
+  Echelle normale ($L_k$) & Echelle log ($\log L_k$) \\
+  \multicolumn{2}{c}{Histogramme des longueurs} \\
+  \begin{tabular}{c}
+    \epsfig{file=sakai_histo_long.eps, clip=, bbllx=70,
+      bblly=196, bburx=550, bbury=600, width=11cm, height=6cm} 
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \epsfig{file=sakai_histo_loglong.eps, clip=, bbllx=70,
+      bblly=196, bburx=550, bbury=600, width=11cm, height=6cm} 
+  \end{tabular}
+  \\
+  \multicolumn{2}{c}{Loi exponentielle} \\
+  \begin{tabular}{c}
+    \epsfig{file=DensExpo.eps, clip=, bbllx=70, bblly=196, bburx=550,
+      bbury=600, width=11cm, height=6cm}
+  \end{tabular}
+  & 
+  \begin{tabular}{c}
+    \epsfig{file=DensExpo-EchLog.eps, clip=, bbllx=70, bblly=196, bburx=550,
+      bbury=600, width=11cm, height=6cm}
+  \end{tabular}
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Modèle de mélange pour les séquences}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bigskip
+\section{Modèle de chaîne de Markov} 
+
+\paragraph{Modèle d'ordre $m$.} La séquence 
+$$
+S = (s_1, s_2, \dots, s_{\ell})
+$$
+est supposée être construite lettre après lettre, chaque lettre
+$s_i$ dépendant des $m$ précédentes.  Le processus est caractérisé par
+les probabilités de transitions
+$$
+\phi(a_1, \dots, a_m; b) = 
+\Pr\{s_i = b \;|\; s_{i-m}=a_1, \dots, s_{i-1} = a_m\}.
+$$
+\paragraph{Estimation des paramètres.} L'estimateur de cette
+probabilité est
+$$
+\widehat{\phi}(a_1, \dots, a_m; b) = \frac{N_S(a_1\dots a_m
+  b)}{N_S(a_1\dots a_m +)} \simeq \frac{N_S(a_1\dots a_m
+  b)}{N_S(a_1\dots a_m)}
+$$
+où $N_S(abc)$ est le nombre d'occurrences du mot $(abc)$ dans la
+séquence $S$. \\
+
+\centerline{\textblue{$\longrightarrow \widehat{\phi}$ rend compte de la
+    composition en ($m+1$)-nucleotides de $S$.}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Modèle de mélange}
+
+Pour la population n°$p$, on note
+\begin{itemize}
+\item \textblue{$\pi_p$} la proportion de séquences qui y appartiennent
+\item \textblue{$\phi_p$} la transition de la chaîne de Markov
+  (d'ordre $m$) qui  la caractérise. 
+\end{itemize}
+
+\bigskip
+\paragraph{Choix de l'ordre $m$.}  Le parti pris est de choisir $m$
+sur des critères biologiques (pas de sélection
+statistique). Typiquement $m=1, 2, 4$ ou $5$.
+
+\bigskip
+\paragraph{Choix du nombre de populations $P$.}  On utilise aussi un
+critère de vraisemblance pénalisé de type
+$$
+BIC(P) = \Lcal(P) - [(P-1) + 3P4^m] \log K
+$$
+\paragraph{Questions} 
+\begin{enumerate}
+\item Dans une groupe de séquences pas très longues (500 ou 1000 bps)
+  et $m$ un peu grand (4 ou 5), estime-t-on vraiment l'ensemble des $3
+  \times 4^m$ paramètres~?
+\item $K$ est-il le vrai nombres d'observations~? Plutôt $\log \ell$~?
+\end{enumerate}
+
+\newpage
+\paragraph{Probabilité d'une séquence pour une population.} On peut
+calculer la probabilité d'observer la séquence $S_k$ avec le modèle
+$\phi_p$~:
+$$
+P(S_k \;|\; \phi_p) = \mbox{coef} \times \prod_{a_1, \dots, a_m, b}
+\phi_p(a_1, \dots, a_m; b)^{N_k(a_1, \dots, a_m, b)}.
+$$
+
+\paragraph{Estimation des paramètres.} 
+\begin{description}
+\item[Étape E~:] probabilités {\it a posteriori} $\qquad \widehat{\tau}_{kp}
+  = \displaystyle{\frac{\widehat{\pi}_p P(S_k
+      \;|\;\widehat{\phi}_p)}{\sum_{p'} \pi_{p'} P(S_k \;|\;
+      \widehat{\phi}_{p'})}}$
+\item[Étape M:] transitions $\qquad \widehat{\phi}(a_1, \dots, a_m; b) =
+  \displaystyle{\frac{\widehat{N}_p(a_1\dots a_m
+      b)}{\widehat{N}_p(a_1\dots a_m +)}}$ 
+\end{description}
+où
+$$
+\widehat{N}_p(abc) = \sum_k \widehat{\tau}_{kp} N_k(abc)
+$$
+est le \textblue{pseudo-comptage} du mot $(abc)$ dans l'ensemble de
+la population $p$.
+
+\newpage
+\paragraph{Initialisation de l'algorithme.} On peut mesurer la
+proximité de 2 séquences en termes de composition en utilisant la
+statistique du rapport de vraisemblance~:
+$$
+LR(k, k') = \log\left[ \frac{P(S_k \;|\; \widehat{\phi}_k) \times
+    P(S_{k'} \;|\; \widehat{\phi}_{k'})}{P(S_k \;|\;
+    \widehat{\phi}_{kk'}) \times P(S_{k'} \;|\; \widehat{\phi}_{kk'})} \right]
+$$
+\begin{tabular}{cc}
+  \begin{tabular}{p{10cm}}
+    Cette ``distance'' mesure la perte d'ajustement ({\it i.e.} de
+    vraisemblance) quand on fusionne les séquences $k$ et $k'$. \\
+    \\
+    On peut utiliser cette distance pour effectuer une classification
+    hiérarchique (CAH) cohérente avec la maximisation de la
+    vraisemblance par E-M. 
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \epsfig{file=CAH-LRT-CFT-m5.eps, clip=, bbllx=0,
+      bblly=11, bburx=230, bbury=185, width=12cm, height=12cm} 
+  \end{tabular}
+\end{tabular}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Interprétation des résultats} 
+
+Chaque groupe est caractérisé par les transitions $\phi_p(a_1, \dots,
+a_m;b)$,  soit $4^{m+1}$ paramètres par groupe \\ 
+\centerline{$P=4, m=5
+  \longrightarrow \simeq 20\;000$ paramètres}
+
+\paragraph{Déterminations des mots caractéristiques de chaque groupe.}
+La fréquence du mot $w = (a_1\dots a_m b)$ dans le groupe $p$ est
+mesurée par le rapport
+$$
+\mu_p(w) = \widehat{N}_p(w) \left/ \widehat{\ell}_p \right.
+$$
+où $\widehat{\ell}_p = \sum_k \tau_{kp} \ell_k$ est la
+pseudo-longueur du groupe $p$. 
+
+On propose de regarder les 2 critères suivants~:
+$$
+c_2(w) = \left[\frac{\mu_p(w)}{\mu_{\bullet}(w)}\right] =
+\frac{\widehat{N}_p(w) / \ell_p}{N(w) / \ell_{\bullet}},
+\qquad
+c_4(w) = \mu_{\bullet}(w) \log \left[\frac{\mu_p(w)}{\mu_{\bullet}(w)}\right]
+$$
+où $\mu_{\bullet}(w)$ est la fréquence moyenne du mot $w$ sur
+l'ensemble des boucles.
+
+\newpage
+\hspace{-2cm}
+\begin{tabular}{cc}
+  \begin{tabular}{l}
+    {\sl K12} \\
+    \\
+    $m = 5$ \\
+    %\\
+    $P = 3$ \\
+    \\
+    abscisse $= \log c_2$ \\
+    %\\
+    ordonnée $= c_4$ \\
+    \\
+    {$
+    \begin{array}{c|ccc}
+      w & %\mu_{\bullet} & N & \mu_3 & \widehat{N}_3 &
+      \log(c_2) & c_2 &  c_4 \\ 
+      \hline
+      {\tt CGTAGC} & -0.29 & 0.75 & -0.24 \\
+      {\tt CTCTAG} & +0.62 & 1.86 & +0.03 \\                              
+      {\tt GCGGCG} & -0.75 & 0.47 & -1.81 \\
+    \end{array}
+    $}
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \hspace{-1cm}
+    \epsfig{file=MotsCarac-K12-M5-P3.eps, clip=, angle=90, bbllx=330,
+      bblly=80, bburx=560, bbury=270, width=15cm, height=15cm} 
+  \end{tabular} \\
+%  \multicolumn{2}{c}}
+\end{tabular}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Un premier résultat~?}
+
+\paragraph{Un groupe d'IS.} Pour $m=5$, $P=3$ (et $P=6$), on détecte
+le groupe suivant~:
+$$
+\begin{tabular}{lrccccc}
+  \# séquence & Début & Long. & $\tau_{k1}$ & $\tau_{k2}$ & $\tau_{k3}$
+  \\
+  \hline
+  0   &     307 & 712 & 1 & $5.12\;10^{-263}$ & $1.29\;10^{-269}$ \\
+  16  &   67629 & 712 & 1 & $5.00\;10^{-263}$ & $1.27\;10^{-269}$ \\
+  25  &   81895 & 857 & 1 & $1.14\;10^{-260}$ & $2.14\;10^{-267}$ \\
+  50  &  192688 & 711 & 1 & $2.46\;10^{-260}$ & $2.26\;10^{-267}$ \\
+  122 &  542210 & 712 & 1 & $6.81\;10^{-262}$ & $1.70\;10^{-268}$ \\
+  171 &  749660 & 713 & 1 & $2.86\;10^{-262}$ & $7.20\;10^{-269}$ \\
+  251 & 1311709 & 711 & 1 & $2.46\;10^{-260}$ & $2.26\;10^{-267}$ \\
+  285 & 1574018 & 711 & 1 & $1.28\;10^{-259}$ & $8.26\;10^{-267}$ \\
+  377 & 2148214 & 712 & 1 & $1.35\;10^{-220}$ & $4.12\;10^{-216}$ \\
+  419 & 2467336 & 847 & 1 & $3.02\;10^{-214}$ & $8.75\;10^{-213}$ \\
+  428 & 2482966 & 931 & 1 & $1.02\;10^{-219}$ & $7.42\;10^{-212}$ \\
+  580 & 3283628 & 712 & 1 & $1.72\;10^{-215}$ & $4.52\;10^{-211}$ \\
+  586 & 3329825 & 791 & 1 & $3.46\;10^{-223}$ & $8.87\;10^{-219}$ \\
+  921 & 5210280 & 838 & 1 & $6.27\;10^{-267}$ & $1.02\;10^{-274}$ \\
+\end{tabular}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter{Modèle pour les séquences et les longueurs}
+
+\bigskip
+\paragraph{Idée.} Les séquences de compositions différentes (modèle de
+Markov) ont sans doute des distributions de longueurs différentes.
+
+\bigskip
+\paragraph{Populations.} On suppose donc qu'il existe
+\begin{itemize}
+\item $P$ populations en termes de composition (transitions $\phi_1,
+  \dots, \phi_P$)
+\item $Q$ populations en termes de longueur (moyennes $\lambda_1,
+  \cdots, \lambda_Q$)
+\end{itemize}
+soit
+$$
+P \times Q \mbox{ populations au total.}
+$$
+
+\paragraph{Proportions $\pi_{pq}$~:} elles rendent compte du lien
+entre les classes de composition et les classes de longueur. 
+
+Les proportions marginales des compositions et des
+longueurs sont
+$$
+\pi_{p+} = \sum_q \pi_{pq}, \qquad \pi_{+q} = \sum_p \pi_{pq}
+$$
+Si les classes sont indépendantes, on doit trouver
+$$
+\widehat{\pi}_{pq} \simeq \widehat{\pi}_{p+} \; \widehat{\pi}_{+q}.
+$$
+
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Exemple} 
+
+Pour {\sl CFT}, $m = 5$, $P = 3$ et $Q = 4$~:
+\begin{eqnarray}
+  \pi (\%) & = & \left( \begin{array}{rrrr|r}
+      1.7 & 0.1 &  0.0 &  0.0 &  1.8 \\
+      0.0 & 0.0 &  0.0 & 24.0 & 24.0 \\
+      0.0 & 0.0 & 74.2 &  0.0 & 74.2 \\
+      \hline
+      1.7 & 0.1 & 74.2 & 24.0 & 
+    \end{array} \right) \\
+  \lambda_q & = & (\begin{array}{cccc}
+    759 & 759 & 110 & 251
+  \end{array}). 
+\end{eqnarray}
+$$
+\begin{tabular}{cc}
+  \begin{tabular}{c}
+    \epsfig{file=CFT-m3-P3-Q4-TauP-Long.eps, clip=, bbllx=70,
+      bblly=212, bburx=550, bbury=600, width=11cm, height=9cm} 
+  \end{tabular}
+  &
+  \begin{tabular}{c}
+    \epsfig{file=CFT-m3-P3-Q4-TauQ-Long.eps, clip=, bbllx=70,
+      bblly=212, bburx=550, bbury=600, width=11cm, height=9cm} 
+  \end{tabular}
+\end{tabular}
+$$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
