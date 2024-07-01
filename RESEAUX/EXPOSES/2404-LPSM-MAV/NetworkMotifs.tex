@@ -1,0 +1,1166 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+\usepackage{xspace}
+\usepackage{pifont}
+\usepackage{marvosym}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\BEDD}{BEDD\xspace}
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+
+%==================================================================
+%==================================================================
+\begin{document}
+%==================================================================
+%==================================================================
+\title[Motifs and bipartite networks]{Motifs and bipartite networks: \\Application to plant-polinator interactions}
+\author{S. Robin}
+\institute[Sorbonne universit\'e]{\normalsize{Sorbonne universit\'e}}
+\date[EcoNet, Apr'24]{Ecole EcoNet, April 2024, Montpellier}
+\maketitle
+
+%==================================================================
+\frame{\frametitle{Outline} \tableofcontents}
+
+%==================================================================
+%==================================================================
+\section{Bipartite networks and motifs}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
+\frame{\frametitle{Bipartite network}
+
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Two types of actors.}
+      \begin{itemize}
+      \item Mutualistic: plant-pollinator
+      \item Antagonistic: host-parasite
+      \end{itemize}
+      \bigskip \bigskip 
+      \paragraph{Topological analysis:} \\
+      understanding the network organisation \\
+      \bigskip
+      \paragraph{Local:} % \\
+      node or edge properties (degree, betweenness) \\
+      \bigskip
+      \paragraph{Global:} % \\
+      density, connected components, nestedness 
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Zackenberg network: } 
+      \refer{SRO16} \\
+      \includegraphics[width=.4\textwidth, trim=0 50 0 50]{\fignet/Zackenberg-1996_12-red-net} \\
+%       \includegraphics[width=.4\textwidth, trim=0 50 0 50]{\fignet/Zackenberg-1996_12-red-adj}
+    \end{tabular} 
+  \end{tabular}
+}
+
+%==================================================================
+\frame{\frametitle{Bipartite network: notations}
+
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.6\textwidth}}
+      \paragraph{Species.}
+      \begin{itemize}
+        \setlength{\itemsep}{1.15\baselineskip}
+        \item $i = 1, \dots m$ pollinators = rows = bottom nodes
+        \item $j = 1, \dots n$ plants = columns = top nodes
+      \end{itemize}
+    \end{tabular}
+    &
+    \hspace{-.15\textwidth}
+    \begin{tabular}{p{.4\textwidth}}
+      \includegraphics[width=.4\textwidth, trim=0 50 0 50]{\fignet/Zackenberg-1996_12-red-net} 
+    \end{tabular} 
+    \\ \pause
+    \begin{tabular}{p{.6\textwidth}}
+      \paragraph{Interactions.}
+      \begin{itemize}
+      \item $A_{ij} = 1$ if pollinator $i$ interacts with plant $j$, \\
+      0 otherwise
+      $$
+      A_{ij} = 1 \quad \Leftrightarrow \quad i \sim j
+      $$
+      \item adjacency matrix : $m \times n$
+      $$
+      A = [A_{ij}]_{1 \leq i \leq m, 1 \leq j \leq n}
+      $$
+      \end{itemize}
+    \end{tabular}
+    &
+    \hspace{-.15\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.4\textwidth, trim=0 50 0 50]{\fignet/Zackenberg-1996_12-red-adj}
+    \end{tabular} 
+  \end{tabular}
+}
+
+%==================================================================
+\frame{\frametitle{Bipartite motifs}
+
+  \begin{tabular}{ll}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{'Meso-scale' analysis.} \refer{SCB19}
+      \begin{itemize}
+       \item Motifs ='building-blocks'
+       \item between local (several nodes) and global (sub-graph)
+      \end{itemize}
+      \bigskip \bigskip 
+      \onslide+<2->{
+      \paragraph{Interest.}
+      \begin{itemize}
+       \item Generic description of a network
+       \item Enables network comparison
+       \item Even when the nodes are different
+      \end{itemize} \\
+      ($+$ 'species-role': out of the scope here) \\
+      }
+      \bigskip \bigskip 
+      \onslide+<3->{
+      \paragraph{Existing tool.} 
+      \url{bmotif} package \refer{SSS19}: \\
+      counts motif occurrences
+      }
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \hspace{-0.035\textwidth}
+      \includegraphics[width=.5\textwidth]{\fignet/SCB19-Oikos-Fig3-6motifs} \\      
+    \end{tabular} 
+  \end{tabular}
+
+}
+
+%==================================================================
+\frame{\frametitle{Example}
+
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Plant-pollinator network} \refer{SRO16} \\
+      \hspace{-.05\textwidth}
+      \includegraphics[width=.45\textwidth, trim=0 50 0 50]{\fignet/Zackenberg-1996_12-red-net} \\
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Motif counts.}  \\ ~\\ 
+      4 nodes (species) \\ 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif5} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif6} \\ ~\\
+      5 nodes \\ 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif9} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif10} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif11} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif12} \\
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif13} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif14} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif15} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif16} 
+    \end{tabular}  
+    ~ \\
+    \hline
+    \\ \pause
+    \begin{tabular}{p{.45\textwidth}}
+      top 'stars' (plants) \\
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif1} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif2} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif7} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif17} 
+    \end{tabular}
+    &    
+    \begin{tabular}{p{.45\textwidth}}
+      bottom 'stars' (pollinators) \\
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif1} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif3} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif4} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif8} 
+    \end{tabular}
+  \end{tabular}
+  
+}
+
+%==================================================================
+%==================================================================
+\section{A null model}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
+\frame{\frametitle{Need for a null model}
+
+  \paragraph{Motif counts} obviously depend on 
+  \begin{itemize}
+   \item the \emphase{size} of the network: $n \times m$
+   \item the \emphase{density} of the network
+   \item the \emphase{imbalance} between bottom-node degrees (specialist vs generalist pollinators)
+   \item the \emphase{imbalance} between top-node degrees (specialist vs generalist plants)
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Bipartite expected degree distribution (\BEDD) model:} (in words)
+  \begin{itemize}
+    \setlength{\itemsep}{1.15\baselineskip}
+    \item Consider $m$ pollinators ($i = 1, \dots m$): \\
+    each plant $i$ has a specific propensity to interact (degree of generalism)
+    \item Consider $n$ plants ($j = 1, \dots n$): \\
+    each plant $j$ has a specific propensity to interact  (idem)
+    \item The probability for pollinator $i$ and plant $j$ to interact is proportional to the product of their respective propensities.
+  \end{itemize}
+
+}
+
+%==================================================================
+\frame{\frametitle{\BEDD model}
+
+  \paragraph{Bipartite expected degree distribution (\BEDD) model:} (formaly) \\~
+  \begin{itemize}
+    \setlength{\itemsep}{1.15\baselineskip}
+    \item $\rho =$ network density
+    \item $g =$ top node degree imbalance ($\int g = 1$)
+    \item $h =$ bottom node degree imbalance ($\int h = 1$)
+  \end{itemize}
+  
+  $$
+  \{U_i\}_{i = 1, \dots m} \text{ iid } \sim \Ucal[0, 1] 
+  \qquad \qquad 
+  \{V_j\}_{j = 1, \dots n} \text{ iid } \sim \Ucal[0, 1]
+  $$
+  
+  $$
+  \Pbb\{i \sim j \mid U_i, V_j\} = \emphase{\rho \; g(U_i) \; h(V_j)}
+  $$ 
+
+  \bigskip
+  (Bipartite version of the EDD model \refer{ChL02})
+  
+  \bigskip \bigskip \pause
+  \paragraph{Model parameters:}
+  $$
+  \theta = (\rho, g, h).
+  $$
+
+}
+
+%==================================================================
+\frame{\frametitle{\BEDD model}
+
+  \begin{tabular}{cccc}
+    & & $h_0(v) =$ & $h(v) =$ \\
+    \multicolumn{2}{c}{
+      $\begin{array}{rl}
+        \Pbb\{i \sim j \mid U_i, V_j\} & = \rho \; g(U_i) \; h(V_j) \\ \\
+        \Esp (D_i \mid U_i) & = n \; \rho \; g(U_i) \\ \\
+        \Esp (D_j \mid V_j) & = m \; \rho \; g(V_i) 
+      \end{array}$
+    } &
+    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-dist-h10} \end{tabular} &
+    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-dist-h40} \end{tabular} \\
+    \begin{tabular}{c} $g_0(u) =$ \end{tabular} &
+    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-dist-g10} \end{tabular} &
+    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-adj-g10-h10} \end{tabular} &
+    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-adj-g10-h40} \end{tabular} \\
+    \begin{tabular}{c} $g(u) =$ \end{tabular} &
+    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-dist-g25} \end{tabular} &
+    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-adj-g25-h10} \end{tabular} &
+    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-adj-g25-h40} \end{tabular} \\
+  \end{tabular}
+  
+}
+
+%==================================================================
+\frame{\frametitle{Properties of the \BEDD model}
+
+  \paragraph{Assumptions.}
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}
+    \item No preferred or avoided specific connexion
+    \item \emphase{Graph-exchangeable} model: pollinators can be permuted and plants can be permuted
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Properties.}
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}
+    \item Expected degree for pollinator $i$ given $U_i$ : $n \; \rho \; g(U_i)$.
+    \item Expected degree for plant $j$ given $V_j$ : $m \; \rho \; h(V_j)$.
+    \item 'Nested' structure by construction
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Sufficient statistics} to fit \BEDD: 
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}
+    \item Pollinator degrees + plant degrees
+    \item or, equivalently, star (single edge, top, bottom) frequencies (see next)
+  \end{itemize}
+
+  }
+
+%==================================================================
+\frame{\frametitle{Properties of the \BEDD model}
+
+}
+
+%==================================================================
+%==================================================================
+\section{Motif distribution}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
+\frame{\frametitle{Counting motifs}
+
+  \hspace{-.05\textwidth}
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.4\textwidth}}
+      \paragraph{Number of 'positions'.}
+      \begin{itemize}
+       \item Choose $p$ nodes among $m$
+       \item Choose $q$ nodes among $n$
+       \item Try all {\sl automorphisms} 
+      \end{itemize}
+      $$
+      c_s := 
+      \left(\begin{array}{c}m \\ p\end{array}\right)
+      \times \left(\begin{array}{c}n \\ q\end{array}\right)
+      \times r_s
+      $$ 
+      ~ \\ ~ \\
+    \end{tabular}
+    & \pause
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Automorphisms=} non-redundant permutations \\
+      \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism1}
+      \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism2}
+      \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism3} \\
+      \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism4}
+      \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism5}
+      \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism6} 
+    \end{tabular} 
+  \end{tabular}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Motif count.} Try all positions $\alpha = 1, \dots c_s$, define 
+  $$
+  Y_{s\alpha} = 1 \text{ if match,} \qquad 0 \text{ otherwise},
+  $$
+  then count the number of matches:
+  $$
+  N_s = \sum_\alpha Y_{s\alpha}
+  $$
+  \ra \emphase{Motif frequency}: $F_s := N_s / c_s$
+  
+}
+
+% %==================================================================
+% \frame{\frametitle{Motif probability}
+% 
+%   \paragraph{Occurrence probability $\overline{\phi}_s = \Pbb\{Y_{s\alpha} = 1\}$.} Under the B-EDD model \refer{OLR22}:
+%   \begin{align*}
+%     \overline{\phi}_s 
+%     & :=
+%     \Pbb_{\BEDD}\left(
+%     \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9} 
+%     \right)
+%     \; = \; 
+%     \frac{
+%     \onslide+<2->{
+%       \overset{\text{top stars}}{\overbrace{
+%       \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
+%       \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
+%       \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top2}\right)   }}
+%     }
+%     \onslide+<3->{
+%       \times
+%       \overset{\text{bottom stars}}{\overbrace{
+%       \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom1}\right) % \times
+%       \Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom3}\right)
+%       }}
+%     }
+%     }{
+%     \onslide+<4->{
+%       \underset{\text{edges}}{\underbrace{
+%       \left(\Pbb\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right)\right)^4
+%       }}
+%     }
+%     } 
+%     \\
+%     \onslide+<5->{
+%     & =
+%     \frac{\left(\phi_1^2 \phi_2\right) \left(\phi_1 \phi_4\right)}{\left(\phi_1\right)^4}
+%     \qquad =
+%     \frac{\phi_2 \phi_4}{\phi_1}
+%     }
+%   \end{align*}
+% 
+%   \onslide+<6->{\bigskip \bigskip 
+%   \paragraph{Estimated probability.} 
+%   $$
+%   \overline{\phi}_s := \frac{\phi_2 \phi_4}{\phi_1}
+%   \qquad \rightarrow \qquad 
+%   \overline{F}_s := \frac{F_2 F_4}{F_1}
+%   $$
+%   where $F_1$, $F_2$, $F_4 =$ observed frequencies of  edges, top stars and bottom stars.
+%   }
+% }
+
+%==================================================================
+\frame{\frametitle{Motif probability (1/2)}
+
+  \paragraph{Occurrence probability $\overline{\phi}_s = \Pbb\{Y_{s\alpha} = 1\}$.} Consider the motif $s = \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9}$, which involves
+  \begin{itemize}
+    \item 3 top nodes (with resp. latent $U_1$, $U_2$ and $U_3$) and
+    \item 2 bottom nodes (with resp. latent $V_1$ and $V_2$).
+  \end{itemize}
+
+  \pause \bigskip \bigskip 
+  We have that:
+  \begin{align*}
+    \overline{\phi}_s 
+    & = \int \dots \int \left(\rho g(u_1) h(v_2)\right) \left(\rho g(u_2) h(v_2)\right) \left(\rho g(u_3) h(v_1)\right) \left(\rho g(u_3) h(v_2)\right) \d u_1 \d u_2 \d u_3 \d v_1 \d v_2 \\
+    & \onslide+<3->{= \rho^{-4} \left(\int \rho g(u_1) \d u_1\right) \left(\int \rho g(u_2) \d u_2\right) \left(\int \rho^2 g(u_3)^2 \d u_3\right) \\
+    & \qquad \left(\int \rho h(v_1) \d v_1\right) \left(\int \rho^3 h(v_2)^3 \d v_2\right)}  \\
+    & \onslide+<4->{= \rho^{-4} 
+      \times 
+      \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) 
+      \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) 
+      \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top2}\right) 
+      \times
+      \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom1}\right) 
+      \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom3}\right) }
+  \end{align*}
+
+  \bigskip 
+  \onslide+<5->{\ra The probability of star motifs are the sufficient statistics of the \BEDD model.} 
+}
+
+%==================================================================
+\frame{\frametitle{Motif probability (2/2)}
+
+  \paragraph{Occurrence probability $\overline{\phi}_s = \Pbb\{Y_{s\alpha} = 1\}$.} Under the B-EDD model:
+  \begin{align*}
+    \left(\includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9}\right) 
+    & = \; 
+    \frac{
+      \overset{\text{top stars}}{\overbrace{
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top2}\right)   }}
+      \quad
+      \overset{\text{bottom stars}}{\overbrace{
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom1}\right) % \times
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom3}\right)
+      }}
+    }{
+      \underset{\text{edges}}{\underbrace{
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right)^4
+      }}
+    } 
+    \\
+    \overline{\phi}_s 
+    =
+    \Pbb_{\BEDD}\left(
+    \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9} 
+    \right)
+    & = \;
+    \frac{\left(\phi_1^2 \phi_2\right) \left(\phi_1 \phi_4\right)}{\left(\phi_1\right)^4}
+    \qquad =
+    \frac{\phi_2 \phi_4}{\phi_1}
+  \end{align*}
+
+  \pause {\bigskip \bigskip 
+  \paragraph{Estimated probability $\overline{F}_s$.} 
+  $$
+  \overline{\phi}_s := \frac{\phi_2 \phi_4}{\phi_1}
+  \qquad \rightarrow \qquad 
+  \overline{F}_s := \frac{F_2 F_4}{F_1}
+  $$
+  where $F_1$, $F_2$, $F_4 =$ observed frequencies of  edges, top stars and bottom stars.
+  }
+}
+
+%==================================================================
+\frame{\frametitle{Moments of the count}
+
+  \begin{itemize}
+  \setlength{\itemsep}{1.5\baselineskip}
+  \item \emphase{Number of positions:} $c_s$ 
+  \item \emphase{Mean:} $\Esp_{\BEDD}(N_s) = c_s \times \overline{\phi}_s$ 
+  \item \pause \emphase{Variance:} Same game, requires to evaluate $\displaystyle{\Esp_{\BEDD}(N_s ^2) = \Esp_{\BEDD}\left(\sum_\alpha Y_{s\alpha} \right)^2}$ \\
+  \ra Need to account for overlap between positions ({\sl super-motifs}: \refer{PDK08}) 
+  $$
+  \includegraphics[width=.8\textwidth, trim=0 25 0 0, clip=]{\fignet/OLR22-EJS-Fig2}
+  $$ 
+  \ra Compute the respective expected count in the way as for regular motifs \\ ~
+  \item \pause \emphase{Covariance:} Same game to compute $\Cov(N_s, N_{s'})$
+  \end{itemize}
+
+}
+
+%==================================================================
+\frame{\frametitle{Super-motifs}
+
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.4\textwidth}}
+      \paragraph{Motif:}
+      $$
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9}
+      $$
+      ~\\ ~\\
+      \paragraph{Variance:}
+      $$
+      \begin{array}{rcl}
+        N_s^2 & = & \displaystyle{\left(\sum_\alpha Y_{s\alpha}\right)^2} \\
+        ~ \\
+        & = & \displaystyle{\sum_{\alpha, \beta: \alpha \cap \beta = \emptyset} Y_{s\alpha} Y_{s\beta}} \\
+        ~ \\
+        & & \displaystyle{+ \sum_{\alpha, \beta: \alpha \cap \beta \neq \emptyset} \underset{\footnotesize\begin{array}{c}\text{occurrence of} \\ \text{a super-motif} \end{array}}{\underbrace{Y_{s\alpha} Y_{s\beta}}}} \\
+      \end{array}
+      $$
+    \end{tabular} 
+    &
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Some super-motifs:} \\
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif1} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif2} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif3} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif4} \\
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif5} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif6} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif7} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif8} \\
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif9} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif10}
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif11}
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif12} \\
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif13} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif14}
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif15}
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif16} \\
+      ~ \\
+      \dots 396 super-motifs \\
+      ~ \\ ~ \\ ~ \\ 
+    \end{tabular} 
+  \end{tabular}
+  
+  \paragraph{Covariance:} same game, for $Y_{s\alpha} Y_{s'\beta}$ with $s \neq s'$
+
+}
+
+%==================================================================
+\frame{\frametitle{Distribution of the count}
+
+  \paragraph{Asymptotic normality for non-star motifs.} Under \BEDD (and sparsity conditions):
+  $$
+  (F_s - \overline{F}_s) \left/ \sqrt{\widehat{\Var}(F_s)} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
+  $$
+  Proof \refer{OLR22}: 
+  \begin{equation*}
+    \text{decompose} \qquad
+   F_s - \overline{F}_s 
+   = \underset{\text{random fluctuations}}{\underbrace{(F_s - \phi_s)}} 
+   + \underset{\text{null under \BEDD}}{\underbrace{(\phi_s - \overline{\phi}_s)}}  
+   + \underset{\text{estimation error } \rightarrow 0}{\underbrace{(\overline{\phi}_s - \overline{F}_s)}}, 
+  \end{equation*}
+  + construct a counting martingale for $F_s - \phi_s$  \refer{GaL17b}.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Consequence.} We know 
+  \begin{itemize}
+    \item the (asymptotic) expected behavior (mean, variance, distribution) of any motif count 
+    \item under the BEDD model (= 'null model').
+  \end{itemize}
+}
+
+%==================================================================
+%==================================================================
+\section{Network embedding}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
+\frame{\frametitle{Network embedding: Multivariate analysis}
+
+  \paragraph{Analysing multiple networks.} Principle
+  \begin{itemize}
+   \item 'Embed' each network into a convenient space (e.g. $\Rbb^d$)
+   \item Use standard multivariate analysis (clustering, PCA, MDS, ...)
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Using motifs.} $K$ networks 
+  $$
+  (\text{Network})_k \quad \rightarrow \quad
+  (N^k_1, \dots, N^k_S) \in \Rbb^S
+  $$
+  but need to correct for: network sizes, correlation between motif frequencies, etc...
+
+  \bigskip \bigskip \pause
+  \hspace{-.05\textwidth}
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.4\textwidth}}
+      \paragraph{~Zackenberg dataset.} $K = 46$ networks 
+      \begin{itemize}
+      \item 2 years
+      \item 1 network observed every few days 
+      \end{itemize}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.1\textwidth]{\fignet/Zackenberg-red-96:5-adj}
+      \includegraphics[width=.1\textwidth]{\fignet/Zackenberg-red-96:10-adj}
+      \includegraphics[width=.1\textwidth]{\fignet/Zackenberg-red-96:15-adj} 
+      \includegraphics[width=.1\textwidth]{\fignet/Zackenberg-red-96:20-adj} 
+      \dots \\
+      \includegraphics[width=.1\textwidth]{\fignet/Zackenberg-red-97:5-adj}
+      \includegraphics[width=.1\textwidth]{\fignet/Zackenberg-red-97:10-adj}
+      \includegraphics[width=.1\textwidth]{\fignet/Zackenberg-red-97:15-adj} 
+      \includegraphics[width=.1\textwidth]{\fignet/Zackenberg-red-97:20-adj} 
+      \dots
+    \end{tabular} 
+  \end{tabular}
+
+}
+
+%==================================================================
+\frame{\frametitle{Choleski transform}
+
+  \bigskip
+  \paragraph{Aim:} 'Remove' correlation and variance heterogeneity
+  
+  \bigskip
+  \begin{tabular}{cc}
+    \hspace{-0.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Covariance matrix of $(X_1, X_2)$:}
+      $$
+      \Sigma_{X_1, X_2} = \left[\begin{array}{cc} 
+                      \sigma^2_1 & \sigma_{12} \\
+                      \sigma_{12} & \sigma^2_2 \\
+                     \end{array}\right]
+      $$
+    \end{tabular}
+    & 
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<2->{\paragraph{Choleski transform:}
+      $$
+      \left[\begin{array}{c} X'_1 \\ X'_2 \end{array} \right]
+      = \Sigma^{-1/2} \left[\begin{array}{c} X_1 \\ X_2 \end{array} \right]
+      $$}
+    \end{tabular} 
+    \\
+    \hspace{-0.04\textwidth}
+    \begin{tabular}{c}
+      \vspace{-0.08\textheight}
+      \includegraphics[width=0.35\textwidth, trim=25 25 25 25, clip=]{\fignet/Cholevski-raw} 
+    \end{tabular}
+    & 
+    \begin{tabular}{c}
+      \vspace{-0.08\textheight}
+      \onslide+<2->{\includegraphics[width=0.35\textwidth, trim=25 25 25 25, clip=]{\fignet/Cholevski-chol}}
+    \end{tabular} 
+    \\
+    \hspace{-0.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      Diagonalization: $\Sigma = P \emphase{\Lambda} P^{-1}$ \\
+      ~ \\
+      Choleski matrix: $\Sigma^{-1/2} = P \emphase{\Lambda^{-1/2}} P^{-1}$
+    \end{tabular}
+    & \pause
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<2->{$$
+      \Sigma_{X'_1, X'_2} = \left[\begin{array}{cc} 
+                      1 & 0 \\
+                      0 & 1 \\
+                     \end{array}\right]
+      $$}
+    \end{tabular} 
+  \end{tabular}
+
+}
+
+%==================================================================
+\frame{\frametitle{Network embedding: Zackenberg's data \refer{SRO16}}
+
+  \bigskip
+  \begin{tabular}{c|c|c|c}
+    \onslide+<1->{Raw counts} & 
+    \onslide+<2->{Corrected stat.} & 
+    \onslide+<3->{Choleski} & 
+    \onslide+<4>{Bray-Curtis MDS} \\
+    \hline
+    \onslide+<1->{\includegraphics[width=.2\textwidth, height=.175\textheight]{\fignet/Zackenberg-red-PCAcount-scree}} &
+    \onslide+<2->{\includegraphics[width=.2\textwidth, height=.175\textheight]{\fignet/Zackenberg-red-PCAstat-scree}} & 
+    \onslide+<3->{\includegraphics[width=.2\textwidth, height=.175\textheight]{\fignet/Zackenberg-red-PCAchol-scree}} &  
+    \onslide+<4>{\includegraphics[width=.2\textwidth, height=.175\textheight]{\fignet/Zackenberg-red-MDSBrayCurtis-scree}}
+    \\
+    \onslide+<1->{\includegraphics[width=.22\textwidth]{\fignet/Zackenberg-red-PCAcount-biplot}} &
+    \onslide+<2->{\includegraphics[width=.22\textwidth]{\fignet/Zackenberg-red-PCAstat-biplot}} &
+    \onslide+<3->{\includegraphics[width=.22\textwidth]{\fignet/Zackenberg-red-PCAchol-biplot}} &
+    \onslide+<4>{\includegraphics[width=.22\textwidth]{\fignet/Zackenberg-red-MDSBrayCurtis-biplot}}
+    \\
+    \onslide+<1->{\includegraphics[width=.2\textwidth]{\fignet/Zackenberg-red-PCAcount-size}} &
+    \onslide+<2->{\includegraphics[width=.2\textwidth]{\fignet/Zackenberg-red-PCAstat-size}} &
+    \onslide+<3->{\includegraphics[width=.2\textwidth]{\fignet/Zackenberg-red-PCAchol-size}} &
+    \onslide+<4>{\includegraphics[width=.2\textwidth]{\fignet/Zackenberg-red-MDSBrayCurtis-size}}
+  \end{tabular}
+
+}
+
+%==================================================================
+%==================================================================
+\section{Goodness-of-fit and network comparison}
+% \frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
+% \frame{\frametitle{Goodness-of-fit (GOF)}
+% 
+%   \paragraph{Aim of GOF tests.} Test if the observed data arise from a given model.
+% 
+%   \medskip
+%   More cautious: 'if the model fits the data reasonably well'
+%   
+%   \bigskip \bigskip \pause
+%   \paragraph{Typical approach.} 
+%   \begin{enumerate}
+%     \setlength{\itemsep}{1.15\baselineskip}
+%     \item Define some statistic (= function of the data) $T$, 
+%     \item Establish the distribution of $T$ under the model, 
+%     \item Compare the observed value of $T$ with its distribution under the model.
+%   \end{enumerate}
+% 
+%   
+%   \bigskip \bigskip \pause
+%   \paragraph{Example.} 
+%   \begin{enumerate}
+%     \item Data = observed plant-pollinator network
+%     \item Statistic $T$ = motif count $N_s$ 
+%     \item Model = BEDD
+%   \end{enumerate}
+% 
+% }
+
+%==================================================================
+\frame{\frametitle{Goodness-of-fit (GOF) of the BEDD model}
+
+  \bigskip \bigskip 
+  \paragraph{Aim.} Test $H_0 : \{G \sim \BEDD\}$.
+
+  \pause \bigskip \bigskip 
+  \begin{tabular}{lc}
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<2->{\paragraph{Raw statistic:}
+      $$
+      T_s = \frac{N_s - \widehat{\Esp} N_s}{\sqrt{\widehat{\Var} N_s}}
+      $$ \\ 
+      }
+      \onslide+<3->{
+      \paragraph{Corrected stat.:} accounts for the estimation error in $\widehat{\Esp} N$
+      $$
+      T'_s = \frac{N_s - (\widehat{\Esp} N_s - \emphase{\widehat{\Bias}(\widehat{\Esp} N_s)})}{\sqrt{\emphase{\widehat{\Var} (N_s - \widehat{\Esp} N_s)}}}
+      $$ \\ 
+      }
+      \onslide+<4>{\paragraph{Choleski transform:} accounts for the correlation between the counts
+      $$
+      T'' = \emphase{\widehat{\Sigma}^{-1/2}}
+      \left[N_s - (\widehat{\Esp} N_s - \widehat{\Bias}(\widehat{\Esp} N_s))\right]
+      $$
+      }
+    \end{tabular}
+    &
+    \begin{tabular}{p{.4\textwidth}}
+      \hspace{-.05\textwidth}
+      \onslide+<2->{\paragraph{Zackenberg network:} dec 1996 \\}
+      \begin{overprint}
+        \onslide<2>
+        \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-StatCount}
+        \onslide<3>
+        \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-NormStatCount}
+        \onslide<4>
+        \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-CholNormStat}
+      \end{overprint}
+    \end{tabular} 
+  \end{tabular}
+
+}
+
+%==================================================================
+\frame{\frametitle{Testing degree imbalance}
+
+  \paragraph{Question.} Is there some degree imbalance between plants?
+  
+  \bigskip \pause
+  \paragraph{Statistical test.} 
+  \begin{itemize}
+    \item Assume $A \sim BEDD(\rho, g, h)$, 
+    $$
+    \emphase{H_0 = \{h = 1\}}
+    $$
+    \item For motif $s$, evaluate $\widehat{\Esp}_0(N_s)$ and $\widehat{\Var}_0(N_s)$ and compare 
+    $$
+    W_s = (N_s - \widehat{\Esp}_0(N_s)) / \sqrt{\widehat{\Var}_0(N_s)}
+    $$ 
+    with $\Ncal(0, 1)$
+  \end{itemize}
+
+  
+  \bigskip \pause
+  \paragraph{Example.} (only one significant difference) 
+  $$
+  \includegraphics[width=.75\textwidth]{\fignet/OLR22-EJS-Tab3}
+  $$
+}
+
+
+%==================================================================
+\frame{\frametitle{Comparing network imbalances}
+
+  \paragraph{Question.} Do network $A$ and $B$ share the same imbalance for pollinators?
+  
+  \bigskip \pause
+  \paragraph{Statistical test.} 
+  \begin{itemize}
+    \item Assume $A \sim BEDD(\rho^A, g^A, h^A)$ and $B \sim BEDD(\rho^B, g^B, h^B)$
+    $$
+    H_0 = \{g^A = g^B\}
+    $$
+    \item For motif $s$, evaluate $\widehat{\Esp}_{\widehat{\rho}^A, \emphase{\widehat{g}^B}, \widehat{h}^A}(N^A_s)$ and $\widehat{\Esp}_{\widehat{\rho}^B, \emphase{\widehat{g}^A}, \widehat{h}^B}(N^B_s)$ and compare 
+    $$
+    W_s = \frac{(N_s^A - \widehat{\Esp}_0(N_s^A)) - (N_s^B - \widehat{\Esp}_0(N_s^B))}{\sqrt{\widehat{\Var}_0(N^A_s) + \widehat{\Var}_0(N^B_s)}}
+    $$ 
+    with $\Ncal(0, 1)$
+  \end{itemize}
+
+  
+  \bigskip \pause
+  \paragraph{Example.} (no significant difference) 
+  $$
+  \begin{array}{c}
+    \includegraphics[width=.8\textwidth, trim=0 50 0 0, clip=]{\fignet/OLR22-EJS-Tab4} \\ 
+    \includegraphics[width=.8\textwidth, trim=0 0 0 90, clip=]{\fignet/OLR22-EJS-Tab4}   
+  \end{array}
+  $$
+
+}
+
+%==================================================================
+%==================================================================
+\section{Contrast-based network embedding}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
+\frame{\frametitle{Understanding the organisation of plant-pollinator networks}
+
+  On-going joint work with Natasha de Manincor (Mons, Belgiuem) \& Fran\c{c}ois Massol (soon in IEES, SU)
+
+  \bigskip \bigskip 
+  \paragraph{Aim.} Compare the organisation of plant-pollinator networks in space and time. \\
+  \bigskip 
+  \ra \BEDD translation: 
+  $$
+  \text{Compare the parameters $\rho$, \emphase{$g$} and $h$ in space and time}.
+  $$
+  
+  \pause \bigskip \bigskip 
+  \paragraph{Experimental design.} ~ \\
+  \medskip
+  \begin{itemize}
+    \setlength{\itemsep}{1.05\baselineskip}
+    \item 3 regions (Hauts-de-France, Normandie, Occitanie) $\times$ 2 sites / region
+    \item 2 years (2016, 2017)
+    \item 7 months (from april to october)
+  \end{itemize}
+  
+  \bigskip
+  \ra 83 networks, $\simeq 34$ pollinators ($\in [7; 80]$), $\simeq 13$ plants ($\in [3; 39]$)
+
+}
+  
+%==================================================================
+\frame{\frametitle{Contrast-based network embedding}
+
+  \bigskip \bigskip 
+  \paragraph{Problems.} 
+  \begin{enumerate}
+    \setlength{\itemsep}{1.05\baselineskip}
+    \item Poor power of network comparison tests for, say $H_0 = \{g^A = g^B\}$
+    \item Which motif $s$ to determine the (contrast) test statistics $W_s$?
+  \end{enumerate}
+
+  \pause \bigskip \bigskip 
+  \paragraph{Contrast-based distance.} 
+  $$
+  d(A, B) = \sum_s W_s^2
+  $$
+  where $W_s =$ test statistics based on motif $s$ for 
+  $$
+  H_0 = \{g^A = g^B\}.
+  $$
+
+  \pause \bigskip 
+  \paragraph{Rational.} 
+  \begin{enumerate}
+    \setlength{\itemsep}{1.05\baselineskip}
+    \item The distance $d$ focuses on the difference in terms of pollinator imbalance
+    \item (Hopefully) insensitive to other factors: networks' dimensions ($m, n$), connectance ($\rho$), plant imbalance ($h$), \dots
+  \end{enumerate}
+
+}
+
+%==================================================================
+\begin{frame}[fragile] \frametitle{Results}
+
+  \paragraph{Distance-based analysis of variance.} \refer{LeA99,McA01}
+  \begin{itemize}
+    \item Data = distance matrix + network covariates
+    \item Standard analysis of variance model \\  
+    \ra Rewriting sums of squares in terms of squared distances $d(A, B)^2$ \\
+    \ra Permutation tests for significance
+    \item {\tt vegan} R package
+  \end{itemize}
+  
+  \bigskip \pause
+  \paragraph{Plant-pollinator networks.}   
+\begin{verbatim}
+                  Df SumOfSqs      R2      F Pr(>F)    
+Year               1    2.243 0.00832 1.3317  0.310    
+Month              6   96.698 0.35891 9.5701  0.001 ***
+Region             2   12.699 0.04713 3.7704  0.012 *  
+Year:Month         6    4.895 0.01817 0.4844  0.892    
+Year:Region        2    7.100 0.02635 2.1081  0.092 .  
+Month:Region      12   45.567 0.16913 2.2549  0.010 ** 
+Year:Month:Region 12   32.856 0.12195 1.6258  0.070 .  
+Residual          40   67.362 0.25003                  
+Total             81  269.419 1.00000                  
+\end{verbatim}
+  
+\end{frame}
+
+%==================================================================
+\begin{frame}[fragile] \frametitle{Yes but}
+
+  \paragraph{Simulated networks.} $K = 83$ simulated networks with
+  \begin{itemize}
+    \item Same network-specif dimensions $(m_k, n_k)$ as in the original dataset,
+    \item Same network-specif connectances $(\rho_kk)$ as in the original dataset,
+    \item Common imbalance functions $(g, h)$.
+  \end{itemize}
+  
+  \bigskip \pause
+  \paragraph{Distance-based anova.}   
+\begin{verbatim}
+                  Df SumOfSqs      R2      F Pr(>F)   
+Year               1    1.504 0.01144 0.9367  0.427   
+Month              6   25.170 0.19139 2.6123  0.010 **
+Region             2    0.688 0.00523 0.2142  0.850   
+Year:Month         6    7.464 0.05675 0.7747  0.649   
+Year:Region        2    2.516 0.01913 0.7835  0.581   
+Month:Region      12   12.549 0.09542 0.6512  0.849   
+Year:Month:Region 12   17.387 0.13221 0.9023  0.562   
+Residual          40   64.234 0.48842                 
+Total             81  131.513 1.00000                 
+\end{verbatim}
+
+  \bigskip \pause
+  \ra Imperfect correction for the network's  (only asymptotic mean and variance?)
+
+\end{frame}
+
+%==================================================================
+\begin{frame}[fragile] \frametitle{A patch}
+
+  \paragraph{Patch.} Include the networks' dimensions $(m_k, n_k)$ in the anova model
+  
+  \bigskip \pause
+  \paragraph{Plant-pollinator networks.}   
+\begin{verbatim}
+                  Df SumOfSqs      R2       F Pr(>F)    
+insectNb           1   69.905 0.25946 42.6945  0.001 ***
+plantNb            1   31.173 0.11570 19.0389  0.001 ***
+Year               1    2.659 0.00987  1.6237  0.209    
+Month              6   24.796 0.09204  2.5241  0.010 ** 
+Region             2    8.675 0.03220  2.6490  0.047 *  
+Year:Month         6    4.814 0.01787  0.4900  0.893    
+Year:Region        2    5.507 0.02044  1.6818  0.188    
+Month:Region      12   32.411 0.12030  1.6496  0.072 .  
+Year:Month:Region 12   27.262 0.10119  1.3875  0.161    
+Residual          38   62.218 0.23093                   
+Total             81  269.419 1.00000                   
+\end{verbatim}
+
+\end{frame}
+
+%====================================================================
+\frame{ \frametitle{On-going}
+
+  \paragraph{Not shown}
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item No clear difference for plants ($H_0 = \{h^A = h^B\}$)
+    \item More significance differences with the combined contrast ($H_0 = \{g^A = g^B, h^A = h^B\}$)
+  \end{itemize}
+
+  \bigskip \pause
+  \paragraph{To do}
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item On-going simulations to assess the efficience of the correction patch
+    \item Visualisation (multivariate dimensional scaling)
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References}
+  {%\footnotesize
+   \tiny
+   \bibliography{/home/robin/Biblio/BibGene}
+%    \bibliographystyle{/home/robin/LATEX/Biblio/astats}
+   \bibliographystyle{alpha}
+  }
+}
+
+%==================================================================
+%==================================================================
+\backupbegin
+% ==================================================================
+% \frame{\frametitle{Asymptotic distribution of the count}
+% 
+%   \bigskip 
+%   \paragraph{Estimated probability.} 
+%   $$
+%   \overline{\phi}_s := {\phi_2 \phi_4} \left/ {\phi_1} \right.
+%   \qquad \rightarrow \qquad 
+%   \overline{F}_s := {F_2 F_4} \left/ {F_1} \right.
+%   $$
+%   where $F_1$, $F_2$, $F_4 =$ observed frequencies of top stars, bottom stars and edges.
+%   
+%   \bigskip \bigskip \pause
+%   \paragraph{Asymptotic normality for non-star motifs.} Under \BEDD (and sparsity conditions):
+%   $$
+%   (F_s - \overline{F}_s) \left/ \sqrt{\widehat{\Var}(F_s)} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
+%   $$
+%   Proof: 
+%   \begin{itemize}
+%    \item decompose 
+%    $$
+%    F_s - \overline{F}_s 
+%    = \underset{\text{random fluctuations}}{\underbrace{(F_s - \phi_s)}} 
+%    + \underset{\text{null under \BEDD}}{\underbrace{(\phi_s - \overline{\phi}_s)}}  
+%    + \underset{\text{estimation error } \rightarrow 0}{\underbrace{(\overline{\phi}_s - \overline{F}_s)}}, 
+%    $$
+%    \item construct a counting martingale \refer{GaL17b} for $F_s - \phi_s$
+%   \end{itemize}
+% 
+%   \bigskip \pause
+%   \paragraph{Test statistic.} Under \BEDD:
+%   $$
+%   N_s \approx \Ncal\left(\widehat{\Esp}(N_s), \widehat{\Var}(N_s)\right)
+%   \qquad  \Leftrightarrow \qquad 
+%   \left({N_s - \widehat{\Esp}(N_s)}\right)\left/{\sqrt{\widehat{\Var}(N_s)}}\right. \approx \Ncal\left(0, 1\right)
+%   $$
+% }
+
+%==================================================================
+\frame{\frametitle{In practice: Asymptotic normality}
+
+  \begin{center}
+  \begin{tabular}{cccc}
+    ($n = 2m/3$) & $m=50$ & $m=100$ & $m=200$ \\
+    \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-adjMatMotif6} & 
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m50-n33-rho5-g2-h3-6nodesFALSE-B500-distCountMotif6} &
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m100-n67-rho5-g2-h3-6nodesFALSE-B500-distCountMotif6} &
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m200-n133-rho5-g2-h3-6nodesFALSE-B500-distCountMotif6} \\
+    \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-adjMatMotif16} & 
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m50-n33-rho5-g2-h3-6nodesFALSE-B500-distCountMotif16} &
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m100-n67-rho5-g2-h3-6nodesFALSE-B500-distCountMotif16} &
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m200-n133-rho5-g2-h3-6nodesFALSE-B500-distCountMotif16} \\
+  \end{tabular}
+  \end{center}
+  
+  \bigskip
+  \textcolor{blue}{Normal} distribution, \textcolor{magenta}{Poisson-geometric} distribution with same mean and variance \refer{Sta01,PDK08}
+
+}
+
+%==================================================================
+\frame{\frametitle{In practice: Test statistic}
+
+  \paragraph{Need to account for the estimation error} of $\widehat{\Esp} N$
+  
+  \begin{center}
+  \begin{tabular}{lccc}
+    & $m=50$ & $m=100$ & $m=200$ \\
+    \begin{tabular}{p{.175\textwidth}}
+    Regular stat.: 
+    $$
+    {\frac{N - \widehat{\Esp} N}{\sqrt{\widehat{\Var} N}}}
+    $$
+    \end{tabular}
+    & 
+    \begin{tabular}{c}
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m50-n33-rho5-g2-h3-6nodesFALSE-B500-distRawStat6}
+    \end{tabular}
+    & 
+    \begin{tabular}{c}
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m100-n67-rho5-g2-h3-6nodesFALSE-B500-distRawStat6}
+    \end{tabular}
+    & 
+    \begin{tabular}{c}
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m200-n133-rho5-g2-h3-6nodesFALSE-B500-distRawStat6}
+    \end{tabular}
+    \\ \pause
+    \begin{tabular}{p{.175\textwidth}}
+    Correction: 
+    $$
+    {\frac{N - (\widehat{\Esp} N - \emphase{\widehat{\Bias}(\widehat{\Esp} N)})}{\sqrt{\emphase{\widehat{\Var} (N - \widehat{\Esp} N)}}}}
+    $$
+    \end{tabular}
+    & 
+    \begin{tabular}{c}    
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m50-n33-rho5-g2-h3-6nodesFALSE-B500-distNormStat6}
+    \end{tabular}
+    & 
+    \begin{tabular}{c}
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m100-n67-rho5-g2-h3-6nodesFALSE-B500-distNormStat6}
+    \end{tabular}
+    & 
+    \begin{tabular}{c}    
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m200-n133-rho5-g2-h3-6nodesFALSE-B500-distNormStat6}
+    \end{tabular}
+  \end{tabular}
+  \end{center}
+  
+  \begin{itemize}
+   \item Need to evaluate \emphase{$\Var(N - \widehat{\Esp}(N))$} and \emphase{$\Bias(\widehat{\Esp} N)$}: resort to Taylor expansion ($\Delta-$method)
+  \end{itemize}
+}
+
+%==================================================================
+%==================================================================
+\backupend
+
+%==================================================================
+%==================================================================
+\end{document}
+%==================================================================
+%==================================================================
+
+\begin{tabular}{ll}
+  \begin{tabular}{p{.45\textwidth}}
+  \end{tabular}
+  &
+  \begin{tabular}{p{.45\textwidth}}
+  \end{tabular} 
+\end{tabular}
