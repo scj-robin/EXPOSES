@@ -37,9 +37,11 @@
 %==================================================================
 %==================================================================
 \title[Motifs and bipartite networks]{Motifs and bipartite networks: \\Application to plant-polinator interactions}
-\author{S. Robin}
+\author[S. Robin]{S. Robin \\ ~ \\
+  joint work with Sarah Ouadah \& Pierre Latouche \\ ~ \\
+}
 \institute[Sorbonne universit\'e]{\normalsize{Sorbonne universit\'e}}
-\date[EcoNet, Apr'24]{Ecole EcoNet, April 2024, Montpellier}
+\date[MAV, Jul'24]{MAV, July 2024, LPSM}
 \maketitle
 
 %==================================================================
@@ -48,16 +50,20 @@
 %==================================================================
 %==================================================================
 \section{Bipartite networks and motifs}
-\frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%==================================================================
 \frame{\frametitle{Bipartite network}
 
   \begin{tabular}{ll}
     \begin{tabular}{p{.45\textwidth}}
-      \paragraph{Two types of actors.}
+      \paragraph{Two types of nodes (='actors').}
       \begin{itemize}
       \item Mutualistic: plant-pollinator
       \item Antagonistic: host-parasite
       \end{itemize}
+      \bigskip 
+      \paragraph{Binary network:} \\
+      edge = observed interaction \\
       \bigskip \bigskip 
       \paragraph{Topological analysis:} \\
       understanding the network organisation \\
@@ -205,12 +211,13 @@
 %==================================================================
 %==================================================================
 \section{A null model}
-\frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%==================================================================
 \frame{\frametitle{Need for a null model}
 
   \paragraph{Motif counts} obviously depend on 
   \begin{itemize}
-   \item the \emphase{size} of the network: $n \times m$
+   \item the \emphase{size} of the network: $m \times n$
    \item the \emphase{density} of the network
    \item the \emphase{imbalance} between bottom-node degrees (specialist vs generalist pollinators)
    \item the \emphase{imbalance} between top-node degrees (specialist vs generalist plants)
@@ -232,12 +239,12 @@
 %==================================================================
 \frame{\frametitle{\BEDD model}
 
-  \paragraph{Bipartite expected degree distribution (\BEDD) model:} (formaly) \\~
+  \paragraph{Bipartite expected degree distribution (\BEDD) model:}  \\~
   \begin{itemize}
     \setlength{\itemsep}{1.15\baselineskip}
-    \item $\rho =$ network density
-    \item $g =$ top node degree imbalance ($\int g = 1$)
-    \item $h =$ bottom node degree imbalance ($\int h = 1$)
+    \item $\rho =$ network density ($\in [0, 1]$)
+    \item $g =$ top node degree imbalance ($g: [0, 1] \mapsto \Rbb^+, \quad \emphase{\int g = 1}$)
+    \item $h =$ bottom node degree imbalance ($h: [0, 1] \mapsto \Rbb^+, \quad \emphase{\int h = 1}$)
   \end{itemize}
   
   $$
@@ -310,21 +317,17 @@
   \paragraph{Sufficient statistics} to fit \BEDD: 
   \begin{itemize}
     \setlength{\itemsep}{1\baselineskip}
-    \item Pollinator degrees + plant degrees
-    \item or, equivalently, star (single edge, top, bottom) frequencies (see next)
+    \item Pollinator degrees + plant degrees or, equivalently, 
+    \item star (single edge, top, bottom) frequencies (see next)
   \end{itemize}
 
   }
 
 %==================================================================
-\frame{\frametitle{Properties of the \BEDD model}
-
-}
-
-%==================================================================
 %==================================================================
 \section{Motif distribution}
-\frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%==================================================================
 \frame{\frametitle{Counting motifs}
 
   \hspace{-.05\textwidth}
@@ -334,8 +337,9 @@
       \begin{itemize}
        \item Choose $p$ nodes among $m$
        \item Choose $q$ nodes among $n$
-       \item Try all {\sl automorphisms} 
+       \item Try the $r_s$ {\sl automorphisms} 
       \end{itemize}
+      There are $c_s$ 'positions'
       $$
       c_s := 
       \left(\begin{array}{c}m \\ p\end{array}\right)
@@ -421,40 +425,74 @@
 %   }
 % }
 
+% %==================================================================
+% \frame{\frametitle{Motif probability (1/2)}
+% 
+%   \paragraph{Occurrence probability $\overline{\phi}_s = \Pbb\{Y_{s\alpha} = 1\}$.} Consider the motif $s = \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9}$, which involves
+%   \begin{itemize}
+%     \item 3 top nodes (with resp. latent $U_1$, $U_2$ and $U_3$) and
+%     \item 2 bottom nodes (with resp. latent $V_1$ and $V_2$).
+%   \end{itemize}
+% 
+%   \pause \bigskip \bigskip 
+%   We have that:
+%   \begin{align*}
+%     \overline{\phi}_s 
+%     & = \int \dots \int \left(\rho g(u_1) h(v_2)\right) \left(\rho g(u_2) h(v_2)\right) \left(\rho g(u_3) h(v_1)\right) \left(\rho g(u_3) h(v_2)\right) \d u_1 \d u_2 \d u_3 \d v_1 \d v_2 \\
+%     & \onslide+<3->{= \rho^{-4} \left(\int \rho g(u_1) \d u_1\right) \left(\int \rho g(u_2) \d u_2\right) \left(\int \rho^2 g(u_3)^2 \d u_3\right) \\
+%     & \qquad \left(\int \rho h(v_1) \d v_1\right) \left(\int \rho^3 h(v_2)^3 \d v_2\right)}  \\
+%     & \onslide+<4->{= \rho^{-4} 
+%       \quad \times \quad 
+%       \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) 
+%       \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) 
+%       \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top2}\right) 
+%       \quad \times \quad 
+%       \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom1}\right) 
+%       \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom3}\right) }
+%   \end{align*}
+% 
+%   \bigskip 
+%   \onslide+<5->{\ra The probability of star motifs are the sufficient statistics of the \BEDD model.} 
+% }
+
 %==================================================================
-\frame{\frametitle{Motif probability (1/2)}
+\frame{\frametitle{Motif probability}
 
-  \paragraph{Occurrence probability $\overline{\phi}_s = \Pbb\{Y_{s\alpha} = 1\}$.} Consider the motif $s = \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9}$, which involves
-  \begin{itemize}
-    \item 3 top nodes (with resp. latent $U_1$, $U_2$ and $U_3$) and
-    \item 2 bottom nodes (with resp. latent $V_1$ and $V_2$).
-  \end{itemize}
+\paragraph{Occurrence probability $\overline{\phi}_s = \Pbb\{Y_{s\alpha} = 1\} =$} $\Pr\{\text{motif $s$ occurs at position $\alpha$}\}$
 
-  \pause \bigskip \bigskip 
-  We have that:
-  \begin{align*}
+\bigskip \bigskip
+Under the B-EDD model:
+\begin{align*}
     \overline{\phi}_s 
-    & = \int \dots \int \left(\rho g(u_1) h(v_2)\right) \left(\rho g(u_2) h(v_2)\right) \left(\rho g(u_3) h(v_1)\right) \left(\rho g(u_3) h(v_2)\right) \d u_1 \d u_2 \d u_3 \d v_1 \d v_2 \\
-    & \onslide+<3->{= \rho^{-4} \left(\int \rho g(u_1) \d u_1\right) \left(\int \rho g(u_2) \d u_2\right) \left(\int \rho^2 g(u_3)^2 \d u_3\right) \\
-    & \qquad \left(\int \rho h(v_1) \d v_1\right) \left(\int \rho^3 h(v_2)^3 \d v_2\right)}  \\
-    & \onslide+<4->{= \rho^{-4} 
-      \times 
-      \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) 
-      \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) 
-      \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top2}\right) 
-      \times
-      \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom1}\right) 
-      \phi\left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom3}\right) }
-  \end{align*}
+    & = \Esp_{(U_i), (V_j)}\left[\Pr\{\text{all edges from $s$ occur} \mid (U_i), (V_j)\}\right] \\
+    & = \Esp_{(U_i), (V_j)}\left[\prod_{\text{edge in $s$}} \rho g(U_i) h(V_j)\right] \\
+%     & = \int\dots\int \left( \prod_{\text{edges}} \rho g(u_i) h(v_j) \right)
+%     \left(\prod_{i = \text{top node}} \d u_i\right)
+%     \left(\prod_{j = \text{bottom node}} \d v_j\right) \\
+    & = \rho^{- \text{nb edges}} 
+    \prod_{i = \text{top node}} \underset{A_i}{\underbrace{\Esp_{U_i}\left[(\rho g(U_i))^{\text{degree($i$)}}\right]}}
+    \prod_{j = \text{bottom node}} \underset{B_j}{\underbrace{\Esp_{V_j}\left[(\rho h(V_j))^{\text{degree($j$)}}\right]}} 
+%     & = \rho^{- \text{nb edges}} 
+%     \left(\prod_{i = \text{top node}} \int (\rho g(u_i))^{\text{degree of $i$}} \d u_i\right)
+%     \left(\prod_{j = \text{bottom node}} \int (\rho h(v_j))^{\text{degree of $j$}} \d v_j\right) \\
+%     & = \rho^{- \text{nb edges}} 
+%     \left(\prod_{i = \text{top node}} (\text{degree($i$)-top star probability}) \right)
+%     \left(\prod_{j = \text{bottom node}} (\text{degree($j$)-bottom star probability})\right)
+\end{align*}
+where
+\begin{align*}
+  A_i & = \text{occurrence probability for a top-star with degree($i$)}, \\
+  B_j & = \text{occurrence probability for a bottom-star with degree($j$)}, \\
+\end{align*}
 
-  \bigskip 
-  \onslide+<5->{\ra The probability of star motifs are the sufficient statistics of the \BEDD model.} 
+{\ra The occurrence probabilities of star motifs are the sufficient statistics of the \BEDD model.} 
+
 }
 
 %==================================================================
-\frame{\frametitle{Motif probability (2/2)}
+\frame{\frametitle{Motif probability: An example}
 
-  \paragraph{Occurrence probability $\overline{\phi}_s = \Pbb\{Y_{s\alpha} = 1\}$.} Under the B-EDD model:
+  \paragraph{Occurrence probability $\overline{\phi}_s = \Pbb\{Y_{s\alpha} = 1\}$.} 
   \begin{align*}
     \left(\includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9}\right) 
     & = \; 
@@ -485,7 +523,7 @@
     \frac{\phi_2 \phi_4}{\phi_1}
   \end{align*}
 
-  \pause {\bigskip \bigskip 
+  \pause {\bigskip 
   \paragraph{Estimated probability $\overline{F}_s$.} 
   $$
   \overline{\phi}_s := \frac{\phi_2 \phi_4}{\phi_1}
@@ -508,7 +546,8 @@
   $$
   \includegraphics[width=.8\textwidth, trim=0 25 0 0, clip=]{\fignet/OLR22-EJS-Fig2}
   $$ 
-  \ra Compute the respective expected count in the way as for regular motifs \\ ~
+  \ra Compute the respective expected count in the same way as for regular motifs \\ ~ \\
+  \ra (No need to actually count super-motifs!) \\ ~
   \item \pause \emphase{Covariance:} Same game to compute $\Cov(N_s, N_{s'})$
   \end{itemize}
 
@@ -591,8 +630,9 @@
 
 %==================================================================
 %==================================================================
-\section{Network embedding}
-\frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
+\section{{\sl Application: Network embedding}}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%==================================================================
 \frame{\frametitle{Network embedding: Multivariate analysis}
 
   \paragraph{Analysing multiple networks.} Principle
@@ -637,63 +677,6 @@
 }
 
 %==================================================================
-\frame{\frametitle{Choleski transform}
-
-  \bigskip
-  \paragraph{Aim:} 'Remove' correlation and variance heterogeneity
-  
-  \bigskip
-  \begin{tabular}{cc}
-    \hspace{-0.04\textwidth}
-    \begin{tabular}{p{.45\textwidth}}
-      \paragraph{Covariance matrix of $(X_1, X_2)$:}
-      $$
-      \Sigma_{X_1, X_2} = \left[\begin{array}{cc} 
-                      \sigma^2_1 & \sigma_{12} \\
-                      \sigma_{12} & \sigma^2_2 \\
-                     \end{array}\right]
-      $$
-    \end{tabular}
-    & 
-    \begin{tabular}{p{.45\textwidth}}
-      \onslide+<2->{\paragraph{Choleski transform:}
-      $$
-      \left[\begin{array}{c} X'_1 \\ X'_2 \end{array} \right]
-      = \Sigma^{-1/2} \left[\begin{array}{c} X_1 \\ X_2 \end{array} \right]
-      $$}
-    \end{tabular} 
-    \\
-    \hspace{-0.04\textwidth}
-    \begin{tabular}{c}
-      \vspace{-0.08\textheight}
-      \includegraphics[width=0.35\textwidth, trim=25 25 25 25, clip=]{\fignet/Cholevski-raw} 
-    \end{tabular}
-    & 
-    \begin{tabular}{c}
-      \vspace{-0.08\textheight}
-      \onslide+<2->{\includegraphics[width=0.35\textwidth, trim=25 25 25 25, clip=]{\fignet/Cholevski-chol}}
-    \end{tabular} 
-    \\
-    \hspace{-0.04\textwidth}
-    \begin{tabular}{p{.45\textwidth}}
-      Diagonalization: $\Sigma = P \emphase{\Lambda} P^{-1}$ \\
-      ~ \\
-      Choleski matrix: $\Sigma^{-1/2} = P \emphase{\Lambda^{-1/2}} P^{-1}$
-    \end{tabular}
-    & \pause
-    \begin{tabular}{p{.45\textwidth}}
-      \onslide+<2->{$$
-      \Sigma_{X'_1, X'_2} = \left[\begin{array}{cc} 
-                      1 & 0 \\
-                      0 & 1 \\
-                     \end{array}\right]
-      $$}
-    \end{tabular} 
-  \end{tabular}
-
-}
-
-%==================================================================
 \frame{\frametitle{Network embedding: Zackenberg's data \refer{SRO16}}
 
   \bigskip
@@ -723,8 +706,9 @@
 
 %==================================================================
 %==================================================================
-\section{Goodness-of-fit and network comparison}
-% \frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
+\section{Goodness-of-fit and network comparison tests}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%==================================================================
 % \frame{\frametitle{Goodness-of-fit (GOF)}
 % 
 %   \paragraph{Aim of GOF tests.} Test if the observed data arise from a given model.
@@ -762,7 +746,7 @@
   \begin{tabular}{lc}
     \hspace{-.05\textwidth}
     \begin{tabular}{p{.5\textwidth}}
-      \onslide+<2->{\paragraph{Raw statistic:}
+      \onslide+<2->{\paragraph{Raw statistic:} for motif $s$
       $$
       T_s = \frac{N_s - \widehat{\Esp} N_s}{\sqrt{\widehat{\Var} N_s}}
       $$ \\ 
@@ -860,12 +844,13 @@
 
 %==================================================================
 %==================================================================
-\section{Contrast-based network embedding}
-\frame{\frametitle{Outline} \tableofcontents[currentsection]}%==================================================================
+\section{{\sl Application: Contrast-based network distance}}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%==================================================================
 \frame{\frametitle{Understanding the organisation of plant-pollinator networks}
 
   \bigskip
-  On-going joint work with Natasha de Manincor (Mons, Belgiuem) \& Fran\c{c}ois Massol (soon in IEES, SU)
+  On-going work with Natasha de Manincor (Mons, Belgium) \& Fran\c{c}ois Massol (soon in IEES, SU)
 
   \bigskip \bigskip 
   \paragraph{Aim.} Compare the organisation of plant-pollinator networks in space and time. \\
@@ -891,7 +876,7 @@
 }
   
 %==================================================================
-\frame{\frametitle{Contrast-based network embedding}
+\frame{\frametitle{Contrast-based network distance}
 
   \bigskip \bigskip 
   \paragraph{Problems.} 
@@ -904,7 +889,7 @@
   \pause \bigskip \bigskip 
   \paragraph{Contrast-based distance.} 
   $$
-  d(A, B) = \sum_s W_s^2
+  d_g(A, B) = \left(\sum_s W_s^2\right)^{1/2}
   $$
   where $W_s =$ test statistics based on motif $s$ for 
   $$
@@ -912,11 +897,11 @@
   $$
 
   \pause \bigskip 
-  \paragraph{Rational.} 
+  \paragraph{Rational.} The distance $d_g$
   \begin{enumerate}
     \setlength{\itemsep}{1.05\baselineskip}
-    \item The distance $d$ focuses on the difference in terms of pollinator imbalance
-    \item (Hopefully) insensitive to other factors: networks' dimensions ($m, n$), connectance ($\rho$), plant imbalance ($h$), \dots
+    \item $d$ focuses on the difference in terms of pollinator imbalance and
+    \item is (hopefully) insensitive to other factors: networks' dimensions ($m, n$), connectance ($\rho$), plant imbalance ($h$), \dots
   \end{enumerate}
 
 }
@@ -1149,6 +1134,63 @@ Total             81  269.419 1.00000
   \begin{itemize}
    \item Need to evaluate \emphase{$\Var(N - \widehat{\Esp}(N))$} and \emphase{$\Bias(\widehat{\Esp} N)$}: resort to Taylor expansion ($\Delta-$method)
   \end{itemize}
+}
+
+%==================================================================
+\frame{\frametitle{Choleski transform}
+
+  \bigskip
+  \paragraph{Aim:} 'Remove' correlation and variance heterogeneity
+  
+  \bigskip
+  \begin{tabular}{cc}
+    \hspace{-0.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Covariance matrix of $(X_1, X_2)$:}
+      $$
+      \Sigma_{X_1, X_2} = \left[\begin{array}{cc} 
+                      \sigma^2_1 & \sigma_{12} \\
+                      \sigma_{12} & \sigma^2_2 \\
+                     \end{array}\right]
+      $$
+    \end{tabular}
+    & 
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<2->{\paragraph{Choleski transform:}
+      $$
+      \left[\begin{array}{c} X'_1 \\ X'_2 \end{array} \right]
+      = \Sigma^{-1/2} \left[\begin{array}{c} X_1 \\ X_2 \end{array} \right]
+      $$}
+    \end{tabular} 
+    \\
+    \hspace{-0.04\textwidth}
+    \begin{tabular}{c}
+      \vspace{-0.08\textheight}
+      \includegraphics[width=0.35\textwidth, trim=25 25 25 25, clip=]{\fignet/Cholevski-raw} 
+    \end{tabular}
+    & 
+    \begin{tabular}{c}
+      \vspace{-0.08\textheight}
+      \onslide+<2->{\includegraphics[width=0.35\textwidth, trim=25 25 25 25, clip=]{\fignet/Cholevski-chol}}
+    \end{tabular} 
+    \\
+    \hspace{-0.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      Diagonalization: $\Sigma = P \emphase{\Lambda} P^{-1}$ \\
+      ~ \\
+      Choleski matrix: $\Sigma^{-1/2} = P \emphase{\Lambda^{-1/2}} P^{-1}$
+    \end{tabular}
+    & \pause
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<2->{$$
+      \Sigma_{X'_1, X'_2} = \left[\begin{array}{cc} 
+                      1 & 0 \\
+                      0 & 1 \\
+                     \end{array}\right]
+      $$}
+    \end{tabular} 
+  \end{tabular}
+
 }
 
 %==================================================================
