@@ -65,14 +65,14 @@
       \paragraph{Binary network:} \\
       edge = observed interaction \\
       \bigskip \bigskip 
-      \paragraph{Topological analysis:} \\
+      \onslide+<2>{\paragraph{Topological analysis:} \\
       understanding the network organisation \\
       \bigskip
       \paragraph{Local:} % \\
       node or edge properties (degree, betweenness) \\
       \bigskip
       \paragraph{Global:} % \\
-      density, connected components, nestedness 
+      density, connected components, nestedness }
     \end{tabular}
     &
     \begin{tabular}{p{.45\textwidth}}
@@ -101,7 +101,7 @@
     \begin{tabular}{p{.4\textwidth}}
       \includegraphics[width=.4\textwidth, trim=0 50 0 50]{\fignet/Zackenberg-1996_12-red-net} 
     \end{tabular} 
-    \\ \pause
+    \\ 
     \begin{tabular}{p{.6\textwidth}}
       \paragraph{Interactions.}
       \begin{itemize}
@@ -110,7 +110,7 @@
       $$
       A_{ij} = 1 \quad \Leftrightarrow \quad i \sim j
       $$
-      \item adjacency matrix : $m \times n$
+      \item \emphase{adjacency matrix}: $m \times n$
       $$
       A = [A_{ij}]_{1 \leq i \leq m, 1 \leq j \leq n}
       $$
@@ -136,7 +136,7 @@
        \item between local (several nodes) and global (sub-graph)
       \end{itemize}
       \bigskip \bigskip 
-      \onslide+<2->{
+      \onslide+<1->{
       \paragraph{Interest.}
       \begin{itemize}
        \item Generic description of a network
@@ -146,7 +146,7 @@
       ($+$ 'species-role': out of the scope here) \\
       }
       \bigskip \bigskip 
-      \onslide+<3->{
+      \onslide+<2->{
       \paragraph{Existing tool.} 
       \url{bmotif} package \refer{SSS19}: \\
       counts motif occurrences
@@ -188,7 +188,7 @@
     \end{tabular}  
     ~ \\
     \hline
-    \\ \pause
+    \\ 
     \begin{tabular}{p{.45\textwidth}}
       top 'stars' (plants) \\
       \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif1} 
@@ -228,7 +228,7 @@
   \begin{itemize}
     \setlength{\itemsep}{1.15\baselineskip}
     \item Consider $m$ pollinators ($i = 1, \dots m$): \\
-    each plant $i$ has a specific propensity to interact (degree of generalism)
+    each pollinator $i$ has a specific propensity to interact (degree of generalism)
     \item Consider $n$ plants ($j = 1, \dots n$): \\
     each plant $j$ has a specific propensity to interact  (idem)
     \item The probability for pollinator $i$ and plant $j$ to interact is proportional to the product of their respective propensities.
@@ -260,7 +260,7 @@
   \bigskip
   (Bipartite version of the EDD model \refer{ChL02})
   
-  \bigskip \bigskip \pause
+  \bigskip \bigskip 
   \paragraph{Model parameters:}
   $$
   \theta = (\rho, g, h).
@@ -304,7 +304,7 @@
     \item \emphase{Graph-exchangeable} model: pollinators can be permuted and plants can be permuted
   \end{itemize}
   
-  \bigskip \bigskip \pause
+  \bigskip \bigskip 
   \paragraph{Properties.}
   \begin{itemize}
     \setlength{\itemsep}{1\baselineskip}
@@ -313,7 +313,7 @@
     \item 'Nested' structure by construction
   \end{itemize}
   
-  \bigskip \bigskip \pause
+  \bigskip \bigskip 
   \paragraph{Sufficient statistics} to fit \BEDD: 
   \begin{itemize}
     \setlength{\itemsep}{1\baselineskip}
@@ -348,7 +348,7 @@
       $$ 
       ~ \\ ~ \\
     \end{tabular}
-    & \pause
+    & 
     \begin{tabular}{p{.5\textwidth}}
       \paragraph{Automorphisms=} non-redundant permutations \\
       \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism1}
@@ -460,7 +460,7 @@
 
 \paragraph{Occurrence probability $\overline{\phi}_s = \Pbb\{Y_{s\alpha} = 1\} =$} $\Pr\{\text{motif $s$ occurs at position $\alpha$}\}$
 
-\bigskip \bigskip
+\bigskip \bigskip \pause
 Under the B-EDD model:
 \begin{align*}
     \overline{\phi}_s 
@@ -608,6 +608,7 @@ where
 
   \paragraph{Asymptotic normality for non-star motifs.} Under \BEDD (and sparsity conditions):
   $$
+  T_s := 
   (F_s - \overline{F}_s) \left/ \sqrt{\widehat{\Var}(F_s)} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
   $$
   Proof \refer{OLR22}: 
@@ -641,7 +642,7 @@ where
    \item Use standard multivariate analysis (clustering, PCA, MDS, ...)
   \end{itemize}
   
-  \bigskip \bigskip \pause
+  \bigskip \bigskip 
   \paragraph{Using motifs.} $K$ networks 
   $$
   (\text{Network})_k \quad \rightarrow \quad
@@ -681,9 +682,9 @@ where
 
   \bigskip
   \begin{tabular}{c|c|c|c}
-    \onslide+<1->{Raw counts} & 
-    \onslide+<2->{Corrected stat.} & 
-    \onslide+<3->{Choleski} & 
+    \onslide+<1->{Raw counts $N$} & 
+    \onslide+<2->{Corrected stat. $T'$} & 
+    \onslide+<3->{Choleski $T''$} & 
     \onslide+<4>{Bray-Curtis MDS} \\
     \hline
     \onslide+<1->{\includegraphics[width=.2\textwidth, height=.175\textheight]{\fignet/Zackenberg-red-PCAcount-scree}} &
@@ -787,18 +788,17 @@ where
   \bigskip
   \paragraph{Question.} Is there some degree imbalance between plants?
   
-  \bigskip \pause
+  \bigskip 
   \paragraph{Statistical test.} 
   \begin{itemize}
     \item Assume $A \sim BEDD(\rho, g, h)$, 
     $$
     \emphase{H_0 = \{h = 1\}}
     $$
-    \item For motif $s$, evaluate $\widehat{\Esp}_0(N_s)$ and $\widehat{\Var}_0(N_s)$ and compare 
+    \item For motif $s$, evaluate $\widehat{\Esp}_0(N_s) = \widehat{\Esp}_{\widehat{\rho}, \widehat{g}, \emphase{h_0}}(N_s)$ and $\widehat{\Var}_0(N_s) =  \widehat{\Var}_{\widehat{\rho}, \widehat{g}, \emphase{h_0}}(N_s)$ and use 
     $$
-    W_s = (N_s - \widehat{\Esp}_0(N_s)) / \sqrt{\widehat{\Var}_0(N_s)}
-    $$ 
-    with $\Ncal(0, 1)$
+    W_s = (N_s - \widehat{\Esp}_0(N_s)) / \sqrt{\widehat{\Var}_0(N_s)} \underset{H_0}\longrightarrow\Ncal(0, 1)
+    $$
   \end{itemize}
 
   
@@ -816,18 +816,18 @@ where
   \bigskip
   \paragraph{Question.} Do network $A$ and $B$ share the same imbalance for pollinators?
   
-  \bigskip \pause
+  \bigskip 
   \paragraph{Statistical test.} 
   \begin{itemize}
     \item Assume $A \sim BEDD(\rho^A, g^A, h^A)$ and $B \sim BEDD(\rho^B, g^B, h^B)$
     $$
     H_0 = \{g^A = g^B\}
     $$
-    \item For motif $s$, evaluate $\widehat{\Esp}_{\widehat{\rho}^A, \emphase{\widehat{g}^B}, \widehat{h}^A}(N^A_s)$ and $\widehat{\Esp}_{\widehat{\rho}^B, \emphase{\widehat{g}^A}, \widehat{h}^B}(N^B_s)$ and compare 
+    \item For motif $s$, evaluate $\widehat{\Esp}_{\widehat{\rho}^A, \emphase{\widehat{g}^B}, \widehat{h}^A}(N^A_s)$ and $\widehat{\Esp}_{\widehat{\rho}^B, \emphase{\widehat{g}^A}, \widehat{h}^B}(N^B_s)$ and use 
     $$
     W_s = \frac{(N_s^A - \widehat{\Esp}_0(N_s^A)) - (N_s^B - \widehat{\Esp}_0(N_s^B))}{\sqrt{\widehat{\Var}_0(N^A_s) + \widehat{\Var}_0(N^B_s)}}
+    \underset{H_0}\longrightarrow\Ncal(0, 1)    
     $$ 
-    with $\Ncal(0, 1)$
   \end{itemize}
 
   
@@ -896,7 +896,7 @@ where
   H_0 = \{g^A = g^B\}.
   $$
 
-  \pause \bigskip 
+  \bigskip 
   \paragraph{Rational.} The distance $d_g$
   \begin{enumerate}
     \setlength{\itemsep}{1.05\baselineskip}
@@ -909,17 +909,17 @@ where
 %==================================================================
 \begin{frame}[fragile] \frametitle{Results}
 
-  \paragraph{Distance-based analysis of variance.} \refer{LeA99,McA01}
+  \paragraph{Distance-based analysis of variance.} 'Adonis' \refer{LeA99,McA01}
   \begin{itemize}
     \item Data = distance matrix + network covariates
     \item Standard analysis of variance model \\  
     \ra Rewriting sums of squares in terms of squared distances $d(A, B)^2$ \\
     \ra Permutation tests for significance
-    \item {\tt vegan} R package ({\tt adonis})
+    \item {\tt vegan} R package 
   \end{itemize}
   
   \bigskip \pause
-  \paragraph{Plant-pollinator networks.}   
+  \paragraph{Plant-pollinator networks.}  {\small
 \begin{verbatim}
                   Df SumOfSqs      R2      F Pr(>F)    
 Year               1    2.243 0.00832 1.3317  0.310    
@@ -931,7 +931,7 @@ Month:Region      12   45.567 0.16913 2.2549  0.010 **
 Year:Month:Region 12   32.856 0.12195 1.6258  0.070 .  
 Residual          40   67.362 0.25003                  
 Total             81  269.419 1.00000                  
-\end{verbatim}
+\end{verbatim} }
   
 \end{frame}
 
@@ -947,7 +947,7 @@ Total             81  269.419 1.00000
   \ra Should see no effect of any factor.
   
   \bigskip \pause
-  \paragraph{Distance-based anova.}   
+  \paragraph{Distance-based anova.} {\small  
 \begin{verbatim}
                   Df SumOfSqs      R2      F Pr(>F)   
 Year               1    1.504 0.01144 0.9367  0.427   
@@ -959,7 +959,7 @@ Month:Region      12   12.549 0.09542 0.6512  0.849
 Year:Month:Region 12   17.387 0.13221 0.9023  0.562   
 Residual          40   64.234 0.48842                 
 Total             81  131.513 1.00000                 
-\end{verbatim}
+\end{verbatim} }
 
   \bigskip \pause
   \ra Imperfect correction for the network's  (only asymptotic mean and variance?)
@@ -972,7 +972,7 @@ Total             81  131.513 1.00000
   \paragraph{Patch.} Include the networks' dimensions $(m_k, n_k)$ in the anova model
   
   \bigskip \pause
-  \paragraph{Plant-pollinator networks.}   
+  \paragraph{Plant-pollinator networks.}   {\small
 \begin{verbatim}
                   Df SumOfSqs      R2       F Pr(>F)    
 insectNb           1   69.905 0.25946 42.6945  0.001 ***
@@ -986,7 +986,7 @@ Month:Region      12   32.411 0.12030  1.6496  0.072 .
 Year:Month:Region 12   27.262 0.10119  1.3875  0.161    
 Residual          38   62.218 0.23093                   
 Total             81  269.419 1.00000                   
-\end{verbatim}
+\end{verbatim} }
 
 \end{frame}
 
