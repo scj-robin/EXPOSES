@@ -1,0 +1,648 @@
+\documentclass[8pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+% \usepackage[dvipsnames]{xcolor}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd, mathabx}
+\usepackage{epsfig}
+\usepackage{multirow}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\dN}{\Delta N}
+\newcommand{\dtau}{\Delta \tau}
+
+% Directory
+\newcommand{\figcp}{/home/robin/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+% \newcommand{\figDLR}{/home/robin/Bureau/Hawkes/segHP/article/StatComp2023/Revision/figures}
+\newcommand{\figchiro}{/home/robin/Bureau/Hawkes/HawkesDiscreteHMM/Figures/chiropteres}
+\newcommand{\figsimul}{/home/robin/Bureau/Hawkes/HawkesDiscreteHMM/Figures/simuls}
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title{Markov-switching (discrete-time) Hawkes process}
+
+\author[S. Robin]{S. Robin \\ \medskip
+\begin{tabular}{rl}
+  joint work with A. Bonnet 
+\end{tabular}
+% , E. Lebarbier, C. Dion-Blanc \refer{DLR24}
+}
+
+\institute[Sorbonne université]{\normalsize{LPSM, Sorbonne université}}
+
+\date[SAMM'25]{Séminaire du SAMM, Paris I, Jan. 2025}
+
+%====================================================================
+%====================================================================
+\maketitle
+
+%====================================================================
+%====================================================================
+\section*{Introduction}
+%====================================================================
+\frame{\frametitle{Problem} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Counting process} \\
+      Overnight recording of bat cries in continuous time
+      
+      \bigskip
+      \begin{itemize}
+        \setlength{\itemsep}{.75\baselineskip}
+        \onslide+<3->{\item Can we detect changes in the occurrence of events?}
+        \onslide+<4->{\item Can we associate each time period with some underlying behavior?}
+      \end{itemize}
+      \bigskip \bigskip 
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{overprint}
+        \onslide<1>
+        \includegraphics[width=.45\textwidth]{\figcp/ChauveSouris-GrandBourg}
+        \onslide<2>
+        \includegraphics[width=.45\textwidth, trim=0 0 0 50, clip=]{\figchiro/Chiro-seq625-N1535-Qmax5-raw.png}
+        \onslide<3>
+        \includegraphics[width=.45\textwidth, trim=0 0 0 50, clip=]{\figchiro/Chiro-seq625-N1535-Qmax5-seg.png}
+        \onslide<4->
+        \includegraphics[width=.45\textwidth, trim=0 0 0 50, clip=]{\figchiro/Chiro-seq625-N1535-Qmax5-viterbi.png}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+  \onslide+<5>{\paragraph{Modelling.} Markov switching point process.}
+}
+
+%====================================================================
+\frame{\frametitle{Point process} 
+
+  \paragraph{Reminder.}
+%   \vspace{-.1\textheight}
+  $$
+  \includegraphics[width=.6\textwidth, trim=0 10 0 0, clip=]{\figcp/Bon24-Hawkes-Fig1}
+  $$ 
+  \begin{itemize}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item $(T_k)_{k \geq 1}$ a random collection of points
+    \item Count process $H(t) = \sum_{k \geq 1} \Ibb\{T_k \leq t\}$
+    \item Intensity function $\lambda(t)$: immediate probability of observing an event at time $t$
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Examples}
+  \begin{itemize}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item{Homogeneous Poisson process:} $\lambda(t) \equiv \lambda$
+    \item{Heterogeneous Poisson process:} $\lambda(t) =$ deterministic function
+    \item{Hawkes process:} $\lambda(t) =$ random function of the past
+  \end{itemize}
+  
+}
+
+%====================================================================
+%====================================================================
+\section{(Discrete) Hawkes process}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Univariate Hawkes process} 
+
+  $$
+  \includegraphics[width=.6\textwidth]{\figcp/Bon24-Hawkes-Fig2}
+  $$
+ 
+  \bigskip
+  \paragraph{(Conditional) intensity function for the Hawkes process \refer{Haw71a}:}
+  $$
+  \lambda(t \mid \Hcal_t)= \lambda(t) = \lambda_0 + \underset{T_k < t}{\sum} h(t-T_k)
+  $$
+ %\nocite{Haw71b}
+ 
+  \begin{itemize}
+  \item $\lambda_0 =$ baseline 
+  \item $h =$ kernel = influence of past events
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Self-exciting exponential Hawkes process} 
+
+  $$
+  \lambda(t)= \lambda_0 + \underset{T_k < t}{\sum} a e^{-b(t-T_k)}
+  $$
+  \paragraph{Self exciting:} 
+  Each event increases the probability of observing another event
+  
+  \bigskip \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.4\textwidth}}
+      \includegraphics[width=.4\textwidth, trim=0 450 0 0, clip=]{\figcp/Bon24-Hawkes-Fig3}
+    \end{tabular}
+    & 
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.55\textwidth}}
+      \begin{itemize}
+        \setlength{\itemsep}{1.5\baselineskip}
+        \item Exponential kernel function \emphase{$h(t)= a e^{-b t}$}
+        \item \emphase{$a \geq 0$} to ensure that $\lambda$ is non negative 
+        \item \emphase{$a/b <1$} to ensure stationarity
+        \item Applications: sismology, epidemiology, neuroscience, ecology, ...
+      \end{itemize}
+    \end{tabular}
+  \end{tabular}  
+
+}
+
+%====================================================================
+\frame{\frametitle{Cluster representation} 
+
+  $$
+  \includegraphics[width=.7\textwidth, trim=0 100 0 0 0, clip=]{\figcp/Bon24-Hawkes-Cluster}
+  $$
+  $$
+  \text{\refer{HaO74}} \quad 
+  \includegraphics[width=.2\textwidth, trim=350 50 350 550, clip=]{\figcp/Bon24-Hawkes-Cluster}
+  \includegraphics[width=.2\textwidth, trim=350 10 350 590, clip=]{\figcp/Bon24-Hawkes-Cluster}
+  $$
+%   \refer{HaO74}
+  \begin{itemize}
+  \item Immigrants arrive at rate $\lambda_0$ 
+  \item Each immigrant or descendant produces new individuals at rate $h(t - T)$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Discrete time Hawkes process} 
+
+\paragraph{Continuous time exponential Hawkes process}
+$$
+\lambda(t)=\lambda_0 + \underset{T_k < t}{\sum} a e^{-b(t-T_k)} 
+$$    
+
+\bigskip \bigskip \pause
+\paragraph{Discretization} \refer{Seo15,Kir16,Kir17}
+\begin{itemize}
+  \setlength{\itemsep}{0.75\baselineskip}
+  \item $I_k=[ \tau_{k-1};\tau_k]$ with $\tau_k=k\Delta$
+  \item $H_k = H(I_k)$ the number of events on $I_k$
+  $$
+  \includegraphics[width=.45\textwidth, trim=0 230 0 70, clip=]{\figcp/Bon24-Hawkes-Fig4}
+  $$
+  \item Distribution of $(H_k)_{k \geq 1}$?
+\end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Discrete time Hawkes process} 
+
+  $H_k$ number of events on $I_k=[ \tau_{k-1};\tau_k]$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Count distribution}
+  $$
+  H_k \overset{\Delta}{=} B_k + \sum_{\ell \leq k-1} \sum_{T \in I_\ell} M_T(I_k) + R_k
+  $$
+  \begin{itemize}
+    \item $B_k \sim \mathcal{P}(\lambda_0 \Delta)$ discrete immigrant process
+    \item $ M_T(I_k) \sim \mathcal{P}\left(c(a,b,\Delta) e^{-b(\tau_{k-1}-\emphase{T})}\right)$ descendants of $T<\tau_{k-1}$
+    \item $R_k$ number of descendants of points $T \in I_k$ within $I_k$
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Approximation when $\Delta$ is small}
+  \begin{itemize}
+    \item  $ M_T(I_k) \simeq \mathcal{P}\left(c(a,b,\Delta) e^{-b(\tau_{k-1}-\emphase{\tau_{\ell-1}})}\right)$ for $T \in  I_\ell=[\tau_{\ell-1}; \tau_\ell]$
+    \item \emphase{$R_k \simeq 0$}
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Markovian reformulation} 
+
+  \paragraph{Approximation of $H_k$}
+  $$
+  Y_k \mid (Y_\ell)_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \sum_{\ell = 1}^{k-1}\alpha \beta^{\ell-1} Y_{k-\ell} \right),
+  $$
+  with $\mu=\lambda_0 \Delta$ and $\alpha$, $\beta$ depending on $a$, $b$, $\Delta$.
+
+  \bigskip \bigskip 
+  $(Y_k)_{k\geq 1}$ is \emphase{not a Markov chain} (infinite memory) but 
+  \begin{itemize}
+    \item \pause defining 
+    \begin{align*}
+      U_1 = 0, \qquad \qquad 
+      U_k = \sum_{\ell = 1}^k \alpha \beta^{\ell-1} Y_{k-\ell}, 
+    \end{align*} 
+    \item \pause we have for $k \geq 1$ \textcolor{gray}{(with $U_0 = Y_0 = 0$)}
+    \begin{align*}
+      U_k = {\alpha Y_{k-1} + \beta U_{k-1}}, 
+      \qquad \qquad 
+      Y_k \mid U_k \sim \mathcal{P}(\mu + U_k),
+    \end{align*}
+    \item \pause so \emphase{$\left((Y_k,U_k)\right)_{k \geq 1}$ forms a Markov Chain}.
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Graphical model} 
+
+  \paragraph{Discrete time Hawkes process.}
+  $$
+  (Y_k)_{k \geq 1} \sim Discrete~Hawkes(\mu, \alpha, \beta)
+  $$
+  \begin{align*}
+    U_1 & = 0, &
+    U_k & = \alpha Y_{k-1} + \beta U_{k-1}, & 
+    Y_k & \sim \mathcal{P}(\mu + U_k)
+  \end{align*}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Graphical model:}
+  \begin{figure}
+    \begin{centering}
+    \input{\figcp/Hawkes-DirectedGM} \\
+    $\quad (U_k)_{k \geq 1} =$ \emphase{memory}, 
+    $\quad (Y_k)_{k \geq 1} =$ \emphase{observed process}.
+    \end{centering}
+  \end{figure}
+  
+  \begin{align*}
+    p\left(U_k, Y_k \mid (U_s, Y_s)_{s \leq k-1}\right)
+    & =
+    p\left(U_k, Y_k \mid U_{k-1}, Y_{k-1}\right) \\
+    & =
+    p\left(U_k \mid U_{k-1}, Y_{k-1}\right) p\left(Y_k \mid U_k\right)
+  \end{align*}
+
+}
+
+%====================================================================
+%====================================================================
+\section{Discrete Markov switching Hawkes process}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Discrete time Hawkes HMM} 
+
+  \paragraph{Model:} $Q$ hidden states
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item Hidden path: $(Z_k)_{k \geq 1}$ homogeneous Markov chain with transition matrix $\pi$
+    \item \pause Observed counts: for $k\geq 1$ and
+      $$
+      Y_k \mid (Y_\ell)_{\ell \leq k-1} 
+      \sim \mathcal{P}\left(\emphase{\mu_{Z_k}} + \sum_{\ell = 1}^{k-1} \alpha \beta^{\ell-1}Y_{k-\ell} \right)
+      $$  
+      or, for $k \geq 1$ \textcolor{gray}{(with $U_0 = Y_0 = 0$)}
+      \begin{align*}
+        U_k & = \alpha Y_{k-1} + \beta U_{k-1}, &
+        Y_k & \mid (Y_\ell)_{\ell \leq k-1} 
+        \sim \mathcal{P}\left(\emphase{\mu_{Z_k}} + U_k \right)
+      \end{align*}
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Assumptions:}
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item The immigration rate varies with the hidden path
+    \item The distribution of the number of offspring does not vary with the hidden path
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Discrete time Hawkes HMM} 
+
+  \paragraph{Graphical model:}
+  \begin{figure}
+    \begin{centering}
+    \input{\figcp/Hawkes-HMM-DirectedGM} \\
+    $(Z_k)_{k \geq 1} =$ \emphase{hidden path}, 
+    $\quad (U_k)_{k \geq 1} =$ memory, 
+    $\quad (Y_k)_{k \geq 1} =$ observed process.
+    \end{centering}
+  \end{figure}
+
+  \bigskip \bigskip \pause
+  \paragraph{Remarks:}
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item The memory of the past is stored in the variable $U_k$, which can still be computed recursively ($U_k = \alpha Y_{k-1} + \beta U_{k-1}$)
+    \item The Markovian property still holds if the influence of the past varies with the hidden path ($\alpha \to \alpha_k, \beta \to \beta_k$).
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Inference}
+
+  \paragraph{Aim:} Infer the parameter $\theta = ((\mu_q)_{1 \leq q \leq Q}, \pi)$
+  $$
+  \widehat{\theta} = \argmax_\theta \log p_\theta(Y)
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{EM algorithm for HMM:} \refer{DLR77,CMR05}
+  $$
+  \theta^{(h+1)} 
+  = \underset{\text{\normalsize \emphase{M step}}}{\underbrace{\argmax_\theta}} \; \underset{\text{\normalsize \emphase{E step}}}{\underbrace{\Esp_{\theta^{(h)}}}}[\log p_\theta(Y, Z) \mid Y]
+  $$
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item E step: Evaluate $Q(\theta \mid \theta^{(h)}) = \Esp_{\theta^{(h)}}[\log p_\theta(Y, Z) \mid Y]$ (forward-backward recursion)
+    \item M step: Gradient descent, computing $\nabla_\theta Q(\theta \mid \theta^{(h)})$ by recursion
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Inference}
+
+  \paragraph{Classification:} 
+  \begin{align*}
+    \text{Marginal:} & & 
+    \widehat{Z}_k & = \argmax_q P_{\widehat{\theta}}\{Z_k = q \mid Y \}, \\
+    \text{Joint (Viterbi):} & & 
+    \widehat{Z} & = \argmax_z p_{\widehat{\theta}}(Z=z \mid Y) 
+  \end{align*}
+
+  \bigskip \bigskip \pause
+  \paragraph{Model selection:} Penalized likelihood
+  \begin{align*}
+    AIC_Q & = \log p_{\widehat{\theta}_Q}(Y) - D_Q, &
+    BIC_Q & = \log p_{\widehat{\theta}_Q}(Y) - D_Q \frac{\log(\emphase{N})}2.     
+  \end{align*}
+  with $D_Q =$ number of parameters $= 2 + Q^2$ and $N =$ number of time bins.
+}
+
+%====================================================================
+%====================================================================
+\section{Simulation study}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{ \frametitle{Simulation design}
+
+  \begin{itemize}
+    \setlength{\itemsep}{1.5\baselineskip}
+    \item \emphase{Baseline continuous parameters:} $a^0 = 40$, $b^0 = 160$, 
+    $$
+    Q = 1: m^0 = [60], \quad
+    Q = 2: m^0 = [1, \;400], \quad
+    Q = 3: m^0 = [10, \;200, \;1000]
+    $$
+    \item \pause \emphase{Increasing signal:}
+    $$
+    a = \lambda \; a^0, \qquad 
+    m = \lambda \; m^0, \qquad 
+    \lambda = .5, \;1, \; 1.5, \;2.
+    $$ 
+    \item \pause \emphase{Simulated process:}
+    $$
+    (H_t)_{0 \leq t \leq 1} \sim Heterogeneous~Continuous~Hawkes(a, b^0, m)
+    $$
+    \item \pause \emphase{Discretized process:} $n = H(1)$
+    $$
+    N = c \; n, \qquad c = 0.5, \;1, \;2, \;4,
+    $$
+    $$
+    Y_k = H\left(\left[\frac{k-1}{N}; \frac{k}{N}\right]\right).
+    $$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{ \frametitle{Simulation results ($Q^* = 3$)}
+
+  \begin{overprint}
+    \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta}/\theta^*$ ($Q = Q^*$) \\
+    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-Coef-discParms}
+    \onslide<2> \paragraph{Model selection: BIC.} Distribution of $BIC_Q - BIC_1$ \\
+    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-Coef-BIC}
+    \onslide<3> \paragraph{Model selection: AIC.} Distribution of $AIC_Q - AIC_1$ \\
+    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-Coef-AIC}
+    \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, \widehat{Q}, Q^*}(Poisson)$ / $AIC_{1, \widehat{Q}, Q^*}(Hawkes)$ \\
+    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-Coef-compAIC}
+  \end{overprint}
+}
+    
+%====================================================================
+%====================================================================
+\section{Illustrations}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{ \frametitle{Bat cries}
+
+  \paragraph{Data set.} $\sim 1000$ overnight recordings.
+  
+  \bigskip 
+  \begin{overprint}
+    \onslide<2> \paragraph{Model selection.} $n = $ nb events, $N = c \; n$, \quad top: $BIC$, bottom: $AIC$. \\
+    \includegraphics[width=.9\textwidth, height=.7\textheight]{\figchiro/ResSeqData-Coef-Qhat}
+  \end{overprint}
+}
+    
+%====================================================================
+\frame{ \frametitle{Examples}
+
+  \begin{overprint}
+    \onslide<1> \paragraph{A recording.}
+    $n = 1535, \; c = 1 : N = 1535, \quad \widehat{Q}= 3$ \\ ~
+    $$
+    \begin{tabular}{ccc}
+      marginal classification & Viterbi & Model selection \\
+      $\widehat{Z}_k$ & $\widehat{Z}$ & \textcolor{red}{Hawkes} / \textcolor{blue}{Poisson} \\ 
+      \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq625-N1535-Qmax5-classif} &
+      \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq625-N1535-Qmax5-viterbi} &
+      \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq625-N1535-Qmax5-models}     
+    \end{tabular}
+    $$
+    \onslide<2> \paragraph{Another recording.}
+    $n = 1391, \; c = 1 : N = 1391, \quad \widehat{Q}= 3$ \\ ~
+    $$
+    \begin{tabular}{ccc}
+      marginal classification & Viterbi & Model selection \\
+      $\widehat{Z}_k$ & $\widehat{Z}$ & \textcolor{red}{Hawkes} / \textcolor{blue}{Poisson} \\ 
+      \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq1530-N1391-Qmax5-classif} &
+      \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq1530-N1391-Qmax5-viterbi} &
+      \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq1530-N1391-Qmax5-models}     
+    \end{tabular}
+    $$
+%     \onslide<3> \paragraph{Another recording.}
+%     $n = 1574, \; c = 4 : N = 6296, \quad \widehat{Q}= 3$ 
+%     $$
+%     \begin{tabular}{ccc}
+%       marginal classification & Viterbi & Model selection \\
+%       $\widehat{Z}_k$ & $\widehat{Z}$ & \textcolor{red}{Hawkes} / \textcolor{blue}{Poisson} \\ 
+%       \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq2283-N6296-Qmax5-classif} &
+%       \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq2283-N6296-Qmax5-viterbi} &
+%       \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq2283-N6296-Qmax5-models}     
+%     \end{tabular}
+%     $$
+  \end{overprint}
+}
+    
+%====================================================================
+%====================================================================
+\section{Discussion}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{ \frametitle{Summary}
+
+  \paragraph{What we did.} \\ ~
+  \begin{itemize}
+    \setlength{\itemsep}{1.5\baselineskip}
+    \item The discretized Markov switching Hawkes process with exponential kernel is a hidden Markov model
+    \item The standard EM machinery applies to achieve maximum likelihood inference.
+    \item Not shown: initialization based on existing tools for homogeneous Hawkes and Poisson HMM
+  \end{itemize}
+}
+    
+%====================================================================
+\frame{ \frametitle{Discussion}
+
+  \paragraph{What we did not do.} \\ ~
+  \begin{itemize}
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item Goodness-of-fit: 'Poissonisation' (on-going). \\
+    \item Model selection: BIC does not seem to work: why? \\
+    (simulation scheme, wrong derivation of the BIC, ...?)
+    \item Identifiability: Needs to be proven. \\
+    (standard HMM-dedicated strategies does not apply here \refer{AMR09}).
+    \item Understand the inferred latent states. \\
+    (different animal behavior, species, ...)
+  \end{itemize}
+
+}
+    
+%====================================================================
+\frame{ \frametitle{References}
+  {
+   \tiny
+   \bibliography{/home/robin/Biblio/BibGene}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+%====================================================================
+\backupbegin 
+\section*{Backup}
+%====================================================================
+\frame{ \frametitle{Backup: Discrete HMM}
+
+  \paragraph{Conversion formulas} from continuous to discrete Hawkes
+  $$
+  \alpha  = \frac{e^{b \Delta} - 1}{b}, \qquad \beta = e^{-b \Delta}
+  $$
+    
+  \bigskip \pause 
+  \paragraph{3-step initialization}
+  \begin{itemize}
+    \item Homogeneous Hawkes for the reproduction parameters $\alpha$ and $\beta$ \\
+    ({\tt hawkesbow} R package \refer{Che21})
+    \item Poisson-HMM for the rates $\mu_1, \dots, \mu_Q$ and transition $\pi$
+    \item Correction $\mu_k \rightarrow \widetilde{\mu}_k$ to account for reproduction rate
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{ \frametitle{Simulation results ($Q^* = 1$)}
+
+  \begin{overprint}
+    \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta}/\theta^*$ ($Q = Q^*$) \\
+    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q1-Coef-discParms}
+    \onslide<2> \paragraph{Model selection: BIC.} Distribution of $BIC_Q - BIC_1$ \\
+    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q1-Coef-BIC}
+    \onslide<3> \paragraph{Model selection: AIC.} Distribution of $AIC_Q - AIC_1$ \\
+    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q1-Coef-AIC}
+    \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, \widehat{Q}, Q^*}(Poisson)$ / $AIC_{1, \widehat{Q}, Q^*}(Hawkes)$ \\
+    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q1-Coef-compAIC}
+  \end{overprint}
+}
+    
+%====================================================================
+\frame{ \frametitle{Simulation results ($Q^* = 2$)}
+
+  \begin{overprint}
+    \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta}/\theta^*$ ($Q = Q^*$) \\
+    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q2-Coef-discParms}
+    \onslide<2> \paragraph{Model selection: BIC.} Distribution of $BIC_Q - BIC_1$ \\
+    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q2-Coef-BIC}
+    \onslide<3> \paragraph{Model selection: AIC.} Distribution of $AIC_Q - AIC_1$ \\
+    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q2-Coef-AIC}
+    \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, \widehat{Q}, Q^*}(Poisson)$ / $AIC_{1, \widehat{Q}, Q^*}(Hawkes)$ \\
+    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q2-Coef-compAIC}
+  \end{overprint}
+}
+    
+% %====================================================================
+% \frame{ \frametitle{Backup: GoF}
+% 
+%   \paragraph{Change-time} for the recording of bat cries over one night:
+%   $$
+%   \begin{tabular}{cccc}
+%     $Q = 1$ & $Q = 2$ & $Q = 3$ & $Q = 4$ \\
+%     \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q1gof} &
+%     \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q2gof} &
+%     \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q3gof} &
+%     \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q4gof}   
+%     \end{tabular}
+%   $$
+% 
+% }
+
+%====================================================================
+\backupend 
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+  
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}
+
+
