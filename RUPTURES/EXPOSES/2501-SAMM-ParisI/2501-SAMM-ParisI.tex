@@ -67,7 +67,7 @@
 %====================================================================
 \section*{Introduction}
 %====================================================================
-\frame{\frametitle{Problem} 
+\frame{\frametitle{'Motivation'} 
 
   \begin{tabular}{cc}
     \hspace{-.04\textwidth}
@@ -88,6 +88,7 @@
     \begin{tabular}{p{.5\textwidth}}
       \begin{overprint}
         \onslide<1>
+        ~ \bigskip 
         \includegraphics[width=.45\textwidth]{\figcp/ChauveSouris-GrandBourg}
         \onslide<2>
         \includegraphics[width=.45\textwidth, trim=0 0 0 50, clip=]{\figchiro/Chiro-seq625-N1535-Qmax5-raw.png}
@@ -184,13 +185,12 @@
 }
 
 %====================================================================
-\frame{\frametitle{Cluster representation} 
+\frame{\frametitle{Cluster representation \refer{HaO74}} 
 
   $$
   \includegraphics[width=.7\textwidth, trim=0 100 0 0 0, clip=]{\figcp/Bon24-Hawkes-Cluster}
   $$
   $$
-  \text{\refer{HaO74}} \quad 
   \includegraphics[width=.2\textwidth, trim=350 50 350 550, clip=]{\figcp/Bon24-Hawkes-Cluster}
   \includegraphics[width=.2\textwidth, trim=350 10 350 590, clip=]{\figcp/Bon24-Hawkes-Cluster}
   $$
@@ -256,11 +256,14 @@ $$
   Y_k \mid (Y_\ell)_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \sum_{\ell = 1}^{k-1}\alpha \beta^{\ell-1} Y_{k-\ell} \right),
   $$
   with $\mu=\lambda_0 \Delta$ and $\alpha$, $\beta$ depending on $a$, $b$, $\Delta$.
+  
+  \bigskip
+  \emphase{$\to$ $(Y_k)_{k\geq 1}$ is not a Markov chain} (infinite memory).
 
-  \bigskip \bigskip 
-  $(Y_k)_{k\geq 1}$ is \emphase{not a Markov chain} (infinite memory) but 
+  \bigskip \bigskip \pause
+  \paragraph{Markovian representation.}
   \begin{itemize}
-    \item \pause defining 
+    \item \pause Define
     \begin{align*}
       U_1 = 0, \qquad \qquad 
       U_k = \sum_{\ell = 1}^k \alpha \beta^{\ell-1} Y_{k-\ell}, 
@@ -269,11 +272,12 @@ $$
     \begin{align*}
       U_k = {\alpha Y_{k-1} + \beta U_{k-1}}, 
       \qquad \qquad 
-      Y_k \mid U_k \sim \mathcal{P}(\mu + U_k),
+      Y_k \mid U_k \sim \mathcal{P}(\mu + U_k).
     \end{align*}
-    \item \pause so \emphase{$\left((Y_k,U_k)\right)_{k \geq 1}$ forms a Markov Chain}.
   \end{itemize}
-  
+  \pause 
+  \medskip
+  \emphase{$\to$ $\left((Y_k,U_k)\right)_{k \geq 1}$ forms a Markov Chain}.
 }
 
 %====================================================================
@@ -328,7 +332,7 @@ $$
       or, for $k \geq 1$ \textcolor{gray}{(with $U_0 = Y_0 = 0$)}
       \begin{align*}
         U_k & = \alpha Y_{k-1} + \beta U_{k-1}, &
-        Y_k & \mid (Y_\ell)_{\ell \leq k-1} 
+        Y_k & \mid U_k 
         \sim \mathcal{P}\left(\emphase{\mu_{Z_k}} + U_k \right)
       \end{align*}
   \end{itemize}
@@ -336,9 +340,9 @@ $$
   \bigskip \bigskip \pause
   \paragraph{Assumptions:}
   \begin{itemize}
-    \setlength{\itemsep}{.75\baselineskip}
-    \item The immigration rate varies with the hidden path
-    \item The distribution of the number of offspring does not vary with the hidden path
+    \setlength{\itemsep}{1\baselineskip}
+    \item The immigration rate $\mu$ varies with the hidden state
+    \item The distribution of the number of offspring ($\alpha, \beta$) does not vary with the hidden state
   \end{itemize}
 
 }
@@ -361,7 +365,7 @@ $$
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
     \item The memory of the past is stored in the variable $U_k$, which can still be computed recursively ($U_k = \alpha Y_{k-1} + \beta U_{k-1}$)
-    \item The Markovian property still holds if the influence of the past varies with the hidden path ($\alpha \to \alpha_k, \beta \to \beta_k$).
+    \item The Markovian property still holds if the influence of the past varies with the hidden state ($\alpha \to \alpha_k, \beta \to \beta_k$).
   \end{itemize}
 
 }
@@ -396,16 +400,16 @@ $$
     \text{Marginal:} & & 
     \widehat{Z}_k & = \argmax_q P_{\widehat{\theta}}\{Z_k = q \mid Y \}, \\
     \text{Joint (Viterbi):} & & 
-    \widehat{Z} & = \argmax_z p_{\widehat{\theta}}(Z=z \mid Y) 
+    \widehat{Z} & = \argmax_z P_{\widehat{\theta}}\{Z=z \mid Y\} 
   \end{align*}
 
   \bigskip \bigskip \pause
   \paragraph{Model selection:} Penalized likelihood
   \begin{align*}
-    AIC_Q & = \log p_{\widehat{\theta}_Q}(Y) - D_Q, &
-    BIC_Q & = \log p_{\widehat{\theta}_Q}(Y) - D_Q \frac{\log(\emphase{N})}2.     
+    AIC_Q & = \log p_{\widehat{\theta}_Q}(Y) - D_Q, \\
+    BIC_Q & = \log p_{\widehat{\theta}_Q}(Y) - D_Q \frac{\log(\emphase{N})}2     
   \end{align*}
-  with $D_Q =$ number of parameters $= 2 + Q^2$ and $N =$ number of time bins.
+  with $D_Q =$ number of parameters $= 2 + Q^2$ and \emphase{$N =$ number of time bins}.
 }
 
 %====================================================================
@@ -427,15 +431,15 @@ $$
     $$
     a = \lambda \; a^0, \qquad 
     m = \lambda \; m^0, \qquad 
-    \lambda = .5, \;1, \; 1.5, \;2.
+    \lambda = \frac12, \;1, \;\frac32, \;2.
     $$ 
     \item \pause \emphase{Simulated process:}
     $$
-    (H_t)_{0 \leq t \leq 1} \sim Heterogeneous~Continuous~Hawkes(a, b^0, m)
+    (H_t)_{0 \leq t \leq 1} \sim Heterogeneous~\emphase{Continuous}~Hawkes(a, b^0, m)
     $$
     \item \pause \emphase{Discretized process:} $n = H(1)$
     $$
-    N = c \; n, \qquad c = 0.5, \;1, \;2, \;4,
+    N = c \; n, \qquad c = \frac12, \;1, \;2, \;4,
     $$
     $$
     Y_k = H\left(\left[\frac{k-1}{N}; \frac{k}{N}\right]\right).
@@ -448,14 +452,14 @@ $$
 \frame{ \frametitle{Simulation results ($Q^* = 3$)}
 
   \begin{overprint}
-    \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta}/\theta^*$ ($Q = Q^*$) \\
-    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-Coef-discParms}
+    \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta} - \theta^*$ ($Q = Q^*$) \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-Coef-discParms}
     \onslide<2> \paragraph{Model selection: BIC.} Distribution of $BIC_Q - BIC_1$ \\
-    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-Coef-BIC}
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-Coef-BIC}
     \onslide<3> \paragraph{Model selection: AIC.} Distribution of $AIC_Q - AIC_1$ \\
-    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-Coef-AIC}
-    \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, \widehat{Q}, Q^*}(Poisson)$ / $AIC_{1, \widehat{Q}, Q^*}(Hawkes)$ \\
-    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-Coef-compAIC}
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-Coef-AIC}
+    \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, Q^*, \widehat{Q}}(Poisson)$ / $AIC_{1, Q^*, \widehat{Q}}(Hawkes)$ \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-Coef-compAIC}
   \end{overprint}
 }
     
@@ -470,8 +474,10 @@ $$
   
   \bigskip 
   \begin{overprint}
-    \onslide<2> \paragraph{Model selection.} $n = $ nb events, $N = c \; n$, \quad top: $BIC$, bottom: $AIC$. \\
-    \includegraphics[width=.9\textwidth, height=.7\textheight]{\figchiro/ResSeqData-Coef-Qhat}
+    \onslide<2> \paragraph{Model selection.} $n = $ nb events, $N = c \; n$, \quad top: $BIC$, bottom: $AIC$. 
+    $$
+    \includegraphics[width=1\textwidth, height=.6\textheight]{\figchiro/ResSeqData-Coef-Qhat}
+    $$
   \end{overprint}
 }
     
@@ -487,7 +493,8 @@ $$
       $\widehat{Z}_k$ & $\widehat{Z}$ & \textcolor{red}{Hawkes} / \textcolor{blue}{Poisson} \\ 
       \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq625-N1535-Qmax5-classif} &
       \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq625-N1535-Qmax5-viterbi} &
-      \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq625-N1535-Qmax5-models}     
+      \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq625-N1535-Qmax5-models} \\
+      & & -- $\log L$, - - $BIC$, $\cdots AIC$
     \end{tabular}
     $$
     \onslide<2> \paragraph{Another recording.}
@@ -498,7 +505,8 @@ $$
       $\widehat{Z}_k$ & $\widehat{Z}$ & \textcolor{red}{Hawkes} / \textcolor{blue}{Poisson} \\ 
       \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq1530-N1391-Qmax5-classif} &
       \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq1530-N1391-Qmax5-viterbi} &
-      \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq1530-N1391-Qmax5-models}     
+      \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq1530-N1391-Qmax5-models} \\     
+      & & -- $\log L$, - - $BIC$, $\cdots AIC$
     \end{tabular}
     $$
 %     \onslide<3> \paragraph{Another recording.}
@@ -509,7 +517,8 @@ $$
 %       $\widehat{Z}_k$ & $\widehat{Z}$ & \textcolor{red}{Hawkes} / \textcolor{blue}{Poisson} \\ 
 %       \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq2283-N6296-Qmax5-classif} &
 %       \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq2283-N6296-Qmax5-viterbi} &
-%       \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq2283-N6296-Qmax5-models}     
+%       \includegraphics[width=.3\textwidth, height=.4\textheight]{\figchiro/Chiro-seq2283-N6296-Qmax5-models} \\
+%       & & -- $\log L$, - - $BIC$, $\cdots AIC$
 %     \end{tabular}
 %     $$
   \end{overprint}
@@ -524,10 +533,12 @@ $$
 
   \paragraph{What we did.} \\ ~
   \begin{itemize}
-    \setlength{\itemsep}{1.5\baselineskip}
-    \item The discretized Markov switching Hawkes process with exponential kernel is a hidden Markov model
+    \setlength{\itemsep}{1.25\baselineskip}
+    \item The discretized Hawkes process with exponential kernel is a Markov model \\
+    ~ \\
+    $\Rightarrow$ The discretized Markov switching Hawkes process with exponential kernel is a hidden Markov model
     \item The standard EM machinery applies to achieve maximum likelihood inference.
-    \item Not shown: initialization based on existing tools for homogeneous Hawkes and Poisson HMM
+    \item Not shown: initialization based on existing estimation procedures for homogeneous Hawkes and Poisson HMM.
   \end{itemize}
 }
     
@@ -542,8 +553,18 @@ $$
     (simulation scheme, wrong derivation of the BIC, ...?)
     \item Identifiability: Needs to be proven. \\
     (standard HMM-dedicated strategies does not apply here \refer{AMR09}).
-    \item Understand the inferred latent states. \\
-    (different animal behavior, species, ...)
+    \item Understand the inferred latent states in terms of animal behavior \& biogeography. \\
+    (transit vs hunting, different species, ...)
+  \end{itemize}
+
+
+  \bigskip \bigskip \pause
+  \paragraph{In parallel.} With C. Dion-Blanc, E. Lebarbier et D. Hawat 
+  \begin{itemize}
+    \setlength{\itemsep}{0.75\baselineskip}
+    \item Efficient change-point detection ('segmentation') in Poisson \& Hawkes processes \refer{DHL24}. \\
+    (Dynamic programming applies.)
+    \item Segmentation-classification of Poisson processes.
   \end{itemize}
 
 }
@@ -551,7 +572,7 @@ $$
 %====================================================================
 \frame{ \frametitle{References}
   {
-   \tiny
+   \footnotesize
    \bibliography{/home/robin/Biblio/BibGene}
    \bibliographystyle{alpha}
   }
@@ -562,7 +583,7 @@ $$
 \backupbegin 
 \section*{Backup}
 %====================================================================
-\frame{ \frametitle{Backup: Discrete HMM}
+\frame{ \frametitle{Discrete HMM}
 
   \paragraph{Conversion formulas} from continuous to discrete Hawkes
   $$
@@ -572,6 +593,7 @@ $$
   \bigskip \pause 
   \paragraph{3-step initialization}
   \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}
     \item Homogeneous Hawkes for the reproduction parameters $\alpha$ and $\beta$ \\
     ({\tt hawkesbow} R package \refer{Che21})
     \item Poisson-HMM for the rates $\mu_1, \dots, \mu_Q$ and transition $\pi$
@@ -581,32 +603,47 @@ $$
 }
 
 %====================================================================
-\frame{ \frametitle{Simulation results ($Q^* = 1$)}
+\frame{ \frametitle{Simulation results ($Q^* = 3$, fixed $N$)}
 
   \begin{overprint}
-    \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta}/\theta^*$ ($Q = Q^*$) \\
-    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q1-Coef-discParms}
+    \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta} - \theta^*$ ($Q = Q^*$) \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-N-discParms}
     \onslide<2> \paragraph{Model selection: BIC.} Distribution of $BIC_Q - BIC_1$ \\
-    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q1-Coef-BIC}
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-N-BIC}
     \onslide<3> \paragraph{Model selection: AIC.} Distribution of $AIC_Q - AIC_1$ \\
-    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q1-Coef-AIC}
-    \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, \widehat{Q}, Q^*}(Poisson)$ / $AIC_{1, \widehat{Q}, Q^*}(Hawkes)$ \\
-    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q1-Coef-compAIC}
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-N-AIC}
+    \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, Q^*, \widehat{Q}}(Poisson)$ / $AIC_{1, Q^*, \widehat{Q}}(Hawkes)$ \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q3-N-compAIC}
   \end{overprint}
 }
     
 %====================================================================
-\frame{ \frametitle{Simulation results ($Q^* = 2$)}
+\frame{ \frametitle{Simulation results ($Q^* = 1$, $N = c n$)}
 
   \begin{overprint}
-    \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta}/\theta^*$ ($Q = Q^*$) \\
-    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q2-Coef-discParms}
+    \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta} - \theta^*$ ($Q = Q^*$) \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q1-Coef-discParms}
     \onslide<2> \paragraph{Model selection: BIC.} Distribution of $BIC_Q - BIC_1$ \\
-    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q2-Coef-BIC}
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q1-Coef-BIC}
     \onslide<3> \paragraph{Model selection: AIC.} Distribution of $AIC_Q - AIC_1$ \\
-    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q2-Coef-AIC}
-    \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, \widehat{Q}, Q^*}(Poisson)$ / $AIC_{1, \widehat{Q}, Q^*}(Hawkes)$ \\
-    \includegraphics[width=.9\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q2-Coef-compAIC}
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q1-Coef-AIC}
+    \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, Q^*, \widehat{Q}}(Poisson)$ / $AIC_{1, Q^*, \widehat{Q}}(Hawkes)$ \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q1-Coef-compAIC}
+  \end{overprint}
+}
+    
+%====================================================================
+\frame{ \frametitle{Simulation results ($Q^* = 2$, $N = c n$)}
+
+  \begin{overprint}
+    \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta} - \theta^*$ ($Q = Q^*$) \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q2-Coef-discParms}
+    \onslide<2> \paragraph{Model selection: BIC.} Distribution of $BIC_Q - BIC_1$ \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q2-Coef-BIC}
+    \onslide<3> \paragraph{Model selection: AIC.} Distribution of $AIC_Q - AIC_1$ \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q2-Coef-AIC}
+    \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, Q^*, \widehat{Q}}(Poisson)$ / $AIC_{1, Q^*, \widehat{Q}}(Hawkes)$ \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV6-parmsSeed1-T1-Q2-Coef-compAIC}
   \end{overprint}
 }
     
