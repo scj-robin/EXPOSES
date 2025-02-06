@@ -5,7 +5,7 @@ palette('R3')
 library(sna)
 library(weights)
 library(blockmodels)
-par(cex.lab=4)
+par(cex=5)
 exportFig <- TRUE
 
 ######################################################################################
@@ -61,3 +61,5 @@ if(exportFig){dev.off()}
 if(exportFig){png('FigUVSQ-Tree-ClustAdjacency-Covar.png')}
 PlotAdjClust(sbm1)
 if(exportFig){dev.off()}
+
+round(sbm1$model_parameters[[which.max(sbm1$ICL)]]$beta, 3)
