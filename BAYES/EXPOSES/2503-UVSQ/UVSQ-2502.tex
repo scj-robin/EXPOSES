@@ -1,4 +1,4 @@
-\documentclass[10pt]{beamer}
+\documentclass[9pt]{beamer}
 
 % Beamer style
 %\usetheme[secheader]{Madrid}
@@ -29,11 +29,11 @@
 \input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands.tex}
 
 % Directory
-% \newcommand{\figpaper}{/home/robin/Bureau/Dropbox/VBEM-IS/Article_New/plots}
 \newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
 \newcommand{\figtree}{/home/robin/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Data/Tree/Fig}
 \newcommand{\figbayes}{/home/robin/RECHERCHE/BAYES/EXPOSES/FIGURES}
 \newcommand{\figzebra}{/home/robin/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Data/Zebra/Fig}
+\newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
 
 %====================================================================
 %====================================================================
@@ -91,21 +91,144 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 %====================================================================
 \frame{\frametitle{Joint species distribution models}
 
+  \paragraph{Aim.} 
+  Describe/understand the relationships that living species share with each other and with their environment (biogeography, community ecology). 
 
-\paragraph{Poisson log-normal model (PLN)}
+  \bigskip \bigskip \pause 
+  \paragraph{Species distribution models.} 
+  $n$ sites, $x_i =$ vector of environmental descriptors for site $i$, $Y_i =$ number of individual from the species of interest observed in site $i$:
+  $$
+  Y_i \sim \Fcal(\cdot; x_i, \beta).
+  $$
+  $\to$ Generalized linear (mixed) model \refer{ElL09,ZIW09}
 
+  \bigskip \bigskip \pause
+  \paragraph{Joint species distribution models.} 
+  Same, but $Y_i = (Y_{i1}, \dots Y_{ip}) =$ vector of counts for $p$ species of interest observed in site $i$:
+  $$
+  Y_i \sim \Fcal_p(\cdot; x_i, \beta, \Sigma)
+  $$
+  $\to$ Multivariate generalized linear mixed model  \refer{WBO15,OvA20}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Poisson log-normal model}
+
+  \paragraph{A joint species distribution model:} 
+  Poisson-log normal distribution \refer{AiH89,CMR21}
+  \begin{align*}
+    & \text{in each site $i = 1 \dots n$:} & 
+    Z_i & \sim \Ncal_p(0, \emphase{\Sigma}) \\
+    & \text{for each specie $j = 1 \dots p$:} &
+    Y_{ij} \mid Z_{ij} & \sim \Pcal_p(\exp(x_i^\top \emphase{\beta_j} + Z_{ij}))
+  \end{align*} \pause
+  \begin{itemize}
+    \item $\beta_j =$ effects of the environmental covariates on species $j$ (\emphase{\sl abiotic} interactions)
+    \item $\Sigma =$ between-species covariance matrix  (\emphase{\sl biotic} interactions)
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Fish species from the Barents sea.} 
+  $n = 89$, $p = 30$, $d = 4$ covariates
+  $$
+  \begin{tabular}{ccc}
+    Covariate effects & 
+    Covariate induced & 
+    Between species \\
+    $\widehat{B}$ & 
+    correlation & 
+    correlation  $\widehat{\Sigma}$ \\
+    \includegraphics[width=.25\textwidth, trim=20 20 50 20, clip=]{\figeco/BarentsFish-coeffAll-woIntercept} & 
+    \includegraphics[width=.25\textwidth, trim=20 20 50 20, clip=]{\figeco/BarentsFish-corrPred} & 
+    \includegraphics[width=.25\textwidth, trim=20 20 50 20, clip=]{\figeco/BarentsFish-corrAll}
+  \end{tabular}
+  $$
 }
 
 %====================================================================
 \frame{\frametitle{Species interaction networks}
 
-\paragraph{Stochastic block-model (SBM).}
+  \paragraph{Aim.} 
+  Understand the organization of species interactions, viewed as a network:
+  \begin{itemize}
+    \item trophic (who-eats-who; unipartite, directed), 
+    \item plant-pollinator, host-parasites (bipartite), 
+    \item number of shared parasites (unipartite, un-oriented, weighted), 
+    \item ....
+  \end{itemize}
 
+  \bigskip \bigskip \pause
+  \paragraph{Network model.} $n$ species, $x_i =$ vector of covariates for species $i$, $x_{ij}$ vector of covariates for the pair of species $(i, j)$, $Y_{ij} =$ interaction between species $i$ and $j$:
+  $$
+  Y = (Y_{ij})_{1 \leq i, j, \leq n} \sim \Fcal(\cdot; (x_i)_{1 \leq i \leq n}, (x_{ij})_{1 \leq i, j \leq n}, \theta).
+  $$
+  $\to$ Exponential random graph models (ERGM: \refer{HHB08}), Block-models \refer{HoL79,GoN03} (review: \refer{MaR14})
+  
+}
+
+%====================================================================
+\frame{\frametitle{Stochastic block-model (1/2)}
+
+  \paragraph{A network model:} Stochastic block-model with covariates \refer{MRV10}
+  \begin{align*}
+    & \text{for each species $i = 1 \dots n$:} & 
+    Z_i & \sim \Mcal_p(0, \emphase{\pi}) \\
+    & \text{for each pair of species $(i, j) \in \{1 \dots n\}$:} &
+    Y_{ij} \mid Z_i = q, Z_j = \ell & \sim \Pcal(\exp(\alpha_{q\ell} + x_{ij}^\top \emphase{\beta}))
+  \end{align*} \pause
+  \begin{itemize}
+    \item $\pi_q =$ proportion of species belonging to group $k$ (\emphase{\sl node clustering})
+    \item $\beta =$ effect of the covariates on the interaction intensity
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Tree interactions.} 
+  $n = 51$ species, $Y_{ij} =$ number of common fungal parasites \refer{VPD08}
+  $$
+  \begin{tabular}{ccc}
+    Observed network &  & Observed adjacency matrix \\
+    \includegraphics[width=.25\textwidth, trim=0 0 50 20, clip=]{\figbayes/FigUVSQ-Tree-Network} & 
+    \qquad \qquad & 
+    \includegraphics[width=.25\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-Adjacency}
+  \end{tabular}
+  $$
+}
+  
+%====================================================================
+\frame{\frametitle{Stochastic block-model (2/2)}
+
+  \paragraph{Tree interactions.} 
+  $d = 3$ edge covariates (distances)
+  $$
+  \begin{tabular}{ccc}
+    Genetic & Geographic & Taxonomic \\
+    \includegraphics[width=.25\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-GeneticDistance} &
+    \includegraphics[width=.25\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-GeographicDistance} & 
+    \includegraphics[width=.25\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-TaxonomicDistance}
+  \end{tabular}
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Tree interactions = number of common fungal parasites.} 
+  $n = 51$, $d = 3$ covariates
+  $$
+  \begin{tabular}{cc}
+    \includegraphics[width=.25\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-ClustAdjacency-noCovar} & 
+    \includegraphics[width=.25\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-ClustAdjacency-Covar}
+  \end{tabular}
+  $$
 }
 
 %====================================================================
 %====================================================================
 \section{From EM to Variationnal EM}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+
+%====================================================================
+%====================================================================
+\section{Two attempts}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
 

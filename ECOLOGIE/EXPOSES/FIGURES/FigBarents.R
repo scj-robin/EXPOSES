@@ -2,13 +2,13 @@
 
 # Parms
 rm(list=ls())
-exportPlot <- TRUE; mex <- .9
+exportPlot <- FALSE; mex <- .9
 par(mfrow=c(1, 1), mex=mex)
 source('/home/robin/PgmR/General/FunctionsMatVec.R')
-library(PLNmodels); library(EMtree)
+library(PLNmodels); # library(EMtree)
 
 # Dirs
-dataDir <- '/home/robin/RECHERCHE/ECOLOGIE/CountPCA/pln/Data/BBVA/'
+dataDir <- '/home/robin/RECHERCHE/ECOLOGIE/PLN/pln/Data/BBVA/'
 dataName <- 'BarentsFish'
 figDir <- '/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES/'
 
