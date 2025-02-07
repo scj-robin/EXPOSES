@@ -14,10 +14,15 @@ source('/home/robin/PgmR/General/FunctionsMatVec.R')
 DataDir <- '/home/robin/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Pgm/TEST_TREE_DATA/'
 load(paste(DataDir, 'Tree-all-data.Rdata', sep=''))
 n = nrow(data$Y.mat)
+# coord <- cbind(cos(2*acos(-1)*order(rowSums(data$Y.mat))/n), 
+               # sin(2*acos(-1)*order(rowSums(data$Y.mat))/n))
 
 # Network
 if(exportFig){png('FigUVSQ-Tree-Network.png')}
 gplot(1*(data$Y.mat>0), gmode='graph')
+if(exportFig){dev.off()}
+if(exportFig){png('FigUVSQ-Tree-WeightedNetwork.png')}
+gplot(1*(data$Y.mat), edge.lwd=(data$Y.mat), edge.lty=1, edge.col=ceiling(10*data$Y.mat/max(data$Y.mat)), gmode='graph')
 if(exportFig){dev.off()}
 if(exportFig){png('FigUVSQ-Tree-Adjacency.png')}
 image((1:n), (1:n), log10(1+data$Y.mat), xlab='species', ylab='species')

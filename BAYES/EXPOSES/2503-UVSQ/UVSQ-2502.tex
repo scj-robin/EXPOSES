@@ -119,9 +119,9 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
   Poisson-log normal distribution \refer{AiH89,CMR21}
   \begin{align*}
     & \text{in each site $i = 1 \dots n$:} & 
-    Z_i & \sim \Ncal_p(0, \emphase{\Sigma}) \\
+    \emphase{Z_i} & \sim \Ncal_p(0, \emphase{\Sigma}) \\
     & \text{for each specie $j = 1 \dots p$:} &
-    Y_{ij} \mid Z_{ij} & \sim \Pcal_p(\exp(x_i^\top \emphase{\beta_j} + Z_{ij}))
+    Y_{ij} \mid Z_{ij} & \sim \Pcal(\exp(x_i^\top \emphase{\beta_j} + Z_{ij}))
   \end{align*} \pause
   \begin{itemize}
     \item $\beta_j =$ effects of the environmental covariates on species $j$ (\emphase{\sl abiotic} interactions)
@@ -161,62 +161,36 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
   \bigskip \bigskip \pause
   \paragraph{Network model.} $n$ species, $x_i =$ vector of covariates for species $i$, $x_{ij}$ vector of covariates for the pair of species $(i, j)$, $Y_{ij} =$ interaction between species $i$ and $j$:
   $$
-  Y = (Y_{ij})_{1 \leq i, j, \leq n} \sim \Fcal(\cdot; (x_i)_{1 \leq i \leq n}, (x_{ij})_{1 \leq i, j \leq n}, \theta).
+  Y = (Y_{ij})_{i, j = 1 \dots n} \sim \Fcal(\cdot; (x_i)_{i = 1 \dots n}, (x_{ij})_{i, j = 1 \dots n}, \theta).
   $$
   $\to$ Exponential random graph models (ERGM: \refer{HHB08}), Block-models \refer{HoL79,GoN03} (review: \refer{MaR14})
   
 }
 
 %====================================================================
-\frame{\frametitle{Stochastic block-model (1/2)}
+\frame{\frametitle{Stochastic block-model}
 
   \paragraph{A network model:} Stochastic block-model with covariates \refer{MRV10}
   \begin{align*}
-    & \text{for each species $i = 1 \dots n$:} & 
-    Z_i & \sim \Mcal_p(0, \emphase{\pi}) \\
-    & \text{for each pair of species $(i, j) \in \{1 \dots n\}$:} &
-    Y_{ij} \mid Z_i = q, Z_j = \ell & \sim \Pcal(\exp(\alpha_{q\ell} + x_{ij}^\top \emphase{\beta}))
-  \end{align*} \pause
+    & \text{For each species $i = 1 \dots n$:} & 
+    \emphase{Z_i} & \sim \Mcal_K(0, \emphase{\pi}) \\
+    & \text{For each species pair $(i, j)$:} &
+    Y_{ij} \mid Z_i = q, Z_j = \ell & \sim \Pcal(\exp(\emphase{\alpha_{q\ell}} + x_{ij}^\top \emphase{\beta}))
+  \end{align*} 
   \begin{itemize}
     \item $\pi_q =$ proportion of species belonging to group $k$ (\emphase{\sl node clustering})
+    \item $\alpha_{q\ell}=$ group effect on the interaction intensity
     \item $\beta =$ effect of the covariates on the interaction intensity
   \end{itemize}
   
   \bigskip \bigskip \pause
   \paragraph{Tree interactions.} 
-  $n = 51$ species, $Y_{ij} =$ number of common fungal parasites \refer{VPD08}
+  $n = 51$ species, $Y_{ij} = \#$ common parasites \refer{VPD08}, $d = 3$ covariates
   $$
   \begin{tabular}{ccc}
-    Observed network &  & Observed adjacency matrix \\
-    \includegraphics[width=.25\textwidth, trim=0 0 50 20, clip=]{\figbayes/FigUVSQ-Tree-Network} & 
-    \qquad \qquad & 
-    \includegraphics[width=.25\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-Adjacency}
-  \end{tabular}
-  $$
-}
-  
-%====================================================================
-\frame{\frametitle{Stochastic block-model (2/2)}
-
-  \paragraph{Tree interactions.} 
-  $d = 3$ edge covariates (distances)
-  $$
-  \begin{tabular}{ccc}
-    Genetic (log) & Geographic & Taxonomic \\
-    \includegraphics[width=.25\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-GeneticDistance} &
-    \includegraphics[width=.25\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-GeographicDistance} & 
-    \includegraphics[width=.25\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-TaxonomicDistance}
-  \end{tabular}
-  $$
-  
-  \pause
-  \paragraph{Tree interactions.} 
-  Results
-  $$
-  \begin{tabular}{ccc}
-    Without covariate ($Q = 6$) & With covariates ($Q=4$) & Covariate effects \\
+    Observed adjacency matrix & Clustered network ($Q=4$) & Covariate effects \\
     \begin{tabular}{c}
-    \includegraphics[width=.25\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-ClustAdjacency-noCovar}
+    \includegraphics[width=.25\textwidth, trim=0 0 50 20, clip=]{\figbayes/FigUVSQ-Tree-Adjacency} 
     \end{tabular}
     & 
     \begin{tabular}{c}
@@ -237,32 +211,387 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 \section{From EM to Variationnal EM}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
+\frame{\frametitle{Maximum likelihood with latent variables}
+
+  \paragraph{Latent variable model.} Three ingredients:
+  \begin{enumerate}
+    \item $\theta =$ parameter set:
+    $$
+    \text{PLN:} \theta = (B, \Sigma) \qquad \qquad \text{SBM:} \theta = (\pi, \alpha, \beta)
+    $$
+    \item $Z =$ set of latent variables:
+    $$
+    Z \sim p_\theta(Z)
+    $$
+    \item $Y =$ set of observed variables:
+    $$
+    Y \sim p_\theta(Y \mid Z)
+    $$
+  \end{enumerate}
+
+  \bigskip \bigskip \pause
+  \paragraph{Maximum likelihood inference.} Estimate $\theta$ with
+  $$
+  \widehat{\theta}
+  = \argmax_\theta \log p_\theta(Y) 
+  = \argmax_\theta \; \log \underset{\text{\normalsize Most often intractable}}{\underbrace{\int p_\theta(Y \mid z) p_\theta(z) \d z}} 
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{EM algorithm}
+
+  \paragraph{Expectation-Maximisation algorithm \refer{DLR77}.} $\theta^{(h)} =$ current value of the estimate,
+  \begin{itemize}
+    \item \emphase{E} step: Evaluate
+    $$
+    Q(\theta \mid \theta^{(h)}) := \Esp_{\theta^{(h)}}\left[\emphase{\log p_\theta(Y, Z)} \mid Y\right]
+    $$
+    \item \emphase{M} step: Update
+    $$
+    \theta^{(h+1)} = \argmax_\theta Q(\theta \mid \theta^{(h)})
+    $$
+  \end{itemize}
+  $\to$ The log-likelihood $\log p_\theta(Y)$ increases at each step.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Critical step = E step:} Requires to determine the conditional distribution
+  $$
+  p_\theta(Z \mid Y),
+  $$
+  or at least some of its moments.
+
+  
+  \bigskip \bigskip \pause
+  \paragraph{Problem:} This distribution is itself intractable for many models, including PLN and SBM
+}
+
+%====================================================================
+\frame{\frametitle{Variational EM (VEM) algorithm}
+
+  \paragraph{Principle \refer{WaJ08,BKM17}.} Replace the E step with an approximation step, i.e.
+  \begin{itemize}
+    \item choose a class $\Qcal$ of approximate (parametric) distributions
+    \item choose divergence measure $D[q \| p]$ (e.g. $KL[q \| p]$)
+    \item \emphase{VE} step :
+    $$
+    q^{(h+1)} = \argmin_{q \in \Qcal} D\left[q(Z) \| p_{\theta^{(h)}}(Z \mid Y)\right]
+    $$
+    \item \emphase{M} step :
+    $$
+    \theta^{(h+1)} = \argmax_\theta \Esp_{\emphase{q^{(h+1)}}}\left[\log p_\theta(Y, Z)\right]
+    $$
+  \end{itemize}
+  $\to$ If $D = KL$, a lower bound of $\log p_\theta(Y)$ ('ELBO') increases at each step
+
+  \bigskip \bigskip \pause
+  \textcolor{gray}{\paragraph{Remark:} A Bayesian version of it exists (Variational Bayes EM = VBEM).}
+
+  \bigskip
+  \paragraph{Pros:} Reasonably easy to implement, fast, empirically accurate
+  
+  \bigskip
+  \paragraph{Cons:} Few theoretical guaranties \refer{CDP12,BCC13,MaM15}, does not enjoy the general properties of maximum likelihood (consistency, asymptotic normality, etc.) \\ 
+  \smallskip
+  $\to$ No measure of uncertainty (no confidence interval)
+
+}
 
 %====================================================================
 %====================================================================
-\section{Two attempts}
+\section{Ecological networks: Stochastic block-model }
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
+\frame{\frametitle{Variational EM (VEM) for the stochastic block-model}
+
+  \paragraph{Model.} 
+  $n$ species
+  \begin{align*}
+    & \text{Species $i$:} & 
+    Z_i & \sim \Mcal_K(0, \pi) 
+    & & \text{(group membership)} \\
+    & \text{Pair $(i, j)$:} &
+    Y_{ij} \mid Z_i = q, Z_j = \ell & \sim \Pcal(e^{\alpha_{q\ell} + x_{ij}^\top \beta})
+    & & \text{(observed interactions)}
+  \end{align*} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.75\textwidth}}
+      \bigskip 
+      \onslide+<2->{
+      \paragraph{No EM.} 
+      The $Z_i$'s are marginally independent, but are dependent conditional on the $Y_{ij}$'s.
+      }
+
+      \onslide+<3>{
+      \bigskip \bigskip 
+      \paragraph{Variational EM.} 'Mean-field' approximation \refer{GoN03,DPR08,MRV10}
+      $$
+      q(Z) = \prod_{i=1}^n q_i(Z_i)
+      $$
+      }
+    \end{tabular}
+    &
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.25\textwidth}}
+      \onslide+<2->{
+      \begin{tikzpicture}
+        \node[hidden] (Zi) at (0, 0) {$Z_i$};
+        \node[hidden] (Zj) at (1.5, 0) {$Z_j$};
+        \node[observed] (Yij) at (0.75, -1*\edgeunit) {$Y_{ij}$};
+        \draw[arrow] (Zi) -- (Yij);
+        \draw[arrow] (Zj) -- (Yij);
+        \draw[-, line width=\edgewidth, color=gray, dashed] (Zi) -- (Zj);
+      \end{tikzpicture}
+      \vspace{0.25\textheight} 
+      }
+    \end{tabular} 
+  \end{tabular}
+
+  \vspace{-.05\textheight}
+  \onslide+<3>{
+  \begin{itemize}
+    \item Parameter estimate $\widehat{\theta} = (\widehat{\pi}, \widehat{\alpha}, \widehat{\beta})$, 
+    \item Approximate membership probability $\widetilde{\tau}_{ik} = \qt\{Z_i = k\}$, 
+    \item Lower bound $ELBO(\widehat{\theta}, \widetilde{\tau})$ (R packages \url{blockmodels} \refer{Leg16}, \url{sbm} \refer{BDL17})
+  \end{itemize}
+  }
+}
+
+%====================================================================
+\frame{\frametitle{Toward genuine Bayesian inference}
+  
+  \paragraph{Bayesian model.} 
+  Hierarchical structure
+  \begin{align*}
+  \text{\emphase{prior:}} \quad
+  \theta & \sim \emphase{p(\theta)} & 
+  Z & \sim p(Z \mid \theta) & 
+  Y & \sim p(Y \mid Z, \theta)
+  \end{align*}
+  $\to$ Aim of the inference: be able to sample from the joint \emphase{posterior $p(\theta, Z \mid Y)$}
+  
+  \bigskip \bigskip
+  \paragraph{Prior:} $p(\theta) = \Dcal(\pi; a) \times \Ncal([\alpha \; \beta]; m, V)$. 
+  
+  \bigskip 
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.6\textwidth}}
+      \onslide+<2->{\paragraph{Sequential Monte Carlo sampling.} \refer{DDJ06}}
+      \begin{itemize}
+      \onslide+<2->{\item $\textcolor{red}{p_0} = $ proposal, $\textcolor{blue}{p^*} = $ target posterior \\ ~ \\}
+      \onslide+<3->{\item Intermediate distributions
+      $$
+      \textcolor{red}{p_0}, \; p_1, \; \dots, \; p_H = \textcolor{blue}{p^*}
+      $$}
+      \onslide+<3->{\item Iteratively: use $p_h$ to get a sample from $p_{h+1}$}
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.35\textwidth}}
+%       \vspace{.025\textwidth}
+      \begin{overprint}
+      \onslide<2> 
+      \includegraphics[width=.35\textwidth]{\figbayes/FigVBEM-IS-PropTarget.pdf}
+      \onslide<3> 
+      \includegraphics[width=.35\textwidth]{\figbayes/FigVBEM-IS-Tempering.pdf}
+      \end{overprint}
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Proposed sequential sampling strategy (1/2)}
+
+  \paragraph{Distribution path:} \refer{DoR21} 
+    set $0 = \rho_0 < \rho_1 < \dots < \rho_{H-1} < \rho_H = 1$,
+  \begin{align*}
+     p_h(\theta, Z) & \propto \pt(\theta, Z)^{\emphase{{1-\rho_h}}} \; \times \; p(\theta, Z | Y)^{\emphase{{\rho_h}}} \\
+%      \\
+     & \propto \pt(\theta, Z) \; \times \; r(\theta, Z)^{\emphase{{\rho_h}}}, 
+     & r(\theta, Z) & = \frac{\pi(\theta, Z) \ell(Y | \theta, Z)}{\pt(\theta, Z)}
+  \end{align*}
+  
+  \bigskip \pause
+  \paragraph{Sequential sampling.} At each step $h$, provide
+  $$
+  \Ecal_h = \{(\theta_h^m, Z_h^m, w_h^m)\}_{m = 1 \dots M} = \text{ weighted sample from } p_h
+  $$
+  with $w_0^m = 1$, $w_h^m = w_{h-1}^m \times r(\theta^m, Z^m)^{\rho_h - \rho_{h-1}}$
+
+  \bigskip \bigskip \pause
+  \paragraph{Tuning $\rho_h$.} 
+  Because 
+  $$
+  p_h(\theta, Z) \propto p_{h-1}(\theta, Z) \; \times \; r(\theta, Z)^{\emphase{{\rho_h} - \rho_{h-1}}}, 
+  $$
+  $\rho_h$ can be tuned so to guaranty a sufficiently high effective sampling size (ESS).
+  
+}
+
+%====================================================================
+\frame{\frametitle{Proposed sequential sampling strategy (2/2)}
+
+  \paragraph{Initial proposal distribution $p_0$:} based on VEM outputs:
+  $$
+  \pt_0(\theta) =  \Dcal(\pi; \widetilde{a}_0) \times \Ncal([\alpha \; \beta]; \widetilde{m}_0, \widetilde{V}_0)
+  $$
+  with  $\widetilde{a}_0 = f(a_0, \widetilde{\tau}_{VEM})$, $\widetilde{m}_0 = f(m_0, \widehat{\theta}_{VEM})$ and $\widetilde{V}_0 = f(S_0, - \nabla_\theta^2 ELBO(\widehat{\theta}_{VEM}, \qt_{VEM}))$.
+  
+  \bigskip \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}    
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{What do we gain?} Mostly time: \\
+      ~ \\
+      $p_0 = \pt_0$ rather than $p_0 =$ prior \\
+      ~ \\
+      $\Rightarrow$ reduced number of SMC steps
+      ~ \\ 
+      \flushright{Synthetic data $\to$}
+      ~ \\ ~ \\
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+      \hspace{-.05\textwidth}    
+      \includegraphics[width=.4\textwidth, trim=5 0 5 00, clip=]{\figbayes/DoR21-Fig1-simu-rho} 
+    \end{tabular}
+  \end{tabular}
+
+}
+
+%====================================================================
+\frame{\frametitle{Tree interaction network}
+
+  \paragraph{Posterior distribution of $\beta$.} For $\widehat{K} = 4 = \argmax_K p(K \mid Y)$, in 26 SMC steps:,
+  $$
+  \begin{tabular}{ccc}
+    taxonomy & geography & genetics \\
+    \includegraphics[width=.3\textwidth, trim=0 30 10 50, clip=]{\figbayes/DoR21-Fig7-beta1} & 
+    \includegraphics[width=.3\textwidth, trim=0 30 10 50, clip=]{\figbayes/DoR21-Fig7-beta2} & 
+    \includegraphics[width=.3\textwidth, trim=0 30 10 50, clip=]{\figbayes/DoR21-Fig7-beta3} \\
+    \multicolumn{3}{c}{\textcolor{orange}{variational $\pt_0(\beta \mid \widehat{K})$}, \quad  \textcolor{darkgreen}{posterior $\widehat{p}(\beta \mid Y, \widehat{K})$}, \quad \textcolor{purple}{$\widehat{p}(\beta \mid Y)$ averaged of $K$}}
+  \end{tabular}
+  $$
+
+  \paragraph{Model selection.} 
+  $
+  \widehat{P}\{x = \text{(taxo., geo.)} \mid Y \} \simeq 70\%, \quad
+  \widehat{P}\{x = \text{(taxo.)} \mid Y \} \simeq 30\%
+  $
+   
+  \bigskip \bigskip \pause
+  \hspace{-.025\textwidth}
+  \begin{tabular}{rrrr}
+    \paragraph{Correlation between estimates.} 
+    & $(\beta_1, \beta_2)$ & $(\beta_1, \beta_3)$ & $(\beta_2, \beta_3)$ \\
+    $\pt_0(\beta)$    & $-0.012$ & $ 0.021$ & $ 0.318$ \\
+    $\widehat{p}(\beta \mid Y)$ & $-0.274$ & $-0.079$ & $-0.088$
+  \end{tabular} \\
+  \bigskip
+  + $p(Z \mid Y)$ going away from $\prod_i q_i(Z_i)$ \textcolor{gray}{see backup slides}.
+
+}
+
 
 %====================================================================
 %====================================================================
-\section{Poisson log-normal model}
+\section{Species abundances: Poisson log-normal model}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
+\frame{\frametitle{Variational EM (VEM) for the Poisson log-normal model}
+
+  \paragraph{Model.} 
+  $n$ sites, $p$ species
+  \begin{align*}
+    & \text{in each site $i = 1 \dots n$:} & 
+    \emphase{Z_i} & \sim \Ncal_p(0, \emphase{\Sigma}) \\
+    & \text{for each specie $j = 1 \dots p$:} &
+    Y_{ij} \mid Z_{ij} & \sim \Pcal(\exp(x_i^\top \emphase{\beta_j} + Z_{ij}))
+  \end{align*} 
+  
+  \bigskip \bigskip \pause
+  \paragraph{No EM.} 
+  The $Z_i$'s are marginally Gaussian, but not Gaussian conditional on the $Y_{ij}$'s \\
+  (no close form, even in one dimension)
+  
+  \bigskip \bigskip 
+  \paragraph{Variational EM.} Gaussian approximation \refer{CMR18a}, \url{PLNmodels} R package
+  $$
+  q(Z) = \prod_{i=1}^n \Ncal(Z_i; m_i, S_i)
+  $$
+  \begin{itemize}
+  \item Parameter estimate $\widehat{\theta} = (\widehat{\Sigma}, \widehat{\beta})$, 
+  \item Approximate conditional distribution $Z_i \mid Y_i \approx \Ncal(\widetilde{m}_i, \widetilde{S}_i)$, 
+  \item Lower bound $ELBO(\widehat{\theta}, \widetilde{m}, \widetilde{S})$
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Monte Carlo EM}
+
+  \paragraph{Monte Carlo EM.} \refer{CeD85}
+  \begin{itemize}
+    \item Monte Carlo E step: Sample $(Z^m)_{m = 1 \dots M} \overset{iid}{\sim} p_{\theta^{(h)}}(Z \mid Y)$, then evaluate
+    $$
+    \widehat{Q}(\theta \mid \theta^{(h)}) := \frac1{M} \sum_{m=1}^M \log p_\theta(Y, Z^m)
+    $$
+    \item M step: Update
+    $$
+    \theta^{(h+1)} = \argmax_\theta \widehat{Q}(\theta \mid \theta^{(h)}) 
+    $$
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{How to sample from $p_{\theta^{(h)}}(Z \mid Y)$?}
+  \todo{!!! On en est là !!!}
+}
+
+%====================================================================
+\frame{\frametitle{Composite log-likelihood}
+
+  \refer{StR24} \refer{VRF11}
+
+}
 
 %====================================================================
 %====================================================================
-\section{Stochastic block-model}
+\section{Discussion}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
+\frame{\frametitle{Discussion}
 
+  \paragraph{Summary.}
+  \begin{itemize}
+    \item Latent variable models are widely in statistical ecology
+    \item Maximum likelihood inference is often intractable \\
+    $\to$ Variational inference = appealing alternative ... with few theoretical guaranties
+    \item Monte Carlo approaches moves from variational inference toward genuine maximum likelihood or Bayesian inference
+  \end{itemize}
+
+  \bigskip \pause
+  \paragraph{Some comments.}
+  \begin{itemize}
+    \item Monte Carlo approaches as still computationally demanding
+    \item ML-based variational inference (variational auto-encoders) may correspond to larger approximation class $\Qcal$, therefore to flexible approximate distribution $\qt$, getting closer to genuine MLE
+    \item Better understanding the properties of variational estimates
+  \end{itemize}
+
+
+}
 
 %====================================================================
 \backupbegin
 %====================================================================
 
 %====================================================================
-\frame{ \frametitle{References}
+\frame[allowframebreaks]{ \frametitle{References}
 {\tiny
   \nocite{DoR21}
   \bibliography{/home/robin/Biblio/BibGene}
@@ -271,6 +600,172 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
   }
 }
 
+%====================================================================
+\frame{ \frametitle{Tree interaction network: dataset}
+
+  
+  $$
+  \begin{tabular}{ccc}
+    & Observed network & Adjacency matrix \\
+    \begin{tabular}{p{0.24\textwidth}}
+      $n = 51$ tree species \\ ~\\
+      $d = 3$ edge covariates \\
+      (distances) \\ ~\\
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+    \includegraphics[width=.22\textwidth, trim=0 0 50 20, clip=]{\figbayes/FigUVSQ-Tree-Network} 
+    \end{tabular}
+    &
+    \begin{tabular}{c}
+    \includegraphics[width=.22\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-Adjacency}
+    \end{tabular}
+  \end{tabular}
+  $$
+
+  \bigskip
+  $$
+  \begin{tabular}{ccccc}
+    Genetic (log) & & Geographic & & Taxonomic \\
+    \includegraphics[width=.22\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-GeneticDistance} &
+    \qquad &
+    \includegraphics[width=.22\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-GeographicDistance} & 
+    \qquad &
+    \includegraphics[width=.22\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-TaxonomicDistance}
+  \end{tabular}
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{Tree interaction network: Sampling path \& choice of $K$}
+
+  \paragraph{Full model.} All covariates
+
+  \bigskip
+  \begin{center}
+    \begin{tabular}{ccc}
+    Model selection & & Sampling path: $\rho_h$ \\
+    \includegraphics[width=.3\textwidth]{\figbayes/DoR21-Fig7-logpY} &
+    \qquad &
+    \includegraphics[width=.3\textwidth]{\figbayes/DoR21-Fig7-rho} \\
+    \textcolor{orange}{$J_K$}, \textcolor{darkgreen}{$\log (Y \mid K)$}, \textcolor{purple}{$\widetilde{ICL}(K)$} 
+    \end{tabular}
+  \end{center}
+  
+  \bigskip \bigskip
+  \paragraph{Choosing the number of groups:} $\widehat{K} = \arg\max_K \widehat{p}(K \mid Y)$ 
+  \begin{itemize}
+    \item Different from $\arg\max_K \widetilde{ICL}(K)$ here.
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Tree interaction network: Conditional dependence between the $Z_i$}
+
+  The conditional dependency between the latent $Z_i$ can be measured at each sampling step by their mutual information
+  $$
+  MI = KL\left(\prod_i p_h(Z_i) \mid p_h(Z)\right).
+  $$
+  
+  \bigskip 
+  Part of the effort of the algorithm is dedicated to the recovery of this conditional dependency structure.
+  $$
+  \includegraphics[width=.3\textwidth]{\figbayes/DoR21-Fig7-MI} 
+  $$
+}
+  
+%====================================================================
+\frame{ \frametitle{Tree interaction network: SBM node clustering}
+
+  \paragraph{Clustered networks.} 
+  $$
+  \begin{tabular}{ccc}
+    No covariate ($Q = 6$) & 3 covariates ($Q=4$) & Covariate effects \\
+    \begin{tabular}{c}
+    \includegraphics[width=.25\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-ClustAdjacency-noCovar}
+    \end{tabular}
+    & 
+    \begin{tabular}{c}
+    \includegraphics[width=.25\textwidth, trim=0 10 50 20, clip=]{\figbayes/FigUVSQ-Tree-ClustAdjacency-Covar}
+    \end{tabular}
+    &
+    \begin{tabular}{l}
+      $\widehat{\beta}_{\text{Gen}} = -0.413$ \\ ~ \\
+      $\widehat{\beta}_{\text{Geo}} = -0.355$ \\ ~ \\
+      $\widehat{\beta}_{\text{Tax}} = +0.036$
+    \end{tabular}
+  \end{tabular}
+  $$
+
+}
+
+%====================================================================
+\frame{\frametitle{Tree interaction network: residual structure}
+
+  Between group interactions ($\alpha_{k\ell}$) = 'residuals' = not explained by the covariates.
+
+  \pause
+  \hspace{-.05\textwidth}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.4\textwidth}}
+      \paragraph{'Graphon' representation.} \refer{LRO17} \\
+      Group interactions encoded as
+      $$
+      \phi: [0, 1]^2 \mapsto \Rbb
+      $$
+      \begin{itemize}
+       \item symmetric\footnote{with increasing marginal $\overline{\phi}(u) = \int \phi(u, v) \d v$ to ensure identifiability.}, 
+       \item block-wise constant, 
+       \item block width $= \pi_k$
+       \item block height $= \alpha_{k\ell}$
+      \end{itemize}
+    \end{tabular}
+    & 
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[trim=50 50 50 50, width=.5\textwidth, clip=T]{\fignet/FigGraphon-SBM-graphon-alpha}
+    \end{tabular}
+  \end{tabular}
+  
+%   \vspace{-.1\textheight}
+  \pause 
+  \paragraph{Same representation for all $K$.}
+  $
+  Y_{ij} | (U_i, U_j) \sim \Pcal\left(\exp(\phi(U_i, U_j) + x_{ij}^\trans \beta \right)
+  $
+  
+  }
+
+%====================================================================
+\frame{\frametitle{Tree interaction network: residual graphon}
+
+%   \vspace{-.2\textheight}
+  \hspace{-.04\textwidth}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.4\textwidth}}
+      \paragraph{Residual graphon.} \\
+      Each particle $\theta^m$ provides an estimate of $\phi^m(u, v)$ \\
+      ~ \\
+      ~ \\
+      All estimates can be averaged (over both $m$ and $K$)
+    \end{tabular}
+    & 
+    \pause
+%     \hspace{-.05\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \includegraphics[trim=130 120 130 0, clip=, width=.5\textwidth]{\figbayes/DoR21-JRSSC-Fig8}
+    \end{tabular}
+  \end{tabular}
+  
+%   \vspace{-.1\textheight}
+  \pause
+  \paragraph{Interpretation.}
+  \begin{itemize}
+   \item A remaining individual effect (some species interact more than other in average)
+   \item A small fraction of species interact much less than expected.
+  \end{itemize}
+
+}
+  
 %====================================================================
 \backupend
 %====================================================================
