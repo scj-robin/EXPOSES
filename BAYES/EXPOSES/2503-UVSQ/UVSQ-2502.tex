@@ -45,17 +45,21 @@
 %====================================================================
 
 %====================================================================
-\title[Improving variational inference]{Improving the variational inference of latent variable models in ecology}
+\title[Improving variational inference]{Improving variational inference for latent variable models in ecology}
 
-\author[S. Robin]{S. Robin \\ ~\\
-    Joint work with S. Donnet and J. Stoehr
+\author[S. Robin]{S. Robin}
+
+\institute[]{{\small Sorbonne universit\'e \\ \medskip
+  Laboratoire de Probabilit\'es, Statistique et Mod\'elisation (LPSM)} 
+  \\
+  \vspace{0.1\textheight}
+  {\normalsize Joint work with S. Donnet and J. Stoehr}
   }
 
-\institute[]{\small Sorbonne universit\'e \\ 
-Laboratoire de Probabilit\'es, Statistique et Mod\'elisation (LPSM) \\ ~ \\ ~}
-
 \date[Feb.'25, UVSQ]{
-Mod\'elisation, analyse statistique, et applications en \'ecologie et climatologie}
+  \vspace{0.1\textheight} \\
+  Mod\'elisation, analyse statistique, et applications en \'ecologie et climatologie, Feb.'25, UVSQ
+  }
 
 %====================================================================
 %====================================================================
@@ -73,7 +77,7 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
   \begin{itemize}
     \setlength{\itemsep}{.5\baselineskip}
     \item account for heterogeneity (species clustering, over-dispersion or 'excess' of zeros in population sizes), 
-    \item encode dependency (due to space, genetics, ...), 
+    \item encode dependency (due to space, relatedness, ...), 
     \item represent a 'true' signal, observed with noise (animal movement), 
     \item ...
   \end{itemize}
@@ -125,8 +129,9 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
     Y_{ij} \mid Z_{ij} & \sim \Pcal(\exp(x_i^\top \emphase{\beta_j} + Z_{ij}))
   \end{align*} \pause
   \begin{itemize}
+    \setlength{\itemsep}{.5\baselineskip}
     \item $\beta_j =$ effects of the environmental covariates on species $j$ (\emphase{\sl abiotic} interactions)
-    \item $\Sigma =$ between-species covariance matrix  (\emphase{\sl biotic} interactions)
+    \item $\Sigma =$ between-species \textcolor{gray}{latent} covariance matrix  (\emphase{\sl biotic} interactions)
   \end{itemize}
 
   \bigskip \bigskip \pause
@@ -140,9 +145,9 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
     $\widehat{B}$ & 
     by the environment & 
     correlation  $\widehat{\Sigma}$ \\
-    \includegraphics[width=.25\textwidth, trim=20 20 50 20, clip=]{\figeco/BarentsFish-coeffAll-woIntercept} & 
-    \includegraphics[width=.25\textwidth, trim=20 20 50 20, clip=]{\figeco/BarentsFish-corrPred} & 
-    \includegraphics[width=.25\textwidth, trim=20 20 50 20, clip=]{\figeco/BarentsFish-corrAll}
+    \includegraphics[width=.25\textwidth, trim=20 10 20 10, clip=]{\figeco/BarentsFish-coeffAll-woIntercept} & 
+    \includegraphics[width=.25\textwidth, trim=20 10 20 10, clip=]{\figeco/BarentsFish-corrPred} & 
+    \includegraphics[width=.25\textwidth, trim=20 10 20 10, clip=]{\figeco/BarentsFish-corrAll}
   \end{tabular}
   $$
 }
@@ -181,6 +186,7 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
     Y_{ij} \mid Z_i = q, Z_j = \ell & \sim \Pcal(\exp(\emphase{\alpha_{q\ell}} + x_{ij}^\top \emphase{\beta}))
   \end{align*} 
   \begin{itemize}
+    \setlength{\itemsep}{.5\baselineskip}
     \item $\pi_q =$ proportion of species belonging to group $k$ (\emphase{\sl node clustering})
     \item $\alpha_{q\ell}=$ group effect on the interaction intensity
     \item $\beta =$ effect of the covariates on the interaction intensity
@@ -211,32 +217,35 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 
 %====================================================================
 %====================================================================
-\section{From EM to Variationnal EM}
+\section{From EM to Variational EM}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
 \frame{\frametitle{Maximum likelihood with latent variables}
 
   \paragraph{Latent variable model.} Three ingredients:
   \begin{enumerate}
-    \item $\theta =$ parameter set:
-    $$
-    \text{PLN:} \theta = (B, \Sigma) \qquad \qquad \text{SBM:} \theta = (\pi, \alpha, \beta)
-    $$
+    \item $\theta =$ set of parameters:
+    \begin{align*}
+      \text{PLN:} \quad \theta & = (B, \Sigma) &
+      \text{SBM:} \quad \theta & = (\pi, \alpha, \beta)
+    \end{align*}
     \item $Z =$ set of latent variables:
-    $$
-    Z \sim p_\theta(Z)
-    $$
+    \begin{align*}
+      Z & \sim p_\theta(Z) &
+      (\text{PLN:\;} \Ncal, \; \text{SBM:\;} \Mcal)
+    \end{align*}
     \item $Y =$ set of observed variables:
-    $$
-    Y \sim p_\theta(Y \mid Z)
-    $$
+    \begin{align*}
+      Y & \sim p_\theta(Y \mid Z) &
+      (\text{PLN \& SBM:\;} \Pcal)
+    \end{align*}
   \end{enumerate}
 
   \bigskip \bigskip \pause
   \paragraph{Maximum likelihood inference.} Estimate $\theta$ with
   $$
   \widehat{\theta}
-  = \argmax_\theta \log p_\theta(Y) 
+  = \argmax_\theta \; \log p_\theta(Y) 
   = \argmax_\theta \; \log \underset{\text{\normalsize Most often intractable}}{\underbrace{\int p_\theta(Y \mid z) p_\theta(z) \d z}} 
   $$
 
@@ -267,12 +276,14 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 
   
   \bigskip \bigskip \pause
-  \paragraph{Problem.} $p_\theta(Z \mid Y)$ is itself intractable for many models, including PLN and SBM
+  \paragraph{Problem.} 
+  For many models (including PLN and SBM), $p_\theta(Z \mid Y)$ is itself intractable 
 }
 
 %====================================================================
 \frame{\frametitle{Variational EM (VEM) algorithm}
 
+  \bigskip
   \paragraph{Principle \refer{WaJ08,BKM17}.} Replace the E step with an approximation step, i.e.
   \begin{itemize}
     \item Choose a class $\Qcal$ of approximate (parametric) distributions
