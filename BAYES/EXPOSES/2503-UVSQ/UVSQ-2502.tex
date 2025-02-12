@@ -1,4 +1,4 @@
-\documentclass[9pt]{beamer}
+\documentclass[8pt]{beamer}
 
 % Beamer style
 %\usetheme[secheader]{Madrid}
@@ -32,8 +32,8 @@
 \newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
 \newcommand{\figtree}{/home/robin/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Data/Tree/Fig}
 \newcommand{\figbayes}{/home/robin/RECHERCHE/BAYES/EXPOSES/FIGURES}
-\newcommand{\figzebra}{/home/robin/RECHERCHE/BAYES/VBEM-IS/VBEM-IS.git/Data/Zebra/Fig}
 \newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
+\newcommand{\figStR}{/home/robin/RECHERCHE/BAYES/PLNsampling/Paper/Figures}
 
 %====================================================================
 %====================================================================
@@ -78,12 +78,12 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
     \item ...
   \end{itemize}
 
-  \bigskip \bigskip 
+  \bigskip \bigskip \pause
   \paragraph{Statistical perspective.} 
   \begin{itemize}
     \setlength{\itemsep}{.5\baselineskip}
-    \item Number of latent variables $\simeq$ number of observed variable.
-    \item The inference of the mode parameters would be much easier if they were observed.
+    \item Number of latent variables $\simeq$ number of observed variables.
+    \item Inference of the model parameters much easier if they were observed.
   \end{itemize}
 
 }
@@ -115,6 +115,7 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 %====================================================================
 \frame{\frametitle{Poisson log-normal model}
 
+  \bigskip
   \paragraph{A joint species distribution model:} 
   Poisson-log normal distribution \refer{AiH89,CMR21}
   \begin{align*}
@@ -134,10 +135,10 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
   $$
   \begin{tabular}{ccc}
     Covariate effects & 
-    Covariate induced & 
+    Correlation induced & 
     Between species \\
     $\widehat{B}$ & 
-    correlation & 
+    by the environment & 
     correlation  $\widehat{\Sigma}$ \\
     \includegraphics[width=.25\textwidth, trim=20 20 50 20, clip=]{\figeco/BarentsFish-coeffAll-woIntercept} & 
     \includegraphics[width=.25\textwidth, trim=20 20 50 20, clip=]{\figeco/BarentsFish-corrPred} & 
@@ -170,7 +171,9 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 %====================================================================
 \frame{\frametitle{Stochastic block-model}
 
-  \paragraph{A network model:} Stochastic block-model with covariates \refer{MRV10}
+  \bigskip
+  \paragraph{A network model:} 
+  Stochastic block-model with covariates \refer{MRV10}
   \begin{align*}
     & \text{For each species $i = 1 \dots n$:} & 
     \emphase{Z_i} & \sim \Mcal_K(0, \emphase{\pi}) \\
@@ -253,7 +256,7 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
     \theta^{(h+1)} = \argmax_\theta Q(\theta \mid \theta^{(h)})
     $$
   \end{itemize}
-  $\to$ The log-likelihood $\log p_\theta(Y)$ increases at each step.
+  $\to$ The log-likelihood increases at each step: $\log p_{\theta^{(h+1)}}(Y) \geq \log p_{\theta^{(h)}}(Y)$ .
   
   \bigskip \bigskip \pause
   \paragraph{Critical step = E step:} Requires to determine the conditional distribution
@@ -264,7 +267,7 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 
   
   \bigskip \bigskip \pause
-  \paragraph{Problem:} This distribution is itself intractable for many models, including PLN and SBM
+  \paragraph{Problem.} $p_\theta(Z \mid Y)$ is itself intractable for many models, including PLN and SBM
 }
 
 %====================================================================
@@ -272,8 +275,8 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 
   \paragraph{Principle \refer{WaJ08,BKM17}.} Replace the E step with an approximation step, i.e.
   \begin{itemize}
-    \item choose a class $\Qcal$ of approximate (parametric) distributions
-    \item choose divergence measure $D[q \| p]$ (e.g. $KL[q \| p]$)
+    \item Choose a class $\Qcal$ of approximate (parametric) distributions
+    \item Choose divergence measure $D[q \| p]$ (e.g. $KL[q \| p]$)
     \item \emphase{VE} step :
     $$
     q^{(h+1)} = \argmin_{q \in \Qcal} D\left[q(Z) \| p_{\theta^{(h)}}(Z \mid Y)\right]
@@ -291,10 +294,13 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
   \bigskip
   \paragraph{Pros:} Reasonably easy to implement, fast, empirically accurate
   
-  \bigskip
-  \paragraph{Cons:} Few theoretical guaranties \refer{CDP12,BCC13,MaM15}, does not enjoy the general properties of maximum likelihood (consistency, asymptotic normality, etc.) \\ 
-  \smallskip
-  $\to$ No measure of uncertainty (no confidence interval)
+  \bigskip \pause
+  \paragraph{Cons:} Few theoretical guaranties \refer{CDP12,BCC13,MaM15}, does not enjoy the general properties of maximum likelihood (consistency, asymptotic normality, etc.) 
+  \begin{itemize}
+   \item No measure of uncertainty (\emphase{no test or confidence interval}) 
+   \item Can we build upon variational inference to achieve 'genuine' statistical inference?
+  \end{itemize}
+  
 
 }
 
@@ -312,7 +318,7 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
     Z_i & \sim \Mcal_K(0, \pi) 
     & & \text{(group membership)} \\
     & \text{Pair $(i, j)$:} &
-    Y_{ij} \mid Z_i = q, Z_j = \ell & \sim \Pcal(e^{\alpha_{q\ell} + x_{ij}^\top \beta})
+    Y_{ij} \mid Z_i = q, Z_j = \ell & \sim \Pcal(e^{\emphase{\alpha_{q\ell}} + x_{ij}^\top \beta})
     & & \text{(observed interactions)}
   \end{align*} 
 
@@ -361,8 +367,9 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 }
 
 %====================================================================
-\frame{\frametitle{Toward genuine Bayesian inference}
+\frame{\frametitle{Toward genuine Bayesian inference \refer{DoR21}}
   
+  \bigskip \pause
   \paragraph{Bayesian model.} 
   Hierarchical structure
   \begin{align*}
@@ -371,23 +378,23 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
   Z & \sim p(Z \mid \theta) & 
   Y & \sim p(Y \mid Z, \theta)
   \end{align*}
-  $\to$ Aim of the inference: be able to sample from the joint \emphase{posterior $p(\theta, Z \mid Y)$}
+  {Prior for SBM:} $p(\theta) = \Dcal(\pi; a_0) \times \Ncal([\alpha \; \beta]; m_0, V_0)$. 
   
   \bigskip \bigskip
-  \paragraph{Prior:} $p(\theta) = \Dcal(\pi; a) \times \Ncal([\alpha \; \beta]; m, V)$. 
+  \paragraph{Aim of the inference:} be able to sample from the joint \emphase{posterior $p(\theta, Z \mid Y)$}
   
   \bigskip 
   \begin{tabular}{cc}
     \hspace{-.04\textwidth}
     \begin{tabular}{p{.6\textwidth}}
-      \onslide+<2->{\paragraph{Sequential Monte Carlo sampling.} \refer{DDJ06}}
+      \onslide+<3->{\paragraph{Sequential Monte Carlo sampling.} \refer{DDJ06}}
       \begin{itemize}
-      \onslide+<2->{\item $\textcolor{red}{p_0} = $ proposal, $\textcolor{blue}{p^*} = $ target posterior \\ ~ \\}
-      \onslide+<3->{\item Intermediate distributions
+      \onslide+<3->{\item $\textcolor{red}{p_0} = $ proposal, $\textcolor{blue}{p^*} = $ target posterior \\ ~ \\}
+      \onslide+<4->{\item Intermediate distributions
       $$
       \textcolor{red}{p_0}, \; p_1, \; \dots, \; p_H = \textcolor{blue}{p^*}
       $$}
-      \onslide+<3->{\item Iteratively: use $p_h$ to get a sample from $p_{h+1}$}
+      \onslide+<4->{\item Iteratively: use $p_h$ to get a sample from $p_{h+1}$}
       \end{itemize}
     \end{tabular}
     & 
@@ -395,9 +402,9 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
     \begin{tabular}{p{.35\textwidth}}
 %       \vspace{.025\textwidth}
       \begin{overprint}
-      \onslide<2> 
-      \includegraphics[width=.35\textwidth]{\figbayes/FigVBEM-IS-PropTarget.pdf}
       \onslide<3> 
+      \includegraphics[width=.35\textwidth]{\figbayes/FigVBEM-IS-PropTarget.pdf}
+      \onslide<4> 
       \includegraphics[width=.35\textwidth]{\figbayes/FigVBEM-IS-Tempering.pdf}
       \end{overprint}
     \end{tabular}
@@ -408,13 +415,13 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 %====================================================================
 \frame{\frametitle{Proposed sequential sampling strategy (1/2)}
 
-  \paragraph{Distribution path:} \refer{DoR21} 
+  \paragraph{Distribution path:}  
     set $0 = \rho_0 < \rho_1 < \dots < \rho_{H-1} < \rho_H = 1$,
   \begin{align*}
-     p_h(\theta, Z) & \propto \pt(\theta, Z)^{\emphase{{1-\rho_h}}} \; \times \; p(\theta, Z | Y)^{\emphase{{\rho_h}}} \\
+     p_h(\theta, Z) & \propto p_0(\theta, Z)^{\emphase{{1-\rho_h}}} \; \times \; p(\theta, Z | Y)^{\emphase{{\rho_h}}} \\
 %      \\
-     & \propto \pt(\theta, Z) \; \times \; r(\theta, Z)^{\emphase{{\rho_h}}}, 
-     & r(\theta, Z) & = \frac{\pi(\theta, Z) \ell(Y | \theta, Z)}{\pt(\theta, Z)}
+     & \propto p_0(\theta, Z) \; \times \; r(\theta, Z)^{\emphase{{\rho_h}}}, 
+     & r(\theta, Z) & = \frac{\pi(\theta, Z) \ell(Y | \theta, Z)}{p_0(\theta, Z)}
   \end{align*}
   
   \bigskip \pause
@@ -430,36 +437,38 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
   $$
   p_h(\theta, Z) \propto p_{h-1}(\theta, Z) \; \times \; r(\theta, Z)^{\emphase{{\rho_h} - \rho_{h-1}}}, 
   $$
-  $\rho_h$ can be tuned so to guaranty a sufficiently high effective sampling size (ESS).
+  $\rho_h$ can be tuned so to guaranty a sufficiently high effective sampling size (ESS\footnote{$\simeq$ Variance of the weights}).
   
 }
 
 %====================================================================
 \frame{\frametitle{Proposed sequential sampling strategy (2/2)}
 
-  \paragraph{Initial proposal distribution $p_0$:} based on VEM outputs:
+  \bigskip
+  \paragraph{Initial proposal distribution $p_0$.} Use VEM outputs:
   $$
   \pt_0(\theta) =  \Dcal(\pi; \widetilde{a}_0) \times \Ncal([\alpha \; \beta]; \widetilde{m}_0, \widetilde{V}_0)
   $$
-  with  $\widetilde{a}_0 = f(a_0, \widetilde{\tau}_{VEM})$, $\widetilde{m}_0 = f(m_0, \widehat{\theta}_{VEM})$ and $\widetilde{V}_0 = f(S_0, - \nabla_\theta^2 ELBO(\widehat{\theta}_{VEM}, \qt_{VEM}))$.
+  with  $\widetilde{a}_0 = f(a_0, \emphase{\widetilde{\tau}_{VEM}})$, $\widetilde{m}_0 = f(m_0, \emphase{\widehat{\theta}_{VEM}})$ and $\widetilde{V}_0 = f(S_0, - \nabla_\theta^2 \emphase{ELBO(\widehat{\theta}_{VEM}, \qt_{VEM})})$.
   
   \bigskip \bigskip \pause
   \begin{tabular}{cc}
     \hspace{-.04\textwidth}    
-    \begin{tabular}{p{.5\textwidth}}
+    \begin{tabular}{p{.35\textwidth}}
       \paragraph{What do we gain?} Mostly time: \\
       ~ \\
       $p_0 = \pt_0$ rather than $p_0 =$ prior \\
       ~ \\
       $\Rightarrow$ reduced number of SMC steps
-      ~ \\ 
-      \flushright{Synthetic data $\to$}
-      ~ \\ ~ \\
+      ~ \\ ~ \\ ~ \\ ~ \\ ~ \\ 
+%       \flushright{Synthetic data $\to$}
+%       ~ \\ ~ \\
     \end{tabular}
     &
     \begin{tabular}{c}
       \hspace{-.05\textwidth}    
-      \includegraphics[width=.4\textwidth, trim=5 0 5 00, clip=]{\figbayes/DoR21-Fig1-simu-rho} 
+      Synthetic data \\
+      \includegraphics[width=.5\textwidth, trim=5 0 5 00, clip=]{\figbayes/DoR21-Fig1-simu-rho} 
     \end{tabular}
   \end{tabular}
 
@@ -468,7 +477,7 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 %====================================================================
 \frame{\frametitle{Tree interaction network}
 
-  \paragraph{Posterior distribution of $\beta$.} For $\widehat{K} = 4 = \argmax_K p(K \mid Y)$, in 26 SMC steps:,
+  \paragraph{Posterior distribution of $\beta$.} For $\widehat{K} = 4 = \argmax_K p(K \mid Y)$, after \emphase{26 SMC steps}:
   $$
   \begin{tabular}{ccc}
     taxonomy & geography & genetics \\
@@ -485,7 +494,7 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
   \widehat{P}\{x = \text{(taxo.)} \mid Y \} \simeq 30\%
   $
    
-  \bigskip \bigskip \pause
+  \bigskip \pause
   \hspace{-.025\textwidth}
   \begin{tabular}{rrrr}
     \paragraph{Correlation between estimates.} 
@@ -510,35 +519,38 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
   $n$ sites, $p$ species
   \begin{align*}
     & \text{in each site $i = 1 \dots n$:} & 
-    \emphase{Z_i} & \sim \Ncal_p(0, \emphase{\Sigma}) \\
-    & \text{for each specie $j = 1 \dots p$:} &
-    Y_{ij} \mid Z_{ij} & \sim \Pcal(\exp(x_i^\top \emphase{\beta_j} + Z_{ij}))
+    \emphase{Z_i} & \sim \Ncal_p(0, \emphase{\Sigma}) &
+    & (\text{latent vector}) \\
+    & \text{for each species $j = 1 \dots p$:} &
+    Y_{ij} \mid Z_{ij} & \sim \Pcal(\exp(x_i^\top \emphase{\beta_j} + Z_{ij})) &
+    & (\text{observed abundances})
   \end{align*} 
   
-  \bigskip \bigskip \pause
+  \bigskip \pause
   \paragraph{No EM.} 
-  The $Z_i$'s are marginally Gaussian, but not Gaussian conditional on the $Y_{ij}$'s \\
-  (no close form, even in one dimension)
+  The $Z_i$'s are marginally Gaussian, but not Gaussian conditionally on the $Y_{ij}$'s \\
+  (no close form for $p(Z \mid Y)$, even in one dimension)
   
-  \bigskip \bigskip 
-  \paragraph{Variational EM.} Gaussian approximation \refer{CMR18a}, \url{PLNmodels} R package
+  \bigskip \bigskip \pause
+  \paragraph{Variational EM.} Gaussian approximation \refer{CMR18a}
   $$
   q(Z) = \prod_{i=1}^n \Ncal(Z_i; m_i, S_i)
   $$
   \begin{itemize}
   \item Parameter estimate $\widehat{\theta} = (\widehat{\Sigma}, \widehat{\beta})$, 
   \item Approximate conditional distribution $Z_i \mid Y_i \approx \Ncal(\widetilde{m}_i, \widetilde{S}_i)$, 
-  \item Lower bound $ELBO(\widehat{\theta}, \widetilde{m}, \widetilde{S})$
+  \item Lower bound $ELBO(\widehat{\theta}, \widetilde{m}, \widetilde{S})$ (R package \url{PLNmodels})
   \end{itemize}
   
 }
 
 %====================================================================
-\frame{\frametitle{Monte Carlo EM}
+\frame{\frametitle{Toward genuine maximum likelihood inference \refer{StR24}}
 
-  \paragraph{Monte Carlo EM.} \refer{CeD85}
+  \pause
+  \paragraph{Monte Carlo EM.} \refer{CeD85} When $p(Z \mid Y)$ intractable:
   \begin{itemize}
-    \item Monte Carlo E step: Sample $(Z^m)_{m = 1 \dots M} \overset{iid}{\sim} p_{\theta^{(h)}}(Z \mid Y)$, then evaluate
+    \item Monte Carlo E step: Sample $(Z^m)_{m = 1 \dots M} \overset{iid}{\sim} p_{\theta^{(h)}}(Z \mid Y)$, then estimate
     $$
     \widehat{Q}(\theta \mid \theta^{(h)}) := \frac1{M} \sum_{m=1}^M \log p_\theta(Y, Z^m)
     $$
@@ -548,16 +560,136 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
     $$
   \end{itemize}
 
-  \bigskip \bigskip \pause
+  \bigskip \pause
   \paragraph{How to sample from $p_{\theta^{(h)}}(Z \mid Y)$?}
-  \todo{!!! On en est là !!!}
+  Importance sampling:
+  \begin{itemize}
+   \item Sample $(Z^m)_{m = 1 \dots M} \overset{iid}{\sim} q^{(h)}(Z)$, $q^{(h)} =$ Gaussian proposal,
+   \item Compute the non-normalized weights $\rho_m^{(h)} = p_{\theta^{(h)}}(Y, Z^m) \left/ q^{(h)}(Z^m)\right.$,
+   \item \pause Estimate
+    $$
+    \widehat{Q}(\theta \mid \theta^{(h)}) := \sum_{m=1}^M \rho_m^{(h)} \log p_\theta(Y, Z^m) \; \left/ \; \sum_{m=1}^M \rho_m^{(h)} \right.,
+    $$
+  \end{itemize}
+
 }
 
 %====================================================================
-\frame{\frametitle{Composite log-likelihood}
+\frame{\frametitle{Composite likelihood}
 
-  \refer{StR24} \refer{VRF11}
+  \paragraph{Importance sampling has a poor efficiency\footnote{Measured in terms of ESS $\simeq$ variance of the weights}} in large dimension (say $p \geq 10, 15$) \\
+  ~  
+  $\to$ Need to reduce the sampling dimension
 
+  \bigskip \pause
+  \paragraph{Composite likelihood.} 
+  \begin{itemize}
+    \item Build $B$ overlapping blocks $\Ccal_1, \dots \Ccal_B$, each containing $k$ species, 
+    \item Define the composite log-likelihood as
+    $$
+    \cl_\theta(Y) = \frac1B \sum_{b=1}^B \log p_\theta(Y^b), 
+    \qquad
+    \text{where} \quad 
+    Y^b = [Y_{ij}]_{i = 1, \dots n, j \in \Ccal_b},
+    $$
+    \item \pause Then, the maximum composite likelihood estimator \refer{VRF11}
+    $$
+    \widehat{\theta}_{CL} = \argmax_\theta \cl_\theta(Y) 
+    $$
+    is consistent, asymptotically Gaussian with asymptotic variance given by
+    \begin{align*}
+      J(\theta) & = \Var_\theta[\nabla_\theta \cl_\theta(Y)], 
+      \qquad \qquad 
+      H(\theta) = - \Esp_\theta[\nabla^2_\theta \cl_\theta(Y)], \\
+      \Var_\infty(\widehat{\theta}_{CL}) & = H^{-1}(\theta) J(\theta) H^{-1}(\theta).
+    \end{align*} 
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Proposed composite likelihood algorithm}
+
+  \paragraph{Dealing with latent variables.}
+  \begin{itemize}
+    \item The latent variables $Z$ can be split in the same way as the observed abundances $Y$
+    \item The EM algorithm applies to the composite log-likelihood (apply the EM decomposition within each block)
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Proposal for importance sampling.}
+  \begin{itemize}
+    \item Start with $q^{(1)}(Z) = \qt_{VEM}(Z)$
+    \item Then update $q^{(h+1)}(Z)$ with the estimated mean and variance of $p_{\theta^{(h)}}(Z \mid Y)$.
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Building the blocks.} To guaranty the same precision for all estimates, one would ideally want that
+  \begin{itemize}
+    \item[$\beta_j$:] Each species $j$ belongs in the same number of blocks $\Ccal_1, \dots \Ccal_B$
+    \item[$\sigma_{jj'}$:] Each pair of species $(j, j')$ appears in the same number of blocks 
+    \item Same problem as the construction of a Balanced Incomplete Block Design\footnote{Not always possible: need to have $p \mid Bk$ and $p(p-1) \mid Bk(k-1)$}
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Simulation study}
+
+  \paragraph{Main aim.} Assess normality 
+  \begin{itemize}
+    \item Test statistic $(\widehat{\theta} -\theta^*) /\sqrt{\widehat{\Var}_\infty(\widehat{\theta})}$ for the regression coefficients
+    \item Criterion = $p$-value of the Kolmogorov-Smirnov test for normality
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Results.} $100$ sites, $3$ covariates, $100$ simulations
+  \newcommand{\lagSim}{50} \newcommand{\nISsim}{200} \newcommand{\nIterSim}{1000}
+  \newcommand{\simulParms}{-nIter\nIterSim-lag\lagSim-nIS\nISsim}
+  $$
+  \begin{tabular}{cccc}
+    7 species & 10 species & 20 species & 50 species \\
+    \includegraphics[width=.2\textwidth, trim=10 10 25 25, clip=]{\figStR/PvalKS-score-n100-d3-p7-parm1\simulParms} & 
+    \includegraphics[width=.2\textwidth, trim=10 10 25 25, clip=]{\figStR/PvalKS-score-n100-d3-p10-parm1\simulParms} & 
+    \includegraphics[width=.2\textwidth, trim=10 10 25 25, clip=]{\figStR/PvalKS-score-n100-d3-p20-parm1\simulParms} &
+    \includegraphics[width=.2\textwidth, trim=10 10 25 25, clip=]{\figStR/PvalKS-score-n100-d3-p50-parm1\simulParms}  
+  \end{tabular}
+  $$
+  FL = full likelihood, CL$k$ = composite likelihood$(k)$, \\
+  \medskip
+  VEM = pseudo Fisher information,  JK = jackknife variance estimate of $\Var(\widehat{\theta}_{VEM})$
+
+}
+
+%====================================================================
+\frame{\frametitle{Fish species in the Barents sea}
+
+  \newcommand{\nIterEx}{10000} \newcommand{\lagEx}{50} \newcommand{\nISex}{200}
+  \newcommand{\exampleParms}{-nIter\nIterEx-lag\lagEx-nIS\nISex}
+  \newcommand{\nIterSel}{\nIterEx} \newcommand{\lagSel}{20} \newcommand{\nISsel}{\nISex}
+  \newcommand{\selectParms}{-nIS\nISsel-nIter\nIterSel-lag\lagSel}
+  
+  \bigskip
+  \paragraph{Comparison of the estimates.}
+  $$
+  \begin{tabular}{ccc}
+    $\widehat{B}$ & $\widehat{\Sigma}$ & ESS (CL5) \\
+    \includegraphics[width=.25\textwidth, trim=10 10 25 50, clip=]{\figStR/Barents\exampleParms-compBeta-cem5-all} & 
+    \includegraphics[width=.25\textwidth, trim=10 10 25 50, clip=]{\figStR/Barents\exampleParms-compSigma-cem5-all} & 
+    \includegraphics[width=.25\textwidth, trim=10 10 25 50, clip=]{\figStR/Barents\exampleParms-ESS-cem5}     
+  \end{tabular}
+  $$
+
+  \pause
+  \paragraph{Significance.}
+  $$
+  \begin{tabular}{ccc}
+    $\widehat{B}$ & $\widehat{\Sigma}$ & $\text{cor}(\widehat{\Sigma})$ \\
+    \includegraphics[width=.25\textwidth, trim=10 10 25 25, clip=]{\figStR/Barents\exampleParms-betaSignif-cem5} & 
+    \includegraphics[width=.25\textwidth, trim=10 10 25 25, clip=]{\figStR/Barents\exampleParms-sigmaSignif-cem5} &
+    \includegraphics[width=.25\textwidth, trim=10 10 25 25, clip=]{\figStR/Barents\exampleParms-corSigmaSignif-cem5}
+  \end{tabular}  
+  $$
 }
 
 %====================================================================
@@ -569,18 +701,20 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 
   \paragraph{Summary.}
   \begin{itemize}
-    \item Latent variable models are widely in statistical ecology
+    \setlength{\itemsep}{.75\baselineskip}
+    \item Latent variable models are widely used in statistical ecology
     \item Maximum likelihood inference is often intractable \\
     $\to$ Variational inference = appealing alternative ... with few theoretical guaranties
     \item Monte Carlo approaches moves from variational inference toward genuine maximum likelihood or Bayesian inference
   \end{itemize}
 
-  \bigskip \pause
-  \paragraph{Some comments.}
+  \bigskip \bigskip \pause
+  \paragraph{Comments.}
   \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
     \item Monte Carlo approaches as still computationally demanding
-    \item ML-based variational inference (variational auto-encoders) may correspond to larger approximation class $\Qcal$, therefore to flexible approximate distribution $\qt$, getting closer to genuine MLE
-    \item Better understanding the properties of variational estimates
+    \item ML-based variational inference (variational auto-encoders) may correspond to larger approximation class $\Qcal$, therefore to more flexible approximate distribution $\qt$, getting closer to genuine MLE
+    \item More insights about the statistical properties of variational estimates are still needed
   \end{itemize}
 
 
@@ -593,7 +727,6 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 %====================================================================
 \frame[allowframebreaks]{ \frametitle{References}
 {\tiny
-  \nocite{DoR21}
   \bibliography{/home/robin/Biblio/BibGene}
 %   \bibliographystyle{/home/robin/LATEX/Biblio/astats}
   \bibliographystyle{alpha}
@@ -730,7 +863,7 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
   \pause 
   \paragraph{Same representation for all $K$.}
   $
-  Y_{ij} | (U_i, U_j) \sim \Pcal\left(\exp(\phi(U_i, U_j) + x_{ij}^\trans \beta \right)
+  Y_{ij} | (U_i, U_j) \sim \Pcal\left(\exp(\phi(U_i, U_j) + x_{ij}^\top \beta \right)
   $
   
   }
@@ -766,6 +899,38 @@ Mod\'elisation, analyse statistique, et applications en \'ecologie et climatolog
 
 }
   
+%====================================================================
+\frame{\frametitle{Barents sea fish species: Model selection}
+
+  \paragraph{BIC for composite likelihood.} \refer{GaS10}
+  $$
+  BIC = \cl_{\theta}(Y) - \frac{\log(n)}2 \text{dim}(\theta) 
+  \qquad \qquad 
+  \text{with} \quad
+  \text{dim}(\theta) = \tr[J(\theta) H(\theta)^{-1}].
+  $$
+  
+  \bigskip 
+  \paragraph{Model selection.} 4 covariates $\to$ 16 possible models 
+  \newcommand{\nIterEx}{10000} \newcommand{\lagEx}{50} \newcommand{\nISex}{200}
+  \newcommand{\exampleParms}{-nIter\nIterEx-lag\lagEx-nIS\nISex}
+  \newcommand{\nIterSel}{\nIterEx} \newcommand{\lagSel}{20} \newcommand{\nISsel}{\nISex}
+  \newcommand{\selectParms}{-nIS\nISsel-nIter\nIterSel-lag\lagSel}
+  $$
+  \begin{tabular}{ccc}
+    $\cl_{\widehat{\theta}_k}$ & $\text{dim}(\widehat{\theta}_k)$ & $BIC(k)$ \\
+    \includegraphics[width=.25\textwidth, trim=10 10 25 50, clip=]{\figStR/Barents\selectParms-models-cl} & 
+    \includegraphics[width=.25\textwidth, trim=10 10 25 50, clip=]{\figStR/Barents\selectParms-models-penbic} & 
+    \includegraphics[width=.25\textwidth, trim=10 10 25 50, clip=]{\figStR/Barents\selectParms-models-bic}     
+  \end{tabular}
+  $$
+  CL(5) vs CL(7): same for $d=1, 2, 3$ and 5 (best) \\
+  \medskip 
+  Differ only for $d=4$: \\
+  CL5 = Latitude + Depth + Temperature, CL7 = Latitude + Depth + Longitude
+
+}
+
 %====================================================================
 \backupend
 %====================================================================
