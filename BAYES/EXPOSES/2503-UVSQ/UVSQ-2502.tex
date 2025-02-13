@@ -426,29 +426,71 @@
 %====================================================================
 \frame{\frametitle{Proposed sequential sampling strategy (1/2)}
 
-  \paragraph{Distribution path:}  
-    set $0 = \rho_0 < \rho_1 < \dots < \rho_{H-1} < \rho_H = 1$,
-  \begin{align*}
-     p_h(\theta, Z) & \propto p_0(\theta, Z)^{\emphase{{1-\rho_h}}} \; \times \; p(\theta, Z | Y)^{\emphase{{\rho_h}}} \\
-%      \\
-     & \propto p_0(\theta, Z) \; \times \; r(\theta, Z)^{\emphase{{\rho_h}}}, 
-     & r(\theta, Z) & = \frac{\pi(\theta, Z) \ell(Y | \theta, Z)}{p_0(\theta, Z)}
-  \end{align*}
-  
-  \bigskip \pause
-  \paragraph{Sequential sampling.} At each step $h$, provide
-  $$
-  \Ecal_h = \{(\theta_h^m, Z_h^m, w_h^m)\}_{m = 1 \dots M} = \text{ weighted sample from } p_h
-  $$
-  with $w_0^m = 1$, $w_h^m = w_{h-1}^m \times r(\theta^m, Z^m)^{\rho_h - \rho_{h-1}}$
+  \vspace{-0.1\textheight}
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.6\textwidth}}
+      \onslide+<1->{\paragraph{Distribution path:}  
+        set $0 = \rho_0 < \rho_1 < \dots < \rho_{H-1} < \rho_H = 1$,
+        $$
+        \begin{array}{rlrl}
+          p_h(\theta, Z) 
+          & \propto p_0(\theta, Z)^{\emphase{{1-\rho_h}}} \; \times \; p(\theta, Z | Y)^{\emphase{{\rho_h}}} \\ ~\\
+          & \propto p_0(\theta, Z) \; \times \; r(\theta, Z)^{\emphase{{\rho_h}}} \\ ~\\
+          \text{with} \quad r(\theta, Z) 
+          & = \frac{\pi(\theta, Z) \ell(Y | \theta, Z)}{p_0(\theta, Z)}
+        \end{array}
+        $$}
+    \end{tabular}
+    & 
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.35\textwidth}}
+      \onslide+<1->{
+      \includegraphics[width=.35\textwidth]{\figbayes/FigVBEM-IS-Tempering.pdf}
+      }
+    \end{tabular}
+  \end{tabular}
 
-  \bigskip \bigskip \pause
+%   \vspace{-0.05\textheight}
+  \onslide+<2->{\paragraph{Sequential sampling.} 
+    At each step $h$, provide a weighted sample from $p_h$
+    $$
+    \Ecal_h = \{(\theta_h^m, Z_h^m, w_h^m)\}_{m = 1 \dots M}
+    $$
+    with $w_0^m = 1$, $w_h^m = w_{h-1}^m \times r(\theta^m, Z^m)^{\rho_h - \rho_{h-1}}$}
+  
+  \bigskip \bigskip 
+  \onslide+<3->{
   \paragraph{Tuning $\rho_h$.} 
   Because 
-  $$
+  $
   p_h(\theta, Z) \propto p_{h-1}(\theta, Z) \; \times \; r(\theta, Z)^{\emphase{{\rho_h} - \rho_{h-1}}}, 
-  $$
+  $
   $\rho_h$ can be tuned so to guaranty a sufficiently high effective sampling size (ESS\footnote{$\simeq$ Variance of the weights}).
+  }
+%   \paragraph{Distribution path:}  
+%     set $0 = \rho_0 < \rho_1 < \dots < \rho_{H-1} < \rho_H = 1$,
+%   \begin{align*}
+%      p_h(\theta, Z) & \propto p_0(\theta, Z)^{\emphase{{1-\rho_h}}} \; \times \; p(\theta, Z | Y)^{\emphase{{\rho_h}}} \\
+% %      \\
+%      & \propto p_0(\theta, Z) \; \times \; r(\theta, Z)^{\emphase{{\rho_h}}}, 
+%      & r(\theta, Z) & = \frac{\pi(\theta, Z) \ell(Y | \theta, Z)}{p_0(\theta, Z)}
+%   \end{align*}
+%   
+%   \bigskip \pause
+%   \paragraph{Sequential sampling.} At each step $h$, provide
+%   $$
+%   \Ecal_h = \{(\theta_h^m, Z_h^m, w_h^m)\}_{m = 1 \dots M} = \text{ weighted sample from } p_h
+%   $$
+%   with $w_0^m = 1$, $w_h^m = w_{h-1}^m \times r(\theta^m, Z^m)^{\rho_h - \rho_{h-1}}$
+% 
+%   \bigskip \bigskip \pause
+%   \paragraph{Tuning $\rho_h$.} 
+%   Because 
+%   $$
+%   p_h(\theta, Z) \propto p_{h-1}(\theta, Z) \; \times \; r(\theta, Z)^{\emphase{{\rho_h} - \rho_{h-1}}}, 
+%   $$
+%   $\rho_h$ can be tuned so to guaranty a sufficiently high effective sampling size (ESS\footnote{$\simeq$ Variance of the weights}).
   
 }
 
@@ -471,15 +513,13 @@
       $p_0 = \pt_0$ rather than $p_0 =$ prior \\
       ~ \\
       $\Rightarrow$ reduced number of SMC steps
-      ~ \\ ~ \\ ~ \\ ~ \\ ~ \\ 
-%       \flushright{Synthetic data $\to$}
-%       ~ \\ ~ \\
+      ~ \\ ~ \\ ~ \\ ~ \\ 
     \end{tabular}
     &
     \begin{tabular}{c}
       \hspace{-.05\textwidth}    
-      Synthetic data \\
-      \includegraphics[width=.5\textwidth, trim=5 0 5 00, clip=]{\figbayes/DoR21-Fig1-simu-rho} 
+      Synthetic data ($n = 40, K = 2, d = 4$)\\
+      \includegraphics[width=.5\textwidth, trim=5 0 0 0, clip=]{\figbayes/DoR21-Fig1-simu-rho} 
     \end{tabular}
   \end{tabular}
 
@@ -571,7 +611,7 @@
     $$
   \end{itemize}
 
-  \bigskip \pause
+  \bigskip \bigskip \pause
   \paragraph{How to sample from $p_{\theta^{(h)}}(Z \mid Y)$?}
   Importance sampling:
   \begin{itemize}
@@ -588,17 +628,18 @@
 %====================================================================
 \frame{\frametitle{Composite likelihood}
 
+  \bigskip
   \paragraph{Importance sampling has a poor efficiency\footnote{Measured in terms of ESS $\simeq$ variance of the weights}} in large dimension (say $p \geq 10, 15$) \\
   ~  
   $\to$ Need to reduce the sampling dimension
 
-  \bigskip \pause
+  \bigskip \bigskip \pause
   \paragraph{Composite likelihood.} 
   \begin{itemize}
     \item Build $B$ overlapping blocks $\Ccal_1, \dots \Ccal_B$, each containing $k$ species, 
     \item Define the composite log-likelihood as
     $$
-    \cl_\theta(Y) = \frac1B \sum_{b=1}^B \log p_\theta(Y^b), 
+    \cl_\theta(Y) = \sum_{b=1}^B \log p_\theta(Y^b), 
     \qquad
     \text{where} \quad 
     Y^b = [Y_{ij}]_{i = 1, \dots n, j \in \Ccal_b},
@@ -649,7 +690,7 @@
 
   \paragraph{Main aim.} Assess normality 
   \begin{itemize}
-    \item Test statistic $(\widehat{\theta} -\theta^*) /\sqrt{\widehat{\Var}_\infty(\widehat{\theta})}$ for the regression coefficients
+    \item Test statistic $(\widehat{\theta} -\theta^*) \left/ \sqrt{\widehat{\Var}_\infty(\widehat{\theta})} \right.$ for the regression coefficients
     \item Criterion = $p$-value of the Kolmogorov-Smirnov test for normality
   \end{itemize}
   
@@ -668,7 +709,8 @@
   $$
   FL = full likelihood, CL$k$ = composite likelihood$(k)$, \\
   \medskip
-  VEM = pseudo Fisher information,  JK = jackknife variance estimate of $\Var(\widehat{\theta}_{VEM})$
+  VEM = pseudo Fisher information based on the ELBO,  \\
+  JK = jackknife variance estimate of $\Var(\widehat{\theta}_{VEM})$
 
 }
 
@@ -692,7 +734,7 @@
   $$
 
   \pause
-  \paragraph{Significance.}
+  \paragraph{Significance.} Test statistics $\widehat{\theta} \left/ \sqrt{\widehat{\Var}_\infty(\widehat{\theta})} \right.$
   $$
   \begin{tabular}{ccc}
     $\widehat{B}$ & $\widehat{\Sigma}$ & $\text{cor}(\widehat{\Sigma})$ \\
@@ -724,7 +766,7 @@
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
     \item Monte Carlo approaches as still computationally demanding
-    \item ML-based variational inference (variational auto-encoders) may correspond to larger approximation class $\Qcal$, therefore to more flexible approximate distribution $\qt$, getting closer to genuine MLE
+    \item ML-based variational inference (e.g. variational auto-encoders) may correspond to larger approximation class $\Qcal$, therefore to more flexible approximate distribution $\qt$, getting closer to genuine MLE
     \item More insights about the statistical properties of variational estimates are still needed
   \end{itemize}
 
