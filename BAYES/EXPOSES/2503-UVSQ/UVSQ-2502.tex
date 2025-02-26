@@ -77,7 +77,7 @@
   \begin{itemize}
     \setlength{\itemsep}{.5\baselineskip}
     \item account for heterogeneity (species clustering, over-dispersion or 'excess' of zeros in population sizes), 
-    \item encode dependency (due to space, relatedness, ...), 
+    \item encode dependency (due to space, parental relatedness, ...), 
     \item represent a 'true' signal, observed with noise (animal movement), 
     \item ...
   \end{itemize}
@@ -87,7 +87,7 @@
   \begin{itemize}
     \setlength{\itemsep}{.5\baselineskip}
     \item Number of latent variables $\simeq$ number of observed variables.
-    \item Inference of the model parameters much easier if they were observed.
+    \item Inference of the model parameters much easier if the latent variables were observed.
   \end{itemize}
 
 }
@@ -145,9 +145,9 @@
     $\widehat{B}$ & 
     by the environment & 
     correlation  $\widehat{\Sigma}$ \\
-    \includegraphics[width=.25\textwidth, trim=20 10 20 10, clip=]{\figeco/BarentsFish-coeffAll-woIntercept} & 
-    \includegraphics[width=.25\textwidth, trim=20 10 20 10, clip=]{\figeco/BarentsFish-corrPred} & 
-    \includegraphics[width=.25\textwidth, trim=20 10 20 10, clip=]{\figeco/BarentsFish-corrAll}
+    \includegraphics[width=.25\textwidth, trim=0 10 20 10, clip=]{\figbayes/FigUVSQ-BarentsFish-coeffAll-woIntercept-specOrderTRUE} & 
+    \includegraphics[width=.25\textwidth, trim=0 10 20 10, clip=]{\figbayes/FigUVSQ-BarentsFish-corrPred-specOrderTRUE} & 
+    \includegraphics[width=.25\textwidth, trim=0 10 20 10, clip=]{\figbayes/FigUVSQ-BarentsFish-corrAll-specOrderTRUE}
   \end{tabular}
   $$
 }
@@ -197,7 +197,7 @@
   $n = 51$ species, $Y_{ij} = \#$ common parasites \refer{VPD08}, $d = 3$ covariates
   $$
   \begin{tabular}{ccc}
-    Observed adjacency matrix & Clustered network ($Q=4$) & Covariate effects \\
+    Observed interaction matrix & Clustered network ($Q=4$) & Covariate effects \\
     \begin{tabular}{c}
     \includegraphics[width=.25\textwidth, trim=0 0 50 20, clip=]{\figbayes/FigUVSQ-Tree-Adjacency} 
     \end{tabular}
@@ -209,7 +209,7 @@
     \begin{tabular}{l}
       $\widehat{\beta}_{\text{Gen}} = -0.413$ \\ ~ \\
       $\widehat{\beta}_{\text{Geo}} = -0.355$ \\ ~ \\
-      $\widehat{\beta}_{\text{Tax}} = +0.036$
+      $\widehat{\beta}_{\text{Tax}} = +0.036$ \\ ~ \\
     \end{tabular}
   \end{tabular}
   $$
@@ -277,41 +277,49 @@
   
   \bigskip \bigskip \pause
   \paragraph{Problem.} 
-  For many models (including PLN and SBM), $p_\theta(Z \mid Y)$ is itself intractable 
+  For many models (including PLN and SBM), the E step is intractable 
 }
 
 %====================================================================
-\frame{\frametitle{Variational EM (VEM) algorithm}
+\frame{\frametitle{Variational EM (VEM) algorithm (1/2)}
 
   \bigskip
-  \paragraph{Principle \refer{WaJ08,BKM17}.} Replace the E step with an approximation step, i.e.
+  \paragraph{Principle \refer{WaJ08,BKM17}.} Replace the E step with an approximation step, i.e. \\ ~
   \begin{itemize}
-    \item Choose a class $\Qcal$ of approximate (parametric) distributions
-    \item Choose divergence measure $D[q \| p]$ (e.g. $KL[q \| p]$)
-    \item \emphase{VE} step :
+    \setlength{\itemsep}{1\baselineskip}
+    \item \pause Choose a class $\Qcal$ of approximate (parametric) distributions
+    \item \pause Choose divergence measure $D[q \| p]$ (e.g. $KL[q \| p]$)
+    \item \pause \emphase{VE} step : (approximation)
     $$
     q^{(h+1)} = \argmin_{q \in \Qcal} D\left[q(Z) \| p_{\theta^{(h)}}(Z \mid Y)\right]
     $$
-    \item \emphase{M} step :
+    \item \pause \emphase{M} step : (update)
     $$
     \theta^{(h+1)} = \argmax_\theta \Esp_{\emphase{q^{(h+1)}}}\left[\log p_\theta(Y, Z)\right]
     $$
   \end{itemize}
+  \pause
+  \bigskip
   $\to$ If $D = KL$, a lower bound of $\log p_\theta(Y)$ ('ELBO') increases at each step
+}
+  
+%====================================================================
+\frame{\frametitle{Variational EM (VEM) algorithm (2/2)}
 
-  \bigskip \bigskip \pause
+  \bigskip 
   \textcolor{gray}{\paragraph{Remark:} A Bayesian version of it exists (Variational Bayes EM = VBEM).}
 
-  \bigskip
+  \bigskip \bigskip \pause
   \paragraph{Pros:} Reasonably easy to implement, fast, empirically accurate
   
-  \bigskip \pause
-  \paragraph{Cons:} Few theoretical guaranties \refer{CDP12,BCC13,MaM15}, does not enjoy the general properties of maximum likelihood (consistency, asymptotic normality, etc.) 
-  \begin{itemize}
-   \item No measure of uncertainty (\emphase{no test or confidence interval}) 
-   \item Can we build upon variational inference to achieve 'genuine' statistical inference?
-  \end{itemize}
+  \bigskip \bigskip \pause
+  \paragraph{Cons:} Few theoretical guaranties \refer{CDP12,BCC13,MaM15}, does not enjoy the general properties of maximum likelihood (consistency, asymptotic normality, etc.) \\
+  \medskip 
+  $\to$ No measure of uncertainty (\emphase{no test or confidence interval}) 
   
+  \bigskip \bigskip \pause
+  \paragraph{Question:} 
+  Can we build upon variational inference to achieve 'genuine' statistical inference?
 
 }
 
@@ -392,7 +400,7 @@
   {Prior for SBM:} $p(\theta) = \Dcal(\pi; a_0) \times \Ncal([\alpha \; \beta]; m_0, V_0)$. 
   
   \bigskip \bigskip
-  \paragraph{Aim of the inference:} be able to sample from the joint \emphase{posterior $p(\theta, Z \mid Y)$}
+  \paragraph{Aim of the inference:} Sample from the joint \emphase{posterior $p(\theta, Z \mid Y)$}
   
   \bigskip 
   \begin{tabular}{cc}
@@ -438,7 +446,7 @@
           & \propto p_0(\theta, Z)^{\emphase{{1-\rho_h}}} \; \times \; p(\theta, Z | Y)^{\emphase{{\rho_h}}} \\ ~\\
           & \propto p_0(\theta, Z) \; \times \; r(\theta, Z)^{\emphase{{\rho_h}}} \\ ~\\
           \text{with} \quad r(\theta, Z) 
-          & = \frac{\pi(\theta, Z) \ell(Y | \theta, Z)}{p_0(\theta, Z)}
+          & = {\pi(\theta, Z) \ell(Y | \theta, Z)} \left/ {p_0(\theta, Z)} \right.
         \end{array}
         $$}
     \end{tabular}
@@ -459,7 +467,7 @@
     $$
     with $w_0^m = 1$, $w_h^m = w_{h-1}^m \times r(\theta^m, Z^m)^{\rho_h - \rho_{h-1}}$}
   
-  \bigskip \bigskip 
+  \bigskip \medskip
   \onslide+<3->{
   \paragraph{Tuning $\rho_h$.} 
   Because 
@@ -758,7 +766,7 @@
     \item Latent variable models are widely used in statistical ecology
     \item Maximum likelihood inference is often intractable \\
     $\to$ Variational inference = appealing alternative ... with few theoretical guaranties
-    \item Monte Carlo approaches moves from variational inference toward genuine maximum likelihood or Bayesian inference
+    \item Monte Carlo approaches move from variational inference toward genuine maximum likelihood or Bayesian inference
   \end{itemize}
 
   \bigskip \bigskip \pause
@@ -767,7 +775,7 @@
     \setlength{\itemsep}{.75\baselineskip}
     \item Monte Carlo approaches as still computationally demanding
     \item ML-based variational inference (e.g. variational auto-encoders) may correspond to larger approximation class $\Qcal$, therefore to more flexible approximate distribution $\qt$, getting closer to genuine MLE
-    \item More insights about the statistical properties of variational estimates are still needed
+    \item More insights about the statistical properties of variational estimates would be more than welcome \refer{WeM19,TaT21,CGG24,GaL23}
   \end{itemize}
 
 
