@@ -100,3 +100,4 @@ PlotAdjClust(sbm1)
 if(exportFig){dev.off()}
 
 round(sbm1$model_parameters[[which.max(sbm1$ICL)]]$beta, 3)
+
