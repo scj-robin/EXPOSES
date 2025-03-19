@@ -1,4 +1,4 @@
-# Pictures for VBEM-IS talk
+# Pictures for VBEM-IS / PLN sampling talk at UVSQ (march 2025)
 
 rm(list=ls())
 palette('R3')
@@ -10,7 +10,7 @@ library(mclust)
 par(cex=5)
 cexLab <- 1.75
 cexTick <- 1.25
-exportFig <- TRUE
+exportFig <- FALSE
 
 ######################################################################################
 # Barents data

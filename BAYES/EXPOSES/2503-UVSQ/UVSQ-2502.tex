@@ -56,11 +56,11 @@
   {\normalsize Joint work with S. Donnet and J. Stoehr}
   }
 
-\date[Feb.'25, UVSQ]{
+\date[Mar.'25, UVSQ]{
   \vspace{0.1\textheight} \\
   Mod\'elisation, analyse statistique, et applications en \'ecologie et climatologie \\
   ~ \\
-  Univ. Versaille - Saint Quentin, Feb.'25
+  Univ. Versaille - Saint Quentin, Mar.'25
   }
 
 %====================================================================
@@ -104,7 +104,7 @@
   \paragraph{Species distribution models.} 
   $n$ sites, $x_i =$ vector of environmental descriptors for site $i$, $Y_i =$ number of individual from the species of interest observed in site $i$:
   $$
-  Y_i \sim \Fcal(\cdot; x_i, \beta).
+  Y_i \sim \Fcal(\cdot; x_i, \emphase{\beta}).
   $$
   $\to$ Generalized linear (mixed) model \refer{ElL09,ZIW09}
 
@@ -112,7 +112,7 @@
   \paragraph{Joint species distribution models.} 
   Same, but $Y_i = (Y_{i1}, \dots Y_{ip}) =$ vector of counts for $p$ species of interest observed in site $i$:
   $$
-  Y_i \sim \Fcal_p(\cdot; x_i, \beta, \Sigma)
+  Y_i \sim \Fcal_p(\cdot; x_i, \emphase{\beta}, \emphase{\Sigma})
   $$
   $\to$ Multivariate generalized linear mixed model  \refer{WBO15,OvA20}
   
@@ -132,13 +132,13 @@
   \end{align*} \pause
   \begin{itemize}
     \setlength{\itemsep}{.5\baselineskip}
-    \item $\beta_j =$ effects of the environmental covariates on species $j$ (\emphase{\sl abiotic} interactions)
-    \item $\Sigma =$ between-species \textcolor{gray}{latent} covariance matrix  (\emphase{\sl biotic} interactions)
+    \item $\emphase{\beta_j} =$ effects of the environmental covariates on species $j$ (\emphase{\sl abiotic} interactions)
+    \item $\emphase{\Sigma} =$ between-species \textcolor{gray}{latent} covariance matrix  (\emphase{\sl biotic} interactions)
   \end{itemize}
 
   \bigskip \bigskip \pause
   \paragraph{Fish species from the Barents sea.} 
-  $n = 89$, $p = 30$, $d = 4$ covariates
+  $n = 89$ sites, $p = 30$ species, $d = 4$ covariates
   $$
   \begin{tabular}{ccc}
     Covariate effects & 
@@ -162,14 +162,14 @@
   \begin{itemize}
     \item trophic (who-eats-who; unipartite, directed), 
     \item plant-pollinator, host-parasites (bipartite), 
-    \item number of shared parasites (unipartite, un-oriented, weighted), 
+    \item number of shared parasites (unipartite, unoriented, weighted), 
     \item ....
   \end{itemize}
 
   \bigskip \bigskip \pause
   \paragraph{Network model.} $n$ species, $x_i =$ vector of covariates for species $i$, $x_{ij}$ vector of covariates for the pair of species $(i, j)$, $Y_{ij} =$ interaction between species $i$ and $j$:
   $$
-  Y = (Y_{ij})_{i, j = 1 \dots n} \sim \Fcal(\cdot; (x_i)_{i = 1 \dots n}, (x_{ij})_{i, j = 1 \dots n}, \theta).
+  Y = (Y_{ij})_{i, j = 1 \dots n} \sim \Fcal(\cdot; (x_i)_{i = 1 \dots n}, (x_{ij})_{i, j = 1 \dots n}, \emphase{\theta}).
   $$
   $\to$ Exponential random graph models (ERGM: \refer{HHB08}), Block-models \refer{HoL79,GoN03} (review: \refer{MaR14})
   
@@ -189,9 +189,9 @@
   \end{align*} 
   \begin{itemize}
     \setlength{\itemsep}{.5\baselineskip}
-    \item $\pi_q =$ proportion of species belonging to group $k$ (\emphase{\sl node clustering})
-    \item $\alpha_{q\ell}=$ group effect on the interaction intensity
-    \item $\beta =$ effect of the covariates on the interaction intensity
+    \item $\emphase{\pi_q} =$ proportion of species belonging to group $k$ (\emphase{\sl node clustering})
+    \item $\emphase{\alpha_{q\ell}} =$ group effect on the interaction intensity
+    \item $\emphase{\beta} =$ effect of the covariates on the interaction intensity
   \end{itemize}
   
   \bigskip \bigskip \pause
@@ -226,20 +226,20 @@
 
   \paragraph{Latent variable model.} Three ingredients:
   \begin{enumerate}
-    \item $\theta =$ set of parameters:
+    \item $\emphase{\theta} =$ set of parameters:
     \begin{align*}
       \text{PLN:} \quad \theta & = (B, \Sigma) &
       \text{SBM:} \quad \theta & = (\pi, \alpha, \beta)
     \end{align*}
-    \item $Z =$ set of latent variables:
+    \item $\emphase{Z} =$ set of latent variables:
     \begin{align*}
       Z & \sim p_\theta(Z) &
-      (\text{PLN:\;} \Ncal, \; \text{SBM:\;} \Mcal)
+      (\text{PLN:\; multivariate normal, SBM:\; multinomial})
     \end{align*}
-    \item $Y =$ set of observed variables:
+    \item $\emphase{Y} =$ set of observed variables:
     \begin{align*}
       Y & \sim p_\theta(Y \mid Z) &
-      (\text{PLN \& SBM:\;} \Pcal)
+      (\text{PLN \& SBM:\; Poisson})
     \end{align*}
   \end{enumerate}
 
@@ -293,7 +293,7 @@
     \item \pause Choose divergence measure $D[q \| p]$ (e.g. $KL[q \| p]$)
     \item \pause \emphase{VE} step : (approximation)
     $$
-    q^{(h+1)} = \argmin_{q \in \Qcal} D\left[q(Z) \| p_{\theta^{(h)}}(Z \mid Y)\right]
+    q^{(h+1)} = \argmin_{q \in \emphase{\Qcal}} \emphase{D}\left[q(Z) \| p_{\theta^{(h)}}(Z \mid Y)\right]
     $$
     \item \pause \emphase{M} step : (update)
     $$
@@ -317,7 +317,7 @@
   \bigskip \bigskip \pause
   \paragraph{Cons:} Few theoretical guaranties \refer{CDP12,BCC13,MaM15}, does not enjoy the general properties of maximum likelihood (consistency, asymptotic normality, etc.) \\
   \medskip 
-  $\to$ No measure of uncertainty (\emphase{no test or confidence interval}) 
+  $\to$ No measure of uncertainty (\emphase{no test, no confidence interval}) 
   
   \bigskip \bigskip \pause
   \paragraph{Question:} 
@@ -381,8 +381,8 @@
   \onslide+<3>{
   \begin{itemize}
     \item Parameter estimate $\widehat{\theta} = (\widehat{\pi}, \widehat{\alpha}, \widehat{\beta})$, 
-    \item Approximate membership probability $\widetilde{\tau}_{ik} = \qt\{Z_i = k\}$, 
-    \item Lower bound $ELBO(\widehat{\theta}, \widetilde{\tau})$ (R packages \url{blockmodels} \refer{Leg16}, \url{sbm} \refer{BDL17})
+    \item Approximate membership probability $\widetilde{\tau}_{ik} = \Pr_{\qt}\{Z_i = k\}$, 
+    \item Lower bound $ELBO(\widehat{\theta}, \qt)$ (R packages \url{blockmodels} \refer{Leg16}, \url{sbm} \refer{BDL17})
   \end{itemize}
   }
 }
@@ -622,10 +622,10 @@
   \end{itemize}
 
   \bigskip \bigskip \pause
-  \paragraph{How to sample from $p_{\theta^{(h)}}(Z \mid Y)$?}
-  Importance sampling:
+  \paragraph{Importance sampling. }
+  How to sample from $p_{\theta^{(h)}}(Z \mid Y)$?
   \begin{itemize}
-   \item Sample $(Z^m)_{m = 1 \dots M} \overset{iid}{\sim} q^{(h)}(Z)$, $q^{(h)} =$ Gaussian proposal,
+   \item Sample $(Z^m)_{m = 1 \dots M} \overset{iid}{\sim} q^{(h)}(Z)$, $q^{(h)} =$ proposal,
    \item Compute the non-normalized weights $\rho_m^{(h)} = p_{\theta^{(h)}}(Y, Z^m) \left/ q^{(h)}(Z^m)\right.$,
    \item \pause Estimate
     $$
@@ -639,8 +639,8 @@
 \frame{\frametitle{Composite likelihood}
 
   \bigskip
-  \paragraph{Importance sampling has a poor efficiency\footnote{Measured in terms of ESS $\simeq$ variance of the weights}} in large dimension (say $p \geq 10, 15$) \\
-  ~  
+  \paragraph{Importance sampling has a poor efficiency\footnote{Measured in terms of ESS $\simeq$ variance of the weights}} in 'large' dimension (say $p \geq 10, 15$) \\
+  \medskip 
   $\to$ Need to reduce the sampling dimension
 
   \bigskip \bigskip \pause
@@ -674,23 +674,27 @@
 
   \paragraph{Dealing with latent variables.}
   \begin{itemize}
-    \item The latent variables $Z$ can be split in the same way as the observed abundances $Y$
-    \item The EM algorithm applies to the composite log-likelihood (apply the EM decomposition within each block)
+    \item The latent variables $Z$ can be split in the same way as the observed abundances $Y$:
+    $$
+    Z^b = [Z_{ij}]_{i = 1, \dots n, j \in \Ccal_b},
+    $$
+    \item The EM algorithm can be extended to composite log-likelihood \\
+    \textcolor{gray}{(Proof: apply the EM decomposition within each block)}
   \end{itemize}
 
   \bigskip \bigskip \pause
   \paragraph{Proposal for importance sampling.}
   \begin{itemize}
-    \item Start with $q^{(1)}(Z) = \qt_{VEM}(Z)$
-    \item Then update $q^{(h+1)}(Z)$ with the estimated mean and variance of $p_{\theta^{(h)}}(Z \mid Y)$.
+    \item Start with $q_b^{(1)}(Z^b) = \qt_{VEM}(Z^b)$
+    \item Then update $q_b^{(h+1)}(Z^b)$ with the estimated mean and variance of $p_{\theta^{(h)}}(Z^b \mid Y^b)$.
   \end{itemize}
 
   \bigskip \bigskip \pause
   \paragraph{Building the blocks.} To guaranty the same precision for all estimates, one would ideally want that
   \begin{itemize}
-    \item[$\beta_j$:] Each species $j$ belongs in the same number of blocks $\Ccal_1, \dots \Ccal_B$
+    \item[$\beta_j$:] Each species $j$ belongs to the same number of blocks $\Ccal_1, \dots \Ccal_B$
     \item[$\sigma_{jj'}$:] Each pair of species $(j, j')$ appears in the same number of blocks 
-    \item Same problem as the construction of a Balanced Incomplete Block Design\footnote{Not always possible: need to have $p \mid Bk$ and $p(p-1) \mid Bk(k-1)$}
+    \item Same problem as the construction of a incomplete balanced block design\footnote{Not always possible: need to have $p \mid Bk$ and $p(p-1) \mid Bk(k-1)$}
   \end{itemize}
 
 }
@@ -717,9 +721,9 @@
     \includegraphics[width=.2\textwidth, trim=10 10 25 25, clip=]{\figStR/PvalKS-score-n100-d3-p50-parm1\simulParms}  
   \end{tabular}
   $$
-  FL = full likelihood, CL$k$ = composite likelihood$(k)$, \\
+  FL = full likelihood, CL$k$ = composite likelihood$(k = \textcolor{gray}{2}, 3, \textcolor{gray}{5}, 7)$, \\
   \medskip
-  VEM = pseudo Fisher information based on the ELBO,  \\
+  \textcolor{gray}{VEM = pseudo Fisher information based on the ELBO},  \\
   JK = jackknife variance estimate of $\Var(\widehat{\theta}_{VEM})$
 
 }
@@ -775,9 +779,9 @@
   \paragraph{Comments.}
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
-    \item Monte Carlo approaches as still computationally demanding
-    \item ML-based variational inference (e.g. variational auto-encoders) may correspond to larger approximation class $\Qcal$, therefore to more flexible approximate distribution $\qt$, getting closer to genuine MLE
-    \item More insights about the statistical properties of variational estimates would be more than welcome \refer{WeM19,TaT21,CGG24,GaL23}
+    \item Monte Carlo approaches as still \emphase{computationally demanding}
+    \item \emphase{ML-based variational inference} (e.g. variational auto-encoders, normalizing flows) may correspond to larger approximation class $\Qcal$, therefore to more flexible approximate distribution $\qt$, getting closer to genuine MLE
+    \item More insights about the \emphase{theoretical properties of variational estimates} would be more than welcome \refer{WeM19,TaT21,CGG24,GaL23}
   \end{itemize}
 
 
