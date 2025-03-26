@@ -1,0 +1,80 @@
+\frametitle{A patch}
+
+  \paragraph{Patch.} Include the networks' dimensions $(m_k, n_k)$ in the anova model
+
+  \bigskip
+  \begin{overprint}
+    \onslide<2>
+    \paragraph{Simulated networks.}   {\small
+    $$
+  %   All_FakeBinNetList-sameColFALSE-sameRowFALSE-sameDensityFALSE-seed1-stat1-adonis2;;;;;
+    \begin{tabular}{l|rrrrrl}
+      & Df & SumOfSqs & $R2$ & $F$ & $Pr(>F)$ \\
+      \hline
+      insectNb & 1 & 10.55 & 0.0803 & 7.17 & \emphase{0.005} \\
+      plantNb & 1 & 7.32 & 0.0556 & 4.97 & \emphase{0.017} \\
+      Year & 1 & 0.77 & 0.0059 & 0.53 & 0.635 \\
+      Month & 6 & 8.96 & 0.0681 & 01.01 & 0.457 \\
+      Region & 2 & 4.39 & 0.0334 & 1.49 & 0.237 \\
+      Year:Month & 6 & 8.54 & 0.0649 & 0.97 & 0.491 \\
+      Year:Region & 2 & 2.17 & 0.0165 & 0.74 & 0.577 \\
+      Month:Region & 12 & 13.99 & 0.1064 & 0.79 & 0.689 \\
+      Year:Month:Region & 12 & 18.9 & 0.1437 & 01.07 & 0.427 \\
+      \hline
+      Residual & 38 & 55.93 & 0.4253 & & \\
+      Total & 81 & 131.51 & 1 & & \\
+    \end{tabular}
+    $$
+% \begin{verbatim}
+%                   Df SumOfSqs      R2       F Pr(>F)
+% insectNb           1   69.905 0.25946 42.6945  0.001 ***
+% plantNb            1   31.173 0.11570 19.0389  0.001 ***
+% Year               1    2.659 0.00987  1.6237  0.209
+% Month              6   24.796 0.09204  2.5241  0.010 **
+% Region             2    8.675 0.03220  2.6490  0.047 *
+% Year:Month         6    4.814 0.01787  0.4900  0.893
+% Year:Region        2    5.507 0.02044  1.6818  0.188
+% Month:Region      12   32.411 0.12030  1.6496  0.072 .
+% Year:Month:Region 12   27.262 0.10119  1.3875  0.161
+% Residual          38   62.218 0.23093
+% Total             81  269.419 1.00000
+% \end{verbatim}
+  }
+  \onslide<3>
+  \paragraph{Plant-pollinator networks.}   {\small
+  $$
+%   All_NatashaBinNetList-stat3-adonis2;;;;;
+  \begin{tabular}{l|rrrrrl}
+    & Df & SumOfSqs & $R2$ & $F$ & $Pr(>F)$ \\
+    \hline
+    insectNb & 1 & 69.9 & 0.2595 & 42.69 & \emphase{0.001} \\
+    plantNb & 1 & 31.17 & 0.1157 & 19.04 & \emphase{0.001} \\
+    Year & 1 & 2.66 & 0.0099 & 1.62 & 0.24 \\
+    Month & 6 & 24.8 & 0.092 & 2.52 & \emphase{0.017} \\
+    Region & 2 & 8.67 & 0.0322 & 2.65 & \emphase{0.035} \\
+    Year:Month & 6 & 4.81 & 0.0179 & 0.49 & 0.875 \\
+    Year:Region & 2 & 5.51 & 0.0204 & 1.68 & 0.198 \\
+    Month:Region & 12 & 32.41 & 0.1203 & 1.65 & 0.058 \\
+    Year:Month:Region & 12 & 27.26 & 0.1012 & 1.39 & 0.165 \\
+    \hline
+    Residual & 38 & 62.22 & 0.2309 & &  \\
+    Total & 81 & 269.42 & 1 & &  \\
+  \end{tabular}
+  $$
+% \begin{verbatim}
+%                   Df SumOfSqs      R2       F Pr(>F)
+% insectNb           1   69.905 0.25946 42.6945  0.001 ***
+% plantNb            1   31.173 0.11570 19.0389  0.001 ***
+% Year               1    2.659 0.00987  1.6237  0.209
+% Month              6   24.796 0.09204  2.5241  0.010 **
+% Region             2    8.675 0.03220  2.6490  0.047 *
+% Year:Month         6    4.814 0.01787  0.4900  0.893
+% Year:Region        2    5.507 0.02044  1.6818  0.188
+% Month:Region      12   32.411 0.12030  1.6496  0.072 .
+% Year:Month:Region 12   27.262 0.10119  1.3875  0.161
+% Residual          38   62.218 0.23093
+% Total             81  269.419 1.00000
+% \end{verbatim}
+  }
+  \end{overprint}
+
