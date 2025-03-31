@@ -1,0 +1,267 @@
+%==================================================================
+\frame{\frametitle{Super-motifs}
+
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.4\textwidth}}
+      \paragraph{Motif:}
+      $$
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9}
+      $$
+      ~\\ ~\\
+      \paragraph{Variance:}
+      $$
+      \begin{array}{rcl}
+        N_s^2 & = & \displaystyle{\left(\sum_\alpha Y_{s\alpha}\right)^2} \\
+        ~ \\
+        & = & \displaystyle{\sum_{\alpha, \beta: \alpha \cap \beta = \emptyset} Y_{s\alpha} Y_{s\beta}} \\
+        ~ \\
+        & & \displaystyle{+ \sum_{\alpha, \beta: \alpha \cap \beta \neq \emptyset} \underset{\footnotesize\begin{array}{c}\text{occurrence of} \\ \text{a super-motif} \end{array}}{\underbrace{Y_{s\alpha} Y_{s\beta}}}} \\
+      \end{array}
+      $$
+    \end{tabular} 
+    &
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Some super-motifs:} \\
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif1} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif2} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif3} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif4} \\
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif5} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif6} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif7} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif8} \\
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif9} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif10}
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif11}
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif12} \\
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif13} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif14}
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif15}
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif16} \\
+      ~ \\
+      \dots 396 super-motifs \\
+      ~ \\ ~ \\ ~ \\ 
+    \end{tabular} 
+  \end{tabular}
+  
+  \paragraph{Covariance:} same game, for $Y_{s\alpha} Y_{s'\beta}$ with $s \neq s'$
+
+}
+
+%==================================================================
+\frame{\frametitle{Asymptotic distribution of the count}
+
+  \bigskip 
+  \paragraph{Estimated probability.} 
+  $$
+  \overline{\phi}_s := {\phi_2 \phi_4} \left/ {\phi_1} \right.
+  \qquad \rightarrow \qquad 
+  \overline{F}_s := {F_2 F_4} \left/ {F_1} \right.
+  $$
+  where $F_1$, $F_2$, $F_4 =$ observed frequencies of top stars, bottom stars and edges.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Asymptotic normality for non-star motifs.} Under \BEDD (and sparsity conditions):
+  $$
+  (F_s - \overline{F}_s) \left/ \sqrt{\widehat{\Var}(F_s)} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
+  $$
+  Proof: 
+  \begin{itemize}
+   \item decompose 
+   $$
+   F_s - \overline{F}_s 
+   = \underset{\text{random fluctuations}}{\underbrace{(F_s - \phi_s)}} 
+   + \underset{\text{null under \BEDD}}{\underbrace{(\phi_s - \overline{\phi}_s)}}  
+   + \underset{\text{estimation error } \rightarrow 0}{\underbrace{(\overline{\phi}_s - \overline{F}_s)}}, 
+   $$
+   \item construct a counting martingale \refer{GaL17b} for $F_s - \phi_s$
+  \end{itemize}
+
+  \bigskip \pause
+  \paragraph{Test statistic.} Under \BEDD:
+  $$
+  N_s \approx \Ncal\left(\widehat{\Esp}(N_s), \widehat{\Var}(N_s)\right)
+  \qquad  \Leftrightarrow \qquad 
+  \left({N_s - \widehat{\Esp}(N_s)}\right)\left/{\sqrt{\widehat{\Var}(N_s)}}\right. \approx \Ncal\left(0, 1\right)
+  $$
+}
+
+%==================================================================
+\frame{\frametitle{In practice: Asymptotic normality}
+
+  \begin{center}
+  \begin{tabular}{cccc}
+    ($n = 2m/3$) & $m=50$ & $m=100$ & $m=200$ \\
+    \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-adjMatMotif6} & 
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m50-n33-rho5-g2-h3-6nodesFALSE-B500-distCountMotif6} &
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m100-n67-rho5-g2-h3-6nodesFALSE-B500-distCountMotif6} &
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m200-n133-rho5-g2-h3-6nodesFALSE-B500-distCountMotif6} \\
+    \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-adjMatMotif16} & 
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m50-n33-rho5-g2-h3-6nodesFALSE-B500-distCountMotif16} &
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m100-n67-rho5-g2-h3-6nodesFALSE-B500-distCountMotif16} &
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m200-n133-rho5-g2-h3-6nodesFALSE-B500-distCountMotif16} \\
+  \end{tabular}
+  \end{center}
+  
+  \bigskip
+  \textcolor{blue}{Normal} distribution, \textcolor{magenta}{Poisson-geometric} distribution with same mean and variance \refer{Sta01,PDK08}
+
+}
+
+%==================================================================
+\frame{\frametitle{In practice: Test statistic}
+
+  \paragraph{Need to account for the estimation error} of $\widehat{\Esp} N$
+  
+  \begin{center}
+  \begin{tabular}{lccc}
+    & $m=50$ & $m=100$ & $m=200$ \\
+    \begin{tabular}{p{.175\textwidth}}
+    Regular stat.: 
+    $$
+    {\frac{N - \widehat{\Esp} N}{\sqrt{\widehat{\Var} N}}}
+    $$
+    \end{tabular}
+    & 
+    \begin{tabular}{c}
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m50-n33-rho5-g2-h3-6nodesFALSE-B500-distRawStat6}
+    \end{tabular}
+    & 
+    \begin{tabular}{c}
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m100-n67-rho5-g2-h3-6nodesFALSE-B500-distRawStat6}
+    \end{tabular}
+    & 
+    \begin{tabular}{c}
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m200-n133-rho5-g2-h3-6nodesFALSE-B500-distRawStat6}
+    \end{tabular}
+    \\ \pause
+    \begin{tabular}{p{.175\textwidth}}
+    Correction: 
+    $$
+    {\frac{N - (\widehat{\Esp} N - \emphase{\widehat{\Bias}(\widehat{\Esp} N)})}{\sqrt{\emphase{\widehat{\Var} (N - \widehat{\Esp} N)}}}}
+    $$
+    \end{tabular}
+    & 
+    \begin{tabular}{c}    
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m50-n33-rho5-g2-h3-6nodesFALSE-B500-distNormStat6}
+    \end{tabular}
+    & 
+    \begin{tabular}{c}
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m100-n67-rho5-g2-h3-6nodesFALSE-B500-distNormStat6}
+    \end{tabular}
+    & 
+    \begin{tabular}{c}    
+    \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m200-n133-rho5-g2-h3-6nodesFALSE-B500-distNormStat6}
+    \end{tabular}
+  \end{tabular}
+  \end{center}
+  
+  \begin{itemize}
+   \item Need to evaluate \emphase{$\Var(N - \widehat{\Esp}(N))$} and \emphase{$\Bias(\widehat{\Esp} N)$}: resort to Taylor expansion ($\Delta-$method)
+  \end{itemize}
+}
+
+%==================================================================
+\frame{\frametitle{Goodness-of-fit (GOF) of the BEDD model}
+
+  \hspace{-.05\textwidth}
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.5\textwidth}}
+      \onslide+<1->{\paragraph{Raw statistic:}
+      $$
+      T_s = \frac{N_s - \widehat{\Esp} N_s}{\sqrt{\widehat{\Var} N_s}}
+      $$ \\ 
+      }
+      \onslide+<2->{
+      \paragraph{Corrected stat.:} accounts for the estimation error in $\widehat{\Esp} N$
+      $$
+      T'_s = \frac{N_s - (\widehat{\Esp} N_s - \emphase{\widehat{\Bias}(\widehat{\Esp} N_s)})}{\sqrt{\emphase{\widehat{\Var} (N_s - \widehat{\Esp} N_s)}}}
+      $$ \\ 
+      }
+      \onslide+<3>{\paragraph{Cholevski      
+      \footnote{$\Sigma = P \Lambda P^\intercal$, $\Sigma = P \Lambda^{-1/2} P^\intercal$} 
+      transformation:} accounts for the correlation between the counts
+      $$
+      \Sigma_{s, s'} = \Cov(N_s - \widehat{\Esp} N_s, N_{s'} - \widehat{\Esp} N_{s'})
+      $$
+      $$
+      T'' = \emphase{\widehat{\Sigma}^{-1/2}}
+      \left[N_s - (\widehat{\Esp} N_s - \widehat{\Bias}(\widehat{\Esp} N_s))\right]
+      $$
+      }
+    \end{tabular}
+    &
+    \begin{tabular}{p{.4\textwidth}}
+      \hspace{-.05\textwidth}
+      \onslide+<1->{\paragraph{Zackenberg network.} ~ \\}
+      \begin{overprint}
+        \onslide<1>
+        \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-StatCount}
+        \onslide<2>
+        \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-NormStatCount}
+        \onslide<3>
+        \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-CholNormStat}
+      \end{overprint}
+    \end{tabular} 
+  \end{tabular}
+
+}
+
+
+%==================================================================
+\frame{\frametitle{An intuition for Adonis \label{back:adonis}}
+
+  \bigskip
+  \paragraph{Variance.} Remind that
+  $
+  \displaystyle{\sum_{i=1}^n (y_i - \overline{y})^2 = \frac1{2n} \sum_{i=1}^n \sum_{i'=1}^n (y_i - y_{i'})^2}
+  $
+
+  \bigskip \pause
+  \paragraph{Analysis of variance.} Remind that, for $g$ groups, with $r$ replicates ($n = r \; g$), 
+  \begin{align*}
+  \underset{\text{\normalsize{Total}}}{\underbrace{\sum_{i=1}^g \sum_{j=1}^r (y_{ij} - \overline{y})^2}}
+  & =
+  \underset{\text{\normalsize{Between}}}{\underbrace{\sum_{i=1}^g r \; (\overline{y}_i - \overline{\overline{y}})^2}}
+  +
+  \underset{\text{\normalsize{Within}}}{\underbrace{\sum_{i=1}^g \sum_{j=1}^r (y_{ij} - \overline{y}_i)^2}} \\
+  \text{Anova test statistic} \quad  \emphase{F} & \emphase{\propto \text{Between}/\text{Within}}
+  \end{align*} 
+
+  \bigskip \pause
+  \paragraph{Distance.} $p$ variables $y_{ij} = (y_{ijk})_{k = 1 \dots p}$:
+  $
+  \displaystyle{D^2(y_{ij}, y_{i'j'}) = \sum_{k=1}^p (y_{ijk} - y_{i'j'k})^2}
+  $
+
+  \bigskip \pause
+  \paragraph{Adonis.} Define Between = Total - Within, where
+  \begin{align*}
+    \text{Total} 
+    & = \frac1{2n} \sum_{i=1}^g \sum_{i'=1}^g \sum_{j'=1}^r D^2(y_{ij}, y_{i'j'}), &
+    \text{Within} 
+    & = \frac1{2} \sum_{i=1}^g  \sum_{j=1}^r \sum_{j'=1}^r D^2(y_{ij}, y_{i'j'}), &
+  \end{align*}
+  and determine the $p$-value for $F = \text{Between}/\text{Within}$ by permutation. 
+  \textcolor{gray}{(Back to \#\ref{sec:adonis})}
+  
+}
+
+%==================================================================
+\frame{\frametitle{An intuition for Adonis \label{back:adonis}}
+
+  \paragraph{Plant imbalance $D^{(h)}$.}
+  $$\footnotesize{
+  \begin{tabular}{l|rrrrr}
+    \input{\tabnatasha/All_NatashaBinNetList-stat2-adonis-perm99999-adonis2}
+  \end{tabular}
+  }$$
+
+  \paragraph{Both imbalance $D^{(gh)}$.}
+  $$\footnotesize{
+  \begin{tabular}{l|rrrrr}
+    \input{\tabnatasha/All_NatashaBinNetList-stat3-adonis-perm99999-adonis2}
+  \end{tabular}
+  }$$
+  
+}

@@ -1,0 +1,114 @@
+\newcommand{\fignatasha}{/home/robin/RECHERCHE/RESEAUX/GOF-Network/Motif_Analysis_Natasha/Figures}
+\newcommand{\tabnatasha}{./Tables}
+
+
+%==================================================================
+%==================================================================
+\section{Distance-based network comparison}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%==================================================================
+\frame{\frametitle{Plant-pollinator networks in space \& time}
+  
+  \paragraph{Questions.} Does the structure of plant (herbaceous species) pollinator (native wild bees and hoverflies) network differ\footnote{Joint work with Natasha de Manincor \& Fran\c{c}ois Massol + Sarah Ouadah \& Pierre Latouche}: 
+  \begin{itemize}
+    \item along the environmental gradient?
+    \item across sites within the season?
+  \end{itemize}  
+  
+  \bigskip \bigskip \pause
+  \paragraph{Dataset.}
+  \begin{itemize}
+    \item 6 sites: 3 regions $\times$ 2 sites per region
+    \item 2 years
+    \item 7 months (April to October) per year
+  \end{itemize}
+  $$
+  \to \quad n = 82 \text{ networks}, \quad [4, 39] \text{ plants}, \quad [8, 80] \text{ insects}
+  $$
+    
+  \bigskip \bigskip \pause
+  \paragraph{Approach.} Define a motif-based distance between each pair of networks.
+%   \bigskip ~
+
+}
+
+%==================================================================
+\frame{\frametitle{Distance-based network comparison}
+
+  \begin{tabular}{ll}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Network distance.} For a pair of networks $(A, B)$
+      \begin{itemize}
+        \item for a given comparison (insect imbalance): 
+        $$H_0^{(g)} = \{g^A = g^B\},$$ 
+        \item for a given motif $s$: test statistic $W_s^{(g)}$, 
+        \item define the 'distances': 
+        $$
+        D^{(g)}(A, B) = \sqrt{\sum_s \left(W_s^{(g)}\right)^2}
+        $$
+      \end{itemize}
+    \end{tabular}
+    &
+    \pause
+%     \hspace{-.05\textwidth}
+    \begin{tabular}{p{.4\textwidth}}
+      \paragraph{Distance matrix:} \\
+%       $$
+      \includegraphics[width=.45\textwidth, trim=0 10 20 50, clip=]{\fignatasha/All_NatashaBinNetList-stat3-distMat}
+%       $$
+    \end{tabular} 
+  \end{tabular}
+
+  \bigskip \bigskip \pause
+  The same for 
+  \begin{itemize}
+    \item plant imbalance: $H_0^{(h)} = \{h^A = h^B\}$ $\to W_s^{(h)}$ $\to D^{(h)}(A, B)$ 
+    \item both imbalance: $H_0^{(gh)} = \{g^A = g^B, h^A = h^B\}$ $\to W_s^{(gh)}$ $\to D^{(gh)}(A, B)$ 
+  \end{itemize}
+}
+
+%==================================================================
+\frame{\frametitle{Distance-based analysis of variance ('Adonis') \label{sec:adonis}}
+
+  \paragraph{Data at hand.} $n$ networks ($A = 1, \dots n$)
+  \begin{itemize}
+    \setlength{\itemsep}{1.15\baselineskip}
+    \item network covariates: e.g. region, year, month, \dots
+    \item distance matrix $D = [D(A, B)]$ for all pairs of networks
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Analysis of variance for distance matrices \refer{And01}.} Briefly speaking\footnote{ See \refer{McA01,ZaS06} for details, \#\ref{back:adonis} for an intuition, R package \url{vegan} (\url{adonis2}) for an implementation}:
+  \begin{itemize}
+    \item Think of the regular linear model (regression, analysis of variance)
+    \item Do as if the distance was computed on pseudo variable rules by a linear model
+    \item 'Model':
+    \begin{align*}
+    D(A, B) = f(& \text{region}_A, \text{region}_B, \text{month}_A, \text{month}_B, \\
+    & (\text{region*month})_A, (\text{region*month})_B, \dots)
+    \end{align*}
+    \item Compute a pseudo $F$ statistics for each effect of interest
+    \item Assess significance using permutation tests.
+  \end{itemize}
+  
+}
+
+%==================================================================
+\frame{\frametitle{Result}
+  
+  \paragraph{Insect imbalance $D^{(g)}$.}
+  $$\small{
+  \begin{tabular}{l|rrrrr}
+    \input{\tabnatasha/All_NatashaBinNetList-stat1-adonis-perm99999-adonis2}
+  \end{tabular}
+  }$$
+  
+  \begin{itemize}
+    \item Because of small network sizes, need to still correct for it
+    \item Significant effect of the region and the month, indicating change of the insect imbalance both in space and time
+    \item The pattern is conserved from year to the next (not Year effect)
+    \item No effect is found for the plant imbalance distance $D^{(h)}$
+  \end{itemize}
+
+}

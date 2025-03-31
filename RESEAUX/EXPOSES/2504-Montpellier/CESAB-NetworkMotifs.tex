@@ -1,0 +1,158 @@
+%==================================================================
+%==================================================================
+\section{Bipartite networks and motifs}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%==================================================================
+\frame{\frametitle{Bipartite network}
+
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Two types of actors.}
+      \begin{itemize}
+      \item Mutualistic: plant-pollinator
+      \item Antagonistic: host-parasite
+      \end{itemize}
+      \bigskip \bigskip 
+      \paragraph{Topological analysis:} \\
+      understanding the network organisation \\
+      \bigskip
+      \paragraph{Local:} % \\
+      node or edge properties (degree, betweenness) \\
+      \bigskip
+      \paragraph{Global:} % \\
+      density, connected components, nestedness 
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Zackenberg network: } 
+      \refer{SRO16} \\
+      \includegraphics[width=.4\textwidth, trim=0 50 0 50]{\fignet/Zackenberg-1996_12-red-net} \\
+%       \includegraphics[width=.4\textwidth, trim=0 50 0 50]{\fignet/Zackenberg-1996_12-red-adj}
+    \end{tabular} 
+  \end{tabular}
+}
+
+%==================================================================
+\frame{\frametitle{Bipartite network: notations}
+
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.6\textwidth}}
+      \paragraph{Species.}
+      \begin{itemize}
+        \setlength{\itemsep}{1.15\baselineskip}
+        \item $i = 1, \dots m$ pollinators = rows = bottom nodes
+        \item $j = 1, \dots n$ plants = columns = top nodes
+      \end{itemize}
+    \end{tabular}
+    &
+    \hspace{-.15\textwidth}
+    \begin{tabular}{p{.4\textwidth}}
+      \includegraphics[width=.4\textwidth, trim=0 50 0 50]{\fignet/Zackenberg-1996_12-red-net} 
+    \end{tabular} 
+    \\ \pause
+    \begin{tabular}{p{.6\textwidth}}
+      \paragraph{Interactions.}
+      \begin{itemize}
+      \item $A_{ij} = 1$ if pollinator $i$ interacts with plant $j$, \\
+      0 otherwise
+      $$
+      A_{ij} = 1 \quad \Leftrightarrow \quad i \sim j
+      $$
+      \item adjacency matrix : $m \times n$
+      $$
+      A = [A_{ij}]_{1 \leq i \leq m, 1 \leq j \leq n}
+      $$
+      \end{itemize}
+    \end{tabular}
+    &
+    \hspace{-.15\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \includegraphics[width=.4\textwidth, trim=0 50 0 50]{\fignet/Zackenberg-1996_12-red-adj}
+    \end{tabular} 
+  \end{tabular}
+}
+
+%==================================================================
+\frame{\frametitle{Bipartite motifs}
+
+  \begin{tabular}{ll}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{'Meso-scale' analysis.} \refer{SCB19}
+      \begin{itemize}
+       \item Motifs ='building-blocks'
+       \item between local (several nodes) and global (sub-graph)
+      \end{itemize}
+      \bigskip \bigskip 
+      \onslide+<2->{
+      \paragraph{Interest.}
+      \begin{itemize}
+       \item Generic description of a network
+       \item Enables network comparison
+       \item Even when the nodes are different
+      \end{itemize} \\
+      ($+$ 'species-role': out of the scope here) \\
+      }
+      \bigskip \bigskip 
+      \onslide+<3->{
+      \paragraph{Existing tool.} 
+      \url{bmotif} package \refer{SSS19}: \\
+      counts motif occurrences
+      }
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \hspace{-0.035\textwidth}
+      \includegraphics[width=.5\textwidth]{\fignet/SCB19-Oikos-Fig3-6motifs} \\      
+    \end{tabular} 
+  \end{tabular}
+
+}
+
+%==================================================================
+\frame{\frametitle{Example}
+
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Plant-pollinator network} \refer{SRO16} \\
+      \hspace{-.05\textwidth}
+      \includegraphics[width=.45\textwidth, trim=0 50 0 50]{\fignet/Zackenberg-1996_12-red-net} \\
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Motif counts.}  \\ ~\\ 
+      4 nodes (species) \\ 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif5} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif6} \\ ~\\
+      5 nodes \\ 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif9} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif10} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif11} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif12} \\
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif13} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif14} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif15} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif16} 
+    \end{tabular}  
+    ~ \\
+    \hline
+    \\ \pause
+    \begin{tabular}{p{.45\textwidth}}
+      top 'stars' (plants) \\
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif1} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif2} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif7} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif17} 
+    \end{tabular}
+    &    
+    \begin{tabular}{p{.45\textwidth}}
+      bottom 'stars' (pollinators) \\
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif1} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif3} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif4} 
+      \includegraphics[width=.09\textwidth]{\fignet/Zackenberg-1996_12-red-motif8} 
+    \end{tabular}
+  \end{tabular}
+  
+}
+
