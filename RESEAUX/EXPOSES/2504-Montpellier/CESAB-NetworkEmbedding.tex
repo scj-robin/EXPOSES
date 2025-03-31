@@ -47,70 +47,13 @@
 }
 
 %==================================================================
-\frame{\frametitle{Choleski transform}
-
-  \bigskip
-  \paragraph{Aim:} 'Remove' correlation and variance heterogeneity
-  
-  \bigskip
-  \begin{tabular}{cc}
-    \hspace{-0.04\textwidth}
-    \begin{tabular}{p{.45\textwidth}}
-      \paragraph{Covariance matrix of $(X_1, X_2)$:}
-      $$
-      \Sigma_{X_1, X_2} = \left[\begin{array}{cc} 
-                      \sigma^2_1 & \sigma_{12} \\
-                      \sigma_{12} & \sigma^2_2 \\
-                     \end{array}\right]
-      $$
-    \end{tabular}
-    & 
-    \begin{tabular}{p{.45\textwidth}}
-      \onslide+<2->{\paragraph{Choleski transform:}
-      $$
-      \left[\begin{array}{c} X'_1 \\ X'_2 \end{array} \right]
-      = \Sigma^{-1/2} \left[\begin{array}{c} X_1 \\ X_2 \end{array} \right]
-      $$}
-    \end{tabular} 
-    \\
-    \hspace{-0.04\textwidth}
-    \begin{tabular}{c}
-      \vspace{-0.08\textheight}
-      \includegraphics[width=0.35\textwidth, trim=25 25 25 25, clip=]{\fignet/Cholevski-raw} 
-    \end{tabular}
-    & 
-    \begin{tabular}{c}
-      \vspace{-0.08\textheight}
-      \onslide+<2->{\includegraphics[width=0.35\textwidth, trim=25 25 25 25, clip=]{\fignet/Cholevski-chol}}
-    \end{tabular} 
-    \\
-    \hspace{-0.04\textwidth}
-    \begin{tabular}{p{.45\textwidth}}
-      Diagonalization: $\Sigma = P \emphase{\Lambda} P^{-1}$ \\
-      ~ \\
-      Choleski matrix: $\Sigma^{-1/2} = P \emphase{\Lambda^{-1/2}} P^{-1}$
-    \end{tabular}
-    & \pause
-    \begin{tabular}{p{.45\textwidth}}
-      \onslide+<2->{$$
-      \Sigma_{X'_1, X'_2} = \left[\begin{array}{cc} 
-                      1 & 0 \\
-                      0 & 1 \\
-                     \end{array}\right]
-      $$}
-    \end{tabular} 
-  \end{tabular}
-
-}
-
-%==================================================================
-\frame{\frametitle{Network embedding: Zackenberg's data \refer{SRO16}}
+\frame{\frametitle{Network embedding: Zackenberg's data \refer{SRO16} \label{sec:cholevsky}}
 
   \bigskip
   \begin{tabular}{c|c|c|c}
     \onslide+<1->{Raw counts} & 
     \onslide+<2->{Corrected stat.} & 
-    \onslide+<3->{Choleski} & 
+    \onslide+<3->{Choleski\footnote{(see \#\ref{back:cholevsky})}.} & 
     \onslide+<4>{Bray-Curtis MDS} \\
     \hline
     \onslide+<1->{\includegraphics[width=.2\textwidth, height=.175\textheight]{\fignet/Zackenberg-red-PCAcount-scree}} &

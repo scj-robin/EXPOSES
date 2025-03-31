@@ -49,7 +49,7 @@
 }
 
 %==================================================================
-\frame{\frametitle{Asymptotic distribution of the count}
+\frame{\frametitle{Asymptotic distribution of the count \label{back:motifDistrib}}
 
   \bigskip 
   \paragraph{Estimated probability.} 
@@ -84,6 +84,8 @@
   \qquad  \Leftrightarrow \qquad 
   \left({N_s - \widehat{\Esp}(N_s)}\right)\left/{\sqrt{\widehat{\Var}(N_s)}}\right. \approx \Ncal\left(0, 1\right)
   $$
+  \textcolor{gray}{(back to \#\ref{sec:motifMoments})}
+
 }
 
 %==================================================================
@@ -159,6 +161,65 @@
   \begin{itemize}
    \item Need to evaluate \emphase{$\Var(N - \widehat{\Esp}(N))$} and \emphase{$\Bias(\widehat{\Esp} N)$}: resort to Taylor expansion ($\Delta-$method)
   \end{itemize}
+}
+
+%==================================================================
+\frame{\frametitle{Choleski transform \label{back:cholevsky}}
+
+  \bigskip
+  \paragraph{Aim:} 'Remove' correlation and variance heterogeneity
+  
+  \bigskip
+  \begin{tabular}{cc}
+    \hspace{-0.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Covariance matrix of $(X_1, X_2)$:}
+      $$
+      \Sigma_{X_1, X_2} = \left[\begin{array}{cc} 
+                      \sigma^2_1 & \sigma_{12} \\
+                      \sigma_{12} & \sigma^2_2 \\
+                     \end{array}\right]
+      $$
+    \end{tabular}
+    & 
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<2->{\paragraph{Choleski transform:}
+      $$
+      \left[\begin{array}{c} X'_1 \\ X'_2 \end{array} \right]
+      = \Sigma^{-1/2} \left[\begin{array}{c} X_1 \\ X_2 \end{array} \right]
+      $$}
+    \end{tabular} 
+    \\
+    \hspace{-0.04\textwidth}
+    \begin{tabular}{c}
+      \vspace{-0.08\textheight}
+      \includegraphics[width=0.35\textwidth, trim=25 25 25 25, clip=]{\fignet/Cholevski-raw} 
+    \end{tabular}
+    & 
+    \begin{tabular}{c}
+      \vspace{-0.08\textheight}
+      \onslide+<2->{\includegraphics[width=0.35\textwidth, trim=25 25 25 25, clip=]{\fignet/Cholevski-chol}}
+    \end{tabular} 
+    \\
+    \hspace{-0.04\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      Diagonalization: $\Sigma = P \emphase{\Lambda} P^{-1}$ \\
+      ~ \\
+      Choleski matrix: $\Sigma^{-1/2} = P \emphase{\Lambda^{-1/2}} P^{-1}$
+    \end{tabular}
+    & \pause
+    \begin{tabular}{p{.45\textwidth}}
+      \onslide+<2->{$$
+      \Sigma_{X'_1, X'_2} = \left[\begin{array}{cc} 
+                      1 & 0 \\
+                      0 & 1 \\
+                     \end{array}\right]
+      $$
+      \textcolor{gray}{(back to \#\ref{sec:cholevsky})}
+      }
+    \end{tabular} 
+  \end{tabular}
+
 }
 
 %==================================================================
@@ -248,20 +309,60 @@
 }
 
 %==================================================================
-\frame{\frametitle{An intuition for Adonis \label{back:adonis}}
+\frame{\frametitle{Results for other motif distances}
 
   \paragraph{Plant imbalance $D^{(h)}$.}
   $$\footnotesize{
   \begin{tabular}{l|rrrrr}
-    \input{\tabnatasha/All_NatashaBinNetList-stat2-adonis-perm99999-adonis2}
+    \input{\tabnat/All_NatashaBinNetList-stat2-adonis-perm99999-adonis2}
   \end{tabular}
   }$$
 
   \paragraph{Both imbalance $D^{(gh)}$.}
   $$\footnotesize{
   \begin{tabular}{l|rrrrr}
-    \input{\tabnatasha/All_NatashaBinNetList-stat3-adonis-perm99999-adonis2}
+    \input{\tabnat/All_NatashaBinNetList-stat3-adonis-perm99999-adonis2}
   \end{tabular}
   }$$
   
+}
+
+%==================================================================
+\frame{\frametitle{Null simulations}
+
+  100 sets of $83$ synthetic networks, with dimensions as the original ones and fixed $\rho$, $g$, and $h$
+
+  \bigskip
+  \begin{tabular}{lc|cl}
+%     \hspace{-.05\textwidth}
+    \paragraph{Without correction.} & & & \paragraph{Over 100 networks.} \\
+    \begin{tabular}{p{.5\textwidth}}
+%       \paragraph{Without correction.} \\
+      \tiny{\begin{tabular}{l|rrrrr}
+        \input{\tabnat/All_FakeBinNetList-sameColFALSE-sameRowFALSE-sameDensityFALSE-seed1-stat1-adonis-perm9999-adonis1}
+      \end{tabular}}
+    \end{tabular}
+    & \quad & \quad & 
+    \begin{tabular}{p{.35\textwidth}}
+%       \paragraph{Over 100 networks.} \\
+      \includegraphics[width=.25\textwidth, trim=10 10 10 40, clip=]{\fignatB/AdonisCorrection-stat1-adonis1-2-Month-permut9999-boxplot}
+    \end{tabular} 
+    \\
+    & & & 
+    \\
+    \paragraph{With correction.} & & & \paragraph{Increasing the networks' size.} \\
+%     \hspace{-.05\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+%       \paragraph{With correction.} \\
+      \tiny{\begin{tabular}{l|rrrrr}
+        \input{\tabnat/All_FakeBinNetList-sameColFALSE-sameRowFALSE-sameDensityFALSE-seed1-stat1-adonis-perm9999-adonis2}
+      \end{tabular}}
+    \end{tabular}
+    & \quad & \quad & 
+    \begin{tabular}{p{.35\textwidth}}
+%       \paragraph{Increasing the networks' size.} \\
+      \includegraphics[width=.25\textwidth, trim=10 10 10 40, clip=]{\fignatB/EffectNetworkSize-stat1-adonis1-Month-permut9999-boxplot}
+    \end{tabular} 
+  \end{tabular}
+
 }

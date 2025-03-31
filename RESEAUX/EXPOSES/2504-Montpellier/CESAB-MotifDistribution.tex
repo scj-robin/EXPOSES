@@ -153,7 +153,7 @@
 }
 
 %==================================================================
-\frame{\frametitle{Moments of the count}
+\frame{\frametitle{Moments of the count \label{sec:motifMoments}}
 
   \begin{itemize}
   \setlength{\itemsep}{1.5\baselineskip}
@@ -166,33 +166,37 @@
   $$ 
   \ra Compute the respective expected count in the way as for regular motifs \\ ~
   \item \pause \emphase{Covariance:} Same game to compute $\Cov(N_s, N_{s'})$
-  \end{itemize}
-
-}
-
-%==================================================================
-\frame{\frametitle{Distribution of the count}
-
-  \paragraph{Asymptotic normality for non-star motifs.} Under \BEDD (and sparsity conditions):
-  $$
+  \item \pause \emphase{Asymptotic normality:} 
+  $
   (F_s - \overline{F}_s) \left/ \sqrt{\widehat{\Var}(F_s)} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
-  $$
-  Proof \refer{OLR22}: 
-  \begin{equation*}
-    \text{decompose} \qquad
-   F_s - \overline{F}_s 
-   = \underset{\text{random fluctuations}}{\underbrace{(F_s - \phi_s)}} 
-   + \underset{\text{null under \BEDD}}{\underbrace{(\phi_s - \overline{\phi}_s)}}  
-   + \underset{\text{estimation error } \rightarrow 0}{\underbrace{(\overline{\phi}_s - \overline{F}_s)}}, 
-  \end{equation*}
-  + construct a counting martingale for $F_s - \phi_s$  \refer{GaL17b}.
-  
-  \bigskip \bigskip \pause
-  \paragraph{Consequence.} We know 
-  \begin{itemize}
-    \item the expected behavior (mean, variance, distribution) of any motif count 
-    \item under the BEDD model (= 'null model').
+  $ 
+  \textcolor{gray}{(see \#\ref{back:motifDistrib})}
   \end{itemize}
+
 }
 
-
+% %==================================================================
+% \frame{\frametitle{Distribution of the count}
+% 
+%   \paragraph{Asymptotic normality for non-star motifs.} Under \BEDD (and sparsity conditions):
+%   $$
+%   (F_s - \overline{F}_s) \left/ \sqrt{\widehat{\Var}(F_s)} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
+%   $$
+%   Proof \refer{OLR22}: 
+%   \begin{equation*}
+%     \text{decompose} \qquad
+%    F_s - \overline{F}_s 
+%    = \underset{\text{random fluctuations}}{\underbrace{(F_s - \phi_s)}} 
+%    + \underset{\text{null under \BEDD}}{\underbrace{(\phi_s - \overline{\phi}_s)}}  
+%    + \underset{\text{estimation error } \rightarrow 0}{\underbrace{(\overline{\phi}_s - \overline{F}_s)}}, 
+%   \end{equation*}
+%   + construct a counting martingale for $F_s - \phi_s$  \refer{GaL17b}.
+%   
+%   \bigskip \bigskip \pause
+%   \paragraph{Consequence.} We know 
+%   \begin{itemize}
+%     \item the expected behavior (mean, variance, distribution) of any motif count 
+%     \item under the BEDD model (= 'null model').
+%   \end{itemize}
+% }
+% 
