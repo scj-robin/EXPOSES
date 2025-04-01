@@ -1,5 +1,5 @@
 %==================================================================
-\frame{\frametitle{Super-motifs}
+\frame{\frametitle{Super-motifs \label{back:superMotifs}}
 
   \begin{tabular}{ll}
     \begin{tabular}{p{.4\textwidth}}
@@ -44,7 +44,7 @@
     \end{tabular} 
   \end{tabular}
   
-  \paragraph{Covariance:} same game, for $Y_{s\alpha} Y_{s'\beta}$ with $s \neq s'$
+  \paragraph{Covariance:} same game, for $Y_{s\alpha} Y_{s'\beta}$ with $s \neq s'$ \goto{sec:motifMoments}
 
 }
 
@@ -84,12 +84,12 @@
   \qquad  \Leftrightarrow \qquad 
   \left({N_s - \widehat{\Esp}(N_s)}\right)\left/{\sqrt{\widehat{\Var}(N_s)}}\right. \approx \Ncal\left(0, 1\right)
   $$
-  \textcolor{gray}{(back to \#\ref{sec:motifMoments})}
+  \goto{sec:motifMoments}
 
 }
 
 %==================================================================
-\frame{\frametitle{In practice: Asymptotic normality}
+\frame{\frametitle{In practice: Asymptotic normality \label{back:asymNormality}}
 
   \begin{center}
   \begin{tabular}{cccc}
@@ -106,12 +106,13 @@
   \end{center}
   
   \bigskip
-  \textcolor{blue}{Normal} distribution, \textcolor{magenta}{Poisson-geometric} distribution with same mean and variance \refer{Sta01,PDK08}
+  \textcolor{blue}{Normal} distribution, \textcolor{magenta}{Poisson-geometric} distribution with same mean and variance \refer{Sta01,PDK08} \goto{sec:motifMoments}
+
 
 }
 
 %==================================================================
-\frame{\frametitle{In practice: Test statistic}
+\frame{\frametitle{In practice: Test statistic \label{back:motifTest}}
 
   \paragraph{Need to account for the estimation error} of $\widehat{\Esp} N$
   
@@ -159,12 +160,12 @@
   \end{center}
   
   \begin{itemize}
-   \item Need to evaluate \emphase{$\Var(N - \widehat{\Esp}(N))$} and \emphase{$\Bias(\widehat{\Esp} N)$}: resort to Taylor expansion ($\Delta-$method)
+    \item Need to evaluate \emphase{$\Var(N - \widehat{\Esp}(N))$} and \emphase{$\Bias(\widehat{\Esp} N)$}: resort to Taylor expansion ($\Delta-$method) \goto{sec:GOF}
   \end{itemize}
 }
 
 %==================================================================
-\frame{\frametitle{Choleski transform \label{back:cholevsky}}
+\frame{\frametitle{Choleski transform \label{back:cholesky}}
 
   \bigskip
   \paragraph{Aim:} 'Remove' correlation and variance heterogeneity
@@ -215,7 +216,7 @@
                       0 & 1 \\
                      \end{array}\right]
       $$
-      \textcolor{gray}{(back to \#\ref{sec:cholevsky})}
+      \goto{sec:cholesky}
       }
     \end{tabular} 
   \end{tabular}
@@ -223,7 +224,7 @@
 }
 
 %==================================================================
-\frame{\frametitle{Goodness-of-fit (GOF) of the BEDD model}
+\frame{\frametitle{Goodness-of-fit (GOF) of the BEDD model \label{back:GOF}}
 
   \hspace{-.05\textwidth}
   \begin{tabular}{ll}
@@ -263,6 +264,7 @@
         \onslide<3>
         \includegraphics[width=.4\textwidth]{\fignet/Zackenberg-1996_12-red-CholNormStat}
       \end{overprint}
+      \goto{sec:GOF}
     \end{tabular} 
   \end{tabular}
 
@@ -304,7 +306,7 @@
     & = \frac1{2} \sum_{i=1}^g  \sum_{j=1}^r \sum_{j'=1}^r D^2(y_{ij}, y_{i'j'}), &
   \end{align*}
   and determine the $p$-value for $F = \text{Between}/\text{Within}$ by permutation. 
-  \textcolor{gray}{(Back to \#\ref{sec:adonis})}
+  \goto{sec:adonis}
   
 }
 
@@ -338,7 +340,7 @@
       \tiny{\begin{tabular}{l|rrrrr}
         \input{\tabnat/All_FakeBinNetList-sameColFALSE-sameRowFALSE-sameDensityFALSE-seed1-stat1-adonis-perm9999-adonis2}
       \end{tabular}} \\
-      \textcolor{gray}{(back to \#\ref{sec:adonisResults})}
+      \goto{sec:adonisResults}
     \end{tabular}
     & \quad & \quad & 
     \begin{tabular}{p{.35\textwidth}}
@@ -365,7 +367,7 @@
     \input{\tabnat/All_NatashaBinNetList-stat3-adonis-perm99999-adonis2}
   \end{tabular}
   }$$
-  \textcolor{gray}{(back to \#\ref{sec:adonisResults})}
+  \goto{sec:adonisResults}
 
 }
 
