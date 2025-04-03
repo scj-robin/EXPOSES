@@ -19,12 +19,12 @@
   \bigskip \bigskip \pause
   \paragraph{Dataset.}
   \begin{itemize}
-    \item 6 sites: 3 regions $\times$ 2 sites per region
-    \item 2 years
+    \item 6 sites: 3 regions (Hauts-de-France, Normandie and Occitanie) $\times$ 2 sites per region
+    \item 2 years (2016, 2017)
     \item 7 months (April to October) per year
   \end{itemize}
   $$
-  \to \quad n = 82 \text{ networks}, \quad [4, 39] \text{ plants}, \quad [8, 80] \text{ insects}
+  \to \quad N=82 \text{ networks}, \quad [4, 39] \text{ plants}, \quad [8, 80] \text{ insects}
   $$
     
   \bigskip \bigskip \pause
@@ -38,10 +38,10 @@
 
   \begin{tabular}{ll}
     \hspace{-.04\textwidth}
-    \begin{tabular}{p{.5\textwidth}}
+    \begin{tabular}{p{.55\textwidth}}
       \paragraph{Network distance.} For a pair of networks $(A, B)$
       \begin{itemize}
-        \item for a given comparison (insect imbalance): 
+        \item for a given comparison (e.g. insect imbalance): 
         $$H_0^{(g)} = \{g^A = g^B\},$$ 
         \item for a given motif $s$: test statistic $W_s^{(g)}$, 
         \item define the 'distances': 
@@ -52,8 +52,8 @@
     \end{tabular}
     &
     \pause
-%     \hspace{-.05\textwidth}
-    \begin{tabular}{p{.4\textwidth}}
+    \hspace{-.05\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
       \paragraph{Distance matrix:} \\
 %       $$
       \includegraphics[width=.45\textwidth, trim=0 10 20 50, clip=]{\fignatA/All_NatashaBinNetList-stat3-distMat}
@@ -72,9 +72,10 @@
 %==================================================================
 \frame{\frametitle{Distance-based analysis of variance ('Adonis')} \label{sec:adonis}
 
-  \paragraph{Data at hand.} $n$ networks ($A = 1, \dots n$)
+  \bigskip
+  \paragraph{Data at hand.} $N$ networks ($A = 1, \dots N$)
   \begin{itemize}
-    \setlength{\itemsep}{1.15\baselineskip}
+    \setlength{\itemsep}{.75\baselineskip}
     \item network covariates: e.g. region, year, month, \dots
     \item distance matrix $D = [D(A, B)]$ for all pairs of networks
   \end{itemize}
@@ -82,7 +83,7 @@
   \bigskip \bigskip \pause
   \paragraph{Analysis of variance for distance matrices \refer{And01}.} Briefly speaking:
   \begin{itemize}
-    \setlength{\itemsep}{1.15\baselineskip}
+    \setlength{\itemsep}{.75\baselineskip}
     \item Think of the regular linear model (regression, analysis of variance)
     \item Do as if the distance was computed on pseudo variable rules by a linear model
     \item 'Model':
@@ -110,7 +111,7 @@
   }$$
 
   \begin{itemize}
-    \setlength{\itemsep}{1.15\baselineskip}
+    \setlength{\itemsep}{1\baselineskip}
     \item \pause Because of small network sizes, need to correct for the number of insects and plants \goto{back:adonisNull}
     \item \pause Significant effect of the region and the month, indicating change of the insect imbalance both in space and time
     \item \pause The pattern is conserved from year to the next (not year effect)

@@ -102,6 +102,7 @@
 %==================================================================
 \frame{\frametitle{Motif probability}
 
+  \label{sec:motifProba}
   \paragraph{Occurrence probability $\overline{\phi}_s = \Pbb\{Y_{s\alpha} = 1\}$.} Under the B-EDD model \refer{OLR22}:
   \begin{align*}
     \left(\includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9}\right) 
@@ -138,10 +139,11 @@
     \frac{\left(\phi_1^2 \phi_2\right) \left(\phi_1 \phi_4\right)}{\left(\phi_1\right)^4}
     \qquad =
     \frac{\phi_2 \phi_4}{\phi_1}
+    \qquad \goto{sec:motifList}
     }
   \end{align*}
 
-  \onslide+<6->{\bigskip \bigskip 
+  \onslide+<6->{\bigskip 
   \paragraph{Estimated probability $\overline{F}_s$.} 
   $$
   \overline{\phi}_s := \frac{\phi_2 \phi_4}{\phi_1}
@@ -156,8 +158,8 @@
 \frame{\frametitle{Moments of the count} \label{sec:motifMoments}
 
   \begin{itemize}
-  \setlength{\itemsep}{1.5\baselineskip}
-  \item \emphase{Number of positions:} $c_s$ 
+  \setlength{\itemsep}{1.15\baselineskip}
+  \item \emphase{Number of positions:} $c_s$ \qquad (frequency: $F_s = N_s \,/\, c_s$)
   \item \emphase{Mean:} $\Esp_{\BEDD}(N_s) = c_s \times \overline{\phi}_s$ 
   \item \pause \emphase{Variance:} Same game, requires to evaluate $\displaystyle{\Esp_{\BEDD}(N_s ^2) = \Esp_{\BEDD}\left(\sum_\alpha Y_{s\alpha} \right)^2}$ \\
   \ra Need to account for overlap between positions ({\sl super-motifs}: \refer{PDK08} \goto{back:superMotifs}) 
@@ -168,7 +170,7 @@
   \item \pause \emphase{Covariance:} Same game to compute $\Cov(N_s, N_{s'})$
   \item \pause \emphase{Asymptotic normality:} \goto{back:motifDistrib} \goto{back:asymNormality}
   $
-  (F_s - \overline{F}_s) \left/ \sqrt{\widehat{\Var}(F_s)} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
+  (N_s - \overline{N}_s) \left/ \sqrt{\widehat{\Var}(N_s)} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
   $ 
   \end{itemize}
 
