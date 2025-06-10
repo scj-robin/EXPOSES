@@ -1,0 +1,101 @@
+%====================================================================
+%====================================================================
+\section{Some statistical issues}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\subsection{Latent variable models}
+%====================================================================
+\frame{\frametitle{Latent variable models} 
+
+  \bigskip 
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Latent variable model.} Three ingredients
+      \begin{itemize}
+        \setlength{\itemsep}{0.5\baselineskip}
+        \item $Y =$ observed variables (data)
+        \item $X =$ covariates (observed)
+        \item $\theta =$ model parameters (unknown)
+        \item $Z =$ latent variables (unobserved)
+      \end{itemize}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \begin{tabular}{p{.6\textwidth}}
+        \input{\figeco/StatLatentModel}
+      \end{tabular}
+    \end{tabular}
+  \end{tabular}
+
+  \bigskip \pause
+  \paragraph{Examples.} 
+  \begin{itemize}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item Poisson log-normal model (PLN)
+    $$
+    Z_i = \text{Gaussian vector associated with site $i$}
+    $$
+    (encodes species dependencies) \\ ~
+    \pause
+    \item Stochastic block model (SBM)
+    $$
+    Z_i = \text{cluster to which species $i$ belongs}
+    $$
+    (encodes network structure)
+  \end{itemize}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Statistical issue} 
+
+  \paragraph{Maximum likelihood inference.} Intractable likelihood (need to integrate over $Z$)
+  $$
+  p_\theta(Y) = \int p_\theta(Y \mid Z) p_\theta(Z) \d Z 
+  $$
+  while $p_\theta(Z)$ and $p_\theta(Y \mid Z)$ are easy to evaluate
+
+  \bigskip \bigskip \pause
+  \paragraph{Usual approach: EM algorithm \refer{DLR77}.} 
+  \begin{itemize}
+    \item E step: with current $\theta^{(h)}$, determine the conditional distribution
+    $$
+    p_{\theta^{(h)}}(Z \mid Y)
+    $$
+    \item M step: update $\theta^{(h+1)}$ as
+    $$
+    \theta^{(h+)} = \arg\max_\theta \Esp_{\theta^{(h)}}\left[\log p_\theta(Z \mid Y) \mid Y\right]
+    $$
+  \end{itemize}
+
+}
+
+%====================================================================
+\subsection{Variational inference}
+%====================================================================
+\frame{\frametitle{Variational inference} 
+
+  \paragraph{For both PLN and SBM.} Intractable E step: 
+  $$
+  \text{no close form or clever way to evaluate } p_{\theta^{(h)}}(Z \mid Y)
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Variational inference \refer{BKM17}.} Approximate it
+  $$
+  q_{\psi^{(h)}(Z)} \simeq p_{\theta^{(h)}}(Z \mid Y)
+  $$
+  with a well chosen distribution $q_\psi \in \Qcal$ (\refer{DPR08} for SBM, \refer{CMR18a} for PLN)
+  
+  \bigskip \bigskip \pause
+  \paragraph{Consequence.} Loose MLE properties
+  \begin{itemize}
+    \item consistency: $\widehat{\theta}_n \to \theta^*$
+    \item asymptotic normality $\widehat{\theta}_n \approx \Ncal(\theta^*, \Var(\widehat{\theta}_n))$ (inc. confidence intervals)
+    \item model selection criteria (AIC, BIC, ...)
+    \item ...
+  \end{itemize}
+
+}
+

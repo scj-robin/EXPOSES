@@ -1,0 +1,64 @@
+%====================================================================
+%====================================================================
+\section{Discussion}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Statistics for networks}
+
+  \bigskip 
+  \paragraph{Networks} are specific objects that require specific statistical models
+  $$
+  \text{$\to$ Make sure that the question is a network question}
+  $$
+  
+  \bigskip \pause
+  \paragraph{In practice,} two main cases
+  \begin{enumerate}
+    \item Pb 1: the network is unknown and needs to be inferred \\
+    $\to$ $\Gcal$ is part of the model parameters
+    $$
+    Y \sim \Fcal(X, \theta, \Gcal)
+    $$
+    \item Pb 2: the network is observed and its structure needs to be understood \\
+    $\to$ $\Gcal$ is the object to be modelled
+    $$
+    \Gcal = Y \sim \Fcal(X, \theta)
+    $$
+  \end{enumerate}
+  
+  \bigskip \pause
+  \paragraph{'Complex' models} require specific inference strategies  
+  \begin{itemize}
+    \item variational approximations yields estimates with uncertain statistical guaranties
+    \item Monte-Carlo integration yields computationally demanding algorithm \refer{TOA20}
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Extensions}
+
+  \bigskip 
+  \paragraph{Modelling.} Problems 1 and 2 can be combined
+  \begin{itemize}
+    \item First infer $\Gcal$ from abundance data $Y$, then pose a model on $\widehat{\Gcal}$ \\
+    $$
+    \text{$\to$ need to be very (very (very)) careful about the uncertainty on $\widehat{\Gcal}$}
+    $$
+    \item Design a specific modelling, e.g. \refer{ACM09,ToC25}
+    $$
+    \Gcal \sim SBM(X, \theta), \qquad Y \mid \Gcal \sim PLN(X, \theta', \Gcal)
+    $$
+    and design the corresponding inference algorithm
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Statistical inference.} 
+  'Post-processing' can be designed to get estimates associated with statistical guaranties
+  \begin{itemize}
+    \item Sequential Monte-Carlo for SBM \refer{DoR21}
+    \item Importance sampling + composiste likelihood for PLN \refer{StR24}
+  \end{itemize}
+
+
+}

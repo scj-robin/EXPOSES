@@ -1,0 +1,94 @@
+%====================================================================
+%====================================================================
+\section{Ecological networks}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\subsection{Some definitions}
+\frame{\frametitle{Ecological networks} 
+%====================================================================
+
+  \paragraph{General aim.} 
+  For a given ecosystem, understand the interactions between
+  \begin{itemize}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item the species ({\sl biotic}) and
+    \item the species and their environment ({\sl abiotic}).
+  \end{itemize}
+
+  \bigskip \bigskip 
+  \paragraph{Ecological network =} 
+  representation of the existing interactions between the species (biotic)
+  
+  \bigskip \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Mathematical counterpart.} 
+      Network = graph
+      $$
+      \Gcal = (\Vcal, \Ecal)
+      $$
+      \begin{itemize}
+        \setlength{\itemsep}{0.6\baselineskip}
+        \item $\Vcal =$ set of vertices = nodes (= species)
+        \item $\Ecal \subset \Vcal \times \Vcal$ set of edges = pairs\footnote{interactions involve only two species} of nodes \\ (= interactions)
+      \end{itemize}
+    \end{tabular}
+    &
+    \begin{tabular}{p{.4\textwidth}}
+      \includegraphics[width=.35\textwidth]{\fignet/FigGGM-4nodes-red}
+    \end{tabular}
+  \end{tabular}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Various types of networks}
+
+  \paragraph{Networks can be} \refer{Kol09}
+  \begin{itemize}
+    \setlength{\itemsep}{0.75\baselineskip}
+    \item \emphase{undirected} ($i \sim j$) or directed ($(i \to j) \neq (j \to i)$) \\
+    \item \emphase{uni-partite} (one type of node) or multi-partite (several types) \\
+    \textcolor{gray}{plant-pollinator networks are bipartite}
+    \item binary (presence/absence of the edges) or \emphase{weighted} (valued edges) \\
+    \textcolor{gray}{plant-pollinator networks are weighted when counting the number of visits of an insect on a plant}
+    \item with \emphase{one} or several types of edges \\
+    \textcolor{gray}{scientific networks: co-authorship, same lab, same project, ...}
+    \item \emphase{static} or dynamic,
+    \item 'multi-layer', \dots
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  More importantly,
+  networks can be \emphase{observed or not}
+
+}
+
+%====================================================================
+\subsection{Two problems}
+%====================================================================
+\frame{\frametitle{Two typical problems} 
+
+  \paragraph{Problem 1: Network inference.}
+  The network is unknown.
+  \begin{itemize}
+    \item Aim: infer it from available data.
+    \item Typical setting: species of abundances recorded in different sites (or at different times):
+    $$
+    \text{abundances} \sim \Fcal(\text{covariates}, \text{parameters}, \emphase{\text{network } \Gcal})
+    $$
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Problem 2: Network structure.}
+  The network is observed.
+  \begin{itemize}
+    \item Aim: understand its organisation or structure (e.g. understand the specific roles of the different species in the network)
+    \item Typical understand the specific roles of the different species in the network
+    $$
+    \emphase{\text{network } \Gcal} \sim \Fcal(\text{covariates}, \text{parameters})
+    $$
+  \end{itemize}
+
+}

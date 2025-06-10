@@ -1,0 +1,244 @@
+%====================================================================
+%====================================================================
+\section{The Poisson log-normal model}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\subsection*{Joint species distribution models}
+%====================================================================
+\frame{\frametitle{Joint species distribution models} \pause
+
+  \paragraph{Foreword.} 
+  \begin{itemize}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item Not a specialist of microbiome
+    \item Used to work on applications in bioinformatics, then microbial ecology, then (macroscopic?) ecology
+    \item Examples borrowed from different fields
+  \end{itemize}
+  
+  \pause \bigskip \bigskip
+  \paragraph{Joint species distribution model (JSDM \refer{WBO15}):} aim at modelling the joint distribution of the abundance of a set of 'species' accounting for
+  \begin{itemize}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item environmental (or experimental) conditions
+    \item 'interactions' between species
+    \item \textcolor{gray}{heterogeneity of the sampling protocole}
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Typical example} \pause
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Fish species in Barents sea \refer{FNA06}:} 
+      \begin{itemize}
+       \item $89$ sites (stations), 
+       \item $30$ fish species, 
+       \item $4$ covariates
+      \end{itemize}
+
+      \bigskip \bigskip \bigskip 
+      \paragraph{Questions:} 
+      \begin{itemize}
+        \item Do environmental conditions affect species abundances? (abiotic) \\~ 
+        \item Do species abundances vary independently? (biotic)
+      \end{itemize} 
+    \end{tabular}
+    &
+    \begin{tabular}{p{.45\textwidth}}
+      \paragraph{Abundance table $=Y$:} ~ \\
+        {\footnotesize \begin{tabular}{rrrr}
+        {\sl Hi.pl}\footnote{{\sl Hi.pl}: Long rough dab, {\sl An.lu}: Atlantic wolffish, {\sl Me.ae}: Haddock} & {\sl An.lu} & {\sl Me.ae} & \dots \\
+%         \\ 
+  %       Dab & Wolffish & Haddock \\ 
+        \hline
+        31  &   0  & 108 & \\
+         4  &   0  & 110 & \\
+        27  &   0  & 788 & \\
+        13  &   0  & 295 & \\
+        23  &   0  &  13 & \\
+        20  &   0  &  97 & \\
+        . & . & . & 
+      \end{tabular}} 
+      \\
+      \bigskip 
+      \bigskip 
+      \paragraph{Environmental covariates $=X$:} ~ \\
+        {\footnotesize \begin{tabular}{rrrr}
+        Lat. & Long. & Depth & Temp. \\
+        \hline
+        71.10 & 22.43 & 349 & 3.95 \\
+        71.32 & 23.68 & 382 & 3.75 \\
+        71.60 & 24.90 & 294 & 3.45 \\
+        71.27 & 25.88 & 304 & 3.65 \\
+        71.52 & 28.12 & 384 & 3.35 \\
+        71.48 & 29.10 & 344 & 3.65 \\
+        . & . & . & .
+      \end{tabular}}
+      \bigskip
+    \end{tabular}
+  \end{tabular}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Latent variable models}
+
+  \bigskip
+  \paragraph{Modelling the dependency.}
+  \begin{itemize}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item Not always easy to propose a joint distribution for a set of dependent variables (abundances), especially when {\sl dealing with counts}.
+    \item May resort to a set of unobserved (latent) variables to encode the dependency.
+  \end{itemize}
+  
+  \pause \bigskip \bigskip 
+  \paragraph{Some popular examples of latent variable models.}
+  \begin{itemize}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item Mixed models (e.g. to account for parental structure in genetics)
+    \item Principal component analysis (for dimension reduction)
+    \item Hidden Markov models (for time series, genomic structure, ...)
+  \end{itemize}
+  
+  
+  \pause \bigskip \bigskip 
+  \paragraph{Many (most?) joint species distribution models:} SpiecEasi \refer{KMM15}, HMSC \refer{OTN17}, gCoda \refer{FHZ17}, MRFcov \refer{CWL18}, ...
+  
+}
+
+%====================================================================
+\frame{\frametitle{The Poisson log-normal (PLN) model}
+
+  \bigskip
+  \paragraph{Data at hand} in each site (or sample)
+  \begin{itemize}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item $Y_i =$ abundance vector for the $p$ species under study:
+    $$
+    Y_i = [Y_{i1} \; \dots \; Y_{ip}],
+    $$
+    \item $x_i =$ vector of environmental covariates (with dimension $d$):
+    $$
+    x_i = [x_{i1} \; \dots \; x_{id}].
+    $$
+  \end{itemize}
+
+  \pause \bigskip \bigskip 
+  \paragraph{PLN = latent variable model:} \refer{AiH89}
+  \begin{itemize}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item A latent Gaussian vector $Z_i$ with covariance matrix $\Sigma$ is associated to each site $i$
+    $$
+    Z_i = [Z_{i1} \; \dots \; Z_{ip}] \sim \Ncal_p(0, \emphase{\Sigma}).
+    $$
+    \item The abundance $Y_{ij}$ of species $j$ in site $i$ depends on both the covariates and the corresponding latent $Z_{ij}$:
+    $$
+    Y_{ij} \textcolor{gray}{\; \mid Z_{ij}} \sim \Pcal\left(\exp(\mu_{ij})\right), 
+    \qquad
+    \mu_{ij} = \textcolor{gray}{o_{ij}\;+\;} x_i^\top \emphase{\beta_j} + Z_{ij}.
+    $$
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Interpretation of the parameters}
+ 
+  \bigskip
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{'Environmental' effects:} 
+      $$
+      \beta_{hj} = \text{effect of covariate $h$ on species $j$}
+      $$
+      \begin{itemize}
+        \item $\beta = d \times p$ regression coefficient matrix, 
+        \item 'abiotic' effects.
+      \end{itemize}
+      \bigskip ~
+    \end{tabular}
+    & \pause
+    \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[width=.325\textwidth]{\figeco/BarentsFish-coeffAll}
+    \end{tabular} 
+    \\
+    \begin{tabular}{p{.5\textwidth}} \pause
+      \paragraph{Species 'interactions':} 
+      $$
+      \sigma_{jk} = \text{(latent) covariance between species $j$ and $k$}
+      $$
+      \begin{itemize}
+        \item $\Sigma= p \times p$ (latent) covariance matrix,
+        \item 'biotic interactions'.
+      \end{itemize}
+      \bigskip ~
+    \end{tabular}
+    & \pause
+    \begin{tabular}{p{.45\textwidth}}
+      \includegraphics[width=.325\textwidth]{\figeco/BarentsFish-corrAll} 
+    \end{tabular}    
+  \end{tabular}
+ 
+}
+
+%====================================================================
+\frame{\frametitle{Distinguishing between environmental effects and species interactions}
+
+  \pause
+  \begin{tabular}{cc|c}
+    \multicolumn{2}{l|}{\emphase{Barents fishes: Full model}} &
+    \multicolumn{1}{l}{\onslide+<3>{\emphase{Null model}}} \\
+    & & \\
+    \multicolumn{2}{c|}{{$Y_{ij} \sim \Pcal(\exp(\emphase{x_i^\intercal \beta_j} + Z_{ij}))$}} &
+    \multicolumn{1}{c}{{\onslide+<3>{$Y_{ij} \sim \Pcal(\exp(\emphase{\mu_j} + Z_{ij}))$}}} \\
+    & & \\
+    \multicolumn{2}{l|}{{$x_i =$ all covariates}} &
+    \multicolumn{1}{l}{{\onslide+<3>{no covariate}}} \\ 
+    & & \\
+    & correlations between & \\
+    inferred  correlations $\widehat{\Sigma}_{\text{full}}$ & 
+    predictions: $x_i^\intercal \widehat{\beta}_j$ & 
+    \onslide+<3>{inferred correlations $\widehat{\Sigma}_{\text{null}}$} \\ 
+    \includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrAll} 
+    &
+    \includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrPred} &
+    \onslide+<3>{\includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrNull}}
+  \end{tabular}
+
+  }
+%====================================================================
+\frame{\frametitle{Some properties of the Poisson log-normal distribution}
+
+  \pause \bigskip
+  \paragraph{Overdispersion.} Due to the random effect $Z$
+  \begin{align*}
+    \Var(PLN) > \Var(\text{Poisson})
+  \end{align*}
+  
+  \pause \bigskip \bigskip
+  \paragraph{Latent correlations sign ($Z$) = observed correlation sign ($Y$).}
+  $$
+  \sign(\sigma_{jk}) = \sign(\Cor(Y_{ij}, Y_{ik})). 
+  $$
+
+  \pause \bigskip \bigskip
+  \paragraph{Sampling effort.} Offset $o_{ij}$
+  $$
+  Y_{ij} 
+  \sim \Pcal(\exp(o_{ij} + x_i^\intercal \beta_j + Z_{ij})) 
+  = \Pcal(\emphase{e^{o_{ij}}} \exp(x_i^\intercal \beta_j + Z_{ij}))
+  $$
+  \begin{itemize}
+    \item 'macroscopic' ecology: $o_{ij} =$ log-time of observation,
+    \item metabarcoding: $o_{ij} =$ log-sequencing depth.
+  \end{itemize}
+
+  \pause \bigskip \bigskip
+  \paragraph{Prediction.} Expected abundance:
+  $\Esp(Y_{ij}) = \exp(x_i^\intercal \beta_j + \sigma_{jj}/2)$.
+
+}
+

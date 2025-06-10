@@ -1,0 +1,75 @@
+%====================================================================
+%====================================================================
+\section{Inference}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\subsection{Incomplete data models}
+%====================================================================
+\frame{\frametitle{Inference of incomplete data models} 
+
+  \paragraph{Maximum likelihood inference.}
+  $$
+%   \widehat{\theta} = \arg
+  \max_\theta \; \underset{\text{likelihood}}{\underbrace{p(Y; \theta)}}
+  $$
+  \ra No closed form for ${p(Y; \theta) = \int \underset{\text{complete likelihood}}{\underbrace{p(Y, Z; \theta)}} \d Z}$ in most latent variable models.
+
+  \pause \bigskip \bigskip
+  \paragraph{Incomplete data models.} EM algorithm \refer{DLR77}
+  $$
+  \theta^{h+1} = 
+  \underset{\text{\normalsize \emphase{M step}}}{\underbrace{{\argmax}_\theta}} \;
+  \underset{\text{\normalsize \emphase{E step}}}{\underbrace{\Esp_{\theta^h}}} \;
+  [\log p(Y, Z; \theta) \mid Y)].
+  $$
+  
+  \pause \bigskip \bigskip 
+  \paragraph{E step = critical step:} Evaluate $p(Z \mid Y; \theta)$, i.e. \\
+  \medskip
+  \ra Retrieve sufficient information about the latent variables $Z$ based on the observed ones $Y$.
+}
+
+%====================================================================
+\subsection*{Variational approximation}
+%====================================================================
+\frame{\frametitle{Case of the Poisson log-normal model} 
+
+  \bigskip
+  \paragraph{Intractable E step.} No reasonably easy way to compute $p(Z_i | Y_i; \theta)$ under PLN.
+
+  \pause \bigskip \bigskip
+  \paragraph{Twisted problem.} Approximate it with some other (nice) distribution, e.g.
+  $$
+  p(Z_i | Y_i; \theta) \simeq \Ncal(m_i, S_i).
+  $$
+  \begin{itemize}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item Variational approximation \refer{WaJ08,BKM17} ('E' step $\to$ 'VE' step).
+    \item Computationaly efficient (can deal with $\simeq 10^3$ samples or species).
+  \end{itemize}
+  
+  \pause \bigskip \bigskip
+  \paragraph{But...} 
+  \begin{itemize}
+    \setlength{\itemsep}{0.5\baselineskip}
+    \item $\neq$ Maximum likelihood
+    \item Very few statistical guaranty (consistency, asymptotic normality, asymptotic variance, ...).
+    \item No direct test or confidence interval.
+    \item Alternative methods or additional steps are needed (bootstrap, jackknife, Monte-Carlo).
+  \end{itemize}
+
+}
+
+%====================================================================
+\subsection{Variational inference}
+%====================================================================
+\frame{\frametitle{Variational inference} \pause
+
+  \todo{TO DO}
+}
+
+%====================================================================
+\frame{\frametitle{Parameter uncertainty} \pause
+
+  \todo{TO DO}
+}

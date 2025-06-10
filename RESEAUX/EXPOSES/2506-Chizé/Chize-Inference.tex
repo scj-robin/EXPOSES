@@ -1,0 +1,296 @@
+%====================================================================
+%====================================================================
+\section{Problem 1: Network inference}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%====================================================================
+\frame{\frametitle{Network inference from abundance data}
+
+  \bigskip 
+  \paragraph{Barents' fish species \refer{FNA06}.} $n=89$ sites, $p=30$ species, $d=$ covariates 
+  \begin{itemize}
+    \item $x_i =$ environmental description of site $i$ %, \textcolor{gray}{$t_j =$ traits of species $j$}
+    \item $Y_{ij} =$ abundance (or presence) of species $j$ in site $i$
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Joint species distribution model (JSDM).}
+  $$
+  Y \sim \Fcal(X, \theta, \Gcal)
+  $$
+  \begin{itemize}
+%     \setlength{\itemsep}{0.5\baselineskip}
+    \item $\theta =$ model parameters, including
+    \item $\Gcal =$ interaction network (same in all site)
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Problem 1.} Retrieve the graph $\Gcal$ from the species abundances $Y$ : 
+  $$  
+  \begin{tabular}{c|c|c}
+    {Abundances} $Y$ & 
+    {Covariates} $X$ & 
+    {Inferred network} $\widehat{\Gcal}$ \\ 
+    \begin{tabular}{p{.25\textwidth}}
+      {\small \begin{tabular}{rrr}
+        {\sl Hi.pl} & {\sl An.lu} & {\sl Me.ae} \\ \hline
+        31  &   0  & 108 \\
+         4  &   0  & 110 \\
+        27  &   0  & 788 \\
+        13  &   0  & 295 \\
+        23  &   0  &  13 \\
+        20  &   0  &  97 \\
+        $\vdots$ & $\vdots$ & $\vdots$ 
+      \end{tabular}}
+    \end{tabular}
+    & 
+    \begin{tabular}{p{.25\textwidth}}
+      {\small \begin{tabular}{rrr}
+        Lat. & Long. & Depth \\ \hline
+        71.10 & 22.43 & 349 \\
+        71.32 & 23.68 & 382 \\
+        71.60 & 24.90 & 294 \\
+        71.27 & 25.88 & 304 \\
+        71.52 & 28.12 & 384 \\
+        71.48 & 29.10 & 344 \\
+        $\vdots$ & $\vdots$ & $\vdots$ 
+      \end{tabular} }
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth} 
+    \begin{tabular}{p{.3\textwidth}}
+      \hspace{-.1\textwidth} 
+      \begin{tabular}{c}
+        \includegraphics[width=.35\textwidth, trim=0 95 0 60, clip=]{\fignet/network_BarentsFish_Gfull_full60edges}
+      \end{tabular}
+    \end{tabular}
+  \end{tabular}
+  $$
+
+}
+
+%====================================================================
+\subsection{Gaussian graphical models}
+%====================================================================
+\frame{\frametitle{Gaussian graphical models} 
+
+  \pause
+  \paragraph{Gaussian distribution.} 
+  $$
+  Z \sim \Ncal_p(\mu, \Sigma)
+  $$
+  $\mu =$ vector of means, $\Sigma =$ covariance matrix, $\Omega = \Sigma^{-1} =$ precision matrix.
+  
+  \bigskip \bigskip \pause
+  \paragraph{A nice property.} ~ \\
+%   \vspace{-.2\textheight}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+%     \hspace{-.15\textwidth}
+    \includegraphics[width=.35\textwidth]{\fignet/FigGGM-4nodes-red}
+    \end{tabular}
+    & 
+    \hspace{-.15\textwidth}
+    \begin{overprint}
+      \onslide<4>
+      \begin{tabular}{p{.5\textwidth}}
+        Covariance matrix
+        $$
+        \Sigma \propto \left[ \begin{array}{rrrr}
+          1 & -.25 & -.41 &  \emphase{.25} \\
+          -.25 &  1 & -.41 &  \emphase{.25} \\
+          -.41 & -.41 &  1 & -.61 \\
+          \emphase{.25} &  \emphase{.25} & -.61 &  1
+          \end{array} \right] 
+        $$
+      \end{tabular} 
+      \onslide<5>
+      \begin{tabular}{p{.5\textwidth}}
+        Inverse covariance matrix (= precision matrix)
+        $$
+        \Omega \; \propto \; \left[ \begin{array}{rrrr}
+          1 & .5 & .5 & \emphase{0} \\
+          .5 & 1 & .5 & \emphase{0} \\
+          .5 & .5 & 1 & .5 \\
+          \emphase{0} & \emphase{0} & .5 & 1
+          \end{array} \right] 
+        $$
+      \end{tabular} 
+      \onslide<6>
+      \begin{tabular}{p{.5\textwidth}}
+          Adjacency matrix
+          $$
+          A = \left[ \begin{array}{rrrr}
+          0 & 1 & 1 & \emphase{0} \\
+          1 & 0 & 1 & \emphase{0} \\
+          1 & 1 & 0 & 1 \\
+          \emphase{0} & \emphase{0} & 1 & 0 
+          \end{array} \right]
+          $$
+      \end{tabular} 
+      \begin{itemize}
+        \item 3 separates 4 from $\{1, 2\}$.
+        \item i.e. $Z_4$ is independent from $Z_1$ and $Z_2$ given $Z_3$
+      \end{itemize}
+    \end{overprint}
+  \end{tabular} 
+
+}
+
+%====================================================================
+\frame{\frametitle{Graphical lasso} 
+
+  \paragraph{How to make $\widehat{\Omega}$ sparse?}
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.5\textwidth}}
+%     \hspace{-.15\textwidth}
+    \includegraphics[width=.35\textwidth]{\fignet/FigGGM-4nodes-red}
+    \end{tabular}
+    & 
+    \hspace{-.15\textwidth}
+    \begin{overprint}
+      \onslide<1>
+      \begin{tabular}{p{.5\textwidth}}
+        Covariance matrix
+        $$
+        \Sigma \propto \left[ \begin{array}{rrrr}
+          1 & -.25 & -.41 &  \emphase{.25} \\
+          -.25 &  1 & -.41 &  \emphase{.25} \\
+          -.41 & -.41 &  1 & -.61 \\
+          \emphase{.25} &  \emphase{.25} & -.61 &  1
+          \end{array} \right] 
+        $$
+      \end{tabular} 
+      \onslide<2->
+      \begin{tabular}{p{.5\textwidth}}
+        Inverse of the estimated covariance matrix
+        $$
+        \left(\widehat{\Sigma}\right)^{-1} \; \propto \; \left[ \begin{array}{rrrr}
+          1 & .48 & .61 & \emphase{.09} \\
+          .48 & 1 & .67 & \emphase{.06} \\
+          .61 & .67 & 1 & .46 \\
+          \emphase{.09} & \emphase{.06} & .46 & 1
+          \end{array} \right] 
+        $$
+        ($n = 100$)
+      \end{tabular} 
+    \end{overprint}
+  \end{tabular}
+
+  \bigskip \bigskip \pause
+  \paragraph{Sparsity inducing penality.} 
+  \begin{itemize}
+    \item Maximum-likelihood estimation: 
+    $$
+    \widehat{\Omega} \text{ maximizes } \log p(Z; \Omega)
+    $$
+    \item Penalized maximum-likelihood estimation: 
+    $$
+    \widehat{\Omega} \text{ maximizes } \log p(Z; \Omega) - \emphase{\lambda \|\Omega\|_{0, 1}}
+    $$
+    where $\|\Omega\|_{0, 1} = \sum_{j \neq k} |w_{jk}|$ \\
+    $\to$ Forces a fraction of entries of $\Omega$ to be zero ('graphical lasso': \refer{FHT08}).
+  \end{itemize}
+ 
+}
+
+%====================================================================
+\subsection{Poisson log-normal (PLN) model}
+%====================================================================
+\frame{\frametitle{Poisson log-normal (PLN) model} 
+
+  \paragraph{PLN = Poisson log-normal model \refer{AiH89}.} A (multivariate mixed) generalized linear model for counts:
+  $$
+  Z_i \sim \Ncal(0, \Sigma), \qquad \qquad
+  Y_{ij} \sim \Pcal(\exp(x_i^\top \beta_j + Z_{ij})).
+  $$
+  \begin{itemize}
+    \setlength\itemsep{1em}    
+    \item $\Sigma =$ covariance structure (of the latent layer): \emphase{biotic interactions}
+    \item $\beta_j =$ regression coefficients: \emphase{abiotic effects} of the environment on species $j$
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Inference.}
+  \begin{itemize}
+    \setlength\itemsep{1em}    
+    \item Not straightforward (because of the latent layer), often classical EM \refer{DLR77} not enough
+    \item Two main strategies: MCMC ({\tt HSMC} package \refer{TOA20}) or EM + variational approximation
+    \item PLN model: {\tt PLNmodels} package \refer{CMR21} uses a variational approximation
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Barents' fish data \refer{FNA06}}
+
+  \bigskip
+  $n =89$ stations, $p = 30$ species, $d = 4$ descriptors (lat., long., depth, temp.)
+
+  \bigskip \bigskip
+%   $$
+  \begin{tabular}{cc|c}
+    \multicolumn{2}{l|}{\emphase{Full PLN model}} &
+    \multicolumn{1}{l}{\emphase{Null PLN model}} \\
+    & & \\
+    \multicolumn{2}{c|}{{$Y_{ij} \sim \Pcal(\exp(\emphase{x_i^\intercal \beta_j} + Z_{ij}))$}} &
+    \multicolumn{1}{c}{{$Y_{ij} \sim \Pcal(\exp(\emphase{\mu_j} + Z_{ij}))$}} \\
+    & & \\
+    \multicolumn{2}{l|}{{$x_i =$ all covariates}} &
+    \multicolumn{1}{l}{{no covariate}} \\ 
+    & & \\
+    & correlations between & \\
+    inferred  correlations $\widehat{\Sigma}_{\text{full}}$ & 
+    predictions: $x_i^\intercal \widehat{\beta}_j$ & 
+    inferred correlations $\widehat{\Sigma}_{\text{null}}$ \\ 
+    \includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrAll} 
+    &
+    \includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrPred} &
+    \includegraphics[width=.3\textwidth, trim=20 20 20 20]{\figeco/BarentsFish-corrNull}
+  \end{tabular}
+%   $$
+}
+
+%====================================================================
+\subsection{Network inference using PLN}
+%====================================================================
+\frame{\frametitle{Network inference using PLN} 
+
+  \paragraph{Lasso-like strategy.} 
+  Rather than maximum likelihood\footnote{Actually MLE is not doable: see later}:
+  $$
+  \widehat{\beta}, \widehat{\Sigma} = \arg\max_{\beta, \Sigma} \log p_{\beta, \Sigma}(Y), 
+  $$
+  use a penalised version ($\Gcal =$ support of $\Omega$)
+  $$
+  \widehat{\beta}, \widehat{\Omega} = \arg\max_{\beta, \Omega} \log p_{\beta, \Omega}(Y) - \lambda \|\Omega\|_{0, 1}
+  $$
+
+  \bigskip \pause
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.65\textwidth}}
+      \paragraph{Still need to tune $\lambda$.}
+      \begin{itemize}
+        \setlength{\itemsep}{0.75\baselineskip}
+        \item Use cross-validation (time consuming)
+        \item Use adapted a penalized likelihood criterion
+      \end{itemize}
+    \end{tabular}
+    &
+    \hspace{-.1\textwidth}
+    \begin{tabular}{p{.4\textwidth}}
+      \includegraphics[height=.4\textheight]{\fignet/BarentsFish_Gfull_criteria}
+    \end{tabular}
+  \end{tabular}
+  
+}
+
+%====================================================================
+\frame{\frametitle{Barents fish data set}
+
+  $$
+  \includegraphics[height=.8\textheight]{\fignet/CMR18b-ArXiv-Fig5}
+  $$
+  \refer{CMR19}
+
+}
