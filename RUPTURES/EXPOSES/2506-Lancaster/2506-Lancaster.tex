@@ -497,19 +497,25 @@ $$
 }
     
 %====================================================================
-\frame{ \frametitle{Practical conclusions}
+\frame{ \frametitle{Simulation conclusions}
 
   \begin{itemize}
     \setlength{\itemsep}{1\baselineskip}
     \item Inference easier when more signal (large $\lambda$)!!!
-    \item Inference easier with thinner discretization step (large $N$), but higher computational cost \\
-    $\to$ recommendation: $N = 2 n$
+    \item Inference easier with thinner discretization step (large $N$) \\
+    But higher computational cost 
     \item BIC does not capture the right number of states \\
-    (but sequences not simulated according to the model)
+    \textcolor{gray}{Sequences not simulated according to the model}
     \item AIC does, with reasonable signal ($\lambda$) and discretization ($N$) \\
-    (blind to the simulation shift from the model?)
+    \textcolor{gray}{Blind to the simulation shift from the model?}
 %     \item Clear advantage wrt Poisson HMM.
   \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Practical recommendations.}
+  $$
+  \text{Take $N = 2 n$ and use AIC}
+  $$
 }
     
 %====================================================================
