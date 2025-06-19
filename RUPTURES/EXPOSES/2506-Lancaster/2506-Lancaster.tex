@@ -91,16 +91,16 @@
         ~ \bigskip 
         \includegraphics[width=.45\textwidth]{\figcp/ChauveSouris-GrandBourg}
         \onslide<2>
-        \includegraphics[width=.45\textwidth, trim=0 0 0 50, clip=]{\figchiro/Chiro-seq625-N1535-Qmax5-raw.png}
+        \includegraphics[width=.45\textwidth, trim=0 0 0 50, clip=]{\figchiro/Chiro-seq1776-N1048-Qmax5-raw.png}
         \onslide<3>
-        \includegraphics[width=.45\textwidth, trim=0 0 0 50, clip=]{\figchiro/Chiro-seq625-N1535-Qmax5-seg.png}
+        \includegraphics[width=.45\textwidth, trim=0 0 0 50, clip=]{\figchiro/Chiro-seq1776-N1048-Qmax5-seg-classif.png}
         \onslide<4->
-        \includegraphics[width=.45\textwidth, trim=0 0 0 50, clip=]{\figchiro/Chiro-seq625-N1535-Qmax5-viterbi.png}
+        \includegraphics[width=.45\textwidth, trim=0 0 0 50, clip=]{\figchiro/Chiro-seq1776-N1048-Qmax5-classif-seg.png}
       \end{overprint}
     \end{tabular}
   \end{tabular}
 
-  \onslide+<5>{\paragraph{Modelling.} Markov switching point process.}
+  \onslide+<5>{\paragraph{Modelling.} Markov switching process.}
 }
 
 %====================================================================
@@ -251,7 +251,7 @@ $$
 %====================================================================
 \frame{\frametitle{Markovian reformulation} 
 
-  \paragraph{Approximation of $H_k$}
+  \paragraph{Approximation of $H_k$:}
   $$
   Y_k \mid (Y_\ell)_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \sum_{\ell = 1}^{k-1}\alpha \beta^{\ell-1} Y_{k-\ell} \right),
   $$
@@ -493,6 +493,8 @@ $$
     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-Coef-AIC}
 %     \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, Q^*, \widehat{Q}}(Poisson)$ / $AIC_{1, Q^*, \widehat{Q}}(Hawkes)$ \\
 %     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-Coef-compAIC}
+    \onslide<4> \paragraph{Classification.} MAP / Viterbi (+ comput. time) \\
+    \includegraphics[width=.6\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-Coef-diag}
   \end{overprint}
 }
     
@@ -567,16 +569,18 @@ $$
 \frame{ \frametitle{Example}
 
   $$
-  \begin{tabular}{cc}
-    Hawkes HMM ($\widehat{Q} = 3$) & 
+  \begin{tabular}{ccc}
+    Hawkes HMM ($\widehat{Q} = 3$) & \qquad &
     Poisson HMM ($\widehat{Q} = 4$) \\ 
-    \includegraphics[width=0.35\textwidth, trim=10 40 20 50, clip=]{\figchiro/Chiro-seq1776-N1048-Qmax5-classif} &
-    \includegraphics[width=0.35\textwidth, trim=10 40 20 50, clip=]{\figchiro/Chiro-seq1776-N1048-Qmax5-classifP} 
+    ~ \\
+    \includegraphics[width=0.3\textwidth, trim=10 40 20 50, clip=]{\figchiro/Chiro-seq1776-N1048-Qmax5-classif-seg} &
+    \qquad & 
+    \includegraphics[width=0.3\textwidth, trim=10 40 20 50, clip=]{\figchiro/Chiro-seq1776-N1048-Qmax5-classifP-seg} 
   \end{tabular}
   $$
   \begin{itemize}
     \item Poisson-HMM needs many state changes to account for self-excitation
-    \item Hawkes-HMM state change do not correspond to slope changes
+    \item Hawkes-HMM state changes do not correspond to slope changes
   \end{itemize}
 
 %   \begin{overprint}
@@ -753,6 +757,8 @@ $$
     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-AIC}
 %     \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, Q^*, \widehat{Q}}(Poisson)$ / $AIC_{1, Q^*, \widehat{Q}}(Hawkes)$ \\
 %     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-compAIC}
+    \onslide<4> \paragraph{Classification.} MAP / Viterbi (+ comput. time) \\
+    \includegraphics[width=.6\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-diag}
   \end{overprint}
 }
     
