@@ -316,7 +316,8 @@ $$
 %====================================================================
 %====================================================================
 \section{Discrete Markov switching Hawkes process}
-\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+\subsection{Model}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
 %====================================================================
 \frame{\frametitle{Discrete time Hawkes HMM} 
 
@@ -371,6 +372,9 @@ $$
 }
 
 %====================================================================
+\subsection{Identifiability \& Inference}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%====================================================================
 \frame{\frametitle{Identifiability}
 
   \paragraph{Proposition:} The model parameter $\theta = (\nu, \pi, (\mu_q)_{1 \leq q \leq Q}, \alpha, \beta)$ is identifiable from the joint distribution $p_\theta(Y_1, Y_2, Y_3)$:
@@ -387,10 +391,10 @@ $$
   $$
   \begin{enumerate}
     \setlength{\itemsep}{.75\baselineskip}
-    \item \pause $\nu$ and $\mu$ can be identified from $p_\theta(Y_1)$, 
-    \item \pause then $\alpha$ can be identified from $p_\theta(Y_2 \mid Y_1=1)$, 
-    \item \pause then $\beta$ can be identified from $p_\theta(Y_3 \mid Y_1=1, Y_2=0)$, 
-    \item \pause then $\pi$ can be identified from the joint mixture
+    \item \pause $\nu$ and $\mu$ can be identified from $p_\theta(Y_1)$, \qquad \textcolor{gray}{[sum over $y$ and $z$]}
+    \item \pause then $\alpha$ can be identified from $p_\theta(Y_2 \mid Y_1=1)$, \qquad \textcolor{gray}{[fix $x=1$, sum over $z$]}
+    \item \pause then $\beta$ can be identified from $p_\theta(Y_3 \mid Y_1=1, Y_2=0)$, \qquad \textcolor{gray}{[fix $x=1$, $y=0$]}
+    \item \pause then $\pi$ can be identified from the joint mixture \qquad \textcolor{gray}{[sum over $z$]}
     $$
 %     {\Pr}_\theta\{Y_1=x, Y_2=y\} 
     p_\theta^{Y_1, Y_2}(x, y) 
@@ -494,7 +498,7 @@ $$
 %     \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, Q^*, \widehat{Q}}(Poisson)$ / $AIC_{1, Q^*, \widehat{Q}}(Hawkes)$ \\
 %     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-Coef-compAIC}
     \onslide<4> \paragraph{Classification.} MAP / Viterbi (+ comput. time) \\
-    \includegraphics[width=.6\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-Coef-diag}
+    \includegraphics[width=.66\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-Coef-diag}
   \end{overprint}
 }
     
@@ -573,12 +577,14 @@ $$
     Hawkes HMM ($\widehat{Q} = 3$) & \qquad &
     Poisson HMM ($\widehat{Q} = 4$) \\ 
     ~ \\
-    \includegraphics[width=0.3\textwidth, trim=10 40 20 50, clip=]{\figchiro/Chiro-seq1776-N1048-Qmax5-classif-seg} &
+    \includegraphics[width=.3\textwidth, trim=10 40 20 50, clip=]{\figchiro/Chiro-seq1776-N1048-Qmax5-classif-seg} &
     \qquad & 
-    \includegraphics[width=0.3\textwidth, trim=10 40 20 50, clip=]{\figchiro/Chiro-seq1776-N1048-Qmax5-classifP-seg} 
+    \includegraphics[width=.3\textwidth, trim=10 40 20 50, clip=]{\figchiro/Chiro-seq1776-N1048-Qmax5-classifP-seg} 
   \end{tabular}
   $$
+  \bigskip
   \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}
     \item Poisson-HMM needs many state changes to account for self-excitation
     \item Hawkes-HMM state changes do not correspond to slope changes
   \end{itemize}
@@ -651,7 +657,7 @@ $$
     ~ \\
     $\Rightarrow$ The discretized Markov switching Hawkes process with exponential kernel is a hidden Markov model
     \item The standard EM machinery applies to achieve maximum likelihood inference.
-    \item Not shown: initialization based on existing estimation procedures for homogeneous Hawkes and Poisson HMM.
+    \item Not shown: initialization based on existing estimation procedures for homogeneous Hawkes (\refer{Che21},\refer{ChL22}) and Poisson HMM.
   \end{itemize}
 }
     
@@ -733,7 +739,7 @@ $$
 
   \begin{overprint}
     \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta} - \theta^*$ ($Q = Q^*$) \\
-    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q1-Coef-discParmsV2}
+    \includegraphics[width=.66\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q1-Coef-discParmsV2}
     \onslide<2> \paragraph{Model selection: BIC.} Distribution of $BIC_Q - BIC_1$ \\
     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q1-Coef-BIC}
     \onslide<3> \paragraph{Model selection: AIC.} Distribution of $AIC_Q - AIC_1$ \\
@@ -748,7 +754,7 @@ $$
 
   \begin{overprint}
     \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta} - \theta^*$ ($Q = Q^*$) \\
-    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-discParmsV2}
+    \includegraphics[width=.83\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-discParmsV2}
     \onslide<2> \paragraph{Model selection: BIC.} Distribution of $BIC_Q - BIC_1$ \\
     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-BIC}
     \onslide<3> \paragraph{Model selection: AIC.} Distribution of $AIC_Q - AIC_1$ \\
@@ -756,7 +762,7 @@ $$
 %     \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, Q^*, \widehat{Q}}(Poisson)$ / $AIC_{1, Q^*, \widehat{Q}}(Hawkes)$ \\
 %     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-compAIC}
     \onslide<4> \paragraph{Classification.} MAP / Viterbi (+ comput. time) \\
-    \includegraphics[width=.6\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-diag}
+    \includegraphics[width=.66\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-diag}
   \end{overprint}
 }
     
@@ -781,8 +787,8 @@ $$
 
   $$
   \begin{tabular}{cc}
-    \includegraphics[width=0.4\textwidth]{\figchiro/Carte_Qmean.pdf} & \includegraphics[width=0.4\textwidth]{\figchiro/carte_species.pdf} \\
-    \includegraphics[width=0.4\textwidth]{\figchiro/Carte_Qmean_bin.pdf} & \includegraphics[width=0.4\textwidth]{\figchiro/carte_species_bin.pdf} 
+    \includegraphics[width=.4\textwidth]{\figchiro/Carte_Qmean.pdf} & \includegraphics[width=.4\textwidth]{\figchiro/carte_species.pdf} \\
+    \includegraphics[width=.4\textwidth]{\figchiro/Carte_Qmean_bin.pdf} & \includegraphics[width=.4\textwidth]{\figchiro/carte_species_bin.pdf} 
   \end{tabular}
   $$
 
