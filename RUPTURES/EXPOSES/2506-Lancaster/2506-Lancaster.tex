@@ -78,7 +78,7 @@
       \bigskip
       \begin{itemize}
         \setlength{\itemsep}{.75\baselineskip}
-        \onslide+<3->{\item Can we detect changes in the occurrence of events?}
+        \onslide+<3->{\item Can we detect changes in the distribution of events?}
         \onslide+<4->{\item Can we associate each time period with some underlying behavior?}
       \end{itemize}
       \bigskip \bigskip 
@@ -100,12 +100,14 @@
     \end{tabular}
   \end{tabular}
 
-  \onslide+<5>{\paragraph{Modelling.} Markov switching process.}
+  \onslide+<5>{\paragraph{Modelling.} Latent Markov switching process.}
+  
 }
 
 %====================================================================
 \frame{\frametitle{Point process} 
 
+  \pause
   \paragraph{Reminder.}
 %   \vspace{-.1\textheight}
   $$
@@ -124,7 +126,7 @@
     \setlength{\itemsep}{0.5\baselineskip}
     \item{Homogeneous Poisson process:} $\lambda(t) \equiv \lambda$
     \item{Heterogeneous Poisson process:} $\lambda(t) =$ deterministic function
-    \item{Hawkes process:} $\lambda(t) =$ random function of the past
+    \item{Hawkes process:} $\lambda(t) =$ function of the past events = random function
   \end{itemize}
   
 }
@@ -132,7 +134,8 @@
 %====================================================================
 %====================================================================
 \section{(Discrete) Hawkes process}
-\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+\subsection{Continuous-time Hawkes process}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
 %====================================================================
 \frame{\frametitle{Univariate Hawkes process} 
 
@@ -143,7 +146,7 @@
   \bigskip
   \paragraph{(Conditional) intensity function for the Hawkes process \refer{Haw71a}:}
   $$
-  \lambda(t \mid \Hcal_t)= \lambda(t) = \lambda_0 + \underset{T_k < t}{\sum} h(t-T_k)
+  \lambda(t) = \lambda(t \mid \Hcal_t) = \lambda_0 + \underset{T_k < t}{\sum} h(t-T_k)
   $$
  %\nocite{Haw71b}
  
@@ -170,14 +173,14 @@
       \includegraphics[width=.4\textwidth, trim=0 450 0 0, clip=]{\figcp/Bon24-Hawkes-Fig3}
     \end{tabular}
     & 
-    \hspace{-.05\textwidth}
+%     \hspace{-.05\textwidth}
     \begin{tabular}{p{.55\textwidth}}
       \begin{itemize}
         \setlength{\itemsep}{1.5\baselineskip}
         \item Exponential kernel function \emphase{$h(t)= a e^{-b t}$}
         \item \emphase{$a \geq 0$} to ensure that $\lambda$ is non negative 
         \item \emphase{$a/b <1$} to ensure stationarity
-        \item Applications: sismology, epidemiology, neuroscience, ecology, ...
+        \item Applications: sismology, epidemiology, vulcanology, neurosciences, ecology, ...
       \end{itemize}
     \end{tabular}
   \end{tabular}  
@@ -203,7 +206,10 @@
 }
 
 %====================================================================
-\frame{\frametitle{Discrete time Hawkes process} 
+\subsection{Discrete-time Hawkes process}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%====================================================================
+\frame{\frametitle{Discrete-time Hawkes process} 
 
 \paragraph{Continuous time exponential Hawkes process}
 $$
@@ -225,37 +231,73 @@ $$
 }
 
 %====================================================================
-\frame{\frametitle{Discrete time Hawkes process} 
+\frame{\frametitle{Decomposition of the count} 
 
-  $H_k$ number of events on $I_k=[ \tau_{k-1};\tau_k]$
-  
-  \bigskip \bigskip \pause
-  \paragraph{Count distribution}
+  \paragraph{$H_k =$ number of events on $I_k=[ \tau_{k-1};\tau_k]$}
   $$
   H_k \overset{\Delta}{=} B_k + \sum_{\ell \leq k-1} \sum_{T \in I_\ell} M_T(I_k) + R_k
   $$
+  where
   \begin{itemize}
-    \item $B_k \sim \mathcal{P}(\lambda_0 \Delta)$ discrete immigrant process
-    \item $ M_T(I_k) \sim \mathcal{P}\left(c(a,b,\Delta) e^{-b(\tau_{k-1}-\emphase{T})}\right)$ descendants of $T<\tau_{k-1}$
-    \item $R_k$ number of descendants of points $T \in I_k$ within $I_k$
+    \setlength{\itemsep}{1\baselineskip}
+    \item $B_k =$ \emphase{number of immigrants} within $I_k$: 
+    $$
+    B_k\sim \mathcal{P}(\mu)
+    $$ 
+    with $\mu = \lambda_0 \Delta$, 
+    \item $M_T(I_k) =$ \emphase{number of descendants descendants of $T < \tau_k$} within $I_k$:
+    $$
+    M_T(I_k) 
+    \sim \mathcal{P}\left(\int_{I_k} a e^{-b(t -\emphase{T})} \d t)\right)
+    = \mathcal{P}\left(\alpha e^{-b (\tau_k - \emphase{T})}\right)
+    $$
+    with $\alpha = a (e^{b \Delta} - 1) / b$, 
+    \item $R_k =$ \emphase{number of descendants of points $T \in I_k$} within $I_k$
   \end{itemize}
 
-  \bigskip \bigskip \pause
-  \paragraph{Approximation when $\Delta$ is small}
-  \begin{itemize}
-    \item  $ M_T(I_k) \simeq \mathcal{P}\left(c(a,b,\Delta) e^{-b(\tau_{k-1}-\emphase{\tau_{\ell-1}})}\right)$ for $T \in  I_\ell=[\tau_{\ell-1}; \tau_\ell]$
-    \item \emphase{$R_k \simeq 0$}
-  \end{itemize}
 }
 
 %====================================================================
-\frame{\frametitle{Markovian reformulation} 
+\frame{\frametitle{Discrete time Hawkes process} 
 
-  \paragraph{Approximation of $H_k$:}
+  \paragraph{When $\Delta$ is small:}
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}
+    \item \emphase{$R_k \simeq 0$}
+    \item For $T \in  I_\ell$:
+    $
+    e^{-b (\tau_k - \emphase{T})} 
+    \simeq e^{-b (\tau_k - \emphase{\tau_\ell})}
+%     = e^{-b \Delta (k - \ell)}
+    = \beta^{k - \ell}
+    $ 
+    with $\beta = e^{-b \Delta}$, so
+    $$
+    \sum_{\ell \leq k-1} \sum_{T \in I_\ell} M_T(I_k)
+    \overset{\Delta}{\simeq} \sum_{\ell \leq k-1} \sum_{T \in I_\ell} \Pcal \left(\alpha \beta^{k - \ell}\right)
+    \overset{\Delta}{=} \Pcal\left(\sum_{\ell \leq k-1} H_{k-\ell} \alpha \beta^{\ell-1}\right)
+    $$
+  \end{itemize}
+  
+  \bigskip \bigskip \bigskip \pause
+  \paragraph{Discrete-time Hawkes process $Y = \{Y_k\}_{k \leq 1}$.} 
   $$
-  Y_k \mid (Y_\ell)_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \sum_{\ell = 1}^{k-1}\alpha \beta^{\ell-1} Y_{k-\ell} \right),
+  Y_k \mid (Y_\ell)_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \sum_{\ell = 1}^{k-1}\alpha \beta^{\ell-1} Y_{k-\ell} \right)
   $$
-  with $\mu=\lambda_0 \Delta$ and $\alpha$, $\beta$ depending on $a$, $b$, $\Delta$.
+  See \refer{Kir16} for the convergence toward a continuous-time Hawkes process.
+  
+}
+
+%====================================================================
+\subsection{Markovian representation}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%====================================================================
+\frame{\frametitle{Markovian representation} 
+
+  \paragraph{Discrete-time Hawkes process $Y = \{Y_k\}_{k \leq 1}$.} 
+  $$
+  Y_k \mid (Y_\ell)_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \sum_{\ell = 1}^{k-1}\alpha \beta^{\ell-1} Y_{k-\ell} \right)
+  $$
   
   \bigskip
   \emphase{$\to$ $(Y_k)_{k\geq 1}$ is not a Markov chain} (infinite memory).
@@ -304,7 +346,7 @@ $$
   \end{figure}
   
   \begin{align*}
-    p\left(U_k, Y_k \mid (U_s, Y_s)_{s \leq k-1}\right)
+    p\left(U_k, Y_k \mid (U_\ell, Y_\ell)_{\ell \leq k-1}\right)
     & =
     p\left(U_k, Y_k \mid U_{k-1}, Y_{k-1}\right) \\
     & =
@@ -324,7 +366,7 @@ $$
   \paragraph{Model:} $Q$ hidden states
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
-    \item Hidden path: $(Z_k)_{k \geq 1}$ homogeneous Markov chain with transition matrix $\pi$
+    \item Hidden path: $(Z_k)_{k \geq 1}$ homogeneous Markov chain with transition matrix $\pi$ and initial distribution $\nu$
     \item \pause Observed counts: for $k\geq 1$ and
       $$
       Y_k \mid (Y_\ell)_{\ell \leq k-1} 
@@ -377,20 +419,22 @@ $$
 %====================================================================
 \frame{\frametitle{Identifiability}
 
+  \bigskip
   \paragraph{Proposition:} The model parameter $\theta = (\nu, \pi, (\mu_q)_{1 \leq q \leq Q}, \alpha, \beta)$ is identifiable from the joint distribution $p_\theta(Y_1, Y_2, Y_3)$:
   $$
   \theta' \neq \theta \qquad \Rightarrow \qquad p_{\theta'}^{Y_1, Y_2, Y_3} \neq p_\theta^{Y_1, Y_2, Y_3}.
   $$
   
   \bigskip \pause
-  \paragraph{Sketch of proof.}Finite Poisson mixtures are identifiable \refer{Tei61}, so, because\footnote{The generic technique from \refer{AMR09} does not apply here.} 
+  \paragraph{Sketch of proof.}
+  Finite Poisson mixtures are identifiable \refer{Tei61}, so, because\footnote{The generic technique from \refer{AMR09} does not apply here.} 
   $$
 %   {\Pr}_\theta\{Y_1=x, Y_2=y, Y_3=z\} 
   p_\theta^{Y_1, Y_2, Y_3}(x, y, z) 
   = \sum_{1 \leq q, \ell, m \leq Q} \nu_q \pi_{q\ell} \pi_{\ell m} \Pcal(x; \mu_q) \Pcal(y; \mu_\ell + \alpha x)  \Pcal(z; \mu_m + \alpha \beta x + \alpha y),
   $$
   \begin{enumerate}
-    \setlength{\itemsep}{.75\baselineskip}
+    \setlength{\itemsep}{.5\baselineskip}
     \item \pause $\nu$ and $\mu$ can be identified from $p_\theta(Y_1)$, \qquad \textcolor{gray}{[sum over $y$ and $z$]}
     \item \pause then $\alpha$ can be identified from $p_\theta(Y_2 \mid Y_1=1)$, \qquad \textcolor{gray}{[fix $x=1$, sum over $z$]}
     \item \pause then $\beta$ can be identified from $p_\theta(Y_3 \mid Y_1=1, Y_2=0)$, \qquad \textcolor{gray}{[fix $x=1$, $y=0$]}
@@ -457,7 +501,7 @@ $$
 
   \begin{itemize}
     \setlength{\itemsep}{1.5\baselineskip}
-    \item \emphase{Baseline continuous parameters:} $a^0 = 40$, $b^0 = 160$, 
+    \item \emphase{Baseline continuous parameters:} $a^0 = 40$, $b = 160$, 
     $$
     Q = 1: m^0 = [400], \quad
     Q = 2: m^0 = [10, \;800], \quad
@@ -481,6 +525,7 @@ $$
     Y_k = H\left(\left[\frac{k-1}{N}; \frac{k}{N}\right]\right), 
     \qquad k=1, \dots N.
     $$
+    (not a genuine discrete-time Hawkes process)
   \end{itemize}
 
 }
@@ -506,10 +551,10 @@ $$
 \frame{ \frametitle{Simulation conclusions}
 
   \begin{itemize}
-    \setlength{\itemsep}{1\baselineskip}
+    \setlength{\itemsep}{1.25\baselineskip}
     \item Inference easier when more signal (large $\lambda$)!!!
     \item Inference easier with thinner discretization step (large $N$) \\
-    But higher computational cost 
+    But at the price of a higher computational cost 
     \item BIC does not capture the right number of states \\
     \textcolor{gray}{Sequences not simulated according to the model}
     \item AIC does, with reasonable signal ($\lambda$) and discretization ($N$) \\
@@ -704,7 +749,7 @@ $$
 
   \paragraph{Conversion formulas} from continuous to discrete Hawkes
   $$
-  \alpha  = \frac{e^{b \Delta} - 1}{b}, \qquad \beta = e^{-b \Delta}
+  \alpha  = \frac{a (e^{b \Delta} - 1)}{b}, \qquad \beta = e^{-b \Delta}
   $$
     
   \bigskip \pause 
@@ -781,6 +826,23 @@ $$
 %   $$
 % 
 % }
+
+%====================================================================
+\frame{ \frametitle{Model comparison for bat cries sequences}
+
+  \paragraph{Poisson vs Hawkes / Homogeneous vs HMM.} Best model based on BIC
+  $$
+  \begin{tabular}{r|cc|c}
+    & Poisson & Hawkes & Total \\
+    \hline
+    Homogeneous & 132 & 775 & 907 \\
+    Hidden Markov  & 21 & 627 & 648 \\
+    \hline
+    Total & 153 & \emphase{1402} & 1555
+  \end{tabular}
+  $$
+  
+}
 
 %====================================================================
 \frame{ \frametitle{States and locations}
