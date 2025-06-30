@@ -57,7 +57,7 @@
 
 \institute[Sorbonne université]{\normalsize{LPSM, Sorbonne université}}
 
-\date[Lancaster'25]{STOR-i, Lancaster, Jun. 2025}
+\date[MaSeMo'25]{Markov, Semi-Markov Models and Associated Fields , Paris, Jul. 2025}
 
 %====================================================================
 %====================================================================
@@ -161,7 +161,7 @@
 \frame{\frametitle{Self-exciting exponential Hawkes process} 
 
   $$
-  \lambda(t)= \lambda_0 + \underset{T_k < t}{\sum} a e^{-b(t-T_k)}
+  \lambda(t)= \lambda_0 + a \underset{T_k < t}{\sum} e^{-b(t-T_k)}
   $$
   \paragraph{Self exciting:} 
   Each event increases the probability of observing another event
@@ -213,7 +213,7 @@
 
 \paragraph{Continuous time exponential Hawkes process}
 $$
-\lambda(t)=\lambda_0 + \underset{T_k < t}{\sum} a e^{-b(t-T_k)} 
+\lambda(t)=\lambda_0 + a \underset{T_k < t}{\sum} e^{-b(t-T_k)} 
 $$    
 
 \bigskip \bigskip \pause
@@ -240,19 +240,19 @@ $$
   where
   \begin{itemize}
     \setlength{\itemsep}{1\baselineskip}
-    \item $B_k =$ \emphase{number of immigrants} within $I_k$: 
+    \item \emphase{$B_k =$ number of immigrants} within $I_k$: 
     $$
     B_k\sim \mathcal{P}(\mu)
     $$ 
     with $\mu = \lambda_0 \Delta$, 
-    \item $M_T(I_k) =$ \emphase{number of descendants descendants of $T < \tau_k$} within $I_k$:
+    \item \emphase{$M_T(I_k) =$ number of descendants descendants of $T < \tau_k$} within $I_k$:
     $$
     M_T(I_k) 
     \sim \mathcal{P}\left(\int_{I_k} a e^{-b(t -\emphase{T})} \d t)\right)
     = \mathcal{P}\left(\alpha e^{-b (\tau_k - \emphase{T})}\right)
     $$
     with $\alpha = a (e^{b \Delta} - 1) / b$, 
-    \item $R_k =$ \emphase{number of descendants of points $T \in I_k$} within $I_k$
+    \item \emphase{$R_k =$ number of descendants of points $T \in I_k$} within $I_k$
   \end{itemize}
 
 }
@@ -274,15 +274,17 @@ $$
     with $\beta = e^{-b \Delta}$, so
     $$
     \sum_{\ell \leq k-1} \sum_{T \in I_\ell} M_T(I_k)
-    \overset{\Delta}{\simeq} \sum_{\ell \leq k-1} \sum_{T \in I_\ell} \Pcal \left(\alpha \beta^{k - \ell}\right)
-    \overset{\Delta}{=} \Pcal\left(\sum_{\ell \leq k-1} H_{k-\ell} \alpha \beta^{\ell-1}\right)
+    \; \emphase{\overset{\Delta}{\simeq}} \;
+    \sum_{\ell \leq k-1} \sum_{T \in I_\ell} \Pcal \left(\alpha \beta^{k - \ell}\right)
+    \; \emphase{\overset{\Delta}{=}} \;
+    \Pcal\left(\alpha \sum_{\ell \leq k-1} H_{k-\ell} \beta^{\ell-1}\right)
     $$
   \end{itemize}
   
   \bigskip \bigskip \bigskip \pause
   \paragraph{Discrete-time Hawkes process $Y = \{Y_k\}_{k \leq 1}$.} 
   $$
-  Y_k \mid (Y_\ell)_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \sum_{\ell = 1}^{k-1}\alpha \beta^{\ell-1} Y_{k-\ell} \right)
+  Y_k \mid (Y_\ell)_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \alpha \sum_{\ell = 1}^{k-1}\beta^{\ell-1} Y_{k-\ell} \right)
   $$
   See \refer{Kir16} for the convergence toward a continuous-time Hawkes process.
   
@@ -296,7 +298,7 @@ $$
 
   \paragraph{Discrete-time Hawkes process $Y = \{Y_k\}_{k \leq 1}$.} 
   $$
-  Y_k \mid (Y_\ell)_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \sum_{\ell = 1}^{k-1}\alpha \beta^{\ell-1} Y_{k-\ell} \right)
+  Y_k \mid (Y_\ell)_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \alpha \sum_{\ell = 1}^{k-1}\beta^{\ell-1} Y_{k-\ell} \right)
   $$
   
   \bigskip
@@ -308,7 +310,7 @@ $$
     \item \pause Define
     \begin{align*}
       U_1 = 0, \qquad \qquad 
-      U_k = \sum_{\ell = 1}^k \alpha \beta^{\ell-1} Y_{k-\ell}, 
+      U_k = \alpha \sum_{\ell = 1}^k \beta^{\ell-1} Y_{k-\ell}, 
     \end{align*} 
     \item \pause we have for $k \geq 1$ \textcolor{gray}{(with $U_0 = Y_0 = 0$)}
     \begin{align*}
@@ -349,8 +351,8 @@ $$
     p\left(U_k, Y_k \mid (U_\ell, Y_\ell)_{\ell \leq k-1}\right)
     & =
     p\left(U_k, Y_k \mid U_{k-1}, Y_{k-1}\right) \\
-    & =
-    p\left(U_k \mid U_{k-1}, Y_{k-1}\right) p\left(Y_k \mid U_k\right)
+    & \textcolor{gray}{=
+    p\left(U_k \mid U_{k-1}, Y_{k-1}\right) p\left(Y_k \mid U_k\right)}
   \end{align*}
 
 }
@@ -366,11 +368,14 @@ $$
   \paragraph{Model:} $Q$ hidden states
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
-    \item Hidden path: $(Z_k)_{k \geq 1}$ homogeneous Markov chain with transition matrix $\pi$ and initial distribution $\nu$
+    \item Hidden path: $(Z_k)_{k \geq 1}$ homogeneous Markov chain with $Q$ states, transition matrix $\pi$ and initial distribution $\nu$:
+    $$
+    (Z_k)_{k \geq 1} \sim MC_Q(\nu, \pi)
+    $$
     \item \pause Observed counts: for $k\geq 1$ and
       $$
-      Y_k \mid (Y_\ell)_{\ell \leq k-1} 
-      \sim \mathcal{P}\left(\emphase{\mu_{Z_k}} + \sum_{\ell = 1}^{k-1} \alpha \beta^{\ell-1}Y_{k-\ell} \right)
+      \left(Y_k \mid (Y_\ell)_{\ell \leq k-1}, \emphase{Z_k=q}\right) 
+      \sim \mathcal{P}\left(\emphase{\mu_q} + \alpha \sum_{\ell = 1}^{k-1} \beta^{\ell-1}Y_{k-\ell} \right)
       $$  
       or, for $k \geq 1$ \textcolor{gray}{(with $U_0 = Y_0 = 0$)}
       \begin{align*}
@@ -408,7 +413,7 @@ $$
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
     \item The memory of the past is 'stored' in the variable $U_k$, which can still be computed recursively ($U_k = \alpha Y_{k-1} + \beta U_{k-1}$)
-    \item The Markovian property still holds if the influence of the past varies with the hidden state ($\alpha \to \alpha_k, \beta \to \beta_k$).
+    \item The Markovian property still holds if the influence of the past varies with the hidden state ($\alpha \to \alpha_q, \beta \to \beta_q$).
   \end{itemize}
 
 }
@@ -420,7 +425,7 @@ $$
 \frame{\frametitle{Identifiability}
 
   \bigskip
-  \paragraph{Proposition:} The model parameter $\theta = (\nu, \pi, (\mu_q)_{1 \leq q \leq Q}, \alpha, \beta)$ is identifiable from the joint distribution $p_\theta(Y_1, Y_2, Y_3)$:
+  \paragraph{Proposition:} The model parameter $\theta = (\nu, \pi, (\mu_q)_{1 \leq q \leq Q}, \alpha, \beta)$ is identifiable from the joint distribution $p_\theta^{Y_1, Y_2, Y_3}$:
   $$
   \theta' \neq \theta \qquad \Rightarrow \qquad p_{\theta'}^{Y_1, Y_2, Y_3} \neq p_\theta^{Y_1, Y_2, Y_3}.
   $$
@@ -496,22 +501,18 @@ $$
 \section{Simulation study}
 \frame{\frametitle{Outline} \tableofcontents[currentsection]}
 %====================================================================
-\frame{ \frametitle{Simulation design}
+\frame{ \frametitle{Simulation design ($Q = 3$)}
   % Version V8 / tol=1e-6
 
   \begin{itemize}
     \setlength{\itemsep}{1.5\baselineskip}
-    \item \emphase{Baseline continuous parameters:} $a^0 = 40$, $b = 160$, 
-    $$
-    Q = 1: m^0 = [400], \quad
-    Q = 2: m^0 = [10, \;800], \quad
-    Q = 3: m^0 = [10, \;200, \;1000]
-    $$
-    \item \pause \emphase{Increasing signal:}
+    \item \emphase{Baseline continuous parameters:} 
+    $m^0 = [10, \;200, \;1000]$, $a^0 = 40$, $b = 160$
+    \item \pause \emphase{Increasing signal:} $\lambda = 0.5, \;1, \;1.5, \;2$
     $$
     a = \lambda \; a^0, \qquad 
-    m = \lambda \; m^0, \qquad 
-    \lambda = 0.5, \;1, \;1.5, \;2.
+    m = \lambda \; m^0
+    .
     $$ 
     \item \pause \emphase{Simulated process:}
     $$
@@ -525,7 +526,8 @@ $$
     Y_k = H\left(\left[\frac{k-1}{N}; \frac{k}{N}\right]\right), 
     \qquad k=1, \dots N.
     $$
-    (not a genuine discrete-time Hawkes process)
+    ~ \\
+    $\to$ not a discrete-time Hawkes process as defined earlier
   \end{itemize}
 
 }
@@ -700,7 +702,7 @@ $$
     \setlength{\itemsep}{1.25\baselineskip}
     \item The discretized Hawkes process with exponential kernel is a Markov model \\
     ~ \\
-    $\Rightarrow$ The discretized Markov switching Hawkes process with exponential kernel is a hidden Markov model
+    $\to$ The discretized Markov switching Hawkes process with exponential kernel is a hidden Markov model
     \item The standard EM machinery applies to achieve maximum likelihood inference.
     \item Not shown: initialization based on existing estimation procedures for homogeneous Hawkes (\refer{Che21},\refer{ChL22}) and Poisson HMM.
   \end{itemize}
@@ -780,8 +782,13 @@ $$
 % }
     
 %====================================================================
-\frame{ \frametitle{Simulation results ($Q^* = 1$, $N = c n$)}
+\frame{ \frametitle{Simulation results ($Q^* = 1$, $N = c n$, $m^0 = 400$)}
 
+%     $$
+%     \emphase{Q = 1}: m^0 = [400], % \qquad
+%     \emphase{Q = 2}: m^0 = [10, \;800], \qquad
+%     \emphase{Q = 3}: m^0 = [10, \;200, \;1000]
+%     $$
   \begin{overprint}
     \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta} - \theta^*$ ($Q = Q^*$) \\
     \includegraphics[width=.66\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q1-Coef-discParmsV2}
@@ -795,8 +802,13 @@ $$
 }
     
 %====================================================================
-\frame{ \frametitle{Simulation results ($Q^* = 2$, $N = c n$)}
+\frame{ \frametitle{Simulation results ($Q^* = 2$, $N = c n$, $m^0 = [10, \;800]$)}
 
+%     $$
+%     \emphase{Q = 1}: m^0 = [400], \qquad
+%     \emphase{Q = 2}: m^0 = [10, \;800], \qquad
+%     \emphase{Q = 3}: m^0 = [10, \;200, \;1000]
+%     $$
   \begin{overprint}
     \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta} - \theta^*$ ($Q = Q^*$) \\
     \includegraphics[width=.83\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-discParmsV2}
