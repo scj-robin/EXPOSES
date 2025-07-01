@@ -868,6 +868,38 @@ $$
 }
 
 %====================================================================
+\frame{ \frametitle{Non exponential kernel function $h$}
+
+  \paragraph{Compact support.} 
+  Suppose that $h$ has no exponential form, but 
+  $$
+  t > L \Delta
+  \qquad \Rightarrow \qquad 
+  h(t) = 0.
+  $$
+
+  \bigskip \bigskip 
+  \paragraph{Homogeneous discrete Hawkes process.} 
+  $$
+  \left(Y_k \mid Y_{1:(k-1)}\right) \sim \Pcal\left(\mu + \sum_{\ell=1}^{k-1} \alpha_\ell Y_{k-\ell}\right) 
+  \qquad \text{with} \quad
+  \alpha_\ell = \int_{(\ell-1)\Delta}^{\ell\Delta} h(t) \d t.
+  $$
+
+  \bigskip \bigskip 
+  \paragraph{Markovian representation.} 
+  Define $U_k = \sum_{\ell=1}^{(k-1)\wedge L} \alpha_\ell Y_{k-\ell}$,
+  then
+  $$
+  \left(Y_k \mid Y_{1:(k-1)}\right)
+  = \left(Y_k \mid U_k\right) 
+  \sim \Pcal\left(\mu + U_k\right)
+  $$
+  and $\left((Y_k, U_k)\right)_{k \geq 1}$ forms a Markov chain (of order $L$).
+  
+}
+
+%====================================================================
 \backupend 
 
 %====================================================================
