@@ -437,19 +437,18 @@ $$
 %   {\Pr}_\theta\{Y_1=x, Y_2=y, Y_3=z\} 
   p_\theta^{Y_1, Y_2, Y_3}(x, y, z) 
   = \sum_{1 \leq q, \ell, m \leq Q} \nu_q \pi_{q\ell} \pi_{\ell m} \Pcal(x; \mu_q) \Pcal(y; \mu_\ell + \alpha x)  \Pcal(z; \mu_m + \alpha \beta x + \alpha y),
-  $$
+  $$one may identify
   \begin{enumerate}
     \setlength{\itemsep}{.5\baselineskip}
-    \item \pause $\nu$ and $\mu$ can be identified from $p_\theta(Y_1)$, \qquad \textcolor{gray}{[sum over $y$ and $z$]}
-    \item \pause then $\alpha$ can be identified from $p_\theta(Y_2 \mid Y_1=1)$, \qquad \textcolor{gray}{[fix $x=1$, sum over $z$]}
-    \item \pause then $\beta$ can be identified from $p_\theta(Y_3 \mid Y_1=1, Y_2=0)$, \qquad \textcolor{gray}{[fix $x=1$, $y=0$]}
-    \item \pause then $\pi$ can be identified from the joint mixture \qquad \textcolor{gray}{[sum over $z$]}
+    \item \pause $\nu$ and $\mu$ from $p_\theta(Y_1)$, \qquad \textcolor{gray}{[sum over $y$ and $z$]}
+    \item \pause then $\alpha$ from $p_\theta(Y_2 \mid Y_1=1)$, \qquad \textcolor{gray}{[fix $x=1$, sum over $z$]}
+    \item \pause then $\beta$ from $p_\theta(Y_3 \mid Y_1=1, Y_2=0)$, \qquad \textcolor{gray}{[fix $x=1$, $y=0$]}
+    \item \pause then $\pi$ from the joint mixture (proven identifiable) \qquad \textcolor{gray}{[sum over $z$]}
     $$
 %     {\Pr}_\theta\{Y_1=x, Y_2=y\} 
     p_\theta^{Y_1, Y_2}(x, y) 
-    = \sum_{1 \leq q, \ell \leq Q} \nu_q \pi_{q\ell} \Pcal(x; \mu_q) \Pcal(y; \mu_\ell + \alpha x),
+    = \sum_{1 \leq q, \ell \leq Q} \nu_q \pi_{q\ell} \Pcal(x; \mu_q) \Pcal(y; \mu_\ell + \alpha x).
     $$
-    which is proven identifiable.
   \end{enumerate}
 
 }
