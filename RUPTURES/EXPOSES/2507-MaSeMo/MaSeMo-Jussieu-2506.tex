@@ -100,14 +100,13 @@
     \end{tabular}
   \end{tabular}
 
-  \onslide+<5>{\paragraph{Modelling.} Latent Markov switching process.}
+  \onslide+<5>{\paragraph{Modelling.} Point process with (latent) Markov switching regime}
   
 }
 
 %====================================================================
 \frame{\frametitle{Point process} 
 
-  \pause
   \paragraph{Reminder.}
 %   \vspace{-.1\textheight}
   $$
@@ -240,19 +239,19 @@ $$
   where
   \begin{itemize}
     \setlength{\itemsep}{1\baselineskip}
-    \item \emphase{$B_k =$ number of immigrants} within $I_k$: 
+    \item \pause \emphase{$B_k =$ number of immigrants} within $I_k$: 
     $$
     B_k\sim \mathcal{P}(\mu)
     $$ 
     with $\mu = \lambda_0 \Delta$, 
-    \item \emphase{$M_T(I_k) =$ number of descendants descendants of $T < \tau_k$} within $I_k$:
+    \item \pause \emphase{$M_T(I_k) =$ number of descendants of $T < \tau_k$} within $I_k$:
     $$
     M_T(I_k) 
     \sim \mathcal{P}\left(\int_{I_k} a e^{-b(t -\emphase{T})} \d t)\right)
     = \mathcal{P}\left(\alpha e^{-b (\tau_k - \emphase{T})}\right)
     $$
     with $\alpha = a (e^{b \Delta} - 1) / b$, 
-    \item \emphase{$R_k =$ number of descendants of points $T \in I_k$} within $I_k$
+    \item \pause \emphase{$R_k =$ number of descendants of points $T \in I_k$} within $I_k$
   \end{itemize}
 
 }
@@ -286,7 +285,7 @@ $$
   $$
   Y_k \mid (Y_\ell)_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \alpha \sum_{\ell = 1}^{k-1}\beta^{\ell-1} Y_{k-\ell} \right)
   $$
-  See \refer{Kir16} for the convergence toward a continuous-time Hawkes process.
+  \refer{Kir16}: convergence toward a continuous-time Hawkes process.
   
 }
 
@@ -302,17 +301,17 @@ $$
   $$
   
   \bigskip
-  \emphase{$\to$ $(Y_k)_{k\geq 1}$ is not a Markov chain} (infinite memory).
+  \emphase{$(Y_k)_{k\geq 1}$ is not a Markov chain} (because of infinite memory).
 
   \bigskip \bigskip \pause
   \paragraph{Markovian representation.}
   \begin{itemize}
-    \item \pause Define
+    \item Define
     \begin{align*}
       U_1 = 0, \qquad \qquad 
       U_k = \alpha \sum_{\ell = 1}^k \beta^{\ell-1} Y_{k-\ell}, 
     \end{align*} 
-    \item \pause we have for $k \geq 1$ \textcolor{gray}{(with $U_0 = Y_0 = 0$)}
+    \item \pause then, for $k \geq 1$ \textcolor{gray}{(with $U_0 = Y_0 = 0$)}
     \begin{align*}
       U_k = {\alpha Y_{k-1} + \beta U_{k-1}}, 
       \qquad \qquad 
@@ -321,7 +320,7 @@ $$
   \end{itemize}
   \pause 
   \medskip
-  \emphase{$\to$ $\left((Y_k,U_k)\right)_{k \geq 1}$ forms a Markov Chain}.
+  \emphase{so $\left((Y_k,U_k)\right)_{k \geq 1}$ forms a Markov Chain}.
 }
 
 %====================================================================
@@ -431,13 +430,14 @@ $$
   $$
   
   \bigskip \pause
-  \paragraph{Sketch of proof.}
-  Finite Poisson mixtures are identifiable \refer{Tei61}, so, because\footnote{The generic technique from \refer{AMR09} does not apply here.} 
+  \paragraph{Sketch of proof\footnote{The generic technique from \refer{AMR09} does not apply here.}.}
+  Because 
   $$
 %   {\Pr}_\theta\{Y_1=x, Y_2=y, Y_3=z\} 
   p_\theta^{Y_1, Y_2, Y_3}(x, y, z) 
   = \sum_{1 \leq q, \ell, m \leq Q} \nu_q \pi_{q\ell} \pi_{\ell m} \Pcal(x; \mu_q) \Pcal(y; \mu_\ell + \alpha x)  \Pcal(z; \mu_m + \alpha \beta x + \alpha y),
-  $$one may identify
+  $$
+  and because finite Poisson mixtures are identifiable \refer{Tei61}, one may identify
   \begin{enumerate}
     \setlength{\itemsep}{.5\baselineskip}
     \item \pause $\nu$ and $\mu$ from $p_\theta(Y_1)$, \qquad \textcolor{gray}{[sum over $y$ and $z$]}
@@ -506,7 +506,7 @@ $$
   \begin{itemize}
     \setlength{\itemsep}{1.5\baselineskip}
     \item \emphase{Baseline continuous parameters:} 
-    $m^0 = [10, \;200, \;1000]$, $a^0 = 40$, $b = 160$
+    $m^0 = [10, \;200, \;1000]$, \quad $a^0 = 40$, \quad $b = 160$
     \item \pause \emphase{Increasing signal:} $\lambda = 0.5, \;1, \;1.5, \;2$
     $$
     a = \lambda \; a^0, \qquad 
@@ -517,10 +517,7 @@ $$
     $$
     (H_t)_{0 \leq t \leq 1} \sim Heterogeneous~\emphase{Continuous}~Hawkes(a, b^0, m)
     $$
-    \item \pause \emphase{Discretized process:} $n = H(1)$
-    $$
-    N = c \; n, \qquad c = 0.5, \;1, \;2, \;4,
-    $$
+    \item \pause \emphase{Discretized process:} $n = H(1)$, \quad $N = c \; n$, \quad $c = 0.5, \;1, \;2, \;4$,
     $$
     Y_k = H\left(\left[\frac{k-1}{N}; \frac{k}{N}\right]\right), 
     \qquad k=1, \dots N.
@@ -566,7 +563,7 @@ $$
   \bigskip \bigskip \pause
   \paragraph{Practical recommendations.}
   $$
-  \text{Take $N = 2 n$ and use AIC}
+  \text{Take $N = 2 n$ \quad and \quad use AIC}
   $$
 }
     
@@ -699,11 +696,11 @@ $$
   \paragraph{What we did.} \\ ~
   \begin{itemize}
     \setlength{\itemsep}{1.25\baselineskip}
-    \item The discretized Hawkes process with exponential kernel is a Markov model \\
+    \item The discretized Hawkes process (with exponential kernel) is a Markov model \\
     ~ \\
-    $\to$ The discretized Markov switching Hawkes process with exponential kernel is a hidden Markov model
-    \item The standard EM machinery applies to achieve maximum likelihood inference.
-    \item Not shown: initialization based on existing estimation procedures for homogeneous Hawkes (\refer{Che21},\refer{ChL22}) and Poisson HMM.
+    $\to$ The discretized Markov switching Hawkes process is a hidden Markov model
+    \item The standard EM machinery applies to achieve maximum likelihood inference
+    \item Not shown: initialization based on existing estimation procedures for homogeneous Hawkes (\refer{Che21}) and Poisson HMM
   \end{itemize}
 }
     
@@ -713,8 +710,8 @@ $$
   \paragraph{What we did not do.} \\ ~
   \begin{itemize}
     \setlength{\itemsep}{1.25\baselineskip}
-    \item Goodness-of-fit: 'Poissonisation' (on-going). 
-    \item Model selection: derive a proper (BIC?) criterion accounting for the discretization step.
+    \item Goodness-of-fit: 'Poissonisation' (on-going) 
+    \item Model selection: derive a proper (BIC?) criterion accounting for the discretization step
 %     \item Identifiability: Needs to be proven. \\
 %     (standard HMM-dedicated strategies does not apply here \refer{AMR09}).
     \item Understand the inferred latent states in terms of animal behavior, biogeography, species, \dots
@@ -727,7 +724,7 @@ $$
     \setlength{\itemsep}{0.75\baselineskip}
     \item Efficient change-point detection ('segmentation') in (marked) Poisson \& Hawkes processes. \\
     $\to$ Dynamic programming applies \refer{DHL24}.
-    \item Segmentation-classification of Poisson processes.
+    \item Segmentation-classification of Poisson processes
   \end{itemize}
 
 }
