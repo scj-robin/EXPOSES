@@ -1,0 +1,129 @@
+\documentclass[9pt]{beamer}
+
+% Beamer style
+%\usetheme[secheader]{Madrid}
+% \usetheme{CambridgeUS}
+\useoutertheme{infolines}
+\usecolortheme[rgb={0.65,0.15,0.25}]{structure}
+% \usefonttheme[onlymath]{serif}
+\beamertemplatenavigationsymbolsempty
+%\AtBeginSubsection
+
+% Packages
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+% \usepackage[dvipsnames]{xcolor}
+\usepackage{xspace}
+\usepackage{dsfont, stmaryrd}
+\usepackage{amsmath, amsfonts, amssymb, stmaryrd, mathabx}
+\usepackage{epsfig}
+\usepackage{multirow}
+\usepackage{tikz}
+\usepackage{url}
+% \usepackage{ulem}
+\usepackage{/home/robin/LATEX/Biblio/astats}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+
+\input{/home/robin/RECHERCHE/EXPOSES/LATEX/SlideCommands}
+\newcommand{\dN}{\Delta N}
+\newcommand{\dtau}{\Delta \tau}
+
+% Directory
+\newcommand{\figcp}{/home/robin/RECHERCHE/RUPTURES/EXPOSES/FIGURES}
+\newcommand{\figeco}{/home/robin/RECHERCHE/ECOLOGIE/EXPOSES/FIGURES}
+\newcommand{\fignet}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/FIGURES}
+\newcommand{\figbayes}{/home/robin/RECHERCHE/BAYES/EXPOSES/FIGURES}
+% \newcommand{\figDLR}{/home/robin/Bureau/Hawkes/segHP/article/StatComp2023/Revision/figures}
+\newcommand{\figchiro}{/home/robin/RECHERCHE/RUPTURES/Hawkes/HawkesDiscreteHMM/Figures/chiropteres}
+\newcommand{\figsimul}{/home/robin/RECHERCHE/RUPTURES/Hawkes/HawkesDiscreteHMM/Figures/simuls}
+\newcommand{\figStR}{/home/robin/RECHERCHE/BAYES/PLNsampling/Paper/Figures}
+
+%====================================================================
+%====================================================================
+
+%====================================================================
+%====================================================================
+\begin{document}
+%====================================================================
+%====================================================================
+
+%====================================================================
+\title{Some latent variable models in ecology}
+
+\author[S. Robin]{Stéphane Robin \\ ~ \\
+    Joint works with Anna Bonnet, Julien Chiquet, Pierre Latouche, \\
+    Mahendra Mariadassou, Sarah Ouadah, Julien Stoehr
+}
+
+\institute[Sorbonne université]{\normalsize{LPSM, Sorbonne université}}
+
+\date[StatMathAppli'25]{StatMathAppli, Fréjus, Sep. 2025}
+
+%====================================================================
+%====================================================================
+\maketitle
+
+%====================================================================
+\section*{Introduction}
+\input{Intro}
+\frame{\frametitle{Outline} \tableofcontents}
+
+%====================================================================
+\section{Motifs in plant-pollinator networks}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+\input{NetworkMotifsBEDD}
+
+%====================================================================
+\section{Hawkes discrete HMM \& Animal behavior}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+\input{HawkesDiscreteHMM}
+
+%====================================================================
+\section{Joint species distribution model}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+\input{SpeciesAbundancePLN}
+
+%====================================================================
+\frame[allowframebreaks]{ \frametitle{References} \allowbreak
+  {
+   \tiny
+   \bibliography{/home/robin/Biblio/BibGene}
+   \bibliographystyle{alpha}
+  }
+}
+
+%====================================================================
+%====================================================================
+\backupbegin 
+
+%====================================================================
+\section*{Network motifs}
+\input{NetworkMotifsBEDD-appendix}
+
+%====================================================================
+\section*{Hawkes discrete HMM}
+\input{HawkesDiscreteHMM-appendix}
+
+%====================================================================
+\section*{Poisson log-normal model}
+\input{SpeciesAbundancePLN-appendix}
+
+\backupend 
+
+%====================================================================
+%====================================================================
+\end{document}
+%====================================================================
+%====================================================================
+  
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+    \end{tabular}
+  \end{tabular}

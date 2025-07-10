@@ -1,0 +1,104 @@
+%====================================================================
+%====================================================================
+\subsection*{Latent variable models}
+%====================================================================
+\frame{\frametitle{Latent variable models (1/2)} 
+
+  \paragraph{Latent  ('hidden', 'unobserved', ...) variables} are widely used in statistical ecology  \refer{PeG22b} to 
+  \begin{itemize}
+    \setlength{\itemsep}{.5\baselineskip}
+    \item account for heterogeneity (species clustering, over-dispersion or 'excess' of zeros in population sizes), 
+    \item encode dependency (due to space, time, parental relatedness, ...), 
+    \item represent a 'true' signal, observed with noise (animal movement), 
+    \item ...
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Statistical perspective.} 
+  \begin{itemize}
+    \setlength{\itemsep}{.5\baselineskip}
+    \item Number of latent variables $\simeq$ number of observed variables.
+    \item Inference of the model parameters much easier if the latent variables were observed.
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Latent variable models (2/2} 
+
+\paragraph{Notations.}
+  \begin{itemize}
+    \item $Y =$ observed variable of interest (response),
+    \item $Z =$ unobserved (latent) variable,
+    \item $\theta =$ unknown parameter (to be inferred),
+    \item $X =$ set of covariates,
+  \end{itemize}
+
+  \bigskip \bigskip \pause 
+  \paragraph{General model.}
+  \begin{align*}
+      \text{hidden layer:} \qquad \qquad Z & \sim p_\theta(Z; \textcolor{gray}{X}), \\ ~ \\
+      \text{observed layer:} \qquad Y \mid Z & \sim p_\theta(Y \mid Z; \textcolor{gray}{X}).
+  \end{align*}
+
+}
+
+%====================================================================
+\frame{\frametitle{Graphical model} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \begin{itemize}
+        \item $Y =$ response,
+        \item $Z =$ latent,
+        \item $\theta =$ parameter,
+        \item $X =$ covariates
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.25\textwidth}
+    \begin{tabular}{p{.5\textwidth}}
+      \input{\figeco/GMlatentVarModel-XYZtheta}
+    \end{tabular}
+  \end{tabular}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Nature of the variables.}
+  $$
+  \begin{tabular}{l|cc}
+    & Fixed & Random \\
+    \hline
+    & \\
+    Observed & covariates $\emphase{X}$ & response $\emphase{Y}$ \\
+    & \\
+    Unobserved & parameter $\emphase{\theta}$ & latent $\emphase{Z}$
+  \end{tabular}
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{Inference specificity} 
+
+  \paragraph{'Observed likelihood'} = likelihood of the observed data $Y$:
+  $$
+  p_\theta(Y) 
+  = 
+  \int_\Zcal p_\theta(Z) p_\theta(Y \mid Z) \d Z
+  $$
+  \pause
+  but (EM decomposition \refer{DLR77})
+  $$
+  \log p_\theta(Y) = \Esp[\log p_\theta(Y, Z) \mid Y] + \Hcal(p_\theta(Z \mid Y)
+  $$
+  where $\Hcal$ stands for the entropy\footnote{$\Hcal(q) = - \Esp_q[\log q(X)]$}.
+  
+  \bigskip \bigskip \pause
+  \paragraph{Three typical situations:}
+  \begin{enumerate}
+    \setlength{\itemsep}{0.75\baselineskip}
+    \item \pause Integration over $Z$ can be done for free,
+    \item \pause Integration over $Z$ is intractable, but $p_\theta(Z \mid Y)$ is accessible,
+    \item \pause Integration over $Z$ is intractable, but $p_\theta(Z \mid Y)$ is inaccessible.
+  \end{enumerate}
+
+}
