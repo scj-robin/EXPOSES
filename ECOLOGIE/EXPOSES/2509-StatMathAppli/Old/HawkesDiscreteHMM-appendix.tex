@@ -1,0 +1,203 @@
+%====================================================================
+\frame{ \frametitle{Discrete HMM}
+
+  \paragraph{Conversion formulas} from continuous to discrete Hawkes
+  $$
+  \alpha  = \frac{a (e^{b \Delta} - 1)}{b}, \qquad \beta = e^{-b \Delta}
+  $$
+    
+  \bigskip \pause 
+  \paragraph{3-step initialization}
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item Homogeneous Hawkes for the reproduction parameters $\alpha$ and $\beta$ \\
+    ({\tt hawkesbow} R package \refer{Che21})
+    \item Poisson-HMM for the rates $\mu_1, \dots, \mu_Q$ and transition $\pi$
+    \item Correction $\mu_k \rightarrow \widetilde{\mu}_k$ to account for reproduction rate
+  \end{itemize}
+  
+}
+
+%====================================================================
+%====================================================================
+\subsection*{Simulation study}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%====================================================================
+\frame{ \frametitle{Simulation design ($Q = 3$)}
+  % Version V8 / tol=1e-6
+
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item \emphase{Baseline continuous parameters:} 
+    $m^0 = [10, \;200, \;1000]$, \quad $a^0 = 40$, \quad $b = 160$
+    \item \pause \emphase{Increasing signal:} $\lambda = 0.5, \;1, \;1.5, \;2$
+    $$
+    a = \lambda \; a^0, \qquad 
+    m = \lambda \; m^0
+    .
+    $$ 
+    \item \pause \emphase{Simulated process:}
+    $$
+    (H_t)_{0 \leq t \leq 1} \sim Heterogeneous~\emphase{Continuous}~Hawkes(a, b^0, m)
+    $$
+    \item \pause \emphase{Discretized process:} $n = H(1)$, \quad $N = c \; n$, \quad $c = 0.5, \;1, \;2, \;4$,
+    $$
+    Y_k = H\left(\left[\frac{k-1}{N}; \frac{k}{N}\right]\right), 
+    \qquad k=1, \dots N.
+    $$
+    ~ \\
+    $\to$ not a discrete-time Hawkes process as defined earlier
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{ \frametitle{Simulation results ($Q^* = 3$)}
+
+  \begin{overprint}
+    \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta} - \theta^*$ ($Q = Q^*$) \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-Coef-discParmsV2}
+    \onslide<2> \paragraph{Model selection: BIC.} Distribution of $BIC_Q - BIC_1$ \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-Coef-BIC}
+    \onslide<3> \paragraph{Model selection: AIC.} Distribution of $AIC_Q - AIC_1$ \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-Coef-AIC}
+%     \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, Q^*, \widehat{Q}}(Poisson)$ / $AIC_{1, Q^*, \widehat{Q}}(Hawkes)$ \\
+%     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-Coef-compAIC}
+    \onslide<4> \paragraph{Classification.} MAP / Viterbi (+ comput. time) \\
+    \includegraphics[width=.66\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-Coef-diag}
+  \end{overprint}
+}
+    
+% %====================================================================
+% \frame{ \frametitle{Simulation results ($Q^* = 3$, fixed $N$)}
+% 
+%   \begin{overprint}
+%     \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta} - \theta^*$ ($Q = Q^*$) \\
+%     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-N-discParmsV2}
+%     \onslide<2> \paragraph{Model selection: BIC.} Distribution of $BIC_Q - BIC_1$ \\
+%     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-N-BIC}
+%     \onslide<3> \paragraph{Model selection: AIC.} Distribution of $AIC_Q - AIC_1$ \\
+%     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-N-AIC}
+%     \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, Q^*, \widehat{Q}}(Poisson)$ / $AIC_{1, Q^*, \widehat{Q}}(Hawkes)$ \\
+%     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q3-N-compAIC}
+%   \end{overprint}
+% }
+    
+%====================================================================
+\frame{ \frametitle{Simulation results ($Q^* = 1$, $N = c n$, $m^0 = 400$)}
+
+%     $$
+%     \emphase{Q = 1}: m^0 = [400], % \qquad
+%     \emphase{Q = 2}: m^0 = [10, \;800], \qquad
+%     \emphase{Q = 3}: m^0 = [10, \;200, \;1000]
+%     $$
+  \begin{overprint}
+    \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta} - \theta^*$ ($Q = Q^*$) \\
+    \includegraphics[width=.66\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q1-Coef-discParmsV2}
+    \onslide<2> \paragraph{Model selection: BIC.} Distribution of $BIC_Q - BIC_1$ \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q1-Coef-BIC}
+    \onslide<3> \paragraph{Model selection: AIC.} Distribution of $AIC_Q - AIC_1$ \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q1-Coef-AIC}
+%     \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, Q^*, \widehat{Q}}(Poisson)$ / $AIC_{1, Q^*, \widehat{Q}}(Hawkes)$ \\
+%     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q1-Coef-compAIC}
+  \end{overprint}
+}
+    
+%====================================================================
+\frame{ \frametitle{Simulation results ($Q^* = 2$, $N = c n$, $m^0 = [10, \;800]$)}
+
+%     $$
+%     \emphase{Q = 1}: m^0 = [400], \qquad
+%     \emphase{Q = 2}: m^0 = [10, \;800], \qquad
+%     \emphase{Q = 3}: m^0 = [10, \;200, \;1000]
+%     $$
+  \begin{overprint}
+    \onslide<1> \paragraph{Parameter estimates.} Distribution of $\widehat{\theta} - \theta^*$ ($Q = Q^*$) \\
+    \includegraphics[width=.83\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-discParmsV2}
+    \onslide<2> \paragraph{Model selection: BIC.} Distribution of $BIC_Q - BIC_1$ \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-BIC}
+    \onslide<3> \paragraph{Model selection: AIC.} Distribution of $AIC_Q - AIC_1$ \\
+    \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-AIC}
+%     \onslide<4> \paragraph{Comparison with Poisson HMM.} $AIC_{1, Q^*, \widehat{Q}}(Poisson)$ / $AIC_{1, Q^*, \widehat{Q}}(Hawkes)$ \\
+%     \includegraphics[width=1\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-compAIC}
+    \onslide<4> \paragraph{Classification.} MAP / Viterbi (+ comput. time) \\
+    \includegraphics[width=.66\textwidth, height=.8\textheight]{\figsimul/SimHHMM1DV8-tol6-T1-Q2-Coef-diag}
+  \end{overprint}
+}
+    
+% %====================================================================
+% \frame{ \frametitle{Backup: GoF}
+% 
+%   \paragraph{Change-time} for the recording of bat cries over one night:
+%   $$
+%   \begin{tabular}{cccc}
+%     $Q = 1$ & $Q = 2$ & $Q = 3$ & $Q = 4$ \\
+%     \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q1gof} &
+%     \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q2gof} &
+%     \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q3gof} &
+%     \includegraphics[width=.2\textwidth, height=.4\textheight, trim=20 20 20 20, clip=]{\figchiro/Chiro-seq99-N692-Qmax5-Q4gof}   
+%     \end{tabular}
+%   $$
+% 
+% }
+
+%====================================================================
+\frame{ \frametitle{Model comparison for bat cries sequences}
+
+  \paragraph{Poisson vs Hawkes / Homogeneous vs HMM.} Best model based on BIC
+  $$
+  \begin{tabular}{r|cc|c}
+    & Poisson & Hawkes & Total \\
+    \hline
+    Homogeneous & 132 & 775 & 907 \\
+    Hidden Markov  & 21 & 627 & 648 \\
+    \hline
+    Total & 153 & \emphase{1402} & 1555
+  \end{tabular}
+  $$
+  
+}
+
+%====================================================================
+\frame{ \frametitle{States and locations}
+
+  $$
+  \begin{tabular}{cc}
+    \includegraphics[width=.4\textwidth]{\figchiro/Carte_Qmean.pdf} & \includegraphics[width=.4\textwidth]{\figchiro/carte_species.pdf} \\
+    \includegraphics[width=.4\textwidth]{\figchiro/Carte_Qmean_bin.pdf} & \includegraphics[width=.4\textwidth]{\figchiro/carte_species_bin.pdf} 
+  \end{tabular}
+  $$
+
+}
+
+%====================================================================
+\frame{ \frametitle{Non exponential kernel function $h$}
+
+  \paragraph{Compact support.} 
+  Suppose that $h$ has no exponential form, but 
+  $$
+  t > L \Delta
+  \qquad \Rightarrow \qquad 
+  h(t) = 0.
+  $$
+
+  \bigskip \bigskip 
+  \paragraph{Homogeneous discrete Hawkes process.} 
+  $$
+  \left(Y_k \mid Y_{1:(k-1)}\right) \sim \Pcal\left(\mu + \sum_{\ell=1}^{k-1} \alpha_\ell Y_{k-\ell}\right) 
+  \qquad \text{with} \quad
+  \alpha_\ell = \int_{(\ell-1)\Delta}^{\ell\Delta} h(t) \d t.
+  $$
+
+  \bigskip \bigskip 
+  \paragraph{Markovian representation.} 
+  Define $U_k = \sum_{\ell \geq 1} \alpha_\ell Y_{k-\ell}$,
+  then
+  $$
+  \left(Y_k \mid Y_{1:(k-1)}\right)
+  = \left(Y_k \mid U_k\right) 
+  \sim \Pcal\left(\mu + U_k\right)
+  $$
+  and $\left((Y_k, U_k)\right)_{k \geq 1}$ forms a Markov chain (of order $L$).
+  
+}

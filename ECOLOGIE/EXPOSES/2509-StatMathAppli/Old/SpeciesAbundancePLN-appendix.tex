@@ -1,0 +1,49 @@
+% %====================================================================
+% \frame{\frametitle{Barents sea fish abundances: Estimates}
+% 
+%   \paragraph{Reduced data set.} $p = 7$ most abundant species
+% 
+%   \bigskip \bigskip 
+%   \paragraph{Comparison of the estimates.}
+%   \newcommand{\nIterEx}{10000} \newcommand{\lagEx}{50} \newcommand{\nISex}{200}
+%   \newcommand{\exampleParms}{-nIter\nIterEx-lag\lagEx-nIS\nISex}
+%   \begin{tabular}{ccc}
+%       $\widehat{B}$ & $\widehat{\Sigma}$ & $\widehat{\Var}(\widehat{B})$  \\
+%     \includegraphics[width=.3\textwidth, trim=15 40 25 50, clip=]{\figStR/BarentsLarge\exampleParms-compBeta-em-all} &
+%     \includegraphics[width=.3\textwidth, trim=15 40 25 50, clip=]{\figStR/BarentsLarge\exampleParms-compSigma-em-all} &
+%     \includegraphics[width=.3\textwidth, trim=15 40 25 50, clip=]{\figStR/BarentsLarge\exampleParms-compVarBeta-em-all}
+%   \end{tabular}
+% 
+%   }
+  
+% %====================================================================
+% \frame{\frametitle{Barents sea fish abundances: Model selection}
+% 
+%   \paragraph{BIC for composite likelihood.} \refer{GaS10}
+%   $$
+%   BIC = \cl_{\theta}(Y) - \frac{\log(n)}2 \text{dim}(\theta) 
+%   \qquad \qquad 
+%   \text{with} \quad
+%   \text{dim}(\theta) = \tr[J(\theta) H(\theta)^{-1}].
+%   $$
+%   
+%   \bigskip 
+%   \paragraph{Model selection.} 4 covariates $\to$ 16 possible models 
+%   \newcommand{\nIterEx}{10000} \newcommand{\lagEx}{50} \newcommand{\nISex}{200}
+%   \newcommand{\exampleParms}{-nIter\nIterEx-lag\lagEx-nIS\nISex}
+%   \newcommand{\nIterSel}{\nIterEx} \newcommand{\lagSel}{20} \newcommand{\nISsel}{\nISex}
+%   \newcommand{\selectParms}{-nIS\nISsel-nIter\nIterSel-lag\lagSel}
+%   $$
+%   \begin{tabular}{ccc}
+%     $\cl_{\widehat{\theta}_k}$ & $\text{dim}(\widehat{\theta}_k)$ & $BIC(k)$ \\
+%     \includegraphics[width=.25\textwidth, trim=10 10 25 50, clip=]{\figStR/Barents\selectParms-models-cl} & 
+%     \includegraphics[width=.25\textwidth, trim=10 10 25 50, clip=]{\figStR/Barents\selectParms-models-penbic} & 
+%     \includegraphics[width=.25\textwidth, trim=10 10 25 50, clip=]{\figStR/Barents\selectParms-models-bic}     
+%   \end{tabular}
+%   $$
+%   CL(5) vs CL(7): same for $d=1, 2, 3$ and 5 (best) \\
+%   \medskip 
+%   Differ only for $d=4$: \\
+%   CL5 = Latitude + Depth + Temperature, CL7 = Latitude + Depth + Longitude
+% 
+% }

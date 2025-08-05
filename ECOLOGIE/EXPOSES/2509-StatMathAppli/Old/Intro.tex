@@ -6,31 +6,31 @@
 
   \paragraph{Latent  ('hidden', 'unobserved', ...) variables} are widely used in statistical ecology  \refer{PeG22b} to 
   \begin{itemize}
-    \setlength{\itemsep}{.5\baselineskip}
-    \item account for heterogeneity (species clustering, over-dispersion or 'excess' of zeros in population sizes), 
+    \setlength{\itemsep}{.75\baselineskip}
+    \item account for heterogeneity (species clustering, over-dispersion or 'excess' of counts), 
     \item encode dependency (due to space, time, parental relatedness, ...), 
-    \item represent a 'true' signal, observed with noise (animal movement), 
+    \item represent a 'true' signal, observed with noise (animal movement and/or behavior), 
     \item ...
   \end{itemize}
 
   \bigskip \bigskip \pause
   \paragraph{Statistical perspective.} 
   \begin{itemize}
-    \setlength{\itemsep}{.5\baselineskip}
+    \setlength{\itemsep}{.75\baselineskip}
     \item Number of latent variables $\simeq$ number of observed variables.
     \item Inference of the model parameters much easier if the latent variables were observed.
   \end{itemize}
 }
 
 %====================================================================
-\frame{\frametitle{Latent variable models (2/2} 
+\frame{\frametitle{Latent variable models (2/2)} 
 
 \paragraph{Notations.}
   \begin{itemize}
-    \item $Y =$ observed variable of interest (response),
-    \item $Z =$ unobserved (latent) variable,
+    \item $Y =$ observed variables of interest (response),
+    \item $Z =$ unobserved (latent) variables,
     \item $\theta =$ unknown parameter (to be inferred),
-    \item $X =$ set of covariates,
+    \item $X =$ covariates,
   \end{itemize}
 
   \bigskip \bigskip \pause 
@@ -95,10 +95,10 @@
   \bigskip \bigskip \pause
   \paragraph{Three typical situations:}
   \begin{enumerate}
-    \setlength{\itemsep}{0.75\baselineskip}
-    \item \pause Integration over $Z$ can be done for free,
-    \item \pause Integration over $Z$ is intractable, but $p_\theta(Z \mid Y)$ is accessible,
-    \item \pause Integration over $Z$ is intractable, but $p_\theta(Z \mid Y)$ is inaccessible.
+    \setlength{\itemsep}{.75\baselineskip}
+    \item \pause Integration wrt $Z$ can be done for free,
+    \item \pause Integration wrt $Z$ is intractable, but $p_\theta(Z \mid Y)$ is accessible,
+    \item \pause Integration wrt $Z$ is intractable, and $p_\theta(Z \mid Y)$ is inaccessible.
   \end{enumerate}
 
 }
