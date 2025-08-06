@@ -1,21 +1,229 @@
 %====================================================================
 %====================================================================
-\subsection*{Discrete time Markov-switching Hawkes process} 
+\subsection{A hidden Markov model?} 
 \frame{\frametitle{Discrete time Markov-switching Hawkes process} 
-}
 %====================================================================
 
-%====================================================================
-%====================================================================
-\subsection{Discrete-time Hawkes HMM} 
-\frame{\frametitle{Discrete-time Hawkes HMM} 
-}
-%====================================================================
+  \bigskip 
+  \paragraph{Data.} $Y_k =$ number of bat calls during the $k$-th time bin.
 
+  \bigskip \pause
+  \paragraph{Markov switching Hawkes process model.} In discrete time:
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item Hidden path $(Z_k)_{k \geq 1} =$ homogeneous Markov chain with $Q$ states
+    $$
+    (Z_k)_{k \geq 1} \sim MC_Q(\nu, \pi)
+    $$
+    $\nu =$ intial distribution, $\pi =$ transition matrix;
+    \item Observed counts: for $k\geq 1$ and
+      $$
+      \left(Y_k \mid (Y_\ell)_{\ell \leq k-1}, \emphase{Z_k=q}\right) 
+      \sim \mathcal{P}\left(\emphase{\mu_q} + \alpha \sum_{\ell = 1}^{k-1} \beta^{\ell-1}Y_{k-\ell} \right);
+      $$  
+    \item Model parameters: $\theta = (\nu, \pi, \mu, \alpha, \beta)$
+  \end{itemize}
+  
+  \bigskip \pause
+  \paragraph{Identifiability \refer{BoR25}\footnote{The proof does not rely on \refer{AMR09}}.}
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item The model parameter $\theta$ is identifiable from the joint distribution $p_\theta(Y_1, Y_2, Y_3)$. \\
+    \textcolor{gray}{($\theta \neq \theta' \Rightarrow p_\theta(\cdot, \cdot, \cdot) \neq p_{\theta'}(\cdot, \cdot, \cdot)$)} 
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Markovian representation (homogeneous)} 
+
+  \paragraph{Homogeneous discrete-time Hawkes process $Y = \{Y_k\}_{k \geq 1}$.} 
+  $$
+  Y_k \mid (Y_\ell)_{\ell \leq k-1} \sim \mathcal{P}\left(\mu + \alpha \sum_{\ell = 1}^{k-1}\beta^{\ell-1} Y_{k-\ell} \right)
+  $$
+  \bigskip
+  $(Y_k)_{k\geq 1}$ is not a Markov chain (because of infinite memory).
+
+  \bigskip \pause
+  \paragraph{Markovian representation.}
+  \begin{itemize}
+    \item Define
+    $$
+    U_1 = 0, \qquad \qquad 
+    U_k = \alpha \sum_{\ell = 1}^k \beta^{\ell-1} Y_{k-\ell}, 
+    $$
+    \item \pause then, for $k \geq 1$ \textcolor{gray}{(with $U_0 = Y_0 = 0$)}
+    $$
+    U_k = {\alpha Y_{k-1} + \beta U_{k-1}}, 
+    \qquad \qquad 
+    Y_k \mid U_k \sim \mathcal{P}(\mu + U_k).
+    $$
+  \end{itemize}
+  \pause 
+  \medskip
+  so $\left((Y_k,U_k)\right)_{k \geq 1}$ forms a Markov chain.
+  
+}
+
+%====================================================================
+\frame{\frametitle{Markovian representation (Markov switching)} 
+
+  \paragraph{Markov switching Hawkes process model.} Can be rephrased as
+  $$
+  \left(Y_k \mid (Y_\ell)_{\ell \leq k-1}, \emphase{Z_k=q}\right) 
+  \sim \mathcal{P}\left(\emphase{\mu_q} + U_k \right)
+  $$  
+  with
+  $$
+  U_1 = 0, \qquad \qquad 
+  U_k = \alpha \sum_{\ell = 1}^k \beta^{\ell-1} Y_{k-\ell}, 
+  $$      
+  
+  \bigskip \pause
+  \paragraph{Consequence.}
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item The model is a regular Hidden Markov Model (HMM)
+    \item With graphical model
+    \begin{figure}
+      \begin{centering}
+        \input{\figcp/Hawkes-HMM-DirectedGM} \\
+        $(Z_k)_{k \geq 1} =$ \emphase{hidden path}, 
+        $\quad (U_k)_{k \geq 1} =$ memory, 
+        $\quad (Y_k)_{k \geq 1} =$ observed process.
+      \end{centering}
+    \end{figure}
+  \end{itemize}
+}
+
+%====================================================================
+\frame{\frametitle{Inference}
+
+  \bigskip
+  \paragraph{Maximum likelihood inference:} 
+  $
+  \widehat{\theta} = \argmax_\theta \log p_\theta(Y)
+  $
+
+  \bigskip \bigskip \pause
+  \paragraph{EM algorithm for HMM:} \refer{DLR77,CMR05}
+  $$
+  \theta^{(h+1)} 
+  = \underset{\text{\normalsize \emphase{M step}}}{\underbrace{\argmax_\theta}} \; \underset{\text{\normalsize \emphase{E step}}}{\underbrace{\Esp_{\theta^{(h)}}}}[\log p_\theta(Y, Z) \mid Y]
+  $$
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item E step: Evaluate $Q(\theta \mid \theta^{(h)}) = \Esp_{\theta^{(h)}}[\log p_\theta(Y, Z) \mid Y]$ (forward-backward recursion)
+    \item M step: Gradient descent, computing $\nabla_\theta Q(\theta \mid \theta^{(h)})$ by recursion
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Model selection.} Penalized likelihood
+  \begin{align*}
+    AIC_Q & = \log p_{\widehat{\theta}_Q}(Y) - D_Q, &
+    BIC_Q & = \log p_{\widehat{\theta}_Q}(Y) - D_Q \frac{\log(\emphase{N})}2     
+  \end{align*}
+  with $D_Q =$ number of parameters $= 2 + Q^2$ and \emphase{$N =$ number of time bins}.
+}
+
+%====================================================================
+\frame{ \frametitle{Simulation (not shown)}
+  
+  \paragraph{Design.}
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item Simulate a \emphase{continuous time} Markov-switching Hawkes process
+    \item With more or less events (control parameter $\lambda$)
+    \item Then discretise with more or less bins (control parameter $N \; \propto$ nb events)
+  \end{itemize}
+
+  \bigskip \pause
+  \paragraph{Conclusions.}
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item Inference more accurate when more signal (large $\lambda$)!!!
+    \goto{back:HawkesFit}
+    \item Inference more accurate with thinner discretization step (large $N$) \\
+    But at the price of a higher computational cost  \goto{back:HawkesClassif}
+    \item BIC does not capture the right number of states \\
+    \textcolor{gray}{Sequences not simulated according to the model}
+    \item AIC does, with reasonable signal ($\lambda$) and discretization ($N$) \\
+    \textcolor{gray}{Blind to the simulation shift from the model?} \goto{back:HawkesAIC}
+%     \item Clear advantage wrt Poisson HMM.
+  \end{itemize} \label{sec:HawkesSimuls}
+  
+  \bigskip \pause
+  \paragraph{Practical recommendations:}
+  Take $N = 2 n$ \quad and \quad use AIC
+
+}
+    
 %====================================================================
 %====================================================================
 \subsection{Bats calls sequences}
-\frame{\frametitle{Vigie-chiro data set} 
-}
-%====================================================================
+\frame{\frametitle{Vigie-chiro project} 
 
+  \bigskip
+  \paragraph{Data set.}
+  \begin{itemize}
+    \item Vigie-chiro project French participatory project to monitor bats echolocation calls (\url{https://www.vigienature.fr/fr/chauves-souris}).
+    \item 2354 overnight recordings collected between October 2010 and January 2020 in 755 locations. 
+    \item Restricted to sequences with at least 50 cries $\to$ 1555 time sequences. 
+  \end{itemize}
+  
+  \bigskip \pause
+  \paragraph{Poisson vs Hawkes / Homogeneous vs HMM.} Best model based on AIC
+  $$
+  \begin{tabular}{r|cc|c}
+    & Poisson & Hawkes & Total \\
+    \hline
+    Homogeneous & 34 & 353 & 387\\
+    Hidden Markov  & 24 & \emphase{1144} & \emphase{1168} \\
+    \hline
+    Total & 58 & \emphase{1497} & 1555
+  \end{tabular}
+  $$
+  \begin{itemize}
+    \item Memory ($95\%$) and heterogeneity ($75\%$) are present in most sequences 
+    \item Hawkes-HMM best fits almost 3 sequences out of 4.
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{ \frametitle{An example}
+
+  $$
+  \begin{tabular}{ccc}
+    Hawkes HMM ($\widehat{Q} = 3$) & \qquad &
+    Poisson HMM ($\widehat{Q} = 4$) \\ 
+    ~ \\
+    \includegraphics[width=.3\textwidth, trim=10 40 20 50, clip=]{\figchiro/Chiro-seq1776-N1048-Qmax5-classif-seg} &
+    \qquad & 
+    \includegraphics[width=.3\textwidth, trim=10 40 20 50, clip=]{\figchiro/Chiro-seq1776-N1048-Qmax5-classifP-seg} 
+  \end{tabular}
+  $$
+  \bigskip
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item Interpretation of the states: \textcolor{red}{absence} of calls, transit and \textcolor{green}{foraging} (high call frequency)
+    \item Poisson-HMM needs many state changes to account for self-excitation
+    \item Hawkes-HMM state changes do not correspond to slope changes
+  \end{itemize}
+}
+    
+%====================================================================
+\frame{ \frametitle{States and species}
+
+  The number of bat species was also recorded 
+  
+  $$
+  \includegraphics[width=.45\textwidth]{\figchiro/boxplot_species_Coef2_allQ.pdf}
+  $$
+  \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
+    \item The number of states does not match the number of species
+    \item More discussion to come with members of the Vigie-chiro project
+  \end{itemize}
+
+}

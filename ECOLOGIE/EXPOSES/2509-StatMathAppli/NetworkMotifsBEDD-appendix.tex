@@ -33,29 +33,121 @@
 }
 
 %==================================================================
-\frame{\frametitle{\BEDD model} \label{back:BEDD}
+\frame{\frametitle{Motif probability} \label{back:motifProba}
 
-  \begin{tabular}{cccc}
-    & & $h_0(v) =$ & $h(v) =$ \\
-    \multicolumn{2}{c}{
-      $\begin{array}{rl}
-        \Pbb\{i \sim j \mid U_i, V_j\} & = \rho \; g(U_i) \; h(V_j) \\ \\
-        \Esp (Y_{i+} \mid U_i) & = n \; \rho \; g(U_i) \\ \\
-        \Esp (Y_{+j} \mid V_j) & = m \; \rho \; g(V_i) 
-      \end{array}$
-    } &
-    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-dist-h10} \end{tabular} &
-    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-dist-h40} \end{tabular} \\
-    \begin{tabular}{c} $g_0(u) =$ \end{tabular} &
-    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-dist-g10} \end{tabular} &
-    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-adj-g10-h10} \end{tabular} &
-    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-adj-g10-h40} \end{tabular} \\
-    \begin{tabular}{c} $g(u) =$ \end{tabular} &
-    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-dist-g25} \end{tabular} &
-    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-adj-g25-h10} \end{tabular} &
-    \begin{tabular}{c} \includegraphics[width=.18\textwidth]{\fignet/FigMotifsBEDD-adj-g25-h40} \end{tabular} \\
+  \paragraph{Occurrence probability $\overline{\phi}_s = \Pbb\{Y_{s\alpha} = 1\}$.} Under the B-EDD model \refer{OLR22}:
+  \begin{align*}
+    \left(\includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9}\right) 
+    & = \; 
+    \frac{
+      \overset{\text{top stars}}{\overbrace{
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right) % \times 
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top2}\right)   }}
+      \quad
+      \overset{\text{bottom stars}}{\overbrace{
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom1}\right) % \times
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-bottom3}\right)
+      }}
+    }{
+      \underset{\text{edges}}{\underbrace{
+      \left(\includegraphics[width=.05\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9-top1}\right)^4
+      }}
+    } 
+    \\
+    \overline{\phi}_s 
+    =
+    \Pbb\left(
+    \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9} 
+    \right)
+    & = \;
+    \frac{\left(\phi_1^2 \phi_2\right) \left(\phi_1 \phi_4\right)}{\left(\phi_1\right)^4}
+    \qquad =
+    \frac{\phi_2 \phi_4}{\phi_1}
+    \qquad \goto{sec:motifList}
+  \end{align*}
+
+  \bigskip 
+  \paragraph{Estimated probability $\overline{F}_s$.} \goto{sec:motifProba}
+  $$
+  \overline{\phi}_s := \frac{\phi_2 \phi_4}{\phi_1}
+  \qquad \rightarrow \qquad 
+  \overline{F}_s := \frac{F_2 F_4}{F_1}
+  $$
+  where $F_1$, $F_2$, $F_4 =$ observed frequencies of  edges, top stars and bottom stars.
+
+}
+
+%==================================================================
+\frame{\frametitle{Super-motifs} \label{back:superMotifs}
+
+  \begin{tabular}{ll}
+    \begin{tabular}{p{.4\textwidth}}
+      \paragraph{Motif:}
+      $$
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9}
+      $$
+      ~\\ ~\\
+      \paragraph{Variance:}
+      $$
+      \begin{array}{rcl}
+        N_s^2 & = & \displaystyle{\left(\sum_\alpha Y_{s\alpha}\right)^2} \\
+        ~ \\
+        & = & \displaystyle{\sum_{\alpha, \beta: \alpha \cap \beta = \emptyset} Y_{s\alpha} Y_{s\beta}} \\
+        ~ \\
+        & & \displaystyle{+ \sum_{\alpha, \beta: \alpha \cap \beta \neq \emptyset} \underset{\footnotesize\begin{array}{c}\text{occurrence of} \\ \text{a super-motif} \end{array}}{\underbrace{Y_{s\alpha} Y_{s\beta}}}} \\
+      \end{array}
+      $$
+    \end{tabular} 
+    &
+    \begin{tabular}{p{.5\textwidth}}
+      \paragraph{Some super-motifs:} \\
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif1} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif2} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif3} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif4} \\
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif5} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif6} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif7} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif8} \\
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif9} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif10}
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif11}
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif12} \\
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif13} 
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif14}
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif15}
+      \includegraphics[width=.1\textwidth, ]{\fignet/FigMotifsBEDD-motif9-supermotif16} \\
+      ~ \\
+      \dots 396 super-motifs \\
+      ~ \\ ~ \\ ~ \\ 
+    \end{tabular} 
   \end{tabular}
   
-  \goto{sec:BEDD}
+  \paragraph{Covariance:} same game, for $Y_{s\alpha} Y_{s'\beta}$ with $s \neq s'$ \goto{sec:motifMoments}
+
+}
+
+%==================================================================
+\frame{\frametitle{In practice: Asymptotic normality} \label{back:asymNormality}
+
+  \begin{center}
+    \begin{tabular}{cccc}
+      ($n = 2m/3$) & $m=50$ & $m=100$ & $m=200$ \\
+      \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-adjMatMotif6} & 
+      \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m50-n33-rho5-g2-h3-6nodesFALSE-B500-distCountMotif6} &
+      \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m100-n67-rho5-g2-h3-6nodesFALSE-B500-distCountMotif6} &
+      \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m200-n133-rho5-g2-h3-6nodesFALSE-B500-distCountMotif6} \\
+      \includegraphics[width=.1\textwidth]{\fignet/FigMotifsBEDD-adjMatMotif16} & 
+      \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m50-n33-rho5-g2-h3-6nodesFALSE-B500-distCountMotif16} &
+      \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m100-n67-rho5-g2-h3-6nodesFALSE-B500-distCountMotif16} &
+      \includegraphics[width=.2\textwidth]{\fignet/FigMotifsBEDD-SimMotifBEDD-m200-n133-rho5-g2-h3-6nodesFALSE-B500-distCountMotif16} \\
+    \end{tabular}
+  \end{center}
+  
+  \bigskip
+  \textcolor{blue}{Normal} distribution, \textcolor{magenta}{Poisson-geometric} distribution with same mean and variance \refer{Sta01,PDK08} \goto{sec:motifMoments}
+
+
 }
 
