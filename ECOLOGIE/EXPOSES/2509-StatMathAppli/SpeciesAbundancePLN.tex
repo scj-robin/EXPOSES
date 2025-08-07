@@ -41,7 +41,7 @@
     \item $n = 89$ sites, $p = 30$ species, $d = 4$ covariates (latitude, longitude, temperature, depth)
   \end{itemize}
   
-  \bigskip \pause
+  \bigskip \bigskip \pause
   \paragraph{Deciphiring between abiotic and biotic effects.} 
   $$
   \begin{tabular}{ccc}
@@ -78,14 +78,15 @@
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
     \item \pause Choose a class $\Qcal$ of approximate (parametric) distributions and a divergence measure $D[q \| p]$ (e.g. $KL[q \| p]$)
-    \item \pause \emphase{VE} step : (approximation)
-    $$
+    \item \pause \emphase{VE} step (approximation):
+    $
     q^{(h+1)} = \argmin_{q \in \emphase{\Qcal}} \emphase{D}\left[q(Z) \| p_{\theta^{(h)}}(Z \mid Y)\right]
-    $$
-    \item \pause \emphase{M} step : (update)
-    $$
+    $
+    \item \pause \emphase{M} step (update):
+    $
     \theta^{(h+1)} = \argmax_\theta \Esp_{\emphase{q^{(h+1)}}}\left[\log p_\theta(Y, Z)\right]
-    $$
+    $
+    \\ ~
     \item \pause If $D = KL$, a lower bound of $\log p_\theta(Y)$ ('ELBO') increases at each step 
   \end{itemize}
 
@@ -118,42 +119,15 @@
 }
 
 %====================================================================
-\frame{\frametitle{VEM for the Poisson log-normal model}
-
-  \paragraph{Approximation class.} Gaussian approximation \refer{CMR18a,CMR19}
-  $$
-  q(Z) = \prod_{i=1}^n \Ncal(Z_i; m_i, S_i)
-  $$
-  \begin{itemize}
-  \item Parameter estimate $\widehat{\theta} = (\widehat{\Sigma}, \widehat{\beta})$, 
-  \item Approximate conditional distribution $Z_i \mid Y_i \approx \Ncal(\widetilde{m}_i, \widetilde{S}_i)$, 
-  \item Lower bound $ELBO(\widehat{\theta}, \widetilde{m}, \widetilde{S})$ (R package \url{PLNmodels})
-  \end{itemize}
-  
-  \bigskip \pause
-  \paragraph{Properties.}
-  \begin{itemize}
-    \setlength{\itemsep}{.75\baselineskip}
-    \item Reasonably easy to implement, fast, empirically accurate
-    \item But very few theoretical guaranties, does not enjoy the general properties of maximum likelihood (consistency, asymptotic normality, etc.) \\
-    \medskip 
-    $\to$ No measure of uncertainty (\emphase{no test, no confidence interval}) 
-    \item Can we build upon variational inference to achieve 'genuine' statistical inference?
-  \end{itemize}
-  
-}
-
-%====================================================================
 \frame{\frametitle{Toward genuine maximum likelihood inference \refer{StR24}}
 
-  \pause
-  \paragraph{Monte Carlo EM.} \refer{CeD85} When $p(Z \mid Y)$ intractable:
+  \paragraph{Monte Carlo EM (MCEM).} \refer{CeD85} When $p(Z \mid Y)$ can be sampled from:
   \begin{itemize}
-    \item Monte Carlo E step: Sample $(Z^m)_{m = 1 \dots M} \overset{iid}{\sim} p_{\theta^{(h)}}(Z \mid Y)$, then estimate
+    \item \emphase{MCE} step: Sample $(Z^m)_{m = 1 \dots M} \overset{iid}{\sim} p_{\theta^{(h)}}(Z \mid Y)$, then estimate
     $$
     \widehat{Q}(\theta \mid \theta^{(h)}) := \frac1{M} \sum_{m=1}^M \log p_\theta(Y, Z^m)
     $$
-    \item M step: Update
+    \item \emphase{M} step: Update
     $$
     \theta^{(h+1)} = \argmax_\theta \widehat{Q}(\theta \mid \theta^{(h)}) 
     $$
@@ -161,7 +135,7 @@
 
   \bigskip \bigskip \pause
   \paragraph{Importance sampling. }
-  How to sample from $p_{\theta^{(h)}}(Z \mid Y)$?
+  When $p(Z \mid Y)$ can not be sampled from:
   \begin{itemize}
    \item Sample $(Z^m)_{m = 1 \dots M} \overset{iid}{\sim} q^{(h)}(Z)$, $q^{(h)} =$ proposal,
    \item Compute the non-normalized weights $\rho_m^{(h)} = p_{\theta^{(h)}}(Y, Z^m) \left/ q^{(h)}(Z^m)\right.$,
@@ -240,6 +214,7 @@
 %====================================================================
 %====================================================================
 \subsection{Fish species from the Barents sea}
+\frame{\frametitle{Fish species from the Barents sea}}
 %====================================================================
 
 %====================================================================
@@ -266,7 +241,7 @@
   $$
   FL = full likelihood, CL$k$ = composite likelihood$(k = \textcolor{gray}{2}, 3, 5, 7)$, \\
   \medskip
-  \textcolor{gray}{VEM = pseudo Fisher information based on the ELBO},  \\
+  \textcolor{gray}{VEM = pseudo Fisher information matrix based on the ELBO},  \\
   JK = jackknife variance estimate of $\Var(\widehat{\theta}_{VEM})$
 
 }

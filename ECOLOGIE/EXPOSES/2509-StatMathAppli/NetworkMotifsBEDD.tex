@@ -13,6 +13,9 @@
         $$
         Y_{ij} \sim \Bcal(\emphase{\rho} \; \emphase{g}(U_i) \; \emphase{h}(V_j))
         $$
+        $$
+        \textstyle{\int g = \int h = 1}
+        $$
       \end{tabular}
 %       $\begin{array}{rl}
 %         \Pbb\{Y_{ij} = 1 \mid U_i, V_j\} & = \rho \; g(U_i) \; h(V_j) \\ \\
@@ -38,7 +41,7 @@
     \item No preferred or avoided specific connexion
     \item \emphase{Graph-exchangeable} model: pollinators (and plants) can be permuted 
     \item Bipartite version of the expected degree distribution \refer{ChL02}
-    \item $\Esp(Y_{i+} \mid U_i) = n \rho g(U_i)$, $\Esp(Y_{+j} \mid V_j) = m \rho h(V_j)$
+    \item Expected degrees: $\Esp(Y_{i+} \mid U_i) = n \rho g(U_i)$, $\Esp(Y_{+j} \mid V_j) = m \rho h(V_j)$.
   \end{itemize} 
   
 }
@@ -52,8 +55,8 @@
 
   \paragraph{Couting motifs\footnote{Not in the way of the \url{bmotif} package \refer{SSS19}}.} For a given motif $s$ with $p_s$ top-node and $q_s$ bottom nodes:
   \begin{itemize}
-    \item Choose $p$ nodes among $m$ and $q$ nodes among $n$;
-    \item \pause Try all {\sl automorphisms} = non-redundant permutations;
+    \item Choose $p_s$ nodes among $m$ and $q_s$ nodes among $n$;
+    \item \pause Try the $r_s$ {\sl automorphisms} = non-redundant permutations
     $$
     \includegraphics[width=.07\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism1}
     \includegraphics[width=.07\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism2}
@@ -86,23 +89,25 @@
 %==================================================================
 \frame{\frametitle{Motif probability} 
 
+  \bigskip 
   \paragraph{Motif probability $\overline{\phi}_s$ under BEDD.} Need to integrate wrt $Z = (U, V)$.
   
   \bigskip \pause
-  \paragraph{An example.} Consider the motif $s = \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9}$ with $p_s = 2$ and $q_s = 3$, we have
+  \paragraph{An example\footnote{Consider here induced motifs  (only the presence of the prescribed edges is required) $\neq$ exact motif}.} Consider the motif $s = \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9}$ with $p_s = 2$ and $q_s = 3$, we have
   \begin{align*}
     \overline{\phi}_s
     & = \int\int\int\int\int \rho^4 g(u_1) h(v_3) g(u_2)^3 h(v_1) h(v_2) h(v_3) \d u_1 \d u_2 \d v_1 \d v_2 \d v_3 \\
-    & = \left. \left(\int \rho^2 h(v_3) \d v_3\right) \left(\int \rho^3 g(u_2)^3 \d u_2\right) \right/ \rho \qquad \qquad \goto{back:motifProba} \label{sec:motifProba} \\
-    & = \left. \left(\text{2-top star probability}\right) \left(\text{3-bottom star probability}\right) \right/ \left(\text{edge probability}\right)
-  \end{align*}
+    & = \left. \left(\int \rho^2 h(v_3) \d v_3\right) \left(\int \rho^3 g(u_2)^3 \d u_2\right) \right/ \rho \qquad \qquad \goto{back:motifProba}  \\
+    & = \left. \left(\text{2-top star probability}\right) \times \left(\text{3-bottom star probability}\right) \right/ \left(\text{edge probability}\right)
+  \end{align*} \label{sec:motifProba}
 
   \bigskip \pause
   \paragraph{A favourable astral configuration.}
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
-    \item Edge and star frequencies are the sufficient statistics for the BEDD model.
-    \item Unbiased estimates of it are given by their respective empirical frequency $F = N / c$.
+    \item Edge and star probabilities contain all information.
+    \item Unbiased estimates are given by their respective empirical frequencies $F = N / c$. \\
+    (which are the sufficient statistics of the BEDD model.)
     \item The integration wrt $Z = (U, V)$ is implicitly achieved (without estimating $g$ and $h$).
   \end{itemize}
 
@@ -133,7 +138,7 @@
   $$
   (N_s - \widehat{\Esp}(N_s)) \left/ \sqrt{\widehat{\Var}(N_s)} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
   $$
-  \item Account for the plug-in bias for moderate network size ($\Delta$-method)
+  \item Account for plug-in for moderate network size ($\Delta$-method)
   $$
   \left(N_s - \widehat{\Esp}(N_s) + \widehat{\Bias}\left(\widehat{\Esp}(N_s)\right)\right) \left/ \sqrt{\widehat{\Var}(N_s - \widehat{\Esp}(N_s))} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
   $$ 
@@ -144,6 +149,10 @@
 %====================================================================
 %====================================================================
 \subsection{Comparing networks in space and time}
+\frame{\frametitle{Comparing networks in space and time} }
+%====================================================================
+
+%====================================================================
 \frame{\frametitle{Experimental design} 
 
   Joint work with Natasha de Manincor et Fran\c{c}ois Massol
@@ -185,12 +194,12 @@
     $$
     \item For motif $s$, with 
     $$
-    \widehat{\Esp}_0(N_s^A) = \widehat{\Esp}_{\widehat{\rho}^A, \emphase{\widehat{g}^B}, \widehat{g}^A}(N^A_s), \qquad 
-    \widehat{\Esp}_0(N_s^B)) = \widehat{\Esp}_{\widehat{\rho}^B, \emphase{\widehat{g}^A}, \widehat{g}^B}(N^B_s)
+    \widehat{\Esp}_0(N_s^A) = \widehat{\Esp}_{\widehat{\rho}^A, \emphase{\widehat{g}^B}, \widehat{h}^A}(N^A_s), \qquad 
+    \widehat{\Esp}_0(N_s^B)) = \widehat{\Esp}_{\widehat{\rho}^B, \emphase{\widehat{g}^A}, \widehat{h}^B}(N^B_s)
     $$
     we have
     $$
-    W_s(A, B) = \frac{(N_s^A - \widehat{\Esp}_0(N_s^A)) - (N_s^B - \widehat{\Esp}_0(N_s^B))}{\sqrt{\widehat{\Var}_0(N^A_s) + \widehat{\Var}_0(N^B_s)}}
+    W^{(g)}_s(A, B) = \frac{(N_s^A - \widehat{\Esp}_0(N_s^A)) - (N_s^B - \widehat{\Esp}_0(N_s^B))}{\sqrt{\widehat{\Var}_0(N^A_s) + \widehat{\Var}_0(N^B_s)}}
     \overset{H_0}{\sim} \Ncal(0, 1)
     $$ 
   \end{itemize}
@@ -198,7 +207,7 @@
   \bigskip \pause
   \paragraph{Network 'distance'} for pollinator imbalance
   $$
-  D(A, B) = \sqrt{\sum_s W_s^2(A, B)}
+  D^{(g)}(A, B) = \sqrt{\sum_s W_s^2(A, B)}
   $$
 
 }
@@ -209,7 +218,7 @@
 %   \newcommand{\fignatB}{/home/robin/RECHERCHE/RESEAUX/GOF-Network/Motif_Analysis_Natasha/Article/Figures}
   \newcommand{\tabnat}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/2504-Montpellier/Tables}
   
-  \paragraph{Pollinator imbalance $D^{(g)}$.}
+  \paragraph{Pollinator imbalance $D^{(g)}$.} Anova table
   $$\small{
   \begin{tabular}{l|rrrrr}
     \input{\tabnat/All_NatashaBinNetList-stat1-adonis-perm99999-adonis2}
@@ -221,7 +230,7 @@
     \item \pause Because of small network sizes, need to correct for the number of insects and plants 
     \item \pause Significant effect of the region and the month, indicating change of the insect imbalance both in space and time
     \item \pause The pattern is conserved from year to the next (not year effect)
-    \item \pause No effect is found for the plant imbalance distance $D^{(h)}$ 
+    \item \pause No significant effect found for the plant imbalance distance $D^{(h)}$ 
   \end{itemize}
 
 }
