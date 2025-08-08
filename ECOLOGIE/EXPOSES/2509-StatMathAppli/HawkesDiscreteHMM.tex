@@ -28,7 +28,7 @@
   \paragraph{Proposition: Identifiability \refer{BoR25}\footnote{The proof does not rely on \refer{AMR09}}.}
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
-    \item The model parameter $\theta$ is identifiable from the joint distribution $p_\theta(Y_1, Y_2, Y_3)$. \\
+    \item The model parameter $\theta$ is identifiable from the joint distribution of $(Y_1, Y_2, Y_3)$. \\
     \textcolor{gray}{($\theta \neq \theta' \Rightarrow p_\theta(\cdot, \cdot, \cdot) \neq p_{\theta'}(\cdot, \cdot, \cdot)$)} 
   \end{itemize}
 
@@ -83,10 +83,11 @@
   \paragraph{Consequence.}
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
-    \item The model is a regular Hidden Markov Model (HMM) with graphical model
+    \item The model is a regular Hidden Markov Model (HMM) with graphical model \\ ~
     \begin{figure}
       \begin{centering}
         \input{\figcp/Hawkes-HMM-DirectedGM} \\
+        ~ \\
         $(Z_k)_{k \geq 1} =$ \emphase{hidden path}, 
         $\quad (U_k)_{k \geq 1} =$ memory, 
         $\quad (Y_k)_{k \geq 1} =$ observed process.
@@ -113,7 +114,7 @@
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
     \item E step: Evaluate $Q(\theta \mid \theta^{(h)}) = \Esp_{\theta^{(h)}}[\log p_\theta(Y, Z) \mid Y]$ (forward-backward recursion)
-    \item M step: Gradient descent, computing $\nabla_\theta Q(\theta \mid \theta^{(h)})$ by recursion
+    \item M step: Gradient ascent, computing $\nabla_\theta Q(\theta \mid \theta^{(h)})$ by recursion
   \end{itemize}
 
   \bigskip \bigskip \pause
@@ -129,12 +130,12 @@
 \frame{ \frametitle{Simulation study (not shown)}
   
   \paragraph{Design.}
-  \begin{itemize}
+  \begin{enumerate}
     \setlength{\itemsep}{.75\baselineskip}
     \item Simulate a \emphase{continuous time} Markov-switching Hawkes process
     \item With more or less events (control parameter $\lambda$)
     \item Then \emphase{discretise} with more or less bins (control parameter $N \; \propto$ nb events)
-  \end{itemize}
+  \end{enumerate}
 
   \bigskip \pause
   \paragraph{Conclusions.}
@@ -219,7 +220,7 @@
 %====================================================================
 \frame{ \frametitle{States and species}
 
-  The number of bat species was also recorded each night in each site
+  The number of bat species was also recorded each night in each site.
   
   $$
   \includegraphics[width=.45\textwidth]{\figchiro/boxplot_species_Coef2_allQ.pdf}

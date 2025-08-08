@@ -5,8 +5,8 @@
 
   \paragraph{Data.} $n$ sites, $p$ species, 
   \begin{itemize}
-    \item $x_i =$ vector of covariates for site $i$
-    \item $Y_i = (Y_{i1}, \dots Y_{ip}) =$ abundance vector in site $i$
+    \item $x_i =$ vector of covariates for site $i$,
+    \item $Y_i = (Y_{i1}, \dots Y_{ip}) =$ abundance vector in site $i$.
   \end{itemize}
 
   \bigskip \pause
@@ -15,17 +15,17 @@
     \setlength{\itemsep}{.75\baselineskip}
     \item Latent layer: 
     $$
-    (Z_i)_{1 \leq i \leq n} \text{ iid } \sim \Ncal_p(0, \Sigma)
+    (Z_i)_{1 \leq i \leq n} \text{ iid } \sim \Ncal_p(0, \Sigma);
     $$
     \item Observed layer: counts $(Y_{ij})_{1 \leq i \leq n, 1 \leq j \leq p} \text{ indep} \mid Z$
     $$
-    Y_{ij} \mid Z \sim \Pcal\left(\exp(o_{ij} + x_i^\top \beta_j + Z_{ij})\right)
+    Y_{ij} \mid Z \sim \Pcal\left(\exp(o_{ij} + x_i^\top \beta_j + Z_{ij})\right),
     $$
-    $o_{ij} =$ given 'offset' term, accounting for the sampling effort
+    $o_{ij} =$ given 'offset' term, accounting for the sampling effort;
     \item Parameters $\theta = (\beta, \Sigma)$:
     $$
     \beta_j = \text{abiotic interactions}, \qquad 
-    \Sigma = \text{biotic interactions}
+    \Sigma = \text{biotic interactions}.
     $$
   \end{itemize}
 
@@ -37,12 +37,12 @@
   \paragraph{A typical dataset.} 
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
-    \item Fish species from the Barents sea \refer{FNA06}.
-    \item $n = 89$ sites, $p = 30$ species, $d = 4$ covariates (latitude, longitude, temperature, depth)
+    \item Fish species from the Barents sea \refer{FNA06},
+    \item $n = 89$ sites, $p = 30$ species, $d = 4$ covariates (latitude, longitude, temperature, depth).
   \end{itemize}
   
   \bigskip \bigskip \pause
-  \paragraph{Distinguish between abiotic and biotic effects.} 
+  \paragraph{Importan aim of JSDM:} Distinguish between abiotic and biotic effects:
   $$
   \begin{tabular}{ccc}
     Covariate effects & 
@@ -137,7 +137,7 @@
   \paragraph{Importance sampling. }
   When $p(Z \mid Y)$ can not be sampled from:
   \begin{itemize}
-   \item Sample $(Z^m)_{m = 1 \dots M} \overset{iid}{\sim} q^{(h)}(Z)$, $q^{(h)} =$ proposal,
+   \item Sample $(Z^m)_{m = 1 \dots M} \overset{iid}{\sim} q^{(h)}(Z)$, \emphase{$q^{(h)} =$ proposal},
    \item Compute the non-normalized weights $\rho_m^{(h)} = p_{\theta^{(h)}}(Y, Z^m) \left/ q^{(h)}(Z^m)\right.$,
    \item \pause Estimate
     $$
@@ -185,7 +185,7 @@
 \frame{\frametitle{Proposed composite likelihood algorithm}
 
   \bigskip
-  \paragraph{Proposition: EM applies for composite likelihood \refer{StR24}.}
+  \paragraph{Proposition: EM applies to composite likelihood \refer{StR24}.}
   \begin{itemize}
     \item Because the latent variables $Z$ can be split in the same way as the observed abundances $Y$:
     $$
@@ -197,7 +197,7 @@
   \bigskip \bigskip \pause
   \paragraph{Proposal for importance sampling.}
   \begin{itemize}
-    \item Start with $q_b^{(1)}(Z^b) = \qt_{VEM}(Z^b)$
+    \item Start with $q_b^{(1)}(Z^b) = \qt_{VEM}(Z^b)$,
     \item Then update $q_b^{(h+1)}(Z^b)$ with the estimated mean and variance of $p_{\theta^{(h)}}(Z^b \mid Y^b)$.
   \end{itemize}
 
