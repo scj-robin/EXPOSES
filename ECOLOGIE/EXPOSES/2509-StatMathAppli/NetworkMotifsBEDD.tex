@@ -1,7 +1,7 @@
 %====================================================================
 %====================================================================
 \subsection*{Bipartite expected degree distribution}
-\frame{\frametitle{Bipartite expected degree distribution} 
+\frame{\frametitle{Bipartite expected degree distribution} \label{sec:BEDD}
 
   \begin{tabular}{rccc}
     & & $h_0(v) =$ & $h(v) =$ \\
@@ -41,7 +41,7 @@
     \item No preferred or avoided specific connexion
     \item \emphase{Graph-exchangeable} model: pollinators (and plants) can be permuted 
     \item Bipartite version of the expected degree distribution \refer{ChL02}
-    \item Expected degrees: $\Esp(Y_{i+} \mid U_i) = n \rho g(U_i)$, $\Esp(Y_{+j} \mid V_j) = m \rho h(V_j)$.
+    \item Expected degrees: $\Esp(Y_{i+} \mid U_i) = n \rho g(U_i)$, $\Esp(Y_{+j} \mid V_j) = m \rho h(V_j)$. \goto{sec:nullModel}
   \end{itemize} 
   
 }
@@ -53,10 +53,10 @@
 %==================================================================
 \frame{\frametitle{Motif count}
 
-  \paragraph{Couting motifs\footnote{Not in the way of the \url{bmotif} package \refer{SSS19}}.} For a given motif $s$ with $p_s$ top-node and $q_s$ bottom nodes:
+  \paragraph{Couting motifs\footnote{Not in the way of the \url{bmotif} package \refer{SSS19}}.} For a given motif $s$ with $p_s$ top nodes and $q_s$ bottom nodes:
   \begin{itemize}
     \item Choose $p_s$ nodes among $m$ and $q_s$ nodes among $n$;
-    \item \pause Try the $r_s$ {\sl automorphisms} = non-redundant permutations
+    \item \pause Try the \emphase{$r_s$} {\sl automorphisms} = non-redundant permutations
     $$
     \includegraphics[width=.07\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism1}
     \includegraphics[width=.07\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism2}
@@ -90,24 +90,24 @@
 \frame{\frametitle{Motif probability} 
 
   \bigskip 
-  \paragraph{Motif probability $\overline{\phi}_s$ under BEDD.} Need to integrate wrt $Z = (U, V)$.
+  \paragraph{Motif probability $\overline{\phi}_s$ under BEDD\footnote{Consider here induced motifs  (only the presence of the prescribed edges is required) $\neq$ exact motif}.} Need to integrate wrt $Z = (U, V)$.
   
   \bigskip \pause
-  \paragraph{An example\footnote{Consider here induced motifs  (only the presence of the prescribed edges is required) $\neq$ exact motif}.} Consider the motif $s = \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9}$ with $p_s = 2$ and $q_s = 3$, we have
+  \paragraph{An example.} Consider the motif $s = \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9}$ with $p_s = 2$ and $q_s = 3$, we have
   \begin{align*}
     \overline{\phi}_s
-    & = \int\int\int\int\int \rho^4 g(u_1) h(v_3) g(u_2)^3 h(v_1) h(v_2) h(v_3) \d u_1 \d u_2 \d v_1 \d v_2 \d v_3 \\
-    & = \left. \left(\int \rho^2 h(v_3) \d v_3\right) \left(\int \rho^3 g(u_2)^3 \d u_2\right) \right/ \rho \qquad \qquad \goto{back:motifProba}  \\
-    & = \left. \left(\text{2-top star probability}\right) \times \left(\text{3-bottom star probability}\right) \right/ \left(\text{edge probability}\right)
+    & = \int\int\int\int\int \rho^4 g(u_1) g(u_2)^3 h(v_1) h(v_2) h(v_3)^2 \d u_1 \d u_2 \d v_1 \d v_2 \d v_3 \\
+    & = \left. \left(\int \rho^3 g(u_2)^3 \d u_2\right) \left(\int \rho^2 h(v_3)^2 \d v_3\right) \right/ \rho \qquad \qquad \goto{back:motifProba}  \\
+    & = \left. \left(\text{3-bottom star probability}\right) \times \left(\text{2-top star probability}\right) \; \right/ \left(\text{edge probability}\right)
   \end{align*} \label{sec:motifProba}
 
   \bigskip \pause
-  \paragraph{A favourable astral configuration.}
+  \paragraph{A favourable configuration.}
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
     \item Edge and star probabilities contain all information.
     \item Unbiased estimates are given by their respective empirical frequencies $F = N / c$. \\
-    (which are the sufficient statistics of the BEDD model.)
+    (sufficient statistics of the BEDD model.)
     \item The integration wrt $Z = (U, V)$ is implicitly achieved (without estimating $g$ and $h$).
   \end{itemize}
 
@@ -122,7 +122,7 @@
   \setlength{\itemsep}{.75\baselineskip}
   \item \emphase{Mean:} $\Esp(N_s) = c_s \times \overline{\phi}_s$ 
   \item \emphase{Variance:} Same game, requires to evaluate ${\Esp(N_s ^2) = \Esp\left(\sum_\alpha \text{match}_{s\alpha} \right)^2}$ \\
-  \ra Need to account for overlap between positions ({\sl super-motifs}: \refer{PDK08} \goto{back:superMotifs} \label{sec:motifMoments}) 
+  \ra Need to consider overlaps between positions ({\sl super-motifs}: \refer{PDK08} \goto{back:superMotifs})  \label{sec:motifMoments}
   $$
   \includegraphics[width=.8\textwidth, trim=0 25 0 5, clip=]{\fignet/OLR22-EJS-Fig2}
   $$ 
@@ -134,7 +134,7 @@
   \emphase{Proposition: Asymptotic normality \refer{OLR22}.} Under {\BEDD}, for non-star motifs 
   \begin{itemize}
 %   \setlength{\itemsep}{.75\baselineskip}
-  \item Under sparsity conditions: 
+  \item Under sparsity conditions ($\rho \; \propto \; m^{-a} n^{-b}$): 
   $$
   (N_s - \widehat{\Esp}(N_s)) \left/ \sqrt{\widehat{\Var}(N_s)} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
   $$
@@ -174,7 +174,7 @@
   \paragraph{Approach.} Distance-based embedding:
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
-    \item Define a network distance 
+    \item Define a network distance (gathering all motifs)
     \item Use (permutation-based) multivariate analysis of variance to test spatial or temporal effects ('Adonis', \refer{McA01,ZaS06})
   \end{itemize}
 
@@ -207,7 +207,7 @@
   \bigskip \pause
   \paragraph{Network 'distance'} for pollinator imbalance
   $$
-  D^{(g)}(A, B) = \sqrt{\sum_s W_s^2(A, B)}
+  D^{(g)}(A, B) = \sqrt{\sum_s W^{(g)}_s(A, B)^2}
   $$
 
 }
@@ -225,6 +225,7 @@
   \end{tabular}
   }$$
 
+  \bigskip
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
     \item \pause Because of small network sizes, need to correct for the number of insects and plants 

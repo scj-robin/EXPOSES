@@ -83,8 +83,7 @@
   \paragraph{Consequence.}
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
-    \item The model is a regular Hidden Markov Model (HMM)
-    \item With graphical model
+    \item The model is a regular Hidden Markov Model (HMM) with graphical model
     \begin{figure}
       \begin{centering}
         \input{\figcp/Hawkes-HMM-DirectedGM} \\
@@ -147,14 +146,14 @@
     But at the price of a higher computational cost  \goto{back:HawkesClassif}
     \item BIC does not capture the right number of states \\
     \textcolor{gray}{Sequences not simulated according to the model}
-    \item AIC does, with reasonable signal ($\lambda$) and discretization ($N$) \\
+    \item AIC does, when enough signal ($\lambda$) and discretization ($N$) \\
     \textcolor{gray}{Blind to the simulation shift from the model?} \goto{back:HawkesAIC}
 %     \item Clear advantage wrt Poisson HMM.
   \end{itemize} \label{sec:HawkesSimuls}
   
   \bigskip \pause
   \paragraph{Practical recommendations:}
-  Take $N = 2 n$ \quad and \quad use AIC to choose $Q$.
+  Take $N = 2 n$ and use AIC to choose $Q$.
 
 }
     
@@ -172,7 +171,7 @@
   \begin{itemize}
     \item Vigie-chiro project French participatory project to monitor bats echolocation calls (\url{https://www.vigienature.fr/fr/chauves-souris}).
     \item 2354 overnight recordings collected between October 2010 and January 2020 in 755 locations. 
-    \item Restricted to sequences with at least 50 cries $\to$ 1555 time sequences. 
+    \item Restricted to sequences with at least 50 calls $\to$ 1555 time sequences. 
   \end{itemize}
   
   \bigskip \bigskip \pause
@@ -197,6 +196,7 @@
 %====================================================================
 \frame{ \frametitle{An example}
 
+  \paragraph{Conditionally most probable states.} (MAP)
   $$
   \begin{tabular}{ccc}
     Hawkes HMM ($\widehat{Q} = 3$) & \qquad &
@@ -219,7 +219,7 @@
 %====================================================================
 \frame{ \frametitle{States and species}
 
-  The number of bat species was also recorded each night
+  The number of bat species was also recorded each night in each site
   
   $$
   \includegraphics[width=.45\textwidth]{\figchiro/boxplot_species_Coef2_allQ.pdf}
