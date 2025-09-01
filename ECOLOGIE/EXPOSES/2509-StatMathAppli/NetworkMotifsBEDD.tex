@@ -55,8 +55,7 @@
 
   \paragraph{Couting motifs\footnote{Not in the way of the \url{bmotif} package \refer{SSS19}}.} For a given motif $s$ with $p_s$ top nodes and $q_s$ bottom nodes:
   \begin{itemize}
-    \item Choose $p_s$ nodes among $m$ and $q_s$ nodes among $n$;
-    \item \pause Try the \emphase{$r_s$} {\sl automorphisms} = non-redundant permutations
+    \item Determine the \emphase{$r_s$} {\sl automorphisms} = non-redundant permutations
     $$
     \includegraphics[width=.07\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism1}
     \includegraphics[width=.07\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism2}
@@ -65,6 +64,7 @@
     \includegraphics[width=.07\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism5}
     \includegraphics[width=.07\textwidth]{\fignet/FigMotifsBEDD-motif9-automorphism6} 
     $$
+    \item \pause Choose $p_s$ nodes among $m$ and $q_s$ nodes among $n$;
     \item The number of possible 'positions' is then 
     $$
     c_s := 
@@ -96,12 +96,12 @@
   \paragraph{An example.} Consider the motif $s = \includegraphics[width=.06\textwidth, trim=100 200 100 0]{\fignet/FigMotifsBEDD-motif9}$ with $p_s = 2$ and $q_s = 3$, we have
   \begin{align*}
     \overline{\phi}_s
-    & = \int\int\int\int\int \rho^4 g(u_1) g(u_2)^3 h(v_1) h(v_2) h(v_3)^2 \d u_1 \d u_2 \d v_1 \d v_2 \d v_3 \\
+    & = \emphase{\idotsint} \rho^4 g(u_1) g(u_2)^3 h(v_1) h(v_2) h(v_3)^2 \emphase{\d u_1 \d u_2 \d v_1 \d v_2 \d v_3} \\
     & = \left. \left(\int \rho^3 g(u_2)^3 \d u_2\right) \left(\int \rho^2 h(v_3)^2 \d v_3\right) \right/ \rho \qquad \qquad \goto{back:motifProba}  \\
     & = \left. \left(\text{bottom 3-star probability}\right) \times \left(\text{top 2-star probability}\right) \; \right/ \left(\text{edge probability}\right)
   \end{align*} \label{sec:motifProba}
 
-  \bigskip \pause
+  \pause
   \paragraph{A favourable configuration.}
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
@@ -121,7 +121,7 @@
   \begin{itemize}
   \setlength{\itemsep}{.75\baselineskip}
   \item \emphase{Mean:} $\Esp(N_s) = c_s \times \overline{\phi}_s$ 
-  \item \emphase{Variance:} Same game, requires to evaluate ${\Esp(N_s ^2) = \Esp\left(\sum_\alpha \text{match}_{s\alpha} \right)^2}$ \\
+  \item \pause \emphase{Variance:} Same game, requires to evaluate ${\Esp(N_s ^2) = \Esp\left(\sum_\alpha \text{match}_{s\alpha} \right)^2}$ \\
   \ra Need to consider overlaps between positions ({\sl super-motifs}: \refer{PDK08} \goto{back:superMotifs})  \label{sec:motifMoments}
   $$
   \includegraphics[width=.8\textwidth, trim=0 25 0 5, clip=]{\fignet/OLR22-EJS-Fig2}
@@ -138,7 +138,7 @@
   $$
   (N_s - \widehat{\Esp}(N_s)) \left/ \sqrt{\widehat{\Var}(N_s)} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
   $$
-  \item Account for plug-in for moderate network size ($\Delta$-method):
+  \item Account for plug-in when moderate network size ($\Delta$-method):
   $$
   \left(N_s - \widehat{\Esp}(N_s) + \widehat{\Bias}\left(\widehat{\Esp}(N_s)\right)\right) \left/ \sqrt{\widehat{\Var}(N_s - \widehat{\Esp}(N_s))} \right. \quad \overset{m, n \rightarrow \infty}{\longrightarrow} \quad \Ncal(0, 1)
   $$ 
@@ -149,19 +149,19 @@
 %====================================================================
 %====================================================================
 \subsection{Networks comparison in space and time}
-\frame{\frametitle{Networks comparison in space and time} }
+\frame{\frametitle{Model 1: Networks comparison in space and time} }
 %====================================================================
 
 %====================================================================
-\frame{\frametitle{Experimental design} 
+\frame{\frametitle{French plant-pollinator networks} 
 
   Joint work with Natasha de Manincor et Fran\c{c}ois Massol
 
-  \bigskip
+  \bigskip 
   \paragraph{Question.} 
   Does the structure of plant-pollinator network vary in space and time?
   
-  \bigskip \pause
+  \bigskip \bigskip \pause
   \paragraph{Design.} 
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
@@ -170,7 +170,7 @@
     \item $3 \times 2 \times 2 \times 7 \simeq 82$ networks 
   \end{itemize}
 
-  \bigskip \pause
+  \bigskip \bigskip \pause
   \paragraph{Approach.} Distance-based embedding:
   \begin{itemize}
     \setlength{\itemsep}{.75\baselineskip}
@@ -218,7 +218,7 @@
 %   \newcommand{\fignatB}{/home/robin/RECHERCHE/RESEAUX/GOF-Network/Motif_Analysis_Natasha/Article/Figures}
   \newcommand{\tabnat}{/home/robin/RECHERCHE/RESEAUX/EXPOSES/2504-Montpellier/Tables}
   
-  \paragraph{Pollinator imbalance $D^{(g)}$.} Anova table
+  \paragraph{Pollinator imbalance $D^{(g)}$.} Adonis anova table
   $$\small{
   \begin{tabular}{l|rrrrr}
     \input{\tabnat/All_NatashaBinNetList-stat1-adonis-perm99999-adonis2}
