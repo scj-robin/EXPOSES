@@ -1,0 +1,103 @@
+%====================================================================
+%====================================================================
+\section*{Network inference}
+%====================================================================
+
+%====================================================================
+\frame{\frametitle{Species interaction network} 
+
+  \begin{tabular}{cc}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.6\textwidth}}
+      \begin{itemize}
+      \item \bigskip Aim: Understand how species from a same community interact
+      \item \bigskip Network representation = draw an edge between interacting pairs of species
+      \item \pause \bigskip Main issue: Distinguish 
+      \emphase{direct interactions} (predator-prey) from
+      simple \emphase{associations} (two preys of a same predator) 
+      \end{itemize}
+    \end{tabular}
+    &
+    \hspace{-.05\textwidth}
+    \begin{tabular}{ccc}
+      \input{\figlux/Pred-Prey} &
+      & 
+      \input{\figlux/Pred-TwoPreys}
+    \end{tabular}
+  \end{tabular}
+  
+  \pause 
+  \ra Co-occurences or correlations cannot distinguish between the two \refer{PWT19}
+
+  \pause \bigskip \bigskip 
+  \paragraph{Probabilistic translation.}
+  \begin{align*}
+    \text{'network'} & = \text{graph} \\
+    \text{'association'} & = \text{marginal dependance} \\
+    \text{'direct interaction'} & = \text{conditional dependance} 
+  \end{align*}
+}
+
+%====================================================================
+\frame{\frametitle{Network inference}
+
+  \bigskip 
+  \paragraph{Typical dataset at hand.} $n$ sites, $p$ species, 
+  \begin{itemize}
+    \item $x_i =$ environmental description of site $i$, \textcolor{gray}{$t_j =$ traits of species $j$}
+    \item $Y_{ij} =$ abundance (or presence) of species $j$ in site $i$
+  \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Assumption.} 
+  \begin{itemize}
+    \item Species 'direct' interactions are encoded in a network (= a graph) $G$.
+    \item $G$ is the same in all sites.
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Aim.} Retrieve the graph $G$ from the species abundances $Y$ : 
+  $$  
+  \begin{tabular}{c|c|c}
+    {Abundances} $Y$ & 
+    {Covariates} $X$ & 
+    {Inferred network} $G$ \\ 
+    \begin{tabular}{p{.25\textwidth}}
+      {\small \begin{tabular}{rrr}
+        {\sl Hi.pl} & {\sl An.lu} & {\sl Me.ae} \\ \hline
+        31  &   0  & 108 \\
+         4  &   0  & 110 \\
+        27  &   0  & 788 \\
+        13  &   0  & 295 \\
+        23  &   0  &  13 \\
+        20  &   0  &  97 \\
+        $\vdots$ & $\vdots$ & $\vdots$ 
+      \end{tabular}}
+    \end{tabular}
+    & 
+    \begin{tabular}{p{.25\textwidth}}
+      {\small \begin{tabular}{rrr}
+        Lat. & Long. & Depth \\ \hline
+        71.10 & 22.43 & 349 \\
+        71.32 & 23.68 & 382 \\
+        71.60 & 24.90 & 294 \\
+        71.27 & 25.88 & 304 \\
+        71.52 & 28.12 & 384 \\
+        71.48 & 29.10 & 344 \\
+        $\vdots$ & $\vdots$ & $\vdots$ 
+      \end{tabular} }
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth} 
+    \begin{tabular}{p{.3\textwidth}}
+      \hspace{-.1\textwidth} 
+      \begin{tabular}{c}
+        \includegraphics[width=.35\textwidth, trim=0 95 0 60, clip=]{\fignet/network_BarentsFish_Gfull_full60edges}
+      \end{tabular}
+    \end{tabular}
+  \end{tabular}
+  $$
+
+}
+  
+

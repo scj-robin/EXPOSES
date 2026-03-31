@@ -1,0 +1,125 @@
+%====================================================================
+%====================================================================
+\section*{Graphical models}
+%====================================================================
+
+\renewcommand{\pause}{}
+
+%====================================================================
+\subsection*{Directed graphical models}
+%==================================================================
+\frame{\frametitle{A simple (interesting) example}
+
+  $p$ faithful to $D =$
+  $$
+  \input{\figeco/LeftRightChainABC}
+  $$
+  means that
+  $$
+  p(a, b, c) = p(a) \; p(b \mid a) \; p(c \mid a) 
+  $$ \pause
+
+  \bigskip \bigskip
+  $p$ is also faithful to $D' =$
+  $$
+  \input{\figeco/RightLeftChainABC} 
+  $$
+  \pause and to $D'' =$
+  $$
+  \input{\figeco/AwayFromCenterABC}
+  $$
+  \pause but not to $D''' =$
+  $$
+  \input{\figeco/HeadToHeadABC}
+  $$  
+}
+  
+%====================================================================
+\frame{\frametitle{Interpretability?}
+
+  \paragraph{Theorem \refer{Pea09}.} 
+  Two DAGs are Markov equivalent (i.e. induce the same conditional dependences and independences) if they have the \emphase{same skeleton} (i.e. the same undirected edges) and the \emphase{same V-structures}.
+
+  \bigskip \bigskip \pause
+  \paragraph{Example.}
+  \begin{center}  
+  \begin{tabular}{c|cc|cc}
+  $D$ &
+  \multicolumn{2}{c|}{Equivalent to $D$} &
+  \multicolumn{2}{c}{Not equivalent to $D$} \\
+  (\textcolor{red}{V-stuctures}) & & & & \\ 
+%   & & & & \\ \hline & & & & \\ 
+  \hline
+  $\footnotesize{\input{\figeco/DAG6nodes-vtruct}}$ \pause &
+  $\footnotesize{\input{\figeco/DAG6nodes-vtruct-equiv1}}$ &
+  $\footnotesize{\input{\figeco/DAG6nodes-vtruct-equiv2}}$ \pause &
+  $\footnotesize{\input{\figeco/DAG6nodes-vtruct-notequiv1}}$ &
+  $\footnotesize{\input{\figeco/DAG6nodes-vtruct-notequiv2}}$ 
+  \end{tabular}
+  \end{center}
+  (Not speaking of possibly missing nodes)
+}
+
+%==================================================================
+\subsection*{Gaussian graphical models}
+%==================================================================
+\frame{\frametitle{Regression point of view}
+
+  \paragraph{Similarly to temporal networks,} finding the neighbors of a node is equivalent to find its 'parents' in a regression:
+  $$
+  Y_{ik} = \sum_{j \neq k} \beta_{jk} Y_{ij} + E_{ik}.
+  $$
+  \ra Requires a testing procedure \refer{VeV09} or a penalization \refer{MeB06} to determine non-zero coefficients
+
+  \bigskip \bigskip \pause
+  \paragraph{Remarks.}
+  \begin{itemize}
+   \item Regression needs reconciliation when $\widehat{\beta}_{jk} = 0$ and $\widehat{\beta}_{jk} \neq 0$ 
+   \item \refer{Ver12} provides bounds for the recovery of the list of neighbors: let $k =$ degree of a given node 
+   \begin{align*}
+    k \log(p/k) & \leq n & & \text{possible recovery} \\
+    k \log(p/k) & > n \log n & & \text{impossible recovery}
+   \end{align*}
+  \end{itemize}
+}
+
+%==================================================================
+\frame{\frametitle{GGM's nice property: More formally}
+
+  \paragraph{If $Y \sim \Ncal(0, \Sigma)$,} then
+  \begin{align*}
+  p(Y) & \propto \exp\left(-\frac12 \|Y\|^2_{\Sigma^{-1}} \right)\\
+  & = \exp\left(-\frac12 \sum_{j, k} \omega_{jk} Y_j Y_k\right)  
+  & & \text{where } \Omega = [\omega_{jk}] = \Sigma^{-1} \\
+  & = \prod_{j, k} \underset{\phi_{jk}(Y_j, Y_k)}{\underbrace{\exp\left(-\frac12 \omega_{jk} Y_j Y_k\right)}}
+  \end{align*}
+
+  \bigskip \pause
+  \begin{itemize}
+   \item The non-zeros of $\Omega$ correspond to the edges of $G$
+   \item Furthermore:
+   $$
+   - \omega_{jk} \; \propto \; 
+   \rho\left(Y_j, Y_k \mid Y_{\{j, k\}}\right)
+   = \text{ \emphase{'partial'} correlation}
+   $$
+  \end{itemize}
+  
+}
+
+
+%====================================================================
+%====================================================================
+\section*{Network inference from count data}
+%====================================================================
+
+%====================================================================
+%====================================================================
+\section*{Extensions}
+%====================================================================
+
+%====================================================================
+\subsection*{Missing actors}
+%====================================================================
+\frame{\frametitle{Missing actors}
+}

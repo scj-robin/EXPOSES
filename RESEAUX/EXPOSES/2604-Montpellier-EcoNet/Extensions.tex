@@ -1,0 +1,86 @@
+%====================================================================
+%====================================================================
+\section{Some extensions}
+%====================================================================
+
+%====================================================================
+\subsection{Missing actors}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%====================================================================
+\frame{\frametitle{Missing actors}
+
+  \paragraph{Incomplete observations.} Most of the time, not all actors (species, environmental covariate, ...) are observed
+  
+  \bigskip \bigskip 
+  \paragraph{Missing variable = marginalisation.} 
+  \begin{center}
+  \begin{tabular}{ccccc}
+    $B \independent C \mid A$ & & $A$ missing & & $B \not\independent C$ \\
+    \begin{tabular}{c}
+    $\input{\figeco/MissingNode-GM}$
+    \end{tabular}
+    & \qquad \qquad &
+    \begin{tabular}{c}
+    $\input{\figeco/MissingNode-Amissing-GM}$
+    \end{tabular}
+    & \qquad \qquad &
+    \begin{tabular}{c}
+    $\input{\figeco/MissingNode-Amissing-marginal}$
+    \end{tabular}
+  \end{tabular}
+  \end{center}
+  
+  \bigskip
+  \begin{itemize}
+    \item Remove the missing node and all its edges
+    \item Connect all its neighbors with each other.
+  \end{itemize}
+
+  
+%   \bigskip
+%   \paragraph{Indeed:}
+%   $$
+%   p(a, b, c) = p(a) p(b \mid a) p(c \mid a)
+%   $$
+%   but $A$ is not observed, so only $p(b, c)$ can be considered:
+%   $$
+%   p(b, c) = \sum_a p(a, b, c) = \sum_a p(\emphase{a}) p(b \mid \emphase{a}) p(c \mid \emphase{a}) \neq p(b) p(c)
+%   $$
+
+}
+
+%====================================================================
+\frame{\frametitle{'Spurious' edges}
+
+  Possibly dramatic effect on the observable dependency structure:
+  \begin{center}
+  \begin{tabular}{ccccc}
+    'Truth' && $C$ missing && $D$ missing \\
+    \begin{tabular}{c}
+    $\footnotesize{\input{\figeco/GM6nodes}}$
+    \end{tabular}
+    & \qquad \qquad &
+    \begin{tabular}{c}
+    $\footnotesize{\input{\figeco/GM6nodes-Cmissing-marginal}}$
+    \end{tabular}
+    & \qquad \qquad &
+    \begin{tabular}{c}
+    $\footnotesize{\input{\figeco/GM6nodes-Dmissing-marginal}}$
+    \end{tabular}
+  \end{tabular}
+  \end{center}
+  
+  \bigskip
+  \ra Need to account for 'all' available information to avoid 'spurious' edges
+
+}
+
+%====================================================================
+\subsection{Temporal data}
+%====================================================================
+
+%====================================================================
+\subsection{Edge prediction}
+%====================================================================
+
+

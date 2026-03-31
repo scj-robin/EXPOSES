@@ -1,0 +1,401 @@
+%====================================================================
+%====================================================================
+\section{Graphical models}
+\frame{\frametitle{Outline} \tableofcontents[currentsection]}
+%==================================================================
+
+%==================================================================
+\frame{ \frametitle{Statistical model}
+
+  \paragraph{Observed data.} The adundance vector in site $i$:
+  $$
+  y_i = [y_{i1} \dots y_{ij} \dots y_{im}]
+  $$
+  is seen as a realisation of a random vector
+  $$
+  Y = [Y_1 \dots Y_j \dots Y_m]
+  $$
+
+  \bigskip \pause
+  \paragraph{Statistical model.} 
+  $$
+  Y_i \sim p \quad \text{= joint distribution: } p(y_1, \dots, y_j, \dots, y_m)
+  $$
+
+  \bigskip \bigskip \pause
+  \paragraph{Where is the network (graph)?} \\ ~
+  \begin{itemize}
+    \item The graph $G$ has to be encoded in the distribution $p$ in some way \\ ~
+    \item \emphase{Graphical models} establish a formal connexion between $p$ and $G$
+  \end{itemize}
+
+}
+
+%==================================================================
+\frame{\frametitle{Graphical models} 
+
+  \bigskip
+  \paragraph{'Interaction':} 
+  need for a probabilistic counterpart for this concept
+
+  \bigskip 
+  \paragraph{Translation:} 
+  $$
+  \text{species interactions} 
+  := 
+  \text{dependency structure of a set of random variables}
+  $$
+  
+  \pause\bigskip
+  \begin{tabular}{lll}
+    \paragraph{Graphical models:} &
+    {Directed} ~ &
+    {Undirected} ~ \\
+    \begin{tabular}{p{0.3\textwidth}} A generic \\ framework \\ \refer{Lau96,WaJ08} \end{tabular}
+    & 
+    \begin{tabular}{p{0.3\textwidth}} \footnotesize{\input{\figeco/DAG6nodes}} \end{tabular}
+    & 
+    \begin{tabular}{p{0.3\textwidth}} \footnotesize{\input{\figeco/GM6nodes}} \end{tabular}
+    \end{tabular}
+  }
+
+
+%====================================================================
+\subsection{Directed graphical models}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%==================================================================
+\frame{\frametitle{A reminder in probability}
+
+\paragraph{Two random variables $A$ and $B$.}
+\begin{align*}
+  \text{Joint distribution:} & & 
+  p(a, b) & = \Pr\{A=a, B=b\} \\ 
+  \text{Marginal distribution:} & & 
+  p(a) & = \Pr\{A=a\} = \sum_{b \in \Bcal} p(a, b) \\ 
+  \text{Conditional distribution:} & & 
+  p(b \mid a) & = \Pr\{B=b \mid A=a\} = \displaystyle{\frac{p(a, b)}{p(b)}}
+\end{align*}
+
+\bigskip \bigskip \pause
+\paragraph{Factorisation.}
+As a consequence:
+\begin{align*}
+p(a, b) 
+& = p(a) \; p(b \mid a) & & \text{'$A$, then $B$ given $A$'} & & A \to B \\ 
+\\
+& = p(b) \; p(a \mid b) & & \text{'$B$, then $A$ given $B$'} & & B \to A
+\end{align*}
+% \pause
+% so
+% \begin{align*}
+% p(a, b, c, d) 
+% & = p(a) \; p(b \mid a) \; p(c \mid a, b) \; p(d \mid a, b, c) & & (\text{'$A \to B \to C \to D$'}) \\ \pause
+% & = p(d) \; p(c \mid d) \; p(b \mid c, d) \; p(a \mid b, c, d) & & (\text{'$A, B, C, D$'})  \\ \pause
+% & = p(b) \; p(c \mid b) \; p(a \mid b, c) \; p(d \mid a, b, c) \\
+% & = \dots
+% \end{align*}
+
+}
+
+%==================================================================
+\frame{\frametitle{Directed graphs = Bayesian networks}
+
+  \paragraph{Definition.} Let $D$ be a \emphase{directed acyclic graph} (DAG), the distribution $p$ is said to factorize in $D$ iff
+  $$
+  p(a_1, \dots a_m) = \prod_{j=1}^m p(a_j \mid a_{pa_D(j)})
+  $$
+  where $pa_D(i)$ stands for the set of parents of $i$ in $D$.
+
+  \pause
+  $$
+  \begin{tabular}{cc}
+    \begin{tabular}{c}
+    $\footnotesize{\input{\figeco/DAG6nodes}}$
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+      \begin{eqnarray*}
+        pa_D(A) = \emptyset, & & pa_D(D) = \{B, C\} \\
+        \\
+        p(a, \dots f) & = 
+        & p(a) \; p(b \mid a) \; p(c \mid a) \\
+        & & p(d \mid b, c) \; p(e \mid d) \\
+        & & p(f \mid b, d)
+      \end{eqnarray*}
+      \\
+      See \refer{SWA17} for an introduction in ecology
+    \end{tabular}
+  \end{tabular}
+  $$
+  
+}
+
+%==================================================================
+\frame{\frametitle{A simple (interesting) example}
+
+  Consider $D =$
+  $$
+  \input{\figeco/LeftRightChainABC}
+  $$
+  $p(a, b, c)$ is faithful to $D$ iff
+  $$
+  p(a, b, c) = p(a) \; p(b \mid a) \; p(c \mid a) 
+  $$ \pause
+  But
+  \begin{align*}
+   p(a) \; p(b \mid a) \; p(c \mid b) 
+   & = p(a \mid b) \; p(b \mid c) \; p(c) 
+  \end{align*}
+  so $p$ is also faithful to $D' =$
+  $$
+  \input{\figeco/RightLeftChainABC} 
+  $$
+  \pause and to $D'' =$
+  $$
+  \input{\figeco/AwayFromCenterABC}
+  $$
+  
+  \bigskip \pause
+  \paragraph{Conclusions.} 
+  \begin{itemize}
+   \item $p(a, b, c, \dots)$ is not enough to retrieve the edge orientations
+   \item No causal interpretation (causality not addressed here, see \refer{Pea09,Pea09b})
+  \end{itemize}
+}
+  
+%====================================================================
+\subsection{Undirected graphical models}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%==================================================================
+\frame{\frametitle{Undirected graphs = Markov random fields}
+
+  \paragraph{Definition.} Let $G$ be an {\sl undirected graph}, the distribution $p$ is said to factorize in $G$ iff
+  $$
+  p(a_1, \dots a_m) \; \propto \prod_{C \in \Ccal(G)} \psi_C(a_C).
+  $$
+  where $\Ccal(G)$ is the set of maximal cliques of $G$
+
+  \pause
+  $$
+  \begin{tabular}{cc}
+    \begin{tabular}{c}
+    $\footnotesize{\input{\figeco/GM6nodes}}$
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+      \begin{eqnarray*}
+%         p(a, \dots g) & \propto 
+%         & \psi_1(a, b, c) \; \psi_2(a, b, d) \; \psi_3(a, c, d) \; \psi_4(b, c, d) \\
+%         & & \psi_5(d, e, f) \; \psi_6(f, g) \\\pause
+%       \text{but also} \qquad \\
+        p(a, \dots f) & \propto 
+        & \psi_1(a, b, c) \\
+        & & \times \; \psi_2(b, c, d) \\
+        & & \times \; \psi_3(b, d, f) \\ 
+        & & \times \; \psi_4(d, e) 
+      \end{eqnarray*}
+%       \ra Only consider \emphase{maximal} cliques
+    \end{tabular}
+  \end{tabular}
+  $$
+}
+
+%====================================================================
+\frame{\frametitle{Conditional independence}
+
+  \paragraph{Property.} If $p(a, b, c, \dots) > 0$, 
+  $$
+  \text{separation} \qquad \Leftrightarrow \qquad \text{conditional independence}
+  $$
+
+  \pause
+  $$
+  \begin{tabular}{ccc}
+    \hspace{.1\textwidth} 
+    &
+    \begin{tabular}{c}
+    $\footnotesize{\input{\figeco/GM6nodes}}$
+    \end{tabular}
+    &
+    \begin{tabular}{p{.7\textwidth}}
+    \begin{itemize}
+     \item $(A, F)$ dependent \\ ~
+     \item $(A, F)$ dependent given $B$ \\ ~
+     \item $(A, F)$ independent given $\{B, C\}$ \\ ~
+     \item $\{A, B, C\}$ independent from $E$ given $D$ 
+    \end{itemize}
+    \end{tabular}
+  \end{tabular}
+  $$
+  
+  \bigskip
+  \ra Inferring $G$ = Inferring conditional independences
+}
+  
+%====================================================================
+\subsection{Gaussian graphical models}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%====================================================================
+\frame{\frametitle{Gaussian graphical models (GGM)}
+
+  \paragraph{Gaussian setting.} Suppose we observe an 'abundance' vector $Y = (Y_1 \dots Y_m)$ and assume that
+  $$
+  Y \sim \Ncal_m(\mu, \Sigma)
+  $$
+  \begin{itemize}
+   \item $\mu = (m \times 1)$ vector of mean 'abundances'
+   \item $\Sigma = (m \times m)$ covariance matrix:
+   $$
+   \sigma_{jj} = \sigma_j^2 = \Var(Y_j), \qquad
+   \sigma_{jk} = \Cov(Y_j, Y_k), \qquad
+   \rho_{jk} = \frac{\sigma_{jk}}{\sigma_j \; \sigma_k}
+   $$
+  \end{itemize}
+
+  \bigskip \pause
+  \paragraph{Property.} For species $j$ and $k$:
+  $$
+  \text{null correlation} \quad \Leftrightarrow \qquad
+  \text{null covariance} \quad \Leftrightarrow \qquad
+  \text{independence} 
+  $$
+  i.e.
+  $$
+  \sigma_{jk} = 0 
+  \quad \Leftrightarrow \qquad 
+  \rho_{jk} = 0 
+  \quad \Leftrightarrow \qquad 
+  Y_j \independent Y_k 
+  \pause \emphase{\text{ marginally}}
+  $$
+}
+
+%==================================================================
+\frame{\frametitle{A nice property of GGM's}
+
+  $$
+  \begin{tabular}{cc}
+    \begin{tabular}{p{.4\textwidth}}
+    $\footnotesize{\input{\fignet/FigGGM-4nodes}}$     
+%     \hspace{-.15\textwidth}
+%     \includegraphics[width=.6\textwidth]{\fignet/FigGGM-4nodes}
+    \end{tabular}
+    & 
+    \hspace{-.15\textwidth}
+    \begin{overprint}
+    \onslide<2>
+    \begin{tabular}{p{.5\textwidth}}
+	 \paragraph{Graphical model.}
+	 $$
+	 G = \left[ \begin{array}{cccc}
+	 0 & 1 & 1 & \emphase{0} \\
+	 1 & 0 & 1 & \emphase{0} \\
+	 1 & 1 & 0 & 1 \\
+	 \emphase{0} & \emphase{0} & 1 & 0 
+	 \end{array} \right]
+	 $$
+	 \bigskip
+	 \begin{itemize}
+     \setlength{\itemsep}{1.5\baselineskip}
+	   \item Connected
+	   \item $C$ separates $D$ from ($A, B$)
+	 \end{itemize}
+    \end{tabular} 
+    \onslide<3>
+    \begin{tabular}{p{.5\textwidth}}
+	 \paragraph{Covariance matrix.}
+	 $$
+	 \Sigma \propto \left[ \begin{array}{cccc}
+	   1 & -.25 & -.41 &  \emphase{.25} \\
+	   -.25 &  1 & -.41 &  \emphase{.25} \\
+	   -.41 & -.41 &  1 & -.61 \\
+	   \emphase{.25} &  \emphase{.25} & -.61 &  1
+	   \end{array} \right] 
+	 $$
+	 \bigskip
+	 \begin{itemize}
+	  \item No zero because $G$ is Connected
+	 \end{itemize}
+    \end{tabular} 
+    \onslide<4>
+    \begin{tabular}{p{.5\textwidth}}
+	 \paragraph{Inverse covariance matrix.}
+	 $$
+	 \Sigma^{-1} \propto \left[ \begin{array}{cccc}
+	   1 & .5 & .5 & \emphase{0} \\
+	   .5 & 1 & .5 & \emphase{0} \\
+	   .5 & .5 & 1 & .5 \\
+	   \emphase{0} & \emphase{0} & .5 & 1
+	   \end{array} \right] 
+	 $$
+	 \bigskip
+	 \begin{itemize}
+     \setlength{\itemsep}{1.5\baselineskip}
+     \item 0's at (1, 4) and (2, 4)
+     \item Conditional independence
+     \item $\Omega := \Sigma^{-1} =$ \emphase{precision} matrix
+	 \end{itemize}
+    \end{tabular} 
+    \onslide<5>
+    \begin{tabular}{p{.5\textwidth}}
+	 \paragraph{Estimated inverse covariance matrix.}
+	 $$
+	 \widehat{\Omega} \propto \left[ \begin{array}{cccc}
+	   1 & .48 & .61 & \emphase{.09} \\
+	   .48 & 1 & .67 & \emphase{.06} \\
+	   .61 & .67 & 1 & .46 \\
+	   \emphase{.09} & \emphase{.06} & .46 & 1
+	   \end{array} \right] 
+	 $$
+	 ($n = 100$)
+	 \bigskip
+	 \begin{itemize}
+     \setlength{\itemsep}{1.5\baselineskip}
+	  \item No 'true zero' in the estimate
+	  \item Need to 'force' zeros to appear
+	 \end{itemize}
+    \end{tabular} 
+    \end{overprint}
+  \end{tabular}
+  $$
+
+}
+
+%==================================================================
+\frame{\frametitle{Network inference}
+
+  \paragraph{Aim.} Given a series of iid 'abundance' vectors $Y_1, \dots Y_n$, find the graph $G$ that best fits the distribution of the $Y_i$'s.
+
+  \bigskip \pause
+  \paragraph{A huge search space:}
+  $$
+  \includegraphics[trim=50 50 0 75, height=.45\textheight, clip]{\fignet/NbGraphs2}
+  $$
+  Number of \textcolor{red}{directed acyclic graphs} (no close form), \textcolor{darkgreen}{undirected graphs} ($2^{m(m-1)/2}$), \textcolor{blue}{spanning trees} ($m^{m-2}$)
+  
+  \bigskip
+  $\to$ Need for efficient algorithms / heuristics
+
+}
+
+%==================================================================
+\frame{\frametitle{Making $\Omega$ sparse}
+
+  \paragraph{Graphical lasso \refer{FHT08}.} Penalized likelihood:
+  $$
+  \max_{\mu, \Omega} \quad \underset{\text{\footnotesize{log-likelihood}}}{\underbrace{\log p(Y; \mu, \Omega)}} - \underset{\text{\footnotesize{penalization}}}{\underbrace{\lambda \sum_{j < k} |\omega_{jk}|}}
+  $$
+  the '$\ell_1$' penalty ($|\omega_{jk}|$) forces some $\omega_{jk}$ to be zero. \\ ~
+  
+  $\to$ Turns out to be a convex problem, so fast solutions exists ({\tt huge} R package)
+  
+  \bigskip \bigskip \pause
+  \paragraph{Alternatives.}
+  \begin{itemize}
+   \item Other forms of penalties ($\ell_1$, $\ell_2$, combinations) induces other topologies
+   \item Ex.: \refer{ACM09} induce clustered networks.
+   \item Mixture of tree-shaped distributions: \refer{MeJ06,Kir07,JFS16,ScR17,MRA19}
+   \item ...
+  \end{itemize}
+}
+

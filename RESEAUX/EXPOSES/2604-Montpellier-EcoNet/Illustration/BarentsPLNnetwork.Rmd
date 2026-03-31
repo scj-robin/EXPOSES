@@ -1,0 +1,88 @@
+---
+title: "Poisson log-normal model for fish species: network inference"
+author: S. Robin
+date: nov 2021
+output: html_document
+# output: pdf_document
+# geometry: margin=1.5cm
+# classoption: a4paper
+---
+
+## Data
+
+```{r data, echo=TRUE}
+rm(list=ls())
+data <- read.table("BarentsFish.csv", header=TRUE, sep=';')
+dataName <- 'BarentsFish'
+rownames(data) <- data[, 1]; data <- data[, -1]
+X <- as.matrix(data[, 1:4]); Y <- as.matrix(data[, 5:ncol(data)])
+n <- nrow(Y); m <- ncol(Y); d <- ncol(X)
+print(head(X))
+print(head(Y[, 1:10]))
+```
+
+## Fitting PLN model
+
+#### Diagonal covariance matrix
+
+No interaction: $\Omega$ and $\Sigma$ diagonal
+
+```{r plnDiag, echo=TRUE, message=FALSE}
+library(PLNmodels)
+plnDiag <- PLN(Y ~ X, control=PLN_param(trace=0, covariance='diagonal'))
+plnDiagCrit <- c(unlist(plnDiag$criteria), c(n_edges=0, EBIC=plnDiag$criteria$BIC, pen_loglik=plnDiag$criteria$loglik, density=0))
+print(plnDiagCrit)
+```
+
+#### Full covariance matrix
+
+All interactions: $\Omega$ and $\Sigma$ full
+
+```{r plnFull, echo=TRUE, message=FALSE}
+plnFull <- PLN(Y ~ X, control=PLN_param(trace=0, covariance='full'))
+plnFullCrit <- c(unlist(plnFull$criteria), c(n_edges=m*(m-1)/2, EBIC=plnFull$criteria$BIC, pen_loglik=plnFull$criteria$loglik, density=1))
+print(plnFullCrit)
+```
+
+## Species network inference
+
+Few interactions: $\Omega$ sparse
+
+```{r net0, echo=TRUE, message=FALSE}
+plnNet <- PLNnetwork(Y ~ X, control=PLNnetwork_param(trace=0))
+plot(plnNet)
+```
+
+Extending the grid for the penalty parameter $\lambda$
+
+```{r net1, echo=TRUE, message=FALSE}
+lambda <- max(plnNet$penalties)^(seq(-5, 1, length.out=50))
+plnNet <- PLNnetwork(Y ~ X, penalties=lambda, control=PLNnetwork_param(trace=0))
+plot(plnNet)
+```
+
+## A first network
+
+```{r netBic, echo=TRUE, message=FALSE}
+netBic <- plnNet$getBestModel(crit='BIC')
+print(netBic$criteria)
+plot(netBic)
+```
+
+## Stability selection
+
+```{r netStab, echo=TRUE, message=FALSE}
+stability_selection(plnNet)
+netStab <- plnNet$getBestModel(crit='StARS')
+print(netStab$criteria)
+plot(netStab)
+```
+
+## Model comparison
+
+```{r compar, echo=TRUE, message=FALSE}
+print(rbind(plnDiag = plnDiagCrit, 
+            plnFull = plnFullCrit,
+            netBic = netBic$criteria, 
+            netStab = netStab$criteria))
+```
