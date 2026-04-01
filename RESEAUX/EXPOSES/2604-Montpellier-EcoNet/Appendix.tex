@@ -107,11 +107,64 @@
   
 }
 
+%==================================================================
+\frame{\frametitle{Regression point of view}
+
+  \paragraph{Similarly to temporal networks,} finding the neighbors of a node is equivalent to find its 'parents' in a regression:
+  $$
+  Y_{ik} = \sum_{j \neq k} \beta_{jk} Y_{ij} + E_{ik}.
+  $$
+  \ra Requires a testing procedure \refer{VeV09} or a penalization \refer{MeB06} to determine non-zero coefficients
+
+  \bigskip \bigskip \pause
+  \paragraph{Remarks.}
+  \begin{itemize}
+   \item Regression needs reconciliation when $\widehat{\beta}_{jk} = 0$ and $\widehat{\beta}_{jk} \neq 0$ 
+   \item \refer{Ver12} provides bounds for the recovery of the list of neighbors: let $k =$ degree of a given node 
+   \begin{align*}
+    k \log(p/k) & \leq n & & \text{possible recovery} \\
+    k \log(p/k) & > n \log n & & \text{impossible recovery}
+   \end{align*}
+  \end{itemize}
+}
 
 %====================================================================
 %====================================================================
 \section*{Network inference from count data}
 %====================================================================
+
+%====================================================================
+\subsection*{Network inference under the PLN model}
+%====================================================================
+\frame{\frametitle{Network inference under the PLN model}
+
+  \paragraph{All latent (GGM) models} infer the dependency struture of the latent $Z$, not of the observed abundances $Y$
+  
+  \bigskip \bigskip 
+  \renewcommand{\nodesize}{2em}
+  \begin{overprint}
+    \onslide<2>
+    $$
+    \begin{array}{ccc}
+    p(Z, Y) & & p(Y) \\ ~\\
+    \input{\fignet/CMR18b-Fig1c}
+    & \qquad \qquad &
+    \input{\fignet/CMR18b-Fig1d}
+    \end{array}
+    $$
+    \onslide<3>
+    $$
+    \begin{array}{ccc}
+    p(Z, Y) & & p(Y) \\ ~\\
+    \input{\fignet/CMR18b-Fig1a}
+    & \qquad \qquad &
+    \input{\fignet/CMR18b-Fig1b}
+    \end{array}
+    $$
+  \end{overprint}
+  \renewcommand{\nodesize}{\commonnodesize}
+}
+
 
 %====================================================================
 %====================================================================
@@ -122,4 +175,30 @@
 \subsection*{Missing actors}
 %====================================================================
 \frame{\frametitle{Missing actors}
+
+  \bigskip
+  \paragraph{Barents'sea dataset.} Based on tree-shaped network inference
+  
+  \begin{center}
+  \begin{tabular}{m{.2\textwidth}m{.3\textwidth}cm{.3\textwidth}}
+    \hspace{-.04\textwidth}
+    & Infered network \refer{MRA20} & &
+    Infered missing actor \refer{MRA21} 
+    \\ 
+    Adjacency matrix
+    & 
+    \includegraphics[width=.3\textwidth, trim=0 220 200 0, clip=]{\fignet/MRA21-JRSSC-Fig7}
+    & \qquad &
+    \hspace{-.02\textwidth}
+    \includegraphics[width=.3\textwidth, trim=200 220 0 0, clip=]{\fignet/MRA21-JRSSC-Fig7}
+    \\
+    Network
+    & 
+    \includegraphics[width=.3\textwidth, trim=0 0 200 200, clip=]{\fignet/MRA21-JRSSC-Fig7}
+    & \qquad &
+    \hspace{-.02\textwidth}
+    \includegraphics[width=.3\textwidth, trim=200 0 0 200, clip=]{\fignet/MRA21-JRSSC-Fig7}
+  \end{tabular}
+  \end{center}
+
 }

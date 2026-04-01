@@ -73,7 +73,7 @@
   \text{Marginal distribution:} & & 
   p(a) & = \Pr\{A=a\} = \sum_{b \in \Bcal} p(a, b) \\ 
   \text{Conditional distribution:} & & 
-  p(b \mid a) & = \Pr\{B=b \mid A=a\} = \displaystyle{\frac{p(a, b)}{p(b)}}
+  p(b \mid a) & = \Pr\{B=b \mid A=a\} = \displaystyle{\frac{p(a, b)}{p(a)}}
 \end{align*}
 
 \bigskip \bigskip \pause
@@ -107,7 +107,7 @@ p(a, b)
   where $pa_D(i)$ stands for the set of parents of $i$ in $D$.
 
   \pause
-  $$
+  \begin{center}
   \begin{tabular}{cc}
     \begin{tabular}{c}
     $\footnotesize{\input{\figeco/DAG6nodes}}$
@@ -126,7 +126,7 @@ p(a, b)
       See \refer{SWA17} for an introduction in ecology
     \end{tabular}
   \end{tabular}
-  $$
+  \end{center}
   
 }
 
@@ -176,7 +176,7 @@ p(a, b)
   where $\Ccal(G)$ is the set of maximal cliques of $G$
 
   \pause
-  $$
+  \begin{center}
   \begin{tabular}{cc}
     \begin{tabular}{c}
     $\footnotesize{\input{\figeco/GM6nodes}}$
@@ -197,7 +197,9 @@ p(a, b)
 %       \ra Only consider \emphase{maximal} cliques
     \end{tabular}
   \end{tabular}
-  $$
+  \end{center}
+
+
 }
 
 %====================================================================
@@ -209,7 +211,7 @@ p(a, b)
   $$
 
   \pause
-  $$
+  \begin{center}
   \begin{tabular}{ccc}
     \hspace{.1\textwidth} 
     &
@@ -226,7 +228,8 @@ p(a, b)
     \end{itemize}
     \end{tabular}
   \end{tabular}
-  $$
+  \end{center}
+
   
   \bigskip
   \ra Inferring $G$ = Inferring conditional independences
@@ -273,7 +276,6 @@ p(a, b)
 %==================================================================
 \frame{\frametitle{A nice property of GGM's}
 
-  $$
   \begin{tabular}{cc}
     \begin{tabular}{p{.4\textwidth}}
     $\footnotesize{\input{\fignet/FigGGM-4nodes}}$     
@@ -357,7 +359,6 @@ p(a, b)
     \end{tabular} 
     \end{overprint}
   \end{tabular}
-  $$
 
 }
 
@@ -371,7 +372,8 @@ p(a, b)
   $$
   \includegraphics[trim=50 50 0 75, height=.45\textheight, clip]{\fignet/NbGraphs2}
   $$
-  Number of \textcolor{red}{directed acyclic graphs} (no close form), \textcolor{darkgreen}{undirected graphs} ($2^{m(m-1)/2}$), \textcolor{blue}{spanning trees} ($m^{m-2}$)
+  Number of \textcolor{red}{directed acyclic graphs} (no close form), \textcolor{darkgreen}{undirected graphs} ($2^{m(m-1)/2}$), \textcolor{blue}{spanning trees} ($m^{m-2}$).
+  $x$-axis: $m =$ number of species.
   
   \bigskip
   $\to$ Need for efficient algorithms / heuristics
@@ -385,17 +387,21 @@ p(a, b)
   $$
   \max_{\mu, \Omega} \quad \underset{\text{\footnotesize{log-likelihood}}}{\underbrace{\log p(Y; \mu, \Omega)}} - \underset{\text{\footnotesize{penalization}}}{\underbrace{\lambda \sum_{j < k} |\omega_{jk}|}}
   $$
-  the '$\ell_1$' penalty ($|\omega_{jk}|$) forces some $\omega_{jk}$ to be zero. \\ ~
+  the $\ell_1$ penalty ('lasso') forces some $\omega_{jk}$ to be zero. \\ ~
   
-  $\to$ Turns out to be a convex problem, so fast solutions exists ({\tt huge} R package)
-  
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}
+    \item The higher $\lambda$, the sparser the network
+    \item Turns out to be a convex problem, so fast solutions exists ({\tt huge} R package)
+  \end{itemize}
+
   \bigskip \bigskip \pause
   \paragraph{Alternatives.}
   \begin{itemize}
+   \item Regression viewpoint (see appendix) 
+   \item Mixture of tree-shaped distributions: \refer{MeJ06,Kir07,JFS16,ScR17,MRA19}
    \item Other forms of penalties ($\ell_1$, $\ell_2$, combinations) induces other topologies
    \item Ex.: \refer{ACM09} induce clustered networks.
-   \item Mixture of tree-shaped distributions: \refer{MeJ06,Kir07,JFS16,ScR17,MRA19}
-   \item ...
   \end{itemize}
 }
 

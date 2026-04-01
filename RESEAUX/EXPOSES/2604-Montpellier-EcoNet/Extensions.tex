@@ -9,44 +9,61 @@
 %====================================================================
 \frame{\frametitle{Missing actors}
 
+  \bigskip
   \paragraph{Incomplete observations.} Most of the time, not all actors (species, environmental covariate, ...) are observed
   
-  \bigskip \bigskip 
+  \bigskip 
   \paragraph{Missing variable = marginalisation.} 
-  \begin{center}
-  \begin{tabular}{ccccc}
-    $B \independent C \mid A$ & & $A$ missing & & $B \not\independent C$ \\
-    \begin{tabular}{c}
-    $\input{\figeco/MissingNode-GM}$
-    \end{tabular}
-    & \qquad \qquad &
-    \begin{tabular}{c}
-    $\input{\figeco/MissingNode-Amissing-GM}$
-    \end{tabular}
-    & \qquad \qquad &
-    \begin{tabular}{c}
-    $\input{\figeco/MissingNode-Amissing-marginal}$
-    \end{tabular}
-  \end{tabular}
-  \end{center}
-  
-  \bigskip
   \begin{itemize}
-    \item Remove the missing node and all its edges
+    \item Remove the missing node and all edges connected to it.
     \item Connect all its neighbors with each other.
   \end{itemize}
-
   
-%   \bigskip
-%   \paragraph{Indeed:}
-%   $$
-%   p(a, b, c) = p(a) p(b \mid a) p(c \mid a)
-%   $$
-%   but $A$ is not observed, so only $p(b, c)$ can be considered:
-%   $$
-%   p(b, c) = \sum_a p(a, b, c) = \sum_a p(\emphase{a}) p(b \mid \emphase{a}) p(c \mid \emphase{a}) \neq p(b) p(c)
-%   $$
-
+  \begin{center}
+  \begin{tabular}{ccccc}
+    \begin{tabular}{c}
+      $B \independent C \mid A$  \\
+      $\input{\figeco/MissingNode-GM}$
+    \end{tabular}
+    & \qquad \qquad & \pause
+    \begin{tabular}{c}
+      $A$ missing \\
+      $\input{\figeco/MissingNode-Amissing-GM}$
+    \end{tabular}
+    & \qquad \qquad & \pause
+    \begin{tabular}{c}
+      $B \not\independent C$ \\
+      $\input{\figeco/MissingNode-Amissing-marginal}$
+    \end{tabular}
+  \end{tabular}    
+%   \begin{tabular}{ccccc}
+%     $B \independent C \mid A$ & & $A$ missing & & $B \not\independent C$ \\
+%     \begin{tabular}{c}
+%     $\input{\figeco/MissingNode-GM}$
+%     \end{tabular}
+%     & \qquad \qquad &
+%     \begin{tabular}{c}
+%     $\input{\figeco/MissingNode-Amissing-GM}$
+%     \end{tabular}
+%     & \qquad \qquad &
+%     \begin{tabular}{c}
+%     $\input{\figeco/MissingNode-Amissing-marginal}$
+%     \end{tabular}
+%   \end{tabular}
+  \end{center}
+    
+  \bigskip \pause
+  \textcolor{gray}{
+  Indeed:
+  $$
+  p(a, b, c) = p(a) p(b \mid a) p(c \mid a)
+  $$
+  but $A$ is not observed, so only $p(b, c)$ can be considered:
+  $$
+  p(b, c) = \sum_a p(a, b, c) = \sum_a p(\emphase{a}) p(b \mid \emphase{a}) p(c \mid \emphase{a}) \neq p(b) p(c)
+  $$
+  }
+  
 }
 
 %====================================================================
@@ -54,20 +71,42 @@
 
   Possibly dramatic effect on the observable dependency structure:
   \begin{center}
-  \begin{tabular}{ccccc}
-    'Truth' && $C$ missing && $D$ missing \\
+  \begin{tabular}{ccccccc}
     \begin{tabular}{c}
-    $\footnotesize{\input{\figeco/GM6nodes}}$
+      'Truth' \\
+      $\footnotesize{\input{\figeco/GM6nodes}}$
     \end{tabular}
-    & \qquad \qquad &
+    & \qquad & \pause
     \begin{tabular}{c}
-    $\footnotesize{\input{\figeco/GM6nodes-Cmissing-marginal}}$
+      $A$ missing \\
+      $\footnotesize{\input{\figeco/GM6nodes-Amissing-marginal}}$
     \end{tabular}
-    & \qquad \qquad &
+    & \qquad & \pause
     \begin{tabular}{c}
-    $\footnotesize{\input{\figeco/GM6nodes-Dmissing-marginal}}$
+      $C$ missing \\
+      $\footnotesize{\input{\figeco/GM6nodes-Cmissing-marginal}}$
     \end{tabular}
-  \end{tabular}
+    & \qquad & \pause
+    \begin{tabular}{c}
+      $D$ missing \\
+      $\footnotesize{\input{\figeco/GM6nodes-Dmissing-marginal}}$
+    \end{tabular}
+  \end{tabular}    
+%   \end{tabular}
+%   \begin{tabular}{ccccc}
+%     'Truth' && $C$ missing && $D$ missing \\
+%     \begin{tabular}{c}
+%     $\footnotesize{\input{\figeco/GM6nodes}}$
+%     \end{tabular}
+%     & \qquad \qquad &
+%     \begin{tabular}{c}
+%     $\footnotesize{\input{\figeco/GM6nodes-Cmissing-marginal}}$
+%     \end{tabular}
+%     & \qquad \qquad &
+%     \begin{tabular}{c}
+%     $\footnotesize{\input{\figeco/GM6nodes-Dmissing-marginal}}$
+%     \end{tabular}
+%   \end{tabular}
   \end{center}
   
   \bigskip
@@ -76,11 +115,174 @@
 }
 
 %====================================================================
-\subsection{Temporal data}
+\frame{\frametitle{An attempt}
+
+  \paragraph{Barents' fishes.} Based on tree-shaped network inference \\
+  
+  \begin{center}
+  \begin{tabular}{m{.1\textwidth}m{.3\textwidth}cm{.3\textwidth}}
+    \hspace{-.04\textwidth}
+    & Infered network \refer{MRA20} & &
+    Infered missing actor \refer{MRA21} 
+    \\ 
+    Adjacency matrix
+    & 
+    \includegraphics[width=.3\textwidth, trim=0 220 200 0, clip=]{\fignet/MRA21-JRSSC-Fig7}
+    & \qquad &
+    \hspace{-.02\textwidth}
+    \includegraphics[width=.3\textwidth, trim=200 220 0 0, clip=]{\fignet/MRA21-JRSSC-Fig7}
+    \\
+    Network
+    & 
+    \includegraphics[width=.3\textwidth, trim=0 0 200 200, clip=]{\fignet/MRA21-JRSSC-Fig7}
+    & \qquad &
+    \hspace{-.02\textwidth}
+    \includegraphics[width=.3\textwidth, trim=200 0 0 200, clip=]{\fignet/MRA21-JRSSC-Fig7}
+  \end{tabular}
+  \end{center}
+
+}
+
 %====================================================================
+\subsection{Temporal data}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%==================================================================
+\frame{\frametitle{Temporal data} 
+
+  \paragraph{Data.} $Y_t =$ abundance vector at time $t$
+  $$
+  Y_t = (A_t, B_t, C_t, D_t) = \text{ abundance vector at time $t$}
+  $$
+  \ra \emphase{Same population} observed along time
+  
+  \bigskip \bigskip \pause
+  \paragraph{A general model.} Markov assumption:
+  $$
+  p(Y) = p(Y_1) p(Y_2 \mid Y_1) \dots p(Y_n \mid Y_{n-1}) 
+  $$
+  that is
+  $$
+  \renewcommand{\nodesize}{2em}
+  \input{\figeco/MarkovChain}
+  \renewcommand{\nodesize}{\commonnodesize}
+  $$
+  \begin{itemize}
+    \item Obviously oriented
+  \end{itemize}
+%   \ra Does not say much about species interactions
+  
+}
+
+%==================================================================
+\frame{\frametitle{A nice case: Dynamic 'Bayesian' networks (DBN)}
+
+  \hspace{-.04\textwidth}
+  \begin{tabular}{p{.48\textwidth}p{.48\textwidth}}
+  \paragraph{Genuine graphical model:} a DAG: &
+  \paragraph{'Dynamic' network:} not a DAG \\
+  $$
+  \renewcommand{\nodesize}{2em}
+  \footnotesize{\input{\figeco/DBN4nodes}}
+  \renewcommand{\nodesize}{\commonnodesize}
+  $$
+  &
+  $$
+  \renewcommand{\nodesize}{2em}
+  \footnotesize{\input{\figeco/DBN4nodes-collapsed}}
+  \renewcommand{\nodesize}{\commonnodesize}
+  $$
+  \end{tabular}
+  
+  \bigskip
+  \paragraph{Inference.} 
+  \begin{itemize}
+    \item Simpler reconstruction problem: Find the parents of each species 
+    $
+    p(A_{t+1} \mid A_t, B_t, C_t, \dots),
+    $
+    \emphase{independently}
+    \item \emphase{\sl Sparsity} assumption: Each species has only few parents
+  \end{itemize}
+
+}
+
+%==================================================================
+\frame{\frametitle{A common misunderstanding}
+  
+  \paragraph{A common setting.} Dynamic model (e.g. Lotka-Volterra) but static data 
+
+  \bigskip\pause
+  \begin{tabular}{m{.25\textwidth}m{.2\textwidth}m{.5\textwidth}}
+    \hspace{-.03\textwidth}
+    \paragraph{Dynamic model} &
+    \paragraph{'Dynamic' network} & 
+    \paragraph{Data at hand}
+    \\
+    $$
+    \renewcommand{\nodesize}{2em}
+    \footnotesize{\input{\figeco/DBN4nodes}}
+    \renewcommand{\nodesize}{\commonnodesize}
+    $$
+    &
+    $$
+    \renewcommand{\nodesize}{2em}
+    \footnotesize{\input{\figeco/DBN4nodes-collapsed}}
+    \renewcommand{\nodesize}{\commonnodesize}
+    $$
+    &
+    \begin{tabular}{p{.4\textwidth}}
+      $\bullet$ $n$ similar sites \\ ~\\
+      $\bullet$ Each assumed to have reach a stationary regime ($T$ large) \\ ~\\
+      $\bullet$ $n$ abundance vectors $Y_T^i$. \\ ~ \\ ~ \\ ~ \\ ~ \\ ~ \\ ~ \\
+    \end{tabular}
+  \end{tabular}
+
+  \vspace{-.1\textheight}\pause
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}
+    \item Applying network inference to the 'stationary' abundance vectors $(Y_T^i)$ will not retrieve the dynamic network 
+    \item Not clear if the dynamic network can be recovered from stationary (static) observations \refer{Liu25}.
+  \end{itemize}
+
+}
 
 %====================================================================
 \subsection{Edge prediction}
+\frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
 %====================================================================
+\frame{\frametitle{Edge prediction}
 
+  \paragraph{Context.} 
+  Network are often only partially observed
+  
+  \bigskip \bigskip \pause
+  \begin{tabular}{ll}
+    \hspace{-.04\textwidth}
+    \begin{tabular}{p{.7\textwidth}}
+      \paragraph{Problem.} Based on
+      \begin{itemize}
+        \setlength{\itemsep}{1\baselineskip}
+        \item Traits $t_a$ and $t_b$ for species $A$ and $B$, 
+        \item Other known interactions : $A \leftrightarrow C$, $A \not\leftrightarrow D$, $B \leftrightarrow C$, $C \not\leftrightarrow D$
+        \item Similarities (phylogeny) between species
+        \item \dots
+      \end{itemize}
+    \end{tabular}
+    & 
+    \hspace{-.02\textwidth}
+    \begin{tabular}{p{.45\textwidth}}
+      $\footnotesize{\input{\figeco/EdgePrediction}}$
+    \end{tabular}
+  \end{tabular}
+  Can we predict if $A \leftrightarrow B$?
+
+  \bigskip \bigskip \pause
+  \paragraph{A 0/1 prediction problem.} 
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}
+    \item Hundreds of (ML-like) prediction methods
+    \item But heterogeneous structured predictors
+  \end{itemize}
+
+}
 

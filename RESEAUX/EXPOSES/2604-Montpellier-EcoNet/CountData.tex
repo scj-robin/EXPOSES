@@ -10,31 +10,162 @@
 %====================================================================
 \frame{\frametitle{Back to ecology}
 
-  \paragraph{Non-Gaussian data.} 
+  \paragraph{Specificities.} 
   \begin{itemize}
-   \item The normal distribution does not fit count or presence/absence data
-   \item Not many flexible {\sl multivariate} distributions for count or binary data do exist (\refer{IYA17})
-   \item Environmental effects need to be accounted for
+    \setlength{\itemsep}{1\baselineskip}
+    \item The normal distribution does not fit count or presence/absence data
+    \item Environmental effects need to be accounted for
+  \end{itemize}
+
+  \bigskip \bigskip \pause
+  \paragraph{Joint species distribution models (JSDM).}
+  \begin{itemize}
+    \item $n$ sites, $m$ species
+    \item $Y_i = [Y_{i1}, \dots Y_{im}]$ abundance vector observed in site $i$
+    \item $x_i =$ vector of environmental covariates for site $i$\textcolor{gray}{+ species traits $t_j$}
+    \item JSDM: multivariate distribution
+    $$
+    p(Y_i \mid x_i)
+    $$
+    \item See \refer{WBO15} for a general introduction to JSDM or \refer{OvA20} for some R tools
+  \end{itemize}
+
+}
+
+%====================================================================
+\frame{\frametitle{Network inference with JSDM}
+
+  \paragraph{Problem.}
+  \begin{itemize}
+    \item Not many flexible {\sl multivariate} distributions for count or binary data do exist \refer{IYA17}
   \end{itemize}
 
   \bigskip \bigskip \pause
   \paragraph{A common trick:} latent variable models
   \begin{itemize}
-  \item See \refer{WBO15} for an introduction for species abundance distributions \\ ~
-  \item Most popular structure = latent GGM: \\
-  Spiec-Easi \refer{KMM15}, gCODA \refer{FHZ17}, MiNT \refer{BML16}, PLNnetwork \refer{CMR18b}, tree-based PLN \refer{MRA19} \\ ~
-  \item Next: focus on PLNnetwork (abundance data)
+    \setlength{\itemsep}{1\baselineskip}
+    \item Most popular structure = latent GGM: \\ 
+    Spiec-Easi \refer{KMM15}, gCODA \refer{FHZ17}, MiNT \refer{BML16}, PLNnetwork \refer{CMR18b}, tree-based PLN \refer{MRA19} 
+    \item PLN = Poisson log-normal model (see next)
   \end{itemize}
+  
+  \bigskip \bigskip \pause
+  \paragraph{But also:} 
+  \begin{itemize}
+    \item Copula-based approaches \refer{AVP19}
+  \end{itemize}
+  
 }
 
 %====================================================================
 \subsection{Poisson log-normal model}
 \frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
-%====================================================================
+%==================================================================
+\frame{\frametitle{Poisson log-normal model}
+
+  \paragraph{Data:} $n$ independent sites (no spatial structure), $m$ species, 
+  $$
+  Y_{ij} = \text{ abundance of species $j$ in site $i$}
+  $$
+  
+  \bigskip \pause
+  \paragraph{Poisson log-normal (PLN) model \refer{AiH89,CMR21}:} 
+  \begin{itemize}
+   \item A Gaussian vector is associated with each site $i$
+   $$
+   Z_i \sim \Ncal_m(0, \Sigma)
+   $$
+   \item \pause Species abundances in site $i$ are independent given $Z_i$
+   $$
+   Y_{ij} \sim \Pcal(\exp(x_i^\top \beta_j + Z_{ij}))
+   $$
+  \end{itemize} \pause
+  summarized as
+  $$
+  \{Y_i\} \text{ iid} \sim PLN(x, \beta, \Sigma),
+  $$
+  $\to$ multivariate mixed generalized linear model (glmm). 
+
+  \bigskip \pause
+  \paragraph{Interpretation.}
+  \begin{itemize}
+%   \item PLN is a mixed model
+  \item $x_i^\top \beta_j$ mean (log-)abundance of species $j$: \emphase{abiotic effects}
+  \item $\Sigma = $ dependency structure (encoded in the latent layer): \emphase{biotic interactions}
+  \end{itemize}
+}
+
+%==================================================================
+\frame{\frametitle{Network inference}
+
+  \paragraph{PLN network model.} Same model as PLN + sparsity assumption:
+  $$
+  \{Y_i\} \text{ iid} \sim PLN(x, \beta, \Sigma)
+  \qquad \qquad + \emphase{\Omega = \Sigma^{-1} \text{ sparse}}
+  $$
+  
+  \bigskip \bigskip \pause
+  \paragraph{Inference algorithm.} Variational EM + sparsity inducing norm \refer{CMR18a,CMR19}:
+  $$
+  \max_{\beta, \Omega} \widetilde{\log p}(Y; x, \beta, \Sigma) - \lambda \sum_{j < k} |\omega_{jk}|
+  $$
+  \ra Alternate convex problems \\
+  \ra Fast solution ({\tt PLNmodels} R package)
+  
+  \bigskip
+  \begin{itemize}
+   \item Resampling (StARS \refer{LRW10}) is highly recommended for robustness
+  \end{itemize}
+}
 
 %====================================================================
 \subsection{An illustration}
 \frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
+%==================================================================
+\frame{\frametitle{Illustration}
+
+  \paragraph{Barents fish dataset:} 
+  \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}
+    \item $n = 89$ stations, 
+    \item $m = 30$ fish species, 
+    \item $d =4$ covariates (latitude, longitude, depth, temperature
+  \end{itemize}
+
+  \bigskip
+  \paragraph{Application}
+  $$
+  \text{see markdown}
+  $$
+
+}
+
 %====================================================================
+\frame{\frametitle{Barents fish} 
+
+  \begin{center}
+  \begin{tabular}{lccc}
+    & no covariate & \textcolor{blue}{temp. \& depth} & \textcolor{red}{all covariates} \\
+    \hline
+    \rotatebox{90}{$\qquad\quad\lambda=.20$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_full60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_full60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_full60edges} 
+    \vspace{-0.05\textheight} \\ \hline
+    %
+    \rotatebox{90}{$\qquad\quad\lambda=.28$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_sel60edges} & \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_sel60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_sel60edges} 
+    \vspace{-0.05\textheight} \\ \hline
+    %
+    \rotatebox{90}{$\qquad\quad\lambda=.84$} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gnull_null60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gsel_null60edges} &
+    \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_density} 
+%     \includegraphics[width=.22\textwidth]{\figCMR/network_BarentsFish_Gfull_null60edges}  
+  \end{tabular}
+  \end{center}
+
+}
 
 
