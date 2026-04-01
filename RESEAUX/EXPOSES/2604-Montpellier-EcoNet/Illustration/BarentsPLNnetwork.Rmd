@@ -88,6 +88,11 @@ image.plot(1:d, 1:m, plnFull$model_par$B[-1, order(cluster)], main='species clus
 abline(h=.5+cumsum(table(cluster)), col=1, lwd=2)
 text(1:d, rep(2, d), labels=substr(colnames(X), 1, 4), col=1)
 ```
+Reordering the covariance matrix 
+
+```{r plnFullOrdered, echo=TRUE, message=FALSE}
+PlotCov(plnFull, cluster=cluster)
+```
 
 ## Network inference
 
@@ -143,12 +148,12 @@ print(rbind(plnDiag = plnDiagCrit,
 
 Comparing estimated abiotic effects
 
-```{r abiotics, echo=TRUE, message=FALSE}
-abiotics = cbind(plnDiag = as.vector(plnDiag$model_par$B[-1, ]), 
+```{r abioticCompar, echo=TRUE, message=FALSE}
+abiotic = cbind(plnDiag = as.vector(plnDiag$model_par$B[-1, ]), 
             plnFull = as.vector(plnFull$model_par$B[-1, ]),
             netBic = as.vector(netBic$model_par$B[-1, ]), 
             netStab = as.vector(netStab$model_par$B[-1, ]))
-plot(as.data.frame(abiotics), pch=20)
+plot(as.data.frame(abiotic), pch=20)
 ```
 
 ## Not accounting for environment
