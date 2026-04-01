@@ -137,3 +137,18 @@ Co = cor(Yo)
 image(1:p, 1:p, 1-abs(Co), xlab='', ylab='')
 # dev.off()
 
+##################################################################
+# Numerical example
+##################################################################
+set.seed(1)
+omega <- matrix(c(1, .5, .5, 0, 
+                  .5, 1, .5, 0, 
+                  .5, .5, 1, .5, 
+                  0, 0, .5, 1), 4, 4)
+sigma <- solve(omega)
+sigma
+round(cov2cor(Sigma), 2)
+y <- rmvnorm(100, sigma=sigma)
+sigmaHat <- cov(y) 
+round(cov2cor(sigmaHat), 2)
+round(cov2cor(solve(sigmaHat)), 2)

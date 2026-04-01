@@ -84,7 +84,7 @@ cluster <- kmeans(t(plnFull$model_par$B[-1, ]), centers=4, iter.max=1e2, nstart=
 par(mfrow=c(1, 2))
 image.plot(1:d, 1:m, plnFull$model_par$B[-1, ], main='abiotic effects', xlab='covariates', ylab='species')
 text(1:d, rep(2, d), labels=substr(colnames(X), 1, 4), col=1)
-image.plot(1:d, 1:m, plnFull$model_par$B[-1, order(cluster)], main='clustering species', xlab='covariates', ylab='species')
+image.plot(1:d, 1:m, plnFull$model_par$B[-1, order(cluster)], main='species clustering', xlab='covariates', ylab='species')
 abline(h=.5+cumsum(table(cluster)), col=1, lwd=2)
 text(1:d, rep(2, d), labels=substr(colnames(X), 1, 4), col=1)
 ```
@@ -126,6 +126,7 @@ Resampling procedure to assess edge robustness
 stability_selection(plnNet)
 netStab <- plnNet$getBestModel(crit='StARS')
 print(netStab$criteria)
+PlotCov(netStab)
 par(mfrow=c(1, 2))
 plot(netStab)
 PlotNet(netStab, color=cluster)

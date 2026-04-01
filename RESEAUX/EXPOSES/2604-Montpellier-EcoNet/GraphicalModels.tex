@@ -15,17 +15,19 @@
   $$
   Y = [Y_1 \dots Y_j \dots Y_m]
   $$
+  (For the time being, forget about the covariates: same $x_i$ in all sites.)
 
-  \bigskip \pause
+  \bigskip \bigskip \pause
   \paragraph{Statistical model.} 
   $$
-  Y_i \sim p \quad \text{= joint distribution: } p(y_1, \dots, y_j, \dots, y_m)
+  Y \sim p \quad \text{= joint distribution: } p(Y_1, \dots, Y_m)
   $$
 
   \bigskip \bigskip \pause
   \paragraph{Where is the network (graph)?} \\ ~
   \begin{itemize}
-    \item The graph $G$ has to be encoded in the distribution $p$ in some way \\ ~
+    \setlength{\itemsep}{1\baselineskip}
+    \item The graph $G$ has to be encoded in the distribution $p$ in some way 
     \item \emphase{Graphical models} establish a formal connexion between $p$ and $G$
   \end{itemize}
 
@@ -34,30 +36,28 @@
 %==================================================================
 \frame{\frametitle{Graphical models} 
 
-  \bigskip
-  \paragraph{'Interaction':} 
-  need for a probabilistic counterpart for this concept
+  A generic framework \refer{Lau96,WaJ08}
 
-  \bigskip 
-  \paragraph{Translation:} 
-  $$
-  \text{species interactions} 
-  := 
-  \text{dependency structure of a set of random variables}
-  $$
-  
+  \bigskip
+  \begin{description}
+    \setlength{\itemsep}{1\baselineskip}
+    \item[Joint distribution $p$ =] $p(A, B, C, D, \dots)$ 
+    \item[Graphical model $G$ =] dependency structure between $A$, $B$, $C$, $D$, \dots
+  \end{description}
+
   \pause\bigskip
-  \begin{tabular}{lll}
-    \paragraph{Graphical models:} &
+  \paragraph{Two kinds of graphical models.}
+  \begin{center}
+  \begin{tabular}{ll}
     {Directed} ~ &
     {Undirected} ~ \\
-    \begin{tabular}{p{0.3\textwidth}} A generic \\ framework \\ \refer{Lau96,WaJ08} \end{tabular}
-    & 
     \begin{tabular}{p{0.3\textwidth}} \footnotesize{\input{\figeco/DAG6nodes}} \end{tabular}
     & 
     \begin{tabular}{p{0.3\textwidth}} \footnotesize{\input{\figeco/GM6nodes}} \end{tabular}
     \end{tabular}
-  }
+  \end{center}
+  
+}
 
 
 %====================================================================
@@ -98,7 +98,7 @@ p(a, b)
 }
 
 %==================================================================
-\frame{\frametitle{Directed graphs = Bayesian networks}
+\frame{\frametitle{Directed graphical models = Bayesian networks}
 
   \paragraph{Definition.} Let $D$ be a \emphase{directed acyclic graph} (DAG), the distribution $p$ is said to factorize in $D$ iff
   $$
@@ -158,8 +158,8 @@ p(a, b)
   \bigskip \pause
   \paragraph{Conclusions.} 
   \begin{itemize}
-   \item $p(a, b, c, \dots)$ is not enough to retrieve the edge orientations
-   \item No causal interpretation (causality not addressed here, see \refer{Pea09,Pea09b})
+   \item $p(a, b, c, \dots)$ is not enough to retrieve the edge orientations (see appendix)
+   \item No causal interpretation (causality not addressed here, see \refer{Pea09b,Pea09})
   \end{itemize}
 }
   
@@ -167,7 +167,7 @@ p(a, b)
 \subsection{Undirected graphical models}
 \frame{\frametitle{Outline} \tableofcontents[currentsubsection]}
 %==================================================================
-\frame{\frametitle{Undirected graphs = Markov random fields}
+\frame{\frametitle{Undirected graphical models = Markov random fields}
 
   \paragraph{Definition.} Let $G$ be an {\sl undirected graph}, the distribution $p$ is said to factorize in $G$ iff
   $$
@@ -250,27 +250,33 @@ p(a, b)
    \item $\Sigma = (m \times m)$ covariance matrix:
    $$
    \sigma_{jj} = \sigma_j^2 = \Var(Y_j), \qquad
-   \sigma_{jk} = \Cov(Y_j, Y_k), \qquad
+   \sigma_{jk} = \Cov(Y_j, Y_k), 
+   $$
+   \item Correlation:
+   $$
    \rho_{jk} = \frac{\sigma_{jk}}{\sigma_j \; \sigma_k}
    $$
   \end{itemize}
 
   \bigskip \pause
-  \paragraph{Property.} For species $j$ and $k$:
+  \paragraph{Property.} For species $j$ and $k$,
   $$
-  \text{null correlation} \quad \Leftrightarrow \qquad
-  \text{null covariance} \quad \Leftrightarrow \qquad
-  \text{independence} 
+  \begin{array}{lcccccc}
+    & & 
+    \text{null correlation} & \Leftrightarrow & 
+    \text{null covariance} & \Leftrightarrow & 
+    \text{independence} \\
+    ~ \\
+    \text{i.e.} 
+    & & \rho_{jk} = 0 
+    & \Leftrightarrow &
+    \sigma_{jk} = 0 
+    & \Leftrightarrow &
+    Y_j \independent Y_k    
+  \end{array}
   $$
-  i.e.
-  $$
-  \sigma_{jk} = 0 
-  \quad \Leftrightarrow \qquad 
-  \rho_{jk} = 0 
-  \quad \Leftrightarrow \qquad 
-  Y_j \independent Y_k 
-  \pause \emphase{\text{ marginally}}
-  $$
+  but we care about emphase{conditional dependency}.
+
 }
 
 %==================================================================
@@ -278,7 +284,9 @@ p(a, b)
 
   \begin{tabular}{cc}
     \begin{tabular}{p{.4\textwidth}}
-    $\footnotesize{\input{\fignet/FigGGM-4nodes}}$     
+      \paragraph{Graphical model.} \\ ~\\
+      $\footnotesize{\input{\fignet/FigGGM-4nodes}}$ \\
+      ~\\ ~\\ ~\\
 %     \hspace{-.15\textwidth}
 %     \includegraphics[width=.6\textwidth]{\fignet/FigGGM-4nodes}
     \end{tabular}
@@ -287,7 +295,7 @@ p(a, b)
     \begin{overprint}
     \onslide<2>
     \begin{tabular}{p{.5\textwidth}}
-	 \paragraph{Graphical model.}
+	 \paragraph{Adjacency matrix.}
 	 $$
 	 G = \left[ \begin{array}{cccc}
 	 0 & 1 & 1 & \emphase{0} \\
@@ -307,7 +315,7 @@ p(a, b)
     \begin{tabular}{p{.5\textwidth}}
 	 \paragraph{Covariance matrix.}
 	 $$
-	 \Sigma \propto \left[ \begin{array}{cccc}
+	 \Sigma \; \propto \; \left[ \begin{array}{cccc}
 	   1 & -.25 & -.41 &  \emphase{.25} \\
 	   -.25 &  1 & -.41 &  \emphase{.25} \\
 	   -.41 & -.41 &  1 & -.61 \\
@@ -323,7 +331,7 @@ p(a, b)
     \begin{tabular}{p{.5\textwidth}}
 	 \paragraph{Inverse covariance matrix.}
 	 $$
-	 \Sigma^{-1} \propto \left[ \begin{array}{cccc}
+	 \Omega = \Sigma^{-1} \; \propto \; \left[ \begin{array}{cccc}
 	   1 & .5 & .5 & \emphase{0} \\
 	   .5 & 1 & .5 & \emphase{0} \\
 	   .5 & .5 & 1 & .5 \\
@@ -335,14 +343,14 @@ p(a, b)
      \setlength{\itemsep}{1.5\baselineskip}
      \item 0's at (1, 4) and (2, 4)
      \item Conditional independence
-     \item $\Omega := \Sigma^{-1} =$ \emphase{precision} matrix
+     \item $\Omega =$ \emphase{precision} matrix
 	 \end{itemize}
     \end{tabular} 
     \onslide<5>
     \begin{tabular}{p{.5\textwidth}}
 	 \paragraph{Estimated inverse covariance matrix.}
 	 $$
-	 \widehat{\Omega} \propto \left[ \begin{array}{cccc}
+	 \widehat{\Sigma}^{-1} \; \propto \; \left[ \begin{array}{cccc}
 	   1 & .48 & .61 & \emphase{.09} \\
 	   .48 & 1 & .67 & \emphase{.06} \\
 	   .61 & .67 & 1 & .46 \\
@@ -400,8 +408,8 @@ p(a, b)
   \begin{itemize}
    \item Regression viewpoint (see appendix) 
    \item Mixture of tree-shaped distributions: \refer{MeJ06,Kir07,JFS16,ScR17,MRA19}
-   \item Other forms of penalties ($\ell_1$, $\ell_2$, combinations) induces other topologies
-   \item Ex.: \refer{ACM09} induce clustered networks.
+   \item Other forms of penalties ($\ell_1$, $\ell_2$, combinations) induces other topologies \\
+   Ex.: \refer{ACM09} induce SBM structured networks.
   \end{itemize}
 }
 
