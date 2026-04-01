@@ -13,22 +13,25 @@
   \paragraph{Specificities.} 
   \begin{itemize}
     \setlength{\itemsep}{1\baselineskip}
-    \item The normal distribution does not fit count or presence/absence data
-    \item Environmental effects need to be accounted for
+    \item Mostly count or presence/absence data, which do not fit a Gaussian distribution \item Environmental effects need to be accounted for
   \end{itemize}
 
   \bigskip \bigskip \pause
   \paragraph{Joint species distribution models (JSDM).}
   \begin{itemize}
+    \setlength{\itemsep}{.75\baselineskip}
     \item $n$ sites, $m$ species
     \item $Y_i = [Y_{i1}, \dots Y_{im}]$ abundance vector observed in site $i$
-    \item $x_i =$ vector of environmental covariates for site $i$\textcolor{gray}{+ species traits $t_j$}
+    \item $x_i =$ vector of environmental covariates for site $i$ \textcolor{gray}{+ species traits $t_j$}
     \item JSDM: multivariate distribution
     $$
     p(Y_i \mid x_i)
     $$
     \item See \refer{WBO15} for a general introduction to JSDM or \refer{OvA20} for some R tools
   \end{itemize}
+
+  \bigskip \bigskip 
+  \paragraph{Remark.} Univariate of JSDM = SDM $\simeq$ Generalized linear models (glm / glmm).
 
 }
 
@@ -105,15 +108,16 @@
   $$
   
   \bigskip \bigskip \pause
-  \paragraph{Inference algorithm.} Variational EM + sparsity inducing norm \refer{CMR18a,CMR19}:
+  \paragraph{Inference algorithm.} Variational EM + lasso penalty \refer{CMR18a,CMR19}:
   $$
   \max_{\beta, \Omega} \widetilde{\log p}(Y; x, \beta, \Sigma) - \lambda \sum_{j < k} |\omega_{jk}|
   $$
-  \ra Alternate convex problems \\
-  \ra Fast solution ({\tt PLNmodels} R package)
   
   \bigskip
   \begin{itemize}
+    \setlength{\itemsep}{1\baselineskip}
+    \item Alternate convex problems 
+    \item Fast solution ({\tt PLNmodels} R package)
    \item Resampling (StARS \refer{LRW10}) is highly recommended for robustness
   \end{itemize}
 }
@@ -135,8 +139,9 @@
   \bigskip
   \paragraph{Application}
   $$
-  \text{see Rmarkdown}
+  \text{see Rmarkdown} 
   $$
+  %   \url{/home/robin/Bureau/EcoNet-CESAB/2604-Montpellier-EcoNet/Illustration/BarentsPLNnetwork.html}
 
 }
 

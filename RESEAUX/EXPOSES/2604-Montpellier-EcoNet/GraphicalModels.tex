@@ -106,14 +106,14 @@ p(a, b)
   $$
   where $pa_D(i)$ stands for the set of parents of $i$ in $D$.
 
-  \pause
+  \bigskip \pause
   \begin{center}
   \begin{tabular}{cc}
     \begin{tabular}{c}
     $\footnotesize{\input{\figeco/DAG6nodes}}$
     \end{tabular}
     &
-    \begin{tabular}{p{.7\textwidth}}
+    \begin{tabular}{p{.5\textwidth}}
       \begin{eqnarray*}
         pa_D(A) = \emptyset, & & pa_D(D) = \{B, C\} \\
         \\
@@ -122,12 +122,13 @@ p(a, b)
         & & p(d \mid b, c) \; p(e \mid d) \\
         & & p(f \mid b, d)
       \end{eqnarray*}
-      \\
-      See \refer{SWA17} for an introduction in ecology
     \end{tabular}
   \end{tabular}
   \end{center}
-  
+
+  \bigskip
+  See \refer{SWA17} for an introduction in ecology
+
 }
 
 %==================================================================
@@ -175,14 +176,14 @@ p(a, b)
   $$
   where $\Ccal(G)$ is the set of maximal cliques of $G$
 
-  \pause
+  \pause \bigskip
   \begin{center}
   \begin{tabular}{cc}
     \begin{tabular}{c}
     $\footnotesize{\input{\figeco/GM6nodes}}$
     \end{tabular}
     &
-    \begin{tabular}{p{.7\textwidth}}
+    \begin{tabular}{p{.5\textwidth}}
       \begin{eqnarray*}
 %         p(a, \dots g) & \propto 
 %         & \psi_1(a, b, c) \; \psi_2(a, b, d) \; \psi_3(a, c, d) \; \psi_4(b, c, d) \\
@@ -205,7 +206,7 @@ p(a, b)
 %====================================================================
 \frame{\frametitle{Conditional independence}
 
-  \paragraph{Property.} If $p(a, b, c, \dots) > 0$, 
+  \paragraph{Property of undirected graphical models.} If $p(a, b, c, \dots) > 0$, 
   $$
   \text{separation} \qquad \Leftrightarrow \qquad \text{conditional independence}
   $$
@@ -221,18 +222,20 @@ p(a, b)
     &
     \begin{tabular}{p{.7\textwidth}}
     \begin{itemize}
-     \item $(A, F)$ dependent \\ ~
-     \item $(A, F)$ dependent given $B$ \\ ~
-     \item $(A, F)$ independent given $\{B, C\}$ \\ ~
-     \item $\{A, B, C\}$ independent from $E$ given $D$ 
+      \item $(A, F)$ dependent \\ ~
+      \item $(A, F)$ dependent given $B$ \\ ~
+      \item $(A, F)$ independent given $\{B, C\}$ \\ ~
+      \item $\{A, B, C\}$ independent from $E$ given $D$ 
     \end{itemize}
     \end{tabular}
   \end{tabular}
   \end{center}
 
-  
   \bigskip
-  \ra Inferring $G$ = Inferring conditional independences
+  \begin{itemize}
+    \item Inferring $G$ = Inferring conditional independences
+  \end{itemize}
+
 }
   
 %====================================================================
@@ -249,12 +252,12 @@ p(a, b)
    \item $\mu = (m \times 1)$ vector of mean 'abundances'
    \item $\Sigma = (m \times m)$ covariance matrix:
    $$
-   \sigma_{jj} = \sigma_j^2 = \Var(Y_j), \qquad
+   \sigma_{jj} = \sigma_j^2 = \Var(Y_j), \qquad \qquad
    \sigma_{jk} = \Cov(Y_j, Y_k), 
    $$
    \item Correlation:
    $$
-   \rho_{jk} = \frac{\sigma_{jk}}{\sigma_j \; \sigma_k}
+   \rho_{jk} = \sigma_{jk} \left/ (\sigma_j \; \sigma_k) \right.
    $$
   \end{itemize}
 
@@ -275,7 +278,7 @@ p(a, b)
     Y_j \independent Y_k    
   \end{array}
   $$
-  but we care about emphase{conditional dependency}.
+  but we care about \emphase{conditional dependency}.
 
 }
 
@@ -384,7 +387,9 @@ p(a, b)
   $x$-axis: $m =$ number of species.
   
   \bigskip
-  $\to$ Need for efficient algorithms / heuristics
+  \begin{itemize}
+    \item Need for efficient algorithms / heuristics
+  \end{itemize}
 
 }
 
