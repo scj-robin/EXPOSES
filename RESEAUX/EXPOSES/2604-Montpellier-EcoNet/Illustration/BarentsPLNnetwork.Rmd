@@ -167,6 +167,7 @@ plnNoCovarCrit <- c(unlist(plnNoCovar$criteria),
 ### Network inference
 
 ```{r netNoCovar, echo=TRUE, message=FALSE}
+lambda <- max(plnNet$penalties)^seq(-4, 1, length.out=50) 
 plnNetNoCovar <- PLNnetwork(Y ~ 1, penalties=lambda, control=PLNnetwork_param(trace=0))
 plot(plnNetNoCovar)
 netNoCovarBic <- plnNetNoCovar$getBestModel(crit='BIC')
