@@ -39,11 +39,11 @@ library(fields)
 PlotCov <- function(fit, cluster=NULL){
   if(is.null(cluster)){order <- 1:nrow(fit$model_par$Sigma)}else{order <- order(cluster)}
   Sigma <- as.matrix(fit$model_par$Sigma)[order, order]; Sigma[which(Sigma==0)] <- NA
-  Omega <- as.matrix(fit$model_par$Omega)[order, order]; Omega[which(Omega==0)] <- NA
+  Omega <- -as.matrix(fit$model_par$Omega)[order, order]; Omega[which(Omega==0)] <- NA; diag(Omega) <- 1
   par(mfrow=c(1, 2))
-  image.plot(1:m, 1:m, cov2cor(Sigma), xlab='species', ylab='species', main='correlations')
+  image.plot(1:m, 1:m, cov2cor(Sigma), xlab='species', ylab='species', main='correlations', zlim=c(-1, 1))
   abline(h=.5+cumsum(table(cluster)), v=.5+cumsum(table(cluster)))
-  image.plot(1:m, 1:m, cov2cor(Omega), xlab='species', ylab='species', main='conditional correlations')
+  image.plot(1:m, 1:m, cov2cor(Omega), xlab='species', ylab='species', main='conditional correlations', zlim=c(-1, 1))
   abline(h=.5+cumsum(table(cluster)), v=.5+cumsum(table(cluster)))
 }
 library(sna)
@@ -57,7 +57,7 @@ PlotNet <- function(fit, color=rep(1, nrow(fit$model_par$Omega))){
 
 ### Diagonal covariance matrix
 
-No interaction: $\Omega$ and $\Sigma$ diagonal
+No interaction: $\Sigma$ (and therefore $\Omega$) diagonal
 
 ```{r plnDiag, echo=TRUE, message=FALSE}
 plnDiag <- PLN(Y ~ X, control=PLN_param(trace=0, covariance='diagonal'))
@@ -68,7 +68,7 @@ PlotCov(plnDiag)
 
 ### Full covariance matrix
 
-All interactions: $\Omega$ and $\Sigma$ full
+All interactions: $\Sigma$ (and possibly $\Omega$) full
 
 ```{r plnFull, echo=TRUE, message=FALSE}
 plnFull <- PLN(Y ~ X, control=PLN_param(trace=0, covariance='full'))
@@ -88,6 +88,7 @@ image.plot(1:d, 1:m, plnFull$model_par$B[-1, order(cluster)], main='species clus
 abline(h=.5+cumsum(table(cluster)), col=1, lwd=2)
 text(1:d, rep(2, d), labels=substr(colnames(X), 1, 4), col=1)
 ```
+
 Reordering the covariance matrix 
 
 ```{r plnFullOrdered, echo=TRUE, message=FALSE}
@@ -156,7 +157,7 @@ abiotic = cbind(plnDiag = as.vector(plnDiag$model_par$B[-1, ]),
 plot(as.data.frame(abiotic), pch=20)
 ```
 
-## Not accounting for environment
+## Not accounting for environmental covariates
 
 ### PLN model
 

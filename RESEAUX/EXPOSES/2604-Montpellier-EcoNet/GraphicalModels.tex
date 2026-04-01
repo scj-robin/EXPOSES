@@ -51,9 +51,9 @@
   \begin{tabular}{ll}
     {Directed} ~ &
     {Undirected} ~ \\
-    \begin{tabular}{p{0.3\textwidth}} \footnotesize{\input{\figeco/DAG6nodes}} \end{tabular}
+    \begin{tabular}{p{0.25\textwidth}} \footnotesize{\input{\figeco/DAG6nodes}} \end{tabular}
     & 
-    \begin{tabular}{p{0.3\textwidth}} \footnotesize{\input{\figeco/GM6nodes}} \end{tabular}
+    \begin{tabular}{p{0.25\textwidth}} \footnotesize{\input{\figeco/GM6nodes}} \end{tabular}
     \end{tabular}
   \end{center}
   
@@ -222,10 +222,12 @@ p(a, b)
     &
     \begin{tabular}{p{.7\textwidth}}
     \begin{itemize}
-      \item $(A, F)$ dependent \\ ~
-      \item $(A, F)$ dependent given $B$ \\ ~
-      \item $(A, F)$ independent given $\{B, C\}$ \\ ~
-      \item $\{A, B, C\}$ independent from $E$ given $D$ 
+      \item $A$ and $F$ are dependent \\ ~
+      \item $A$ and $F$ are dependent given $B$ \\ ~
+      \item $A$ and $F$ are independent given $\{B, C\}$ \\ ~
+      \item $\{A, B, C\}$ is independent from $E$ given $D$ \\ ~
+      \item $A$ and $C$ are \emphase{dependent given all other variables} \\
+      $A$ and $C$ are \emphase{'conditionally dependent'} 
     \end{itemize}
     \end{tabular}
   \end{tabular}
@@ -233,7 +235,7 @@ p(a, b)
 
   \bigskip
   \begin{itemize}
-    \item Inferring $G$ = Inferring conditional independences
+    \item Inferring $G$ = Inferring conditional dependencies 
   \end{itemize}
 
 }
@@ -244,7 +246,7 @@ p(a, b)
 %====================================================================
 \frame{\frametitle{Gaussian graphical models (GGM)}
 
-  \paragraph{Gaussian setting.} Suppose we observe an 'abundance' vector $Y = (Y_1 \dots Y_m)$ and assume that
+  \paragraph{Gaussian setting.} Suppose that the 'abundance' vector $Y = (Y_1 \dots Y_m)$ has a multivariate Gaussian distribution
   $$
   Y \sim \Ncal_m(\mu, \Sigma)
   $$
@@ -261,24 +263,24 @@ p(a, b)
    $$
   \end{itemize}
 
-  \bigskip \pause
-  \paragraph{Property.} For species $j$ and $k$,
+  \bigskip \bigskip \pause
+  \paragraph{A first nice property.} For species $j$ and $k$,
   $$
   \begin{array}{lcccccc}
     & & 
     \text{null correlation} & \Leftrightarrow & 
     \text{null covariance} & \Leftrightarrow & 
-    \text{independence} \\
+    \text{independence}, \\
     ~ \\
     \text{i.e.} 
     & & \rho_{jk} = 0 
     & \Leftrightarrow &
     \sigma_{jk} = 0 
     & \Leftrightarrow &
-    Y_j \independent Y_k    
+    Y_j \independent Y_k.    
   \end{array}
   $$
-  but we care about \emphase{conditional dependency}.
+  But we are interested in \emphase{conditional dependency}.
 
 }
 
@@ -311,7 +313,7 @@ p(a, b)
 	 \begin{itemize}
      \setlength{\itemsep}{1.5\baselineskip}
 	   \item Connected
-	   \item $C$ separates $D$ from ($A, B$)
+	   \item $C$ separates $D$ from $\{A, B\}$
 	 \end{itemize}
     \end{tabular} 
     \onslide<3>
@@ -345,8 +347,8 @@ p(a, b)
 	 \begin{itemize}
      \setlength{\itemsep}{1.5\baselineskip}
      \item 0's at (1, 4) and (2, 4)
-     \item Conditional independence
-     \item $\Omega =$ \emphase{precision} matrix
+     \item Conditional dependencies are encoded in $\Omega =$ \emphase{precision} matrix
+     \item See appendix for a formal explanation
 	 \end{itemize}
     \end{tabular} 
     \onslide<5>
