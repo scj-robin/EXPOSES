@@ -60,6 +60,59 @@
   (Not speaking of possibly missing nodes)
 }
 
+%====================================================================
+\frame{\frametitle{V-structure}
+
+%   \paragraph{Counter-example.} 
+  In the V-structured (or 'head to head') DAG:
+  $$
+  \footnotesize{\input{\figeco/HeadToHeadABC}}
+  $$
+  $A$ and $C$ are \emphase{conditionally dependent} ($A \not\independent C \mid B$):
+  \begin{align*}
+  p(a, b, c) & = p(a) p(c) p(b \mid a, b) \\ ~\\
+  \Rightarrow \quad
+  p(a, b \mid b) & = \frac{p(a, b, c)}{p(b)}   = \frac{p(a) \; p(c) \; p(b \mid a, c)}{p(b)}  
+  \end{align*}
+  
+  \bigskip \bigskip \pause
+  \paragraph{Remark.} 
+  $A$ and $C$ are \emphase{marginally independent}:
+  $$
+   p(a, c)
+  = \sum_b p(a) \; p(c) \; p(b \mid a, c)
+  = p(a) \; p(c) \; \underset{\footnotesize{= 1}}{\underbrace{\sum_b p(b \mid a, c)}}
+  $$
+}
+
+
+%====================================================================
+\frame{\frametitle{From directed to undirected graphical models}
+
+  \paragraph{Resolve {\sl immoralities}.} Graph {\sl moralization} ('parents must be married'):
+  $$
+  \begin{array}{ccccc}
+   \footnotesize{\input{\figeco/Moral-DAG}}
+   & \qquad & 
+   \footnotesize{\input{\figeco/Moral-marriage}}
+   & \qquad & 
+   \footnotesize{\input{\figeco/Moral-GM}}
+  \end{array}
+  $$
+  
+  \bigskip \pause
+  \paragraph{Example.}
+  $$
+  \begin{array}{ccccc}
+   \footnotesize{\input{\figeco/DAG6nodes}}
+   & \qquad & 
+   \footnotesize{\input{\figeco/DAG6nodes-marriage}}
+   & \qquad & 
+   \footnotesize{\input{\figeco/DAG6nodes-GM}}
+  \end{array}
+  $$
+}
+
 %==================================================================
 \subsection*{Gaussian graphical models}
 %==================================================================
