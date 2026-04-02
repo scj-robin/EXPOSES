@@ -15,7 +15,7 @@ output: html_document
 * $d = 4$ environmental covariates: latitude, longitude, depth, temperature
 
 ```{r data, echo=TRUE}
-rm(list=ls()); palette('R3'); set.seed(1)
+rm(list=ls()); set.seed(1)
 library(PLNmodels)
 data(barents)
 X <- as.matrix(cbind(barents$Latitude, barents$Longitude, barents$Depth, barents$Temperature)) 
@@ -23,13 +23,26 @@ colnames(X) <- c('Latitude', 'Longitude', 'Depth', 'Temperature')
 Y <- as.matrix(barents$Abundance)
 ```
 
-Scaling covariates (for numerical reasons) and removing too rare species
+Scaling covariates (for numerical reasons) 
 
-```{r clean, echo=TRUE}
+```{r scale, echo=TRUE}
 X <- scale(X) 
-Y <- Y[, which(colMeans(Y)>1)] 
-n <- nrow(Y); m <- ncol(Y); d <- ncol(X)
 print(head(X))
+d <- ncol(X)
+Y <- Y[, which(colMeans(Y)>1)] 
+n <- nrow(Y); m <- ncol(Y) 
+print(m)
+print(head(Y[, 1:10]))
+```
+
+Removing too rare species
+
+```{r rare, echo=TRUE}
+X <- scale(X) 
+print(head(X))
+d <- ncol(X)
+Y <- Y[, which(colMeans(Y)>1)] 
+n <- nrow(Y); m <- ncol(Y) 
 print(m)
 print(head(Y[, 1:10]))
 ```
@@ -41,7 +54,7 @@ PlotCov <- function(fit, cluster=NULL){
   Sigma <- as.matrix(fit$model_par$Sigma)[order, order]; Sigma[which(Sigma==0)] <- NA
   Omega <- -as.matrix(fit$model_par$Omega)[order, order]; Omega[which(Omega==0)] <- NA; diag(Omega) <- 1
   par(mfrow=c(1, 2))
-  image.plot(1:m, 1:m, cov2cor(Sigma), xlab='species', ylab='species', main='correlations', zlim=c(-1, 1))
+  image.plot(1:m, 1:m, cov2cor(Sigma), xlab='species', ylab='species', main='correlations', zlim=c(-1, 1) <- )
   abline(h=.5+cumsum(table(cluster)), v=.5+cumsum(table(cluster)))
   image.plot(1:m, 1:m, cov2cor(Omega), xlab='species', ylab='species', main='conditional correlations', zlim=c(-1, 1))
   abline(h=.5+cumsum(table(cluster)), v=.5+cumsum(table(cluster)))

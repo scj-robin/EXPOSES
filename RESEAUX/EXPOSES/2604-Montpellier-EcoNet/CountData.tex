@@ -83,9 +83,9 @@
    Y_{ij} \sim \Pcal(\exp(x_i^\top \beta_j + Z_{ij}))
    $$
   \end{itemize} \pause
-  summarized as
+  summarized as $\{Y_i\}_{1 \leq i \leq n}$ independent
   $$
-  \{Y_i\} \text{ iid} \sim PLN(x, \beta, \Sigma),
+  Y_i \sim PLN(x_i, \beta, \Sigma),
   $$
   $\to$ multivariate mixed generalized linear model (glmm). 
 
@@ -102,22 +102,24 @@
 \frame{\frametitle{Network inference}
 
   \paragraph{PLN network model.} Same model as PLN + sparsity assumption:
-  $$
-  \{Y_i\} \text{ iid} \sim PLN(x, \beta, \Sigma)
-  \qquad \qquad + \emphase{\Omega = \Sigma^{-1} \text{ sparse}}
-  $$
+  \begin{align*}
+  \{Y_i\} & \text{ independent,} & 
+  Y_i & \sim PLN(x_i, \beta, \Sigma), &
+  + & \emphase{\Omega = \Sigma^{-1} \text{ sparse}}
+  \end{align*}
   
   \bigskip \bigskip \pause
   \paragraph{Inference algorithm.} Variational EM + lasso penalty \refer{CMR18a,CMR19}:
   $$
-  \max_{\beta, \Omega} \widetilde{\log p}(Y; x, \beta, \Sigma) - \lambda \sum_{j < k} |\omega_{jk}|
+  \max_{\beta, \Omega} \; \widetilde{\log p}(Y; x, \beta, \Sigma) - \lambda \sum_{j < k} |\omega_{jk}|
   $$
   
   \bigskip
   \begin{itemize}
     \setlength{\itemsep}{1\baselineskip}
-    \item Alternate convex problems 
-    \item Fast solution ({\tt PLNmodels} R package)
+    \item Alternate convex problems \\
+    $\to$ Fast solution ({\tt PLNmodels} R package)
+    \item 'Atutomatic' choice of $\lambda$: BIC, EBIC, cross-validation, \dots
    \item Resampling (StARS \refer{LRW10}) can be used to assess robustness
   \end{itemize}
 }

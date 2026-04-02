@@ -10,9 +10,9 @@
 \frame{\frametitle{Missing actors}
 
   \bigskip
-  \paragraph{Incomplete observations.} Most of the time, not all actors (species, environmental covariate, ...) are observed
+  \paragraph{Incomplete observations.} Most of the time, not all 'actors' (species, environmental covariates, ...) are observed
   
-  \bigskip \pause
+  \bigskip \bigskip \pause
   \paragraph{Missing variable = marginalisation.} 
   \begin{itemize}
     \item Remove the missing node and all edges connected to it.
@@ -216,12 +216,13 @@
   \bigskip
   \paragraph{Inference.} 
   \begin{itemize}
-    \item Simpler reconstruction problem: Find the parents of each species 
+    \item Reconstruction problem: Find the parents of each species 
     $
     p(A_{t+1} \mid A_t, B_t, C_t, \dots),
     $
     \emphase{independently}
-    \item \emphase{\sl Sparsity} assumption: Each species has only few parents
+    \item \emphase{\sl Sparsity} assumption: Each species has only few parents \\
+    $\to$ Variable selection for regression
   \end{itemize}
 
 }
@@ -260,7 +261,8 @@
   \vspace{-.1\textheight}\pause
   \begin{itemize}
     \setlength{\itemsep}{1\baselineskip}
-    \item Applying network inference to the 'stationary' abundance vectors $(Y_T^i)$ will not retrieve the dynamic network 
+    \item The graphical model of $Y_T$ is not the dynamic network \\
+    $\to$ network inference applied to the 'stationary' abundance vectors $(Y_T^i)$ \emphase{will not retrieve} the dynamic network 
     \item Not clear if the dynamic network can be recovered from stationary (static) observations \refer{Liu25}.
   \end{itemize}
 
