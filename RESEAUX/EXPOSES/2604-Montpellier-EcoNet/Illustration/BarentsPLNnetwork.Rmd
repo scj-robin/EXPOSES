@@ -29,18 +29,11 @@ Scaling covariates (for numerical reasons)
 X <- scale(X) 
 print(head(X))
 d <- ncol(X)
-Y <- Y[, which(colMeans(Y)>1)] 
-n <- nrow(Y); m <- ncol(Y) 
-print(m)
-print(head(Y[, 1:10]))
 ```
 
 Removing too rare species
 
 ```{r rare, echo=TRUE}
-X <- scale(X) 
-print(head(X))
-d <- ncol(X)
 Y <- Y[, which(colMeans(Y)>1)] 
 n <- nrow(Y); m <- ncol(Y) 
 print(m)
@@ -54,7 +47,7 @@ PlotCov <- function(fit, cluster=NULL){
   Sigma <- as.matrix(fit$model_par$Sigma)[order, order]; Sigma[which(Sigma==0)] <- NA
   Omega <- -as.matrix(fit$model_par$Omega)[order, order]; Omega[which(Omega==0)] <- NA; diag(Omega) <- 1
   par(mfrow=c(1, 2))
-  image.plot(1:m, 1:m, cov2cor(Sigma), xlab='species', ylab='species', main='correlations', zlim=c(-1, 1) <- )
+  image.plot(1:m, 1:m, cov2cor(Sigma), xlab='species', ylab='species', main='correlations', zlim=c(-1, 1))
   abline(h=.5+cumsum(table(cluster)), v=.5+cumsum(table(cluster)))
   image.plot(1:m, 1:m, cov2cor(Omega), xlab='species', ylab='species', main='conditional correlations', zlim=c(-1, 1))
   abline(h=.5+cumsum(table(cluster)), v=.5+cumsum(table(cluster)))
@@ -124,7 +117,6 @@ lambda <- max(plnNet$penalties)^seq(-2, 1, length.out=50)
 plnNet <- PLNnetwork(Y ~ X, penalties=lambda, control=PLNnetwork_param(trace=0))
 plot(plnNet)
 ```
-grid
 
 ### A first network
 
